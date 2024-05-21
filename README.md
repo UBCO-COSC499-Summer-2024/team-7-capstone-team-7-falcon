@@ -12,16 +12,16 @@
     * Students: must be able to view the results of instances on an exam for a course. They will be only available to review their exam(s) during the time interval for the course.
     * Administrator: Requires the ability to maintain and manage the system
 * Things to think about when scoping your project:This list is non-exhaustive. It is only meant to get you thinking about the variety of ways you may choose to scope and design this project.
-        * How will users login to the system? (security and authentication)
-        * How will accounts be created?
-        * As the system would be considered ‘extra work’ for instructors, how to make it most efficient for data entry and quick glance reporting/analytics?
-        * How will the database be designed to support new exams or formats of bubble sheets? It is anticipated that the system will need to be able to handle a number of different ways of marking and analyzing questions.
-        * The system will not have a high number of instructors but potentially a large number of students and data. How to optimize for ease of use and maintainability? What about data security?
-        * What can be done to make this system easy to use especially for first time users?
-        * Ideally instructors have limited interaction with the system except for some exam creation, data entry and reporting. What can be done to streamline the onboarding process and recall when using the system. 
-        * There is a variety of data that could be available on an exam. What other data would be useful to understand exam performance?
-        * It is expected that the web app will be almost entirely used on desktop computers from the instructors and administrators view. Student view should support both desktop and mobile.
-        * What needs to be done to adhere to relevant privacy regulations and guidelines to ensure student data protection.
+   * How will users login to the system? (security and authentication)
+   * How will accounts be created?
+   * As the system would be considered ‘extra work’ for instructors, how to make it most efficient for data entry and quick glance reporting/analytics?
+   * How will the database be designed to support new exams or formats of bubble sheets? It is anticipated that the system will need to be able to handle a number of different ways of marking and analyzing questions.
+   * The system will not have a high number of instructors but potentially a large number of students and data. How to optimize for ease of use and maintainability? What about data security?
+   * What can be done to make this system easy to use especially for first time users?
+   * Ideally instructors have limited interaction with the system except for some exam creation, data entry and reporting. What can be done to streamline the onboarding process and recall when using the system. 
+   * There is a variety of data that could be available on an exam. What other data would be useful to understand exam performance?
+   * It is expected that the web app will be almost entirely used on desktop computers from the instructors and administrators view. Student view should support both desktop and mobile.
+   * What needs to be done to adhere to relevant privacy regulations and guidelines to ensure student data protection.
 
 ---
 

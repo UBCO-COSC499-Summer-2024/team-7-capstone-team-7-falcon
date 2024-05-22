@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.4"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "!(node_modules/**/*)*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+cd optical-marking-management
+npm test
+exit 1

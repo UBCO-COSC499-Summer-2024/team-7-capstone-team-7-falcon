@@ -1,2 +1,1 @@
-cd optical-marking-management && npm run pre-commit 
-
+cd optical-marking-management && npm run pre-commit

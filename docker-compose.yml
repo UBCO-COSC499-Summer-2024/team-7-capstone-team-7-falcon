@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    networks:
+      - api
+    volumes:
+      - pg:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+networks:
+  api:
+    driver: bridge
+
+volumes:
+  pg:

@@ -81,66 +81,67 @@ The Optical Marking Management System's minimum viable product will be a respons
 
 1. Account Management System:
 
-  - Users will be able to log in and create accounts using a modular system that allows multiple authentication methods. The application will support an option to create and sign in with Google OAuth and regular email & password methods.
-  - Access to various system features will be restricted based on the user account's assigned role.
+    - Users will be able to log in and create accounts using a modular system that allows multiple authentication methods. 
+    - The application will support an option to create and sign in with Google OAuth and regular email & password methods.
+    - Access to various system features will be restricted based on the user account's assigned role.
 
 2. Course Management System:
 
-  - Instructors can create and manage their courses.
-  - Students can join the course using an invite link provided by the instructor.
+    - Instructors can create and manage their courses.
+    - Students can join the course using an invite link provided by the instructor.
 
 3. Exams creation and management system:
 
-  - Instructors will be able to create exams.
-  - Upload bubble sheet exams for optical recognition grading.
-  - Create bubble-sheet exams with a customizable number of questions and answers, allowing individual points assignment for each question.
-  - Students can view their scores and the digital version of the exam.
+    - Instructors will be able to create exams.
+    - Upload bubble sheet exams for optical recognition grading.
+    - Create bubble-sheet exams with a customizable number of questions and answers, allowing individual points assignment for each question.
+    - Students can view their scores and the digital version of the exam.
 
 4. Analytics
 
-  - Instructors will be able to view individual and overall performance and exam statistics.
-  - Compare data across different exams.
-  - Ability to compare data with past performance of students.
-  - Instructors can export exam results.
+    - Instructors will be able to view individual and overall performance and exam statistics.
+    - Compare data across different exams.
+    - Ability to compare data with past performance of students.
+    - Instructors can export exam results.
 
 5. System Administration
 
-  - Administrators will be able to change the role of user accounts.
-  - Administrators will be able to create semester terms for the courses.
+    - Administrators will be able to change the role of user accounts.
+    - Administrators will be able to create semester terms for the courses.
 
 6. Privacy and storage of data
 
-  - Exam files will be archived in the system one year after the semester has ended.
-  - Users will only be able to view their own submissions.
+    - Exam files will be archived in the system one year after the semester has ended.
+    - Users will only be able to view their own submissions.
 
 7. Responsive Design:
 
-  - The application and user interfaces will be able to support desktop and mobile devices.
+    - The application and user interfaces will be able to support desktop and mobile devices.
 
 #### Out-of-Scope:
 
 1. Authentication:
 
-  - Integration of authentication system from institutions (i.e., SSO with CWL).
-  - Additional security features such as multi-factor authentication, security questions, or biometrics.
+    - Integration of authentication system from institutions (i.e., SSO with CWL).
+    - Additional security features such as multi-factor authentication, security questions, or biometrics.
 
 2. Charts and Analytics Customization:
 
-  - Ability to create custom charts or metrics.
-  - Ability to modify existing charts.
+    - Ability to create custom charts or metrics.
+    - Ability to modify existing charts.
 
 3. Integration with third-party Providers:
 
-  - Exporting exam results and/or grades in a format suitable for third-party applications (i.e., Canvas).
-  - Importing students’ or course information from third-party applications.
+    - Exporting exam results and/or grades in a format suitable for third-party applications (i.e., Canvas).
+    - Importing students’ or course information from third-party applications.
 
 4. Accessibility:
 
-  - Support of screen readers or keyboard navigation.
+    -  Support of screen readers or keyboard navigation.
 
 5. Custom Optical Mark Recognition model
 
-  - The application will not use a custom-trained OMR model to scan and evaluate bubble-sheet exams.
+    - The application will not use a custom-trained OMR model to scan and evaluate bubble-sheet exams. 
 
 ### Measurable project objectives and related success criteria (scope of project)
 
@@ -163,23 +164,23 @@ Project requirements to be completed before July 5th, 2024.
 
 1. Instructor Use Cases:
 
-  - Create and manage classes and exams.
-  - Upload scanned bubble sheets.
-  - Parse and mark bubble sheets.
-  - Review exam results and run analytics.
-  - Visualize student performance and benchmarks.
-  - Download exam results.
+    - Create and manage classes and exams.
+    - Upload scanned bubble sheets.
+    - Parse and mark bubble sheets.
+    - Review exam results and run analytics.
+    - Visualize student performance and benchmarks.
+    - Download exam results.
 
 3. Student Use Cases:
 
-  - Log in to view exam results.
-  - Review detailed performance on exams via the dashboard.
-  - Access exam results within the designated time frame.
+    - Log in to view exam results.
+    - Review detailed performance on exams via the dashboard.
+    - Access exam results within the designated time frame.
 
 4. Administrator Use Cases:
 
-  - Manage user accounts and roles.
-  - Create semesters/terms to manage and archive course data and limit access to the course material.
+    - Manage user accounts and roles.
+    - Create semesters/terms to manage and archive course data and limit access to the course material.
 
 ### Proto-Personas:
 
@@ -296,10 +297,10 @@ Scenario #1:
 2. Administrator navigates to the list of students
 3. Clicks on a student to bring up a list of actions:
 
-  - Change the user’s role from a student to an instructor account
-  - Delete student account
-  - Modify student account details
-  - View all courses that the student is in
+    - Change the user’s role from a student to an instructor account
+    - Delete student account
+    - Modify student account details
+    - View all courses that the student is in
 
 5. Removes student from a course
 
@@ -310,10 +311,10 @@ Scenario #1:
 2. Administrator navigates to the list of instructors
 3. Clicks on an instructor to bring up a list of actions:
 
-  - Change the user’s role from an instructor to a student
-  - Delete instructor account
-  - View all courses that the instructor is teaching
-  - Modify instructor account details
+    - Change the user’s role from an instructor to a student
+    - Delete instructor account
+    - View all courses that the instructor is teaching
+    - Modify instructor account details
 
 *Scenario #3:*
 
@@ -321,9 +322,9 @@ Scenario #1:
 2. Navigates to the administrator dashboard
 3. Clicks on “Manage semesters” to see a list of actions:
 
-  - Add a new semester to the system with the start and end date
-  - Modify semester
-  - Delete semester
+    - Add a new semester to the system with the start and end date
+    - Modify semester
+    - Delete semester
 
 
 #### *Journey Lines*
@@ -392,23 +393,23 @@ The system will:
 1. Instructors will be able to upload a bubble-sheet PDF file and answer key for the exam.
 2. Instructors will be able to create a custom bubble-sheet exam that is able to specify the:
 
-  - number of questions
-  - answers per question
-  - points allocated to each question.
+    - number of questions
+    - answers per question
+    - points allocated to each question.
 
 3. Instructors will be able to toggle the visibility of grades for the exam.
 4. Instructors will be able to manually modify grades after automatic parsing and calculation by the system.
 5. Instructors will be able to access numerical data related to the exam, including:
 
-  - class average over time
-  - score distribution, mean, median, standard deviation, and percentiles
-  - performance by question.
+    - class average over time
+    - score distribution, mean, median, standard deviation, and percentiles
+    - performance by question.
 
 6. Instructors will be able to create multiple courses in the system, including options for
 
-  - choosing a course code
-  - setting the name of a course
-  - selecting the term session.
+    - choosing a course code
+    - setting the name of a course
+    - selecting the term session.
 
 7. Instructors will be able to generate an invitation link for students to join the course.
 
@@ -417,8 +418,8 @@ The system will:
 
 1. Students will be able to create accounts by
 
-  - Using Google authentication
-  - Using an email and password combination.
+    - Using Google authentication
+    - Using an email and password combination.
 
 2. Students will be able to join a course through an invite link provided by an instructor.
 
@@ -426,11 +427,11 @@ The system will:
 
 4. Students will receive feedback on their performance by 
 
-  - Having errors highlighted in red.
-  - Being able to compare their individual performance with that of the overall class performance through metrics:
-    - Average
-    - Median
-    - Quartiles
+    - Having errors highlighted in red.
+    - Being able to compare their individual performance with that of the overall class performance through metrics:
+      - Average
+      - Median
+      - Quartiles
 
 
 
@@ -438,75 +439,75 @@ The system will:
 
 1. Administrators will be able to view a list of all users. From this list, they can:
 
-  - Add user
-  - Remove User
-  - Modify User information, including role
+    - Add user
+    - Remove User
+    - Modify User information, including role
 
 
 2. Administrators will be able to view a list of courses. From this list, they can:
 
-  - Add courses
-  - Remove Courses
-  - Modify Courses, including roles within the courses and enrollment
-  - Within a course, they can view an exam events list where they can:
-    - Add exams
-    - Remove exams
-    - Modify exam names, dates, and submission information
+    - Add courses
+    - Remove Courses
+    - Modify Courses, including roles within the courses and enrollment
+    - Within a course, they can view an exam events list where they can:
+      - Add exams
+      - Remove exams
+      - Modify exam names, dates, and submission information
 
 
 3. Administrators will be able to view a list of yearly sessions and terms(e.g. Summer 2024 T1). From the list, they can:
 
-  - Add sessions and terms
-  - Remove sessions and terms
-  - Modify the school term's start and end date
+    - Add sessions and terms
+    - Remove sessions and terms
+    - Modify the school term's start and end date
 
 
 #### Technical Requirements:
 
 1. Microservices Architecture
 
-  - Each project component will be its own service running independently, and communication between components will be done with an open API endpoint. Microservices will communicate with each other via Apache or Nginx proxies and ExpressJs middleware for database communication.
+    - Each project component will be its own service running independently, and communication between components will be done with an open API endpoint. Microservices will communicate with each other via Apache or Nginx proxies and ExpressJs middleware for database communication.
 
 
 2. Security
 
-  - Passwords and sensitive information will be encrypted using a hashing-based approach available in libraries such bcryptjs and JWT tokens to share information between microservices.
-  - As an alternative to a password-based authentication system, the application will also use an external authentication provider (Google OAuth) to sign in users within the system, which shares limited information about users.
+    - Passwords and sensitive information will be encrypted using a hashing-based approach available in libraries such bcryptjs and JWT tokens to share information between microservices.
+    - As an alternative to a password-based authentication system, the application will also use an external authentication provider (Google OAuth) to sign in users within the system, which shares limited information about users.
 
 
 3. Optical Mark Recognition (OMR) system
 
-  - An open-source pre-trained OMR model will be used to grade bubble-sheet exams automatically. No GPU availability will be assumed.
-  - Pre  - and post-processing, including reading and generation of PDFs, will be performed using Python libraries.
-  - The output of the OMR system will be in JSON format.
+    - An open-source pre-trained OMR model will be used to grade bubble-sheet exams automatically. No GPU availability will be assumed.
+    - Pre  - and post-processing, including reading and generation of PDFs, will be performed using Python libraries.
+    - The output of the OMR system will be in JSON format.
 
 
 4. Database
 
-  - A relational database (PostgreSQL) will be used to store user information and processed bubble sheet data.
-  - The data will be entered through forms on the NextJS frontend, passed as JSON data to the ExpressJS backend, and then pre-processed in ExpressJS before being stored in PostgreSQL.
+    - A relational database (PostgreSQL) will be used to store user information and processed bubble sheet data.
+    - The data will be entered through forms on the NextJS frontend, passed as JSON data to the ExpressJS backend, and then pre-processed in ExpressJS before being stored in PostgreSQL.
 
 5. Continuous Integration / Continuous Deployment
 
-  - In addition to local testing, GitHub Actions will be used to test, build, and deploy the services to the production server.
+    - In addition to local testing, GitHub Actions will be used to test, build, and deploy the services to the production server.
 
 
 6. Testing
 
-  - The project will use automated unit testing, integration, and end-to-end testing frameworks such as Jest (Javascript), unittest (Python), and Cypress (Nextjs).
-  - Each member of the team will be performing manual user acceptance and security testing on code changes that were made in pull requests.
+    - The project will use automated unit testing, integration, and end-to-end testing frameworks such as Jest (Javascript), unittest (Python), and Cypress (Nextjs).
+    - Each member of the team will be performing manual user acceptance and security testing on code changes that were made in pull requests.
 
 
 7. Containerization 
 
-  - Docker will be used to containerize the application, with scripts for setting up the project on any machine and a PostgreSQL database running within the container for querying and testing.
+    - Docker will be used to containerize the application, with scripts for setting up the project on any machine and a PostgreSQL database running within the container for querying and testing.
 
 
 8. Documentation
 
-  - Components and functions will be documented with JSDoc (Next.js) and Docstrings (Python).
-  - To help keep track of development progress, pull requests will be detailed and include changes, fixes, and feature additions.
-  - Each microservice will include a README detailing setup, uses, and functionality.
+    - Components and functions will be documented with JSDoc (Next.js) and Docstrings (Python).
+    - To help keep track of development progress, pull requests will be detailed and include changes, fixes, and feature additions.
+    - Each microservice will include a README detailing setup, uses, and functionality.
 
 
 ## Tech Stack

@@ -1,8 +1,61 @@
+# Team 7 Project Proposal - Optical Marking Management System 
+
 Team Number: 7
 
 Team Members: Francisco, Dima, Paula, Ishika, Bennett
 
 ---
+## Table of Contents
+- [Overview:](#overview)
+  * [Project purpose or justification (UVP)](#project-purpose-or-justification-uvp)
+    + [Unique Value Proposition](#unique-value-proposition)
+    + [Why is our solution better than others?](#why-is-our-solution-better-than-others)
+  * [High-level project description and boundaries](#high-level-project-description-and-boundaries)
+    + [In Scope:](#in-scope)
+    + [Out-of-Scope:](#out-of-scope)
+  * [Measurable project objectives and related success criteria (scope of project)](#measurable-project-objectives-and-related-success-criteria-scope-of-project)
+- [Users, Usage Scenarios and High-Level Requirements](#users-usage-scenarios-and-high-level-requirements)
+  * [Users Groups:](#users-groups)
+  * [Proto-Personas:](#proto-personas)
+    + [Instructor Jane](#instructor-jane)
+    + [Student Alex](#student-alex)
+    + [Admin Sarah](#admin-sarah)
+  * [Envisioned Usage](#envisioned-usage)
+    + [Instructor:](#instructor)
+    + [Student:](#student)
+    + [System Administrator:](#system-administrator)
+    + [*Journey Lines*](#journey-lines)
+      - [Instructors:](#instructors)
+      - [Students:](#students)
+      - [System Administrators:](#system-administrators)
+  * [Requirements:](#requirements)
+    + [Functional Requirements:](#functional-requirements)
+    + [Non-functional Requirements:](#non-functional-requirements)
+    + [User Requirements:](#user-requirements)
+      - [Instructor Requirements:](#instructor-requirements)
+      - [Student Requirements:](#student-requirements)
+      - [Administrator Requirements:](#administrator-requirements)
+    + [Technical Requirements:](#technical-requirements)
+- [Tech Stack](#tech-stack)
+  * [User Devices](#user-devices)
+  * [Frontend](#frontend)
+  * [Backend](#backend)
+  * [Database](#database)
+  * [Containerization](#containerization)
+  * [Version Control and Code Quality](#version-control-and-code-quality)
+    + [Linting and Formatting](#linting-and-formatting)
+  * [Testing](#testing)
+  * [Dependency Management](#dependency-management)
+  * [Continuous Integration and Deployment](#continuous-integration-and-deployment)
+- [High-level risks](#high-level-risks)
+- [Assumptions and constraints](#assumptions-and-constraints)
+  * [Assumptions](#assumptions)
+  * [Constraints](#constraints)
+- [Summary milestone schedule](#summary-milestone-schedule)
+- [Teamwork Planning and Anticipated Hurdles](#teamwork-planning-and-anticipated-hurdles)
+
+---
+
 ## Overview:
 
 ### Project purpose or justification (UVP)
@@ -565,7 +618,7 @@ Semantic Release action (GitHub Actions) 
 
 Possible Structure:
 
-# ADD IMAGE HERE
+![Image of tech stack plan](https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/blob/documentation/docs/plan/tech-stack-example.png)
 
 ## High-level risks
 

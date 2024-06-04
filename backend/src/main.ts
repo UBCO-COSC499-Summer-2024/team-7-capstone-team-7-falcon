@@ -8,6 +8,9 @@ async function bootstrap() {
     logger: ['error', 'warn', 'log', 'debug'],
   });
 
+  // All routes will be prefixed with /api/v1
+  app.setGlobalPrefix('api/v1');
+
   app.use(morgan('dev'));
   app.use(bodyparser.json({ limit: '150mb' }));
   app.use(bodyparser.urlencoded({ limit: '150mb', extended: true }));

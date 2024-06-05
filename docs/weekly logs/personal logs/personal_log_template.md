@@ -19,4 +19,6 @@ Since we will need to show the tasks from the project board which are associated
 ## This week's goals
 
 1. Recap on your week's goals.
-2. Quick notes on your personal plan for the next cycle (3 days/4 days)
+2. Quick notes on your personal plan for the next cycle (2 days/5 days)
+
+(Note that the cycles are Wed-Thu and Fri-Tue.)

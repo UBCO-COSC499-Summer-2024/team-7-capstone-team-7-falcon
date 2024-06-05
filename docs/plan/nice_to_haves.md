@@ -11,3 +11,4 @@ This is a (growing) list of nice-to-haves that the team has identified.
 - Supporting multiple correct answers per question
 - Allowing a questions in an exam to be assigned different points.
 - Adding a slider for light/dark theme. We can easily do that in tailwind/flowbite.
+- Mobile UI for students.

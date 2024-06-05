@@ -8,7 +8,7 @@
 
 **Date**:
 
-## 👋 Attendence
+## 👋 Attendance
 
 1. Bennett
 2. Dima
@@ -16,7 +16,7 @@
 4. Ishika
 5. Paula
 
-***Attendence Comments***
+***Attendance Comments***
 
 ## Announcements
 

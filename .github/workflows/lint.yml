@@ -1,10 +1,10 @@
-name: CI - Tests
+name: Lint
 
 on: [pull_request]
 
 jobs:
   run-tests:
-    name: Run tests (Backend)
+    name: Run Lint (Backend)
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +20,6 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
-      - name: Run tests
+      - name: Run linter
         working-directory: ./backend
-        run: npm run test
+        run: npm run lint

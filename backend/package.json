@@ -15,7 +15,7 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "jest -i",
-    "test:integration": "jest --coverage",
+    "test:integration": "jest -i --config ./test/jest-integration.json",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typeorm": "npx typeorm-ts-node-commonjs --dataSource ./src/modules/datasource/ormconfig.ts",

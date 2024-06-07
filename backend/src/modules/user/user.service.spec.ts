@@ -5,6 +5,8 @@ import {
   TestTypeOrmModule,
 } from '../../../test/utils/testUtils';
 import { UserModel } from './entities/user.entity';
+import { EmployeeUserModel } from './entities/employee-user.entity';
+import { StudentUserModel } from './entities/student-user.entity';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -34,11 +36,21 @@ describe('UserService', () => {
         updated_at: 1_000_000_000,
       }).save();
 
+      await EmployeeUserModel.create({
+        employee_id: 1,
+        user: user,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 1,
+        user: user,
+      }).save();
+
       const result = await userService.getUserById(user.id);
       expect(result).toMatchSnapshot();
     });
 
-    it('should return null', async () => {
+    it("should return null when user id doesn't exist", async () => {
       const user = await userService.getUserById(100);
       expect(user).toBeNull();
     });

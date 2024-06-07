@@ -2,9 +2,7 @@ import { Controller, HttpStatus, ParseIntPipe } from '@nestjs/common';
 import { Get, Param, Res } from '@nestjs/common/decorators';
 import { Response } from 'express';
 import { UserService } from './user.service';
-import { ERROR_MESSAGES } from 'src/common';
-import { UserModel } from './entities/user.entity';
-import { EmployeeUserModel } from './entities/employee-user.entity';
+import { ERROR_MESSAGES } from '../../common';
 
 @Controller('user')
 export class UserController {
@@ -37,20 +35,5 @@ export class UserController {
     } else {
       return res.status(HttpStatus.OK).send(user);
     }
-
-    // const user = await UserModel.create({
-    //   first_name: 'John',
-    //   last_name: 'Doe',
-    //   email: 'john.doe1@test.com',
-    //   password: 'password',
-    //   created_at: 1_000_000_000,
-    //   updated_at: 1_000_000_000,
-    // }).save();
-
-    // await EmployeeUserModel.create({
-    //   user,
-    //   employee_id: 1,
-    // }).save();
-    // return res.status(HttpStatus.OK).send(user);
   }
 }

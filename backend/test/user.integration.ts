@@ -1,3 +1,4 @@
+import { HttpStatus } from '@nestjs/common';
 import { UserModel } from '../src/modules/user/entities/user.entity';
 import { UserModule } from '../src/modules/user/user.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
@@ -14,7 +15,7 @@ describe('User Integration', () => {
 
   describe('GET /', () => {
     it('should return status 401 when no token is provided', () => {
-      return supertest().get('/user').expect(401);
+      return supertest().get('/user').expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 200 and user object', async () => {
@@ -29,26 +30,26 @@ describe('User Integration', () => {
 
       const response = await supertest()
         .get('/user')
-        .auth(signJwtToken(user.id), { type: 'bearer' });
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
     });
   });
 
   describe('GET /:uid', () => {
     it('should return status 401 when no token is provided', () => {
-      return supertest().get('/user/1').expect(401);
+      return supertest().get('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 400 when uid is not a number', () => {
       return supertest()
         .get('/user/abc')
-        .auth(signJwtToken(1), { type: 'bearer' })
-        .expect(400)
+        .set('Cookie', [`auth_token=${signJwtToken(1)}`])
+        .expect(HttpStatus.BAD_REQUEST)
         .expect({
           message: 'Validation failed (numeric string is expected)',
           error: 'Bad Request',
-          statusCode: 400,
+          statusCode: HttpStatus.BAD_REQUEST,
         });
     });
 
@@ -64,17 +65,17 @@ describe('User Integration', () => {
 
       const response = await supertest()
         .get(`/user/${user.id}`)
-        .auth(signJwtToken(1), { type: 'bearer' });
+        .set('Cookie', [`auth_token=${signJwtToken(1)}`]);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body).toMatchSnapshot();
     });
 
     it("should return status 404 when user id doesn't exist", () => {
       return supertest()
         .get('/user/100')
-        .auth(signJwtToken(1), { type: 'bearer' })
-        .expect(404)
+        .set('Cookie', [`auth_token=${signJwtToken(1)}`])
+        .expect(HttpStatus.NOT_FOUND)
         .expect({
           message: 'User not found',
         });

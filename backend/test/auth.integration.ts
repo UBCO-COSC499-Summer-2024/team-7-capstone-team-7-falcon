@@ -1,11 +1,12 @@
 import { TestingModuleBuilder } from '@nestjs/testing';
 import { AuthModule } from '../src/modules/auth/auth.module';
-import { setUpIntegrationTests } from './utils/testUtils';
+import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { AuthService } from '../src/modules/auth/auth.service';
 import {
   OAuthGoogleErrorException,
   UserAlreadyExistsException,
 } from '../src/common/errors';
+import { HttpStatus } from '@nestjs/common';
 
 const mockAuthService = {
   // We need to mock the signInWithGoogle method to avoid calling the Google API
@@ -32,7 +33,9 @@ describe('Auth Integration', () => {
 
   describe('GET oauth/:provider', () => {
     it('should return status 400 when provider is not supported', () => {
-      return supertest().get('/auth/oauth/unknown').expect(400);
+      return supertest()
+        .get('/auth/oauth/unknown')
+        .expect(HttpStatus.BAD_REQUEST);
     });
 
     it('should redirect to google oauth url', async () => {
@@ -45,11 +48,15 @@ describe('Auth Integration', () => {
 
   describe('GET oauth/:provider/callback', () => {
     it('should return status 400 when provider is not supported', () => {
-      return supertest().get('/auth/oauth/unknown/callback').expect(400);
+      return supertest()
+        .get('/auth/oauth/unknown/callback')
+        .expect(HttpStatus.BAD_REQUEST);
     });
 
     it('should return status 400 when code is not provided', () => {
-      return supertest().get('/auth/oauth/google/callback').expect(400);
+      return supertest()
+        .get('/auth/oauth/google/callback')
+        .expect(HttpStatus.BAD_REQUEST);
     });
 
     it('should return status 302 and redirect to frontend url', async () => {
@@ -58,6 +65,7 @@ describe('Auth Integration', () => {
         .query({ code: 'code' });
 
       expect(response.status).toBe(302);
+      expect(response.get('Set-Cookie')[0]).toContain('auth_token=access');
       expect(response.header.location).toContain('localhost');
     });
 
@@ -65,21 +73,34 @@ describe('Auth Integration', () => {
       return supertest()
         .get('/auth/oauth/google/callback')
         .query({ code: 'oauth_error' })
-        .expect(401);
+        .expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 409 when user already exists', () => {
       return supertest()
         .get('/auth/oauth/google/callback')
         .query({ code: 'user_exists' })
-        .expect(409);
+        .expect(HttpStatus.CONFLICT);
     });
 
     it('should return status 500 when an error occurs', () => {
       return supertest()
         .get('/auth/oauth/google/callback')
         .query({ code: 'error' })
-        .expect(500);
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR);
+    });
+  });
+
+  describe('GET logout', () => {
+    it('should return status 401 when no token is provided', () => {
+      return supertest().get('/auth/logout').expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 204 when token is provided', () => {
+      return supertest()
+        .get('/auth/logout')
+        .set('Cookie', [`auth_token=${signJwtToken(1)}`])
+        .expect(HttpStatus.NO_CONTENT);
     });
   });
 });

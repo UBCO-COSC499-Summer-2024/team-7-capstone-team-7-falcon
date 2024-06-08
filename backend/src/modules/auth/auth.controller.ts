@@ -1,4 +1,12 @@
-import { Controller, Get, HttpStatus, Param, Query, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { ProviderAuthPipe } from './pipes/auth.pipe';
 import { AuthService } from './auth.service';
@@ -7,10 +15,12 @@ import {
   UserAlreadyExistsException,
 } from '../../common/errors';
 import { CodeAuthPipe } from './pipes/code-auth.pipe';
+import { AuthGuard } from '../../guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  private GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+  private GOOGLE_AUTH_URL: string =
+    'https://accounts.google.com/o/oauth2/v2/auth';
 
   constructor(private readonly authService: AuthService) {}
 
@@ -53,7 +63,11 @@ export class AuthController {
       const result = await this.authService.signInWithGoogle(code);
       return res
         .status(HttpStatus.PERMANENT_REDIRECT)
-        .redirect(`${process.env.FRONTEND_URL}/?token=${result.access_token}`);
+        .cookie('auth_token', result.access_token, {
+          httpOnly: true,
+          secure: this.isSecure(),
+        })
+        .redirect(process.env.FRONTEND_URL);
     } catch (e) {
       if (e instanceof OAuthGoogleErrorException) {
         return res.status(HttpStatus.UNAUTHORIZED).send({ error: e.message });
@@ -65,5 +79,27 @@ export class AuthController {
           .send({ error: e.message });
       }
     }
+  }
+
+  /**
+   * Log out the user
+   * @param res {Response} - The response object
+   * @returns {Response}
+   */
+  @UseGuards(AuthGuard)
+  @Get('logout')
+  logout(@Res() res: Response): Response {
+    return res
+      .status(HttpStatus.NO_CONTENT)
+      .clearCookie('auth_token', { httpOnly: true, secure: this.isSecure() })
+      .send();
+  }
+
+  /**
+   * Check if the application is running in a secure environment
+   * @returns {boolean} - The result of the check
+   */
+  private isSecure(): boolean {
+    return process.env.NODE_ENV === 'production';
   }
 }

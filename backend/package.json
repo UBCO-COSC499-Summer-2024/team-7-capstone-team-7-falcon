@@ -26,11 +26,13 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
     "body-parser": "^1.20.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "google-auth-library": "^9.10.0",
     "morgan": "^1.10.0",
     "mysql2": "^3.10.0",
     "pg": "^8.12.0",
@@ -64,11 +66,7 @@
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": [
-        "cobertura",
-        "lcov",
-        "text"
-    ],
+    "coverageReporters": ["cobertura", "lcov", "text"],
     "collectCoverageFrom": [
       "src/**/*.ts"
     ],

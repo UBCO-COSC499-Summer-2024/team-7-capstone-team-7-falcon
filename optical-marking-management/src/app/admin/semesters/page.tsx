@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Renders the admin semester management page.
+ * @component
+ * @returns TSX element
+ */
 const AdminSemesterManagement: React.FC = () => {
   return (
     <div>

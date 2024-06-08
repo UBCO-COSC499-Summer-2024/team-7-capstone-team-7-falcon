@@ -26,7 +26,7 @@ export const TestTypeOrmModule = TypeOrmModule.forRoot({
 export type ModuleModifier = (t: TestingModuleBuilder) => TestingModuleBuilder;
 
 export const TestConfigModule = ConfigModule.forRoot({
-  envFilePath: ['.env'],
+  envFilePath: ['.env.test'],
   isGlobal: true,
 });
 

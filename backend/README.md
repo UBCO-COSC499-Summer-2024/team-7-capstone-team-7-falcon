@@ -29,7 +29,7 @@ If you are planning to run or develop the application outside of the docker cont
 cp .env.example .env
 ```
 
-2. Set Node version to 20:
+2. Set Node version to 20 via nvm:
 
 ```bash
 nvm use 20
@@ -53,7 +53,7 @@ cp .env.example .env
 cp .env.example .env.docker && echo "DB_HOST=postgres" | cat - .env.docker > /dev/null
 ```
 
-Note: You don't have to modify the default values provided in the `.env` unless the root [.env](../.env) values do not match.
+Note (Database credentials): You don't have to modify the default values provided in the `.env` unless the root [.env](../.env) values do not match.
 
 ## Running locally
 
@@ -111,7 +111,7 @@ Steps to follow:
 pwd
 ```
 
-and output looks like:
+and confirm output looks like:
 
 ```bash
 **/team-7-capstone-team-7-falcon/backend

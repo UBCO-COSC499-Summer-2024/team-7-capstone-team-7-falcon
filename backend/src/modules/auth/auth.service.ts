@@ -4,6 +4,7 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { OAuthGoogleUserPayload } from '../../common/interfaces';
 import { OAuthGoogleErrorException } from '../../common/errors';
 import { JwtService } from '@nestjs/jwt';
+import { AuthTypeEnum } from '../../enums/user.enum';
 
 @Injectable()
 export class AuthService {
@@ -59,7 +60,7 @@ export class AuthService {
 
     const user = await this.userService.findOrCreateUser(
       userPayload,
-      'google_oauth',
+      AuthTypeEnum.GOOGLE_OAUTH,
     );
 
     return {

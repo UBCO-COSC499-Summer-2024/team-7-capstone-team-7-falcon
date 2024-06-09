@@ -1,17 +1,17 @@
 import React from "react";
 
 /**
- * Renders the Instructor Dashboard component.
+ * Renders the Instructor Courses component.
  * This component could be merged with the Student component depending on further implementation.
  * @component
  * @returns TSX Element
  */
-const InstructorDashboard: React.FC = () => {
+const InstructorCourses: React.FC = () => {
   return (
     <div>
-      <h1>Instructor Dashboard</h1>
+      <h1>Instructor Courses</h1>
     </div>
   );
 };
 
-export default InstructorDashboard;
+export default InstructorCourses;

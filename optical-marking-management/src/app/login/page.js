@@ -4,18 +4,17 @@ import { useState } from "react";
 import styles from './signup.module.css'; // Import CSS module
 import { useRouter } from "next/navigation";
 
-export default function SignUp() {
-    const [name, setName] = useState('');
+export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(false);
     const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const onLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('', {
-                name,
+
                 email,
                 password,
             });
@@ -32,21 +31,11 @@ export default function SignUp() {
     return (
         <div className={styles.signupContainer}>
             <div className={styles.wrapper}>
-            <h2 className={styles.heading}>Create an Account</h2>
+            <h2 className={styles.heading}>Login</h2>
             <hr className={styles.hrLine} />
             <p className={error === "" ? styles.hide : styles.show}>{error}</p>
                 <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="name" className={styles.Label}> Name</label>
-                        <input
-                            type="text"
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                            className={styles.Input}
-                        />
-                    </div>
+                   
                       <div>
                         <label htmlFor="email" className={styles.Label}>Email</label>
                         <input
@@ -69,7 +58,7 @@ export default function SignUp() {
                             className={styles.Input}
                         />
                     </div>
-                    <button type="submit" className={styles.btn}>Sign Up</button>
+                    <button type="submit" className={styles.btn}>Login</button>
                     
                 </form>
             </div>

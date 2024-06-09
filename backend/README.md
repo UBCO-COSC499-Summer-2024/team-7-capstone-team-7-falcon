@@ -50,7 +50,7 @@ cp .env.example .env
 4. Create an `.env.docker` file from `.env.example`:
 
 ```bash
-cp .env.example .env.docker && echo "DB_HOST=postgres" | cat - .env.docker > /dev/null
+cp .env.example .env.docker && echo "DB_HOST=postgres" >> .env.docker
 ```
 
 Note: You don't have to modify the default values provided in the `.env` unless the root [.env](../.env) values do not match.

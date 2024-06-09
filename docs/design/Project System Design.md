@@ -4,12 +4,6 @@
 
 This document details the design proposal for an optical marking management web application which aims to provide educators with a robust, efficient, and accurate tool for digitally creating, administering, and automatically parsing and grading scanned bubble-sheet exams. 
 
-  
-
-Start with a brief introduction of what you are building, reminding the reader of the high-level usage scenarios (project purpose). Complete each section with the required components. Don't forget that you can include [images in your markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images).
-
-Start each section with a lead-in, detailing what it is. Also, do not just have a collection of images. Each diagram must be explained clearly. Do not assume that the reader understands the intentions of your designs.
-
 ## System Architecture Design
 
 We chose to design a microservices architecture to have each distinct part of the system exist within its own container. This allows us to scale our application if needed, queue data processing, and work on features without bringing down the rest of the system, allowing us to test out different libraries and frameworks in parallel. The components are all separate except for a connection to a Nest.js backend, which all the other modules connect to via stubs. This prevents any module from accessing the DB directly and from affecting the functionality of the others.
@@ -662,8 +656,6 @@ Postcondition: The instructor is able to view analytics about the course.
 
 ## Database Design
 
-Provide an ER diagram of the entities and relationships you anticipate having in your system (this will most likely change, but you need a starting point).  In a few sentences, explain why the data is modelled this way and what is the purpose of each table/attribute.  For this part, you only need to have ONE diagram and an explanation.
-
 ![](https://lh7-us.googleusercontent.com/docsz/AD_4nXelo3vqmKhlLpuArXnea80mqEUSIfBJ9xRrxc_P_qLjdvmOxanYq0ygrSxIyolRy6Gz7odqggEM7fQj_ITPFIL9dOq7ziANhGFOmC7h1Z96ybgeLOdT6CHk5XVFWp5wkbzy4K-azqh6DRhgR0jM5StL1NEf?key=JLhAxdZn9C4A1hqwb0WwYA)
 
 In this diagram, we tried to decouple all information into different tables based on the use-case of features in our system. For instance:
@@ -695,16 +687,10 @@ Data Flow Diagram Level 1:
 
 ## User Interface (UI) Design
 
-The team is required to put forward a series of UI mock-ups that will be used as starting points for the design of the system. They can be minimal but the team will need to  have at least made some choices about the interaction flow of the application.  You should consider the different major aspects of user interactions and develop UI mockups for those (think about the different features/use cases and what pages are needed; you will have a number most likely).  Additionally, create a diagram to explain the navigation flow for the MVP  prototype (and any alternate flows).  When considering your UI, think about usability, accessibility, desktop and mobile uses.  As a team, you will need to discuss design choices for the system.
-
-  
-
 Design Document: [https://www.figma.com/design/i5fqO3j50VS81X14C7T5Qt/Falcon-Optical-Mark-Recognition-System?node-id=0-1&t=lVGko6MxNZM4hfKI-1](https://www.figma.com/design/i5fqO3j50VS81X14C7T5Qt/Falcon-Optical-Mark-Recognition-System?node-id=0-1&t=lVGko6MxNZM4hfKI-1) 
 
   
 
 Interaction flow:
-
-  
 
 ![](https://lh7-us.googleusercontent.com/docsz/AD_4nXc7F5qE2ufnd4NYoSIIBa4Y-WdMJ8bgv8SP6vQ0zTFJ2BwBHz9D_boJxqT2IrjDd2EHGDuBpWJiCejCMQwLihhh8-lmxGPH638021Cn6vCCSXT3gOapbAi3qCtR2ZF-r8TBNFX1GKKCGMIi9I0KxdjFvpE?key=JLhAxdZn9C4A1hqwb0WwYA)

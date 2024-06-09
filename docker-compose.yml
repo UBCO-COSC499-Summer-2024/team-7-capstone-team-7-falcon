@@ -36,7 +36,7 @@ services:
     volumes:
       - ./backend:/app
     env_file:
-      - backend/.env
+      - backend/.env.docker
     depends_on:
       - postgres
       - redis

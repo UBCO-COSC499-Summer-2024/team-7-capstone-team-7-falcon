@@ -1,8 +1,9 @@
 "use client"
 import axios from "axios";
 import { useState } from "react";
-import styles from './signup.module.css'; // Import CSS module
+import styles from './login.module.css'; // Import CSS module
 import { useRouter } from "next/navigation";
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ export default function LoginPage() {
     const [error, setError] = useState(false);
     const router = useRouter();
 
-    const onLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('', {

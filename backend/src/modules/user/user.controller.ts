@@ -6,7 +6,7 @@ import { ERROR_MESSAGES } from '../../common';
 import { AuthGuard } from '../../guards/auth.guard';
 import { SystemRoleGuard } from '../../guards/system-role.guard';
 import { UserRoleEnum } from '../../enums/user.enum';
-import { Roles } from '../../decorators/roles';
+import { Roles } from '../../decorators/roles.decorator';
 
 @Controller('user')
 export class UserController {

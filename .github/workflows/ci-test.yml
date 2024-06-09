@@ -1,0 +1,29 @@
+name: CI - Tests
+
+on:
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'optical-marking-management/**'
+
+jobs:
+  run-tests:
+    name: Run tests (Backend)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install packages
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run tests
+        working-directory: ./backend
+        run: npm run test

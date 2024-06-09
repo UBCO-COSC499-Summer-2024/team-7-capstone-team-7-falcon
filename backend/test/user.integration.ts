@@ -2,6 +2,7 @@ import { HttpStatus } from '@nestjs/common';
 import { UserModel } from '../src/modules/user/entities/user.entity';
 import { UserModule } from '../src/modules/user/user.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
+import { UserRoleEnum } from '../src/enums/user.enum';
 
 describe('User Integration', () => {
   const supertest = setUpIntegrationTests(UserModule);
@@ -41,10 +42,36 @@ describe('User Integration', () => {
       return supertest().get('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
 
-    it('should return status 400 when uid is not a number', () => {
+    it('should return status 401 when user is not an admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      return supertest()
+        .get('/user/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 400 when uid is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
       return supertest()
         .get('/user/abc')
-        .set('Cookie', [`auth_token=${signJwtToken(1)}`])
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.BAD_REQUEST)
         .expect({
           message: 'Validation failed (numeric string is expected)',
@@ -61,6 +88,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
       }).save();
 
       const response = await supertest()
@@ -71,10 +99,20 @@ describe('User Integration', () => {
       expect(response.body).toMatchSnapshot();
     });
 
-    it("should return status 404 when user id doesn't exist", () => {
+    it("should return status 404 when user id doesn't exist", async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
       return supertest()
         .get('/user/100')
-        .set('Cookie', [`auth_token=${signJwtToken(1)}`])
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.NOT_FOUND)
         .expect({
           message: 'User not found',

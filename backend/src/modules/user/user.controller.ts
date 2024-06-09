@@ -4,6 +4,9 @@ import { Response } from 'express';
 import { UserService } from './user.service';
 import { ERROR_MESSAGES } from '../../common';
 import { AuthGuard } from '../../guards/auth.guard';
+import { SystemRoleGuard } from '../../guards/system-role.guard';
+import { UserRoleEnum } from '../../enums/user.enum';
+import { Roles } from '../../decorators/roles';
 
 @Controller('user')
 export class UserController {
@@ -36,8 +39,9 @@ export class UserController {
    * @param uid {number} - User id
    * @returns {Promise<Response>} - User object
    */
-  @UseGuards(AuthGuard)
   @Get('/:uid')
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
   async getById(
     @Res() res: Response,
     @Param('uid', ParseIntPipe) uid: number,

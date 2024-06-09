@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "cd .. && husky optical-marking-management/.husky",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "cypress:open": "cypress open"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -17,17 +18,18 @@
     ]
   },
   "dependencies": {
+    "eslint": "^9.3.0",
     "husky": "^9.0.11",
     "next": "14.2.3",
+    "prettier": "^3.2.5",
     "react": "^18",
-    "react-dom": "^18",
-    "eslint": "^9.3.0",
-    "prettier": "^3.2.5"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cypress": "^13.11.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "lint-staged": "^15.2.4",

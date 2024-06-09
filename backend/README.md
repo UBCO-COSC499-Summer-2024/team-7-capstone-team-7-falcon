@@ -21,7 +21,7 @@ You will need to install the following command line tools and applications to ru
 
 ## Setup and Installation
 
-If you are planning to run or develop the application outside of the docker container, you will need to follow the steps below:
+If you are planning to run or develop the applicatio, you will need to follow the steps below:
 
 1. In the root folder of the project:
 
@@ -50,7 +50,7 @@ cp .env.example .env
 4. Create an `.env.docker` file from `.env.example`:
 
 ```bash
-cp .env.example .env.docker && echo "DB_HOST=postgres" | cat - .env.docker > /dev/null
+cp .env.example .env.docker && echo "DB_HOST=postgres" >> .env.docker
 ```
 
 Note (Database credentials): You don't have to modify the default values provided in the `.env` unless the root [.env](../.env) values do not match.

@@ -29,7 +29,7 @@ export default function LoginPage() {
     
 
     return (
-        <div className={styles.signupContainer}>
+        <div className={styles.LoginContainer}>
             <div className={styles.wrapper}>
             <h2 className={styles.heading}>Login</h2>
             <hr className={styles.hrLine} />

@@ -26,3 +26,30 @@ export class OAuthGoogleErrorException extends Error {
     super(message ?? ERROR_MESSAGES.authController.googleAuthError);
   }
 }
+
+/**
+ * Exception to be thrown when a user is not found
+ */
+export class UserNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.userController.userNotFound);
+  }
+}
+
+/**
+ * Exception to be thrown when a user is not allowed to edit / create employee ID
+ */
+export class EmployeeIdAlreadyExistsException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.userController.employeeIdAlreadyExists);
+  }
+}
+
+/**
+ * Exception to be thrown when a user is not allowed to edit another user
+ */
+export class StudentIdAlreadyExistsException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.userController.studentIdAlreadyExists);
+  }
+}

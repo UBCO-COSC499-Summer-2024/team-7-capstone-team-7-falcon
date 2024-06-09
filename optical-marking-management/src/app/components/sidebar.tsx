@@ -1,7 +1,13 @@
 import React from "react";
-import { Avatar, Sidebar } from "flowbite-react";
+import { Sidebar } from "flowbite-react";
 
-const PageSidebar: React.FC<PageSidebarProps> = () => {
+/**
+ * Renders the sidebar component which shows on all pages in routes
+ *
+ * @component
+ * @returns TSX Element
+ */
+const PageSidebar: React.FC = () => {
   return (
     <Sidebar id="sidebar">
       <div className="flex flex-col items-center py-4">

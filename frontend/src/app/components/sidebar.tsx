@@ -19,7 +19,7 @@ const PageSidebar: React.FC = () => {
         <h1 className="text-2xl font-bold mb-4">OwlMark</h1>
       </div>
      { /* Profile navigation */ }
-    {!userInfo && <h1>Not logged in</h1>}
+    {userInfo.firstName !== null && <h1>Hello, {userInfo.firstName}</h1>}
      { /* Separate component */ }
      { /* Sign out */ }
     </Sidebar>

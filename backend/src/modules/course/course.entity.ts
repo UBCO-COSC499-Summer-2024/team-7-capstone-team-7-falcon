@@ -8,7 +8,7 @@ import {
 import { CourseUser } from './course_user.entity';
 import { ExamModel } from '../exams/entities/exam.entity';
 
-@Entity("course_model")
+@Entity('course_model')
 export class CourseModel extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

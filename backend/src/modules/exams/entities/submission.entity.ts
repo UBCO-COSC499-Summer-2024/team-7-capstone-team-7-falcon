@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ExamModel } from './exam.entity';
-import { StudentUserModel } from 'src/modules/user/entities/student-user.entity';
+import { StudentUserModel } from '../../../modules/user/entities/student-user.entity';
 
 @Entity('submission_model')
 export class SubmissionModel extends BaseEntity {

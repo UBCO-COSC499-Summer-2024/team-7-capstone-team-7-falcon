@@ -25,8 +25,8 @@ const Navigation: React.FC<NavigationProps> = ({ links }) => {
   return (
     <Sidebar.ItemGroup>
       {links.map((link, index) => (
-        <Sidebar.Item key={index} href={link.href} className={`flex items-center my-5 py-2 px-10 ${currentPath(link.href)}`}>
-          <div className="flex items-center space-x-2">
+        <Sidebar.Item key={index} href={link.href} className={`my-5 py-2 px-10 ${currentPath(link.href)}`}>
+          <div className="flex items-center space-x-2 w-28">
             {link.icon}
             <span>{link.title}</span>
           </div>

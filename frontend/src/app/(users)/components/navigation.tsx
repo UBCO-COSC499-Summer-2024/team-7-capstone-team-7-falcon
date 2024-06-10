@@ -20,7 +20,7 @@ const Navigation: React.FC<NavigationProps> = ({ links }) => {
     } else {
       return "text-[#A8A9A9]";
     }
-  }
+  };
 
   return (
     <Sidebar.ItemGroup>
@@ -34,6 +34,6 @@ const Navigation: React.FC<NavigationProps> = ({ links }) => {
       ))}
     </Sidebar.ItemGroup>
   );
-}
+};
 
 export default Navigation;

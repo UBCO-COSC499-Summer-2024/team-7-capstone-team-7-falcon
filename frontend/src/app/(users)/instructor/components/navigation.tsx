@@ -5,17 +5,17 @@ const instructorLinks = [
   {
     title: "Courses",
     href: "/instructor",
-    icon: <Book className="w-5 h-5" />,
+    icon: <Book />,
   },
   {
     title: "Exams",
     href: "/instructor/exams",
-    icon: <Clipboard className="w-5 h-5" />,
+    icon: <Clipboard />,
   },
   {
     title: "Help",
     href: "/instructor/help",
-    icon: <QuestionCircle className="w-5 h-5" />,
+    icon: <QuestionCircle />,
   }
 ];
 

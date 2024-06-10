@@ -1,38 +1,44 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany} from "typeorm";
-import { CourseUser } from "./course_user.entity";
-import { ExamModel } from "../exams/entities/exam.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  OneToMany,
+} from 'typeorm';
+import { CourseUser } from './course_user.entity';
+import { ExamModel } from '../exams/entities/exam.entity';
 
-@Entity()
+@Entity("course_model")
 export class CourseModel extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    course_code: string;
+  @Column()
+  course_code: string;
 
-    @Column()
-    course_name: string;
-    
-    @Column({type: 'timestamp'})
-    created_at: Date;
+  @Column()
+  course_name: string;
 
-    @Column({type: 'timestamp'})
-    updated_at: Date;
+  @Column({ type: 'bigint' })
+  created_at: number;
 
-    // add term id later
+  @Column({ type: 'bigint' })
+  updated_at: number;
 
-    @Column()
-    is_archived: boolean;
+  // add term id later
 
-    @Column()
-    invite_code: string;
+  @Column()
+  is_archived: boolean;
 
-    @Column()
-    section_name: string;
+  @Column()
+  invite_code: string;
 
-    @OneToMany(() => CourseUser, (user) => user.course)
-    users: CourseModel[];
+  @Column()
+  section_name: string;
 
-    @OneToMany(() => ExamModel, (exam) => exam.course)
-    exams: ExamModel[];
+  @OneToMany(() => CourseUser, (user) => user.course)
+  users: CourseUser[];
+
+  @OneToMany(() => ExamModel, (exam) => exam.course)
+  exams: ExamModel[];
 }

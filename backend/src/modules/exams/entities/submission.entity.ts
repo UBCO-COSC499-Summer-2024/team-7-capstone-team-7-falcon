@@ -1,32 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn} from "typeorm";
-import { ExamModel } from "./exam.entity";
-import { StudentUserModel } from "src/modules/user/entities/student-user.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { ExamModel } from './exam.entity';
+import { StudentUserModel } from 'src/modules/user/entities/student-user.entity';
 
-@Entity()
+@Entity('submission_model')
 export class SubmissionModel extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    document_path: string;
-    
-    @Column({type: 'float'})
-    score: number;
-    
-    @Column({type: 'timestamp'})
-    created_at: Date;
+  @Column()
+  document_path: string;
 
-    @Column({type: 'timestamp'})
-    updated_at: Date;
+  @Column({ type: 'float' })
+  score: number;
 
-    @Column({type: 'json'})
-    answers: JSON;
+  @Column({ type: 'bigint' })
+  created_at: number;
 
-    @ManyToOne(() => ExamModel, (exam) => exam.submissions)
-    @JoinColumn({ name: 'exam_id' })
-    exam: ExamModel;
+  @Column({ type: 'bigint' })
+  updated_at: number;
 
-    @ManyToOne(() => StudentUserModel, (user) => user.submissions)
-    @JoinColumn({ name: 'student_id' })
-    student: StudentUserModel;
+  @Column({ type: 'json' })
+  answers: JSON;
+
+  @ManyToOne(() => ExamModel, (exam) => exam.submissions)
+  @JoinColumn({ name: 'exam_id' })
+  exam: ExamModel;
+
+  @ManyToOne(() => StudentUserModel, (user) => user.submissions)
+  @JoinColumn({ name: 'student_id' })
+  student: StudentUserModel;
 }

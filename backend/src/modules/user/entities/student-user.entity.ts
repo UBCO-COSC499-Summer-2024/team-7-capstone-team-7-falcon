@@ -1,4 +1,10 @@
-import { BaseEntity, Entity, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { UserModel } from './user.entity';
 import { SubmissionModel } from 'src/modules/exams/entities/submission.entity';
 

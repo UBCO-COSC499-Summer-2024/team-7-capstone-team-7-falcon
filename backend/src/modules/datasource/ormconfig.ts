@@ -20,8 +20,15 @@ const ormconfig: DataSourceOptions = {
   database: process.env.POSTGRES_DB,
   synchronize: process.env.NODE_ENV !== 'production',
   logging: process.env.NODE_ENV !== 'production',
-  entities: [UserModel, EmployeeUserModel, StudentUserModel, 
-    ExamModel, SubmissionModel, CourseModel, CourseUser],
+  entities: [
+    UserModel,
+    EmployeeUserModel,
+    StudentUserModel,
+    ExamModel,
+    SubmissionModel,
+    CourseModel,
+    CourseUser,
+  ],
   migrations: [path.join(__dirname, '..', '..', '..', 'migrations', '*')],
 };
 

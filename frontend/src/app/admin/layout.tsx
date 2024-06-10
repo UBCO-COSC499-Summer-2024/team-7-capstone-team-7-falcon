@@ -7,7 +7,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="container grid grid-cols-9">
+    <div className="grid grid-cols-9">
       <div className="sidebar col-span-1">
         <PageSidebar />
       </div>

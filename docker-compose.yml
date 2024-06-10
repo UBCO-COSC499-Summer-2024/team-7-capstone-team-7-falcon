@@ -14,14 +14,14 @@ services:
 
   frontend:
     build:
-      context: ./optical-marking-management
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     networks:
       - api
     volumes:
-      - ./optical-marking-management:/app
+      - ./frontend:/app
     depends_on:
       - backend
 

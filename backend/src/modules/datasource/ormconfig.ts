@@ -4,6 +4,10 @@ import { StudentUserModel } from '../user/entities/student-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import * as path from 'path';
+import { ExamModel } from '../exams/entities/exam.entity';
+import { SubmissionModel } from '../exams/entities/submission.entity';
+import { CourseModel } from '../course/course.entity';
+import { CourseUser } from '../course/course_user.entity';
 
 config();
 
@@ -16,7 +20,8 @@ const ormconfig: DataSourceOptions = {
   database: process.env.POSTGRES_DB,
   synchronize: process.env.NODE_ENV !== 'production',
   logging: process.env.NODE_ENV !== 'production',
-  entities: [UserModel, EmployeeUserModel, StudentUserModel],
+  entities: [UserModel, EmployeeUserModel, StudentUserModel, 
+    ExamModel, SubmissionModel, CourseModel, CourseUser],
   migrations: [path.join(__dirname, '..', '..', '..', 'migrations', '*')],
 };
 

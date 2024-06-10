@@ -4,12 +4,14 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { EmployeeUserModel } from './employee-user.entity';
 import { StudentUserModel } from './student-user.entity';
 import { Exclude } from 'class-transformer';
+import { CourseUser } from 'src/modules/course/course_user.entity';
 
 @Entity('user_model')
 export class UserModel extends BaseEntity {
@@ -53,4 +55,7 @@ export class UserModel extends BaseEntity {
   @JoinColumn({ name: 'student_id' })
   @Exclude()
   student_user: StudentUserModel;
+
+  @OneToMany(() => CourseUser, (courseUser) => courseUser.user)
+  courses: CourseUser[];
 }

@@ -10,7 +10,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex">
       <UserInfoProvider>
-        <div className="sidebar flex-none w-48">
+        <div className="sidebar flex-none w-80">
           <Sidebar />
         </div>
         <div className="content flex-grow">{children}</div>

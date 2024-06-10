@@ -8,12 +8,12 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="grid grid-cols-9">
+    <div className="flex">
       <UserInfoProvider>
-        <div className="sidebar col-span-1">
+        <div className="sidebar flex-none w-48">
           <Sidebar />
         </div>
-        <div className="content col-span-8">{children}</div>
+        <div className="content flex-grow">{children}</div>
       </UserInfoProvider>
     </div>
   );

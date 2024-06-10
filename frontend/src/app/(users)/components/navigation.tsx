@@ -1,7 +1,7 @@
 import { Sidebar } from "flowbite-react";
 import { usePathname } from "next/navigation";
 
-export interface NavigationLink {
+interface NavigationLink {
   title: string;
   href: string;
   icon: JSX.Element;
@@ -11,9 +11,19 @@ interface NavigationProps {
   links: NavigationLink[];
 }
 
+/**
+ * Renders the navigation component
+ * @param param0 {NavigationProps} - Navigation links
+ * @returns {JSX.Element} - Navigation component
+ */
 const Navigation: React.FC<NavigationProps> = ({ links }) => {
   const pathName = usePathname();
 
+  /**
+   * Check if the current path is the same as the href
+   * @param href {string} - The href of the link
+   * @returns {string} - The class name
+   */
   const currentPath = (href: string) => {
     if (pathName === href) {
       return "bg-[#8F3DDE] text-[#fff] hover:bg-[#8F3DDE] hover:text-[#fff]";

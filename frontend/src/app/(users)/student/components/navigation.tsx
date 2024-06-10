@@ -19,6 +19,10 @@ const studentLinks = [
   }
 ];
 
+/**
+ * Renders the navigation component for the student
+ * @returns {JSX.Element} - Student navigation component
+ */
 const StudentNavigation: React.FC = () => {
   return <Navigation links={studentLinks} />;
 }

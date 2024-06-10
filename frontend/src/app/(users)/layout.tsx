@@ -8,14 +8,14 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex">
-      <UserInfoProvider>
-        <div className="sidebar flex-none w-80">
-          <Sidebar />
+    <UserInfoProvider>
+      <div className="flex">
+        <Sidebar />
+        <div className="relative h-full w-full overflow-y-auto">
+          {children}
         </div>
-        <div className="content flex-grow">{children}</div>
-      </UserInfoProvider>
-    </div>
+      </div>
+    </UserInfoProvider>
   );
 };
 

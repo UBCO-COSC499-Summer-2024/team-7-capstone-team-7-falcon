@@ -19,7 +19,7 @@ const PageSidebar: React.FC = () => {
 
   return (
     <Sidebar id="sidebar"
-      className="hidden md:flex h-screen flex-col bg-[#F7F7F7] w-64"
+      className="hidden md:flex h-screen flex-col bg-[#F7F7F7] w-72 shadow-lg"
     >
       <div className="flex flex-col justify-between h-full py-4 px-4">
         <div>

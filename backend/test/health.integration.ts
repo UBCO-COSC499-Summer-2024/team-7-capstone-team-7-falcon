@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { HealthModule } from '../src/health/health.module';
+import { HealthModule } from '../src/modules/health/health.module';
 import { setUpIntegrationTests } from './utils/testUtils';
 
 describe('HealthController Integration', () => {

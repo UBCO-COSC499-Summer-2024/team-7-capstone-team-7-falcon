@@ -24,8 +24,11 @@ export class ExamModel extends BaseEntity {
   @Column({ type: 'bigint' })
   updated_at: number;
 
-  @Column({ type: 'date' }) // merged exam_date and released_at into one field
-  exam_date: Date;
+  @Column({ type: 'bigint' })
+  exam_date: number;
+
+  @Column({ type: 'bigint' })
+  grades_released_at: number;
 
   @Column({ type: 'json' })
   questions: JSON;

@@ -5,7 +5,7 @@ import {
   BaseEntity,
   OneToMany,
 } from 'typeorm';
-import { CourseUser } from './course_user.entity';
+import { CourseUser } from './course-user.entity';
 import { ExamModel } from '../exams/entities/exam.entity';
 
 @Entity('course_model')
@@ -27,7 +27,7 @@ export class CourseModel extends BaseEntity {
 
   // add term id later
 
-  @Column()
+  @Column({ default: false })
   is_archived: boolean;
 
   @Column()

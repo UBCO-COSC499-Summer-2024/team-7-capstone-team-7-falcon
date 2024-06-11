@@ -7,7 +7,7 @@ import * as path from 'path';
 import { ExamModel } from '../exams/entities/exam.entity';
 import { SubmissionModel } from '../exams/entities/submission.entity';
 import { CourseModel } from '../course/course.entity';
-import { CourseUser } from '../course/course_user.entity';
+import { CourseUser } from '../course/course-user.entity';
 
 config();
 

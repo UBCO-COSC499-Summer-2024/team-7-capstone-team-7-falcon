@@ -1,4 +1,4 @@
-import { UserRoleEnum } from '../../enums/user.enum';
+import { CourseRoleEnum } from '../../enums/user.enum';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -15,8 +15,8 @@ export class CourseUser extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  course_role: UserRoleEnum;
+  @Column({ default: CourseRoleEnum.STUDENT })
+  course_role: CourseRoleEnum;
 
   @ManyToOne(() => UserModel, (user) => user.courses)
   @JoinColumn({ name: 'user_id' })

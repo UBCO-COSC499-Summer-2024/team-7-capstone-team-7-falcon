@@ -11,7 +11,7 @@ import {
 import { EmployeeUserModel } from './employee-user.entity';
 import { StudentUserModel } from './student-user.entity';
 import { Exclude } from 'class-transformer';
-import { CourseUser } from '../../../modules/course/course_user.entity';
+import { CourseUser } from '../../course/course-user.entity';
 
 @Entity('user_model')
 export class UserModel extends BaseEntity {

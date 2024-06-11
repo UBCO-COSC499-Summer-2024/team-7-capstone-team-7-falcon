@@ -14,8 +14,8 @@ interface CourseCreatorProps {
 const CourseCreateModal: React.FC<CourseCreatorProps> = (props) => {
     const { isOpen, closeModal } = props;
   return (
-    <Modal show={isOpen} size="md" popup dismissible position={"center"} onClose={() => closeModal()}>
-        <Modal.Header>Create a new Course</Modal.Header>
+    <Modal show={isOpen} size="lg" popup dismissible position={"center"} onClose={() => closeModal()}>
+        <Modal.Header><h1 className="pl-2 pt-2">Create a new Course</h1></Modal.Header>
         <Modal.Body>
           <form>
             <Label htmlFor="courseCode">Course Code</Label>

@@ -13,9 +13,9 @@ import CourseCreateModal from "./components/createCourse";
 const InstructorCourses: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div>
-      <h1>Instructor Courses</h1>
-      <Button onClick={() => setModalOpen(true)}>Create course</Button>
+    <div className="flex justify-between">
+      <h1 className="text-3xl font-bold">Managed Courses</h1>
+      <Button color="purple" onClick={() => setModalOpen(true)} className="flex align-right">Create course</Button>
       <CourseCreateModal isOpen={modalOpen} closeModal={() => setModalOpen(false)} />
     </div>
   );

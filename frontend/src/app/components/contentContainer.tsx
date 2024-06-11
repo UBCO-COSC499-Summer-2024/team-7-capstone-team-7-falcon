@@ -16,7 +16,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({ children }) => {
   return (
     <div className="bg-gray-100 w-full">
       <div className="relative h-screen w-full rounded-l-3xl shadow-md bg-white  ">
-        <div className="relative h-full w-full overflow-y-auto px-4 py-3">{children}</div>
+        <div className="relative h-full w-full overflow-y-auto px-6 py-3">{children}</div>
       </div>
     </div>
   );

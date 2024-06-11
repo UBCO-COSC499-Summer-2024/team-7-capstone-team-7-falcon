@@ -7,6 +7,7 @@ import StudentNavigation from "../(users)/student/components/navigation";
 import { ArrowRightToBracket } from "flowbite-react-icons/outline";
 import Link from "next/link";
 import InstructorNavigation from "../(users)/instructor/components/navigation";
+import Avatar from "./avatar";
 
 /**
  * Renders the sidebar component which shows on all pages in routes
@@ -26,15 +27,9 @@ const PageSidebar: React.FC = () => {
           <div className="flex flex-col items-center">
             <h1 className="text-2xl font-bold mb-4">OwlMark</h1>
             <div className="flex items-center flex-col">
-              <Image
-                className="rounded-full"
-                src={userInfo.avatarUrl}
-                width={96}
-                height={96}
-                alt={`Profile image of ${userInfo.firstName} ${userInfo.lastName}`}
-              />
+              <Avatar avatarUrl={userInfo.avatarUrl ?? undefined} firstName={userInfo.firstName} lastName={userInfo.lastName ?? undefined} />
               <h2 className="mt-3 text-center">
-                Welcome back,<br /><span className="font-bold">{userInfo.firstName} {userInfo.lastName}</span>
+                Welcome back,<br /><span className="font-bold">{userInfo.firstName} {userInfo.lastName ?? ''}</span>
               </h2>
             </div>
           </div>

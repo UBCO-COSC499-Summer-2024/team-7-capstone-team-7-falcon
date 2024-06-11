@@ -19,4 +19,11 @@ export const ERROR_MESSAGES = {
     employeeNumberMustBeNumber: 'Employee number must be a number',
     employeeNumberMustBeGreater: 'Employee number must be greater than 0',
   },
+  courseController: {
+    courseNotFound: 'Course not found',
+    invalidInviteCode: 'Invalid invite code',
+  },
+  courseEnrollDto: {
+    inviteCodeRequired: 'Invite code is required',
+  },
 };

@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'backend/**'
-      - 'optical-marking-management/**'
+      - 'frontend/**'
 
 jobs:
   run-tests:

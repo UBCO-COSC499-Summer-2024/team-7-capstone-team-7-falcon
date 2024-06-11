@@ -53,3 +53,21 @@ export class StudentIdAlreadyExistsException extends Error {
     super(ERROR_MESSAGES.userController.studentIdAlreadyExists);
   }
 }
+
+/**
+ * Exception to be thrown when a course is not found
+ */
+export class CourseNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.courseController.courseNotFound);
+  }
+}
+
+/**
+ * Exception to be thrown when an invalid invite code is provided
+ */
+export class InvalidInviteCodeException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.courseController.invalidInviteCode);
+  }
+}

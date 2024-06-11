@@ -2,8 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
-import { toast } from "react-hot-toast";
+import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -13,32 +12,26 @@ export default function SignupPage() {
     firstname: "",
     lastname: "",
   });
-  const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [loading, setLoading] = useState(false);
+ 
 
   const onSignup = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post("/api/users/signup", user);
-      console.log("Signup success", response.data);
-      router.push("/login");
-    } catch (error) {}
+    //handle Signup
   };
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
       <form className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="text-center font-bold mb-3">FALCON MS LOGIN PORTAL</h1>
-        <h2 className="text-md mb-6 text-center text-gray-400">Login</h2>
+        <h1 className="text-center font-bold mb-3">OWLMARK</h1>
+        <h2 className="text-md mb-6 text-center text-gray-400">Create an Account</h2>
 
         <div className="mb-4">
-          <label
+          <Label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="first-name"
           >
             First Name
-          </label>
-          <input
+          </Label>
+          <TextInput
             className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="firstname"
             type="text"
@@ -49,13 +42,13 @@ export default function SignupPage() {
         </div>
 
         <div className="mb-4">
-          <label
+          <Label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="last-name"
           >
             Last Name
-          </label>
-          <input
+          </Label>
+          <TextInput
             className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="lastname"
             type="text"
@@ -66,13 +59,13 @@ export default function SignupPage() {
         </div>
 
         <div className="mb-4">
-          <label
+          <Label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
             email
-          </label>
-          <input
+          </Label>
+          <TextInput
             className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="email"
             type="password"
@@ -83,13 +76,13 @@ export default function SignupPage() {
         </div>
 
         <div className="mb-4">
-          <label
+          <Label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
             password
-          </label>
-          <input
+          </Label>
+          <TextInput
             className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="password"
             type="password"
@@ -99,12 +92,13 @@ export default function SignupPage() {
           />
         </div>
 
-        <button
+        <Button
           onClick={onSignup}
+          color = "purple"
           className="w-full bg-purple-700 text-whote text-sm text-white font-bold py-3 rounded-md hover:bg-purple-700 transition duration-300"
         >
           Register
-        </button>
+        </Button>
 
         <Link
           href="/login"

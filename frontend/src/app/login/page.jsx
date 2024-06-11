@@ -2,74 +2,72 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
-import { toast } from "react-hot-toast";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { HiMail } from "react-icons/hi";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [user, setUser] = useState({
+  const [user, setUser] = useState({  //define user state
     email: "",
     password: "",
   });
-  const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const onLogin = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post("", user);
-      console.log("Login success", response.data);
-      toast.success("Login success");
-      router.push("/profile");
-    } catch (error) {
-      console.log("Login failed", error.message);
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
+   
   };
 
-  // useEffect(() => {
-  //   if (user.email.length > 0 && user.password.length > 0) {
-  //     setButtonDisabled(false);
-  //   } else {
-  //     setButtonDisabled(true);
-  //   }
-  // }, [user]);
+  const onGoogleSignup = async () => {
+    //handle Google Signup
+  }
+ 
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
-      <form className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="text-center font-bold mb-3">FALCON MS LOGIN PORTAL</h1>
+      <form className=" max-w-sm mx-auto bg-white p-8 rounded-md shadow-md ">
+        <h1 className="text-center font-bold mb-3">OWLMARK</h1>
         <h2 className="text-md mb-6 text-center text-gray-400">Login</h2>
 
+        <Button 
+        onClick = {onGoogleSignup}
+        color = "white"
+        size = "xs"
+        className='w-full flex items-center justify-center gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-4  rounded-lg text-gray-700 font-semibold text-lg border-2 border-gray-100 '>
+        <svg width="50" height="20" viewBox="0 0 10 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.26644 9.76453C6.19903 6.93863 8.85469 4.90909 12.0002 4.90909C13.6912 4.90909 15.2184 5.50909 16.4184 6.49091L19.9093 3C17.7821 1.14545 15.0548 0 12.0002 0C7.27031 0 3.19799 2.6983 1.24023 6.65002L5.26644 9.76453Z" fill="#EA4335"/>
+         <path d="M16.0406 18.0142C14.9508 18.718 13.5659 19.0926 11.9998 19.0926C8.86633 19.0926 6.21896 17.0785 5.27682 14.2695L1.2373 17.3366C3.19263 21.2953 7.26484 24.0017 11.9998 24.0017C14.9327 24.0017 17.7352 22.959 19.834 21.0012L16.0406 18.0142Z" fill="#34A853"/>
+         <path d="M19.8342 20.9978C22.0292 18.9503 23.4545 15.9019 23.4545 11.9982C23.4545 11.2891 23.3455 10.5255 23.1818 9.81641H12V14.4528H18.4364C18.1188 16.0119 17.2663 17.2194 16.0407 18.0108L19.8342 20.9978Z" fill="#4A90E2"/>
+        <path d="M5.27698 14.2663C5.03833 13.5547 4.90909 12.7922 4.90909 11.9984C4.90909 11.2167 5.03444 10.4652 5.2662 9.76294L1.23999 6.64844C0.436587 8.25884 0 10.0738 0 11.9984C0 13.918 0.444781 15.7286 1.23746 17.3334L5.27698 14.2663Z" fill="#FBBC05"/>
+          </svg>
+         Sign in with Google
+        </Button>
+
         <div className="mb-4">
-          <label
+          <Label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
             email
-          </label>
-          <input
-            className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          </Label>
+          <TextInput
+            className="border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="email"
-            type="password"
+            type="email"
             value={user.email}
+            icon={HiMail}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
             placeholder="john123@gmail.com"
           />
         </div>
 
         <div className="mb-4">
-          <label
+          <Label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
             password
-          </label>
-          <input
-            className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          </Label>
+          <TextInput
+            className="border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="password"
             type="password"
             value={user.password}
@@ -78,19 +76,21 @@ export default function LoginPage() {
           />
         </div>
 
-        <button
-          onClick={onLogin}
-          className="w-full bg-purple-700 text-whote text-sm text-white font-bold py-3 rounded-md hover:bg-purple-700 transition duration-300"
-        >
-          Login
-        </button>
+        <Button
+  onClick={onLogin}
+  color="purple"
+  size="xs"
+  className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"
+>
+  Login
+</Button>
 
-        <Link
-          href="/signup"
-          className="text-purple-500  font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center"
-        >
-          Sign up
-        </Link>
+<Link
+  href="/signup"
+  className="text-purple-500 font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center mt-4"
+>
+  Sign up
+</Link>
       </form>
     </div>
   );

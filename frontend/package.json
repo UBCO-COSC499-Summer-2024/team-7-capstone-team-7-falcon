@@ -24,7 +24,7 @@
     "flowbite-react": "^0.9.0",
     "flowbite-react-icons": "^1.0.7",
     "husky": "^9.0.11",
-    "next": "14.2.3",
+    "next": "^14.2.3",
     "prettier": "^3.2.5",
     "react": "^18",
     "react-dom": "^18",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18",
     "cypress": "^13.11.0",
     "eslint": "^8",

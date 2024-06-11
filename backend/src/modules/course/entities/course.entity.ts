@@ -27,8 +27,6 @@ export class CourseModel extends BaseEntity {
   @Column({ type: 'bigint' })
   updated_at: number;
 
-  // add term id later
-
   @Column({ default: false })
   is_archived: boolean;
 

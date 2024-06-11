@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { CourseService } from './course.service';
 import { ERROR_MESSAGES } from '../../common';
 import { CourseEnrollDto } from './dto/course-enroll.dto';

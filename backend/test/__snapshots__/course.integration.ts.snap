@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Course Integration GET /course/:cid should return course if course is found 1`] = `
+{
+  "course_code": "COSC 499",
+  "course_name": "Capstone Project",
+  "created_at": "1000000000",
+  "id": 1,
+  "invite_code": "123",
+  "is_archived": false,
+  "section_name": "001",
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`Course Integration POST /course/:cid/enroll should return 200 if user is not already enrolled 1`] = `
+CourseUserModel {
+  "course": CourseModel {
+    "course_code": "COSC 499",
+    "course_name": "Capstone Project",
+    "created_at": "1000000000",
+    "id": 1,
+    "invite_code": "123",
+    "is_archived": false,
+    "section_name": "001",
+    "updated_at": "1000000000",
+  },
+  "course_role": "student",
+  "id": 1,
+  "user": UserModel {
+    "auth_type": "email",
+    "avatar_url": null,
+    "created_at": "1000000000",
+    "email": "john.doe@test.com",
+    "first_name": "John",
+    "id": 1,
+    "last_name": "Doe",
+    "password": "password",
+    "role": "student",
+    "updated_at": "1000000000",
+  },
+}
+`;

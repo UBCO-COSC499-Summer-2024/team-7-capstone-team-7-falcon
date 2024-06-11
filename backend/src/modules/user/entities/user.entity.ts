@@ -4,12 +4,14 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { EmployeeUserModel } from './employee-user.entity';
 import { StudentUserModel } from './student-user.entity';
 import { Exclude } from 'class-transformer';
+import { CourseUserModel } from '../../course/entities/course-user.entity';
 
 @Entity('user_model')
 export class UserModel extends BaseEntity {
@@ -40,6 +42,9 @@ export class UserModel extends BaseEntity {
   @Column({ nullable: true })
   password: string;
 
+  @Column({ nullable: true })
+  avatar_url: string;
+
   @OneToOne(() => EmployeeUserModel, (employee_user) => employee_user.user, {
     cascade: true,
   })
@@ -53,4 +58,7 @@ export class UserModel extends BaseEntity {
   @JoinColumn({ name: 'student_id' })
   @Exclude()
   student_user: StudentUserModel;
+
+  @OneToMany(() => CourseUserModel, (courseUser) => courseUser.user)
+  courses: CourseUserModel[];
 }

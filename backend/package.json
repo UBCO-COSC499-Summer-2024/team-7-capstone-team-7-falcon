@@ -66,7 +66,11 @@
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": ["cobertura", "lcov", "text"],
+    "coverageReporters": [
+      "cobertura",
+      "lcov",
+      "text"
+    ],
     "collectCoverageFrom": [
       "src/**/*.ts"
     ],

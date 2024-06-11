@@ -170,5 +170,4 @@ describe('CourseService', () => {
       expect(courseUser).toMatchSnapshot();
     });
   });
-
 });

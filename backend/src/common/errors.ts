@@ -71,3 +71,9 @@ export class InvalidInviteCodeException extends Error {
     super(ERROR_MESSAGES.courseController.invalidInviteCode);
   }
 }
+
+export class SemesterCreationDateException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}

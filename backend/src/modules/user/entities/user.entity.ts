@@ -40,6 +40,9 @@ export class UserModel extends BaseEntity {
   @Column({ nullable: true })
   password: string;
 
+  @Column({ nullable: true })
+  avatar_url: string;
+
   @OneToOne(() => EmployeeUserModel, (employee_user) => employee_user.user, {
     cascade: true,
   })

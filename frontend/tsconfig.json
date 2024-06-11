@@ -21,10 +21,16 @@
       "@/*": ["./src/*"]
     }
   },
-<<<<<<< HEAD:optical-marking-management/tsconfig.json
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/login.tsx", "src/app/signup/page.tsx"],
-=======
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/contexts/userContext.tsx"],
->>>>>>> 5b3bb65dfa53e5e67ffe65cf5491ebffa6ab5e51:frontend/tsconfig.json
+
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/contexts/userContext.tsx",
+    "src/app/login.tsx",
+    "src/app/signup/page.tsx"
+  ],
+
   "exclude": ["node_modules"]
 }

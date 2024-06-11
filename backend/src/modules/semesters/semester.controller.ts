@@ -49,7 +49,7 @@ export class SemesterController {
         });
       } else {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-          message: 'Internal server error',
+          message: e.message,
         });
       }
     }

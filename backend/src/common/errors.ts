@@ -71,3 +71,27 @@ export class InvalidInviteCodeException extends Error {
     super(ERROR_MESSAGES.courseController.invalidInviteCode);
   }
 }
+
+/**
+ * Exception to be thrown when an invalid invite code is provided
+ */
+export class UniqueConstraintException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.courseController.uniqueConstraintViolation);
+  }
+}
+
+/**
+ * Exception to be thrown when a course instance from an archived course is accessed
+ */
+export class CourseArchivedException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.courseController.courseNotFound);
+  }
+}
+
+export class UnidentifiedException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.other.unidentifiedException);
+  }
+}

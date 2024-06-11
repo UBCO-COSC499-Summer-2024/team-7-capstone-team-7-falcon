@@ -2,13 +2,48 @@ import { Injectable } from '@nestjs/common';
 import { CourseModel } from './entities/course.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
+  CourseArchivedException,
   CourseNotFoundException,
   InvalidInviteCodeException,
+  UnidentifiedException,
+  UniqueConstraintException,
 } from '../../common/errors';
 import { CourseUserModel } from './entities/course-user.entity';
 
 @Injectable()
 export class CourseService {
+  /**
+   * Search for courses based on user id
+   * @param user_id {number} - User id
+   * @returns {Promise<CourseUserModel[]>} - CourseUserModel[] promise
+   */
+  public async findAllCoursesById(user_id: number): Promise<CourseUserModel[]> {
+    const courses: CourseUserModel[] = await CourseUserModel.find({
+      where: { user: { id: user_id } },
+      relations: ['user', 'course'],
+    });
+    return courses;
+  }
+
+  /**
+   * Create a new course
+   * @param course {CourseModel} - Course id
+   * @returns {Promise<boolean>} - Promise boolean (success/failure)
+   */
+  public async create(course: CourseModel): Promise<boolean> {
+    try {
+      await course.save();
+      return true;
+    } catch (error) {
+      if (error.code === '23505') {
+        // unique constraint violation
+        throw new UniqueConstraintException();
+      } else {
+        throw new UnidentifiedException();
+      }
+    }
+  }
+
   /**
    * Returns a course by id
    * @param id {number} - Course id
@@ -36,6 +71,13 @@ export class CourseService {
       where: { course: { id: cid }, user: { id: userId } },
       relations: ['course', 'user'],
     });
+
+    if (!userCourse) {
+      throw new CourseNotFoundException();
+    }
+    if (userCourse.course.is_archived) {
+      throw new CourseArchivedException();
+    }
 
     return userCourse;
   }

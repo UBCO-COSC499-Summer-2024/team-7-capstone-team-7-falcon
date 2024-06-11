@@ -170,4 +170,76 @@ describe('CourseService', () => {
       expect(courseUser).toMatchSnapshot();
     });
   });
+
+  describe('findAllCoursesById', () => {
+    it('should return null if course is not found', async () => {
+      const course = await courseService.getCourseById(1);
+      expect(course).toBeNull();
+    });
+
+    it('should return all courses found', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const course2 = await CourseModel.create({
+        course_code: 'MATH 101',
+        course_name: 'Calculus I',
+        created_at: 1_000_000_001,
+        updated_at: 1_000_000_001,
+        section_name: '002',
+        invite_code: '456',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: { id: user.id },
+        course: { id: course.id },
+      }).save();
+
+      CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: { id: user.id },
+        course: { id: course2.id },
+      }).save();
+
+      const result = await courseService.findAllCoursesById(user.id);
+      expect(result).toHaveLength(2);
+    });
+  });
+
+  describe('create course', () => {
+    it('verifies coures creation and some fields', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COURSE101',
+        course_name: 'Introduction to Programming',
+        created_at: Date.now(),
+        updated_at: Date.now(),
+        is_archived: false,
+        invite_code: 'ABC123',
+        section_name: 'A',
+      }).save();
+
+      const createdCourse = await CourseModel.findOne({
+        where: { id: course.id },
+      });
+      expect(createdCourse).toBeDefined();
+      expect(createdCourse.course_code).toBe('COURSE101');
+      expect(createdCourse.course_name).toBe('Introduction to Programming');
+    });
+  });
 });

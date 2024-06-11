@@ -2,7 +2,6 @@
 import React from "react";
 import { Sidebar } from "flowbite-react";
 import { useUserInfo } from "../contexts/userContext";
-import Image from "next/image";
 import StudentNavigation from "../(users)/student/components/navigation";
 import { ArrowRightToBracket } from "flowbite-react-icons/outline";
 import Link from "next/link";

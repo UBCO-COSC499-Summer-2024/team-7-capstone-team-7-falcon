@@ -2,8 +2,8 @@ import React from "react";
 import { Select, Button, TextInput, Modal, Label } from "flowbite-react";
 
 interface CourseCreatorProps {
-    isOpen: boolean;
-    closeModal: () => void;
+  isOpen: boolean;
+  closeModal: () => void;
 }
 
 /**
@@ -12,26 +12,55 @@ interface CourseCreatorProps {
  * @returns {React.JSX.Element} - Course creator component
  */
 const CourseCreateModal: React.FC<CourseCreatorProps> = (props) => {
-    const { isOpen, closeModal } = props;
+  const { isOpen, closeModal } = props;
   return (
-    <Modal show={isOpen} size="lg" popup dismissible position={"center"} onClose={() => closeModal()}>
-        <Modal.Header><h1 className="pl-2 pt-2">Create a new Course</h1></Modal.Header>
-        <Modal.Body>
-          <form>
-            <Label htmlFor="courseCode">Course Code</Label>
-            <TextInput id="courseCode" placeholder="Enter course Code" required/>
-            <Label htmlFor="courseName">Course Name</Label>
-            <TextInput id="courseName" placeholder="Enter course name" required/>
-            <Label htmlFor="courseSection">Course Section</Label>
-            <TextInput id="courseSection" placeholder="Enter course Section" required/>
-            <Label htmlFor="courseSemester">Semester</Label>
-            <Select id="courseSemester" label="Select semester" required>
-              {/* Map options here */}
-            </Select>
-            <Button color="purple" type="submit" className="mt-4">Create Course</Button>
-          </form>
-        </Modal.Body>
-      </Modal>
+    <Modal
+      show={isOpen}
+      size="lg"
+      popup
+      position={"center"}
+      onClose={() => closeModal()}
+    >
+      <Modal.Header>
+        <h1 className="pl-2 pt-2">Create a new Course</h1>
+      </Modal.Header>
+      <Modal.Body>
+        <form>
+          <Label htmlFor="courseCode">
+            <h2>Course Code</h2>
+          </Label>
+          <TextInput id="courseCode" placeholder="Enter course Code" required />
+          <Label htmlFor="courseName">
+            <h2 className="pt-2">Course Name</h2>
+          </Label>
+          <TextInput id="courseName" placeholder="Enter course name" required />
+          <Label htmlFor="courseSection">
+            <h2 className="pt-2">Course Section</h2>
+          </Label>
+          <TextInput
+            id="courseSection"
+            placeholder="Enter course Section"
+            required
+          />
+          <Label htmlFor="courseSemester">
+            <h2 className="pt-2">Semester</h2>
+          </Label>
+          <Select id="courseSemester" required>
+            {/* Map options here */}
+            <option value="Fall">Fall</option>
+          </Select>
+          <div className="flex gap-4 mt-4 justify-left items-start">
+
+          <Button color="purple" type="submit">
+            Create Course
+          </Button>
+          <Button color="red" onClick={() => closeModal() }>
+            Cancel
+          </Button>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
   );
 };
 

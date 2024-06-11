@@ -56,6 +56,7 @@ export class UserService {
         user.email = userPayload.email;
         user.first_name = userPayload.given_name;
         user.last_name = userPayload.family_name;
+        user.avatar_url = userPayload.picture;
         user.auth_type = AuthTypeEnum.GOOGLE_OAUTH;
         user.created_at = currentTime;
         user.updated_at = currentTime;

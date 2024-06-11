@@ -21,6 +21,9 @@ import {
   CourseNotFoundException,
   InvalidInviteCodeException,
 } from '../../common/errors';
+import { CourseRoleGuard } from '../../guards/course-role.guard';
+import { Roles } from '../../decorators/roles.decorator';
+import { CourseRoleEnum } from '../../enums/user.enum';
 
 @Controller('course')
 export class CourseController {
@@ -32,7 +35,8 @@ export class CourseController {
    * @param cid {number} - Course id
    * @returns {Promise<Response>} - Course object
    */
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
   @Get('/:cid')
   async getCourseById(
     @Res() res: Response,

@@ -7,6 +7,7 @@ import {
 import { CourseModel } from './entities/course.entity';
 import { UserModel } from '../user/entities/user.entity';
 import { CourseUserModel } from './entities/course-user.entity';
+import { CourseRoleEnum } from '../../enums/user.enum';
 
 describe('CourseService', () => {
   let courseService: CourseService;
@@ -42,6 +43,47 @@ describe('CourseService', () => {
       }).save();
 
       const result = await courseService.getCourseById(course.id);
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('getUserByCourseAndUserId', () => {
+    it('should return null if user is not enrolled in course', async () => {
+      const courseUser = await courseService.getUserByCourseAndUserId(1, 1);
+      expect(courseUser).toBeNull();
+    });
+
+    it('should return course user if user is enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await courseService.getUserByCourseAndUserId(
+        course.id,
+        user.id,
+      );
+
+      expect(result).toBeDefined();
       expect(result).toMatchSnapshot();
     });
   });
@@ -128,4 +170,5 @@ describe('CourseService', () => {
       expect(courseUser).toMatchSnapshot();
     });
   });
+
 });

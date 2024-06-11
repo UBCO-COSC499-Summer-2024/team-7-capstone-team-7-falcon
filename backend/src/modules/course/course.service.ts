@@ -23,6 +23,24 @@ export class CourseService {
   }
 
   /**
+   * Get user by course and user id
+   * @param cid {number} - Course id
+   * @param userId {number} - User id
+   * @returns {Promise<CourseUserModel>} - Course user object
+   */
+  public async getUserByCourseAndUserId(
+    cid: number,
+    userId: number,
+  ): Promise<CourseUserModel> {
+    const userCourse = await CourseUserModel.findOne({
+      where: { course: { id: cid }, user: { id: userId } },
+      relations: ['course', 'user'],
+    });
+
+    return userCourse;
+  }
+
+  /**
    * Enroll in a course
    * @param cid {number} - Course id
    * @param user {UserModel} - User object

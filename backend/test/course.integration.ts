@@ -27,7 +27,7 @@ describe('Course Integration', () => {
       await supertest().get('/course/1').expect(401);
     });
 
-    it('should return 404 if course is not found', async () => {
+    it('should return 401 if user not enrolled in course', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -37,10 +37,19 @@ describe('Course Integration', () => {
         updated_at: 1_000_000_000,
       }).save();
 
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
       await supertest()
-        .get('/course/1')
+        .get(`/course/${course.id}`)
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .expect(404);
+        .expect(401);
     });
 
     it('should return course if course is found', async () => {
@@ -60,6 +69,11 @@ describe('Course Integration', () => {
         updated_at: 1_000_000_000,
         section_name: '001',
         invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
       }).save();
 
       const result = await supertest()

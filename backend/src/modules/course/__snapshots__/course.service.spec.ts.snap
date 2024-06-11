@@ -41,3 +41,32 @@ CourseModel {
   "updated_at": "1000000000",
 }
 `;
+
+exports[`CourseService getUserByCourseAndUserId should return course user if user is enrolled in course 1`] = `
+CourseUserModel {
+  "course": CourseModel {
+    "course_code": "COSC 499",
+    "course_name": "Capstone Project",
+    "created_at": "1000000000",
+    "id": 1,
+    "invite_code": "123",
+    "is_archived": false,
+    "section_name": "001",
+    "updated_at": "1000000000",
+  },
+  "course_role": "professor",
+  "id": 1,
+  "user": UserModel {
+    "auth_type": "email",
+    "avatar_url": null,
+    "created_at": "1000000000",
+    "email": "john.doe@test.com",
+    "first_name": "John",
+    "id": 1,
+    "last_name": "Doe",
+    "password": "password",
+    "role": "student",
+    "updated_at": "1000000000",
+  },
+}
+`;

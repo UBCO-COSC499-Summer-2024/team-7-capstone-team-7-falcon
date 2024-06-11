@@ -4,9 +4,11 @@ import {
   Column,
   BaseEntity,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { CourseUser } from './course-user.entity';
-import { ExamModel } from '../exams/entities/exam.entity';
+import { CourseUserModel } from './course-user.entity';
+import { ExamModel } from '../../exams/entities/exam.entity';
+import { SemesterModel } from '../../semesters/entities/semester.entity';
 
 @Entity('course_model')
 export class CourseModel extends BaseEntity {
@@ -36,9 +38,12 @@ export class CourseModel extends BaseEntity {
   @Column()
   section_name: string;
 
-  @OneToMany(() => CourseUser, (user) => user.course)
-  users: CourseUser[];
+  @OneToMany(() => CourseUserModel, (user) => user.course)
+  users: CourseUserModel[];
 
   @OneToMany(() => ExamModel, (exam) => exam.course)
   exams: ExamModel[];
+
+  @ManyToOne(() => SemesterModel, (semester) => semester.courses)
+  semester: SemesterModel;
 }

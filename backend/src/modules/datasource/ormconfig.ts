@@ -6,8 +6,9 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import * as path from 'path';
 import { ExamModel } from '../exams/entities/exam.entity';
 import { SubmissionModel } from '../exams/entities/submission.entity';
-import { CourseModel } from '../course/course.entity';
-import { CourseUser } from '../course/course-user.entity';
+import { CourseModel } from '../course/entities/course.entity';
+import { CourseUserModel } from '../course/entities/course-user.entity';
+import { SemesterModel } from '../semesters/entities/semester.entity';
 
 config();
 
@@ -27,7 +28,8 @@ const ormconfig: DataSourceOptions = {
     ExamModel,
     SubmissionModel,
     CourseModel,
-    CourseUser,
+    CourseUserModel,
+    SemesterModel,
   ],
   migrations: [path.join(__dirname, '..', '..', '..', 'migrations', '*')],
 };

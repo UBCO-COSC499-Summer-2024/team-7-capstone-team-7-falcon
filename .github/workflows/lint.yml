@@ -1,10 +1,9 @@
-name: Lint
+name: Lint (Backend)
 
 on:
   pull_request:
     paths:
       - 'backend/**'
-      - 'frontend/**'
 
 jobs:
   run-tests:

@@ -14,7 +14,7 @@ import { Roles } from '../../decorators/roles.decorator';
 import { UserRoleEnum } from '../../enums/user.enum';
 import { SemesterService } from './semester.service';
 import { Response } from 'express';
-import { SemesterCreationDateException } from '../../common/errors';
+import { SemesterCreationException } from '../../common/errors';
 
 @Controller('semester')
 export class SemesterController {
@@ -43,7 +43,7 @@ export class SemesterController {
         message: 'ok',
       });
     } catch (e) {
-      if (e instanceof SemesterCreationDateException) {
+      if (e instanceof SemesterCreationException) {
         return res.status(HttpStatus.BAD_REQUEST).send({
           message: e.message,
         });

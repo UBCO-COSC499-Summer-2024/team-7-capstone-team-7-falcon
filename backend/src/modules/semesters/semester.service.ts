@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SemesterCreateDto } from './dto/semester-create.dto';
-import { SemesterCreationDateException } from '../../common/errors';
+import { SemesterCreationException } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
 import { SemesterModel } from './entities/semester.entity';
 
@@ -17,7 +17,7 @@ export class SemesterService {
     semesterDetails: SemesterCreateDto,
   ): Promise<void> {
     if (semesterDetails.starts_at >= semesterDetails.ends_at) {
-      throw new SemesterCreationDateException(
+      throw new SemesterCreationException(
         ERROR_MESSAGES.semesterController.semesterStateDateMustBeBeforeEndDate,
       );
     }
@@ -25,7 +25,7 @@ export class SemesterService {
     const currentDate: number = parseInt(new Date().getTime().toString());
 
     if (semesterDetails.starts_at <= currentDate - this.TWO_DAYS) {
-      throw new SemesterCreationDateException(
+      throw new SemesterCreationException(
         ERROR_MESSAGES.semesterController.semesterStartDateMustBeTwoDaysAhead,
       );
     }

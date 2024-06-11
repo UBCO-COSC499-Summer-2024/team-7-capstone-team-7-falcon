@@ -32,7 +32,7 @@ export default function SignupPage() {
             First Name
           </Label>
           <TextInput
-            className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="firstname"
             type="text"
             value={user.firstname}
@@ -49,7 +49,7 @@ export default function SignupPage() {
             Last Name
           </Label>
           <TextInput
-            className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="lastname"
             type="text"
             value={user.lastname}
@@ -66,7 +66,7 @@ export default function SignupPage() {
             email
           </Label>
           <TextInput
-            className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="email"
             type="password"
             value={user.email}
@@ -83,7 +83,7 @@ export default function SignupPage() {
             password
           </Label>
           <TextInput
-            className="w-full px-3 py-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="password"
             type="password"
             value={user.password}
@@ -93,19 +93,20 @@ export default function SignupPage() {
         </div>
 
         <Button
-          onClick={onSignup}
-          color = "purple"
-          className="w-full bg-purple-700 text-whote text-sm text-white font-bold py-3 rounded-md hover:bg-purple-700 transition duration-300"
-        >
-          Register
-        </Button>
+  onClick={onSignup}
+  color="purple"
+  size="xs"
+  className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"
+>
+  Sign Up
+</Button>
 
-        <Link
-          href="/login"
-          className="text-purple-500  font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center"
-        >
-          Login
-        </Link>
+<Link
+  href="/login"
+  className="text-purple-500 font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center mt-4"
+>
+  Login
+</Link>
       </form>
     </div>
   );

@@ -24,10 +24,8 @@ export default function LoginPage() {
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
       <form className=" max-w-sm mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="text-center font-bold mb-3">OWLMARK</h1>
-        <h2 className="text-md mb-6 text-center text-gray-400">Login</h2>
-
-        <Button 
+        <h1 className="text-center font-bold mb-3">OWLMARK  Login  Portal</h1>
+         <Button 
         onClick = {onGoogleSignup}
         color = "white"
         size = "xs"

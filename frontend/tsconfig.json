@@ -27,8 +27,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/contexts/userContext.tsx",
-    "src/app/signup/page.jsx",
-    "src/app/login/page.jsx",
+    "src/app/signup/page.tsx",
+    "src/app/login/page.tsx",
   ],
 
   "exclude": ["node_modules"]

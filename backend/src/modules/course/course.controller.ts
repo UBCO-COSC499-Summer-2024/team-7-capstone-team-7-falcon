@@ -19,6 +19,7 @@ import { CourseEnrollDto } from './dto/course-enroll.dto';
 import { UserModel } from '../user/entities/user.entity';
 import { User } from '../../decorators/user.decorator';
 import {
+  CourseArchivedException,
   CourseNotFoundException,
   InvalidInviteCodeException,
 } from '../../common/errors';
@@ -128,6 +129,10 @@ export class CourseController {
         });
       } else if (e instanceof InvalidInviteCodeException) {
         return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else if (e instanceof CourseArchivedException) {
+        return res.status(HttpStatus.UNAUTHORIZED).send({
           message: e.message,
         });
       } else {

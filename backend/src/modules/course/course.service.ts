@@ -11,6 +11,7 @@ import {
 import { CourseUserModel } from './entities/course-user.entity';
 import { CourseCreateDto } from './dto/course-create.dto';
 import { SemesterModel } from '../semesters/entities/semester.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CourseService {
@@ -35,7 +36,7 @@ export class CourseService {
       updated_at: Date.now(),
       is_archived: false,
       section_name: course.section_name,
-      invite_code: generateRandomString(8),
+      invite_code: uuidv4(),
       semester: semester,
     });
 
@@ -121,16 +122,4 @@ export class CourseService {
 
     return;
   }
-}
-
-function generateRandomString(length: number): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters[randomIndex];
-  }
-
-  return result;
 }

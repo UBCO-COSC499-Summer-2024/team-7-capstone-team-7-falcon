@@ -1,4 +1,4 @@
-## Friday (6/5- 6/7)
+## Wednesday (6/7- 6/11)
 
 ### Timesheet
 Clockify report

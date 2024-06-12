@@ -18,7 +18,7 @@ export class SemesterService {
   ): Promise<void> {
     if (semesterDetails.starts_at >= semesterDetails.ends_at) {
       throw new SemesterCreationException(
-        ERROR_MESSAGES.semesterController.semesterStateDateMustBeBeforeEndDate,
+        ERROR_MESSAGES.semesterController.semesterStartDateMustBeBeforeEndDate,
       );
     }
 

@@ -33,7 +33,7 @@ export const ERROR_MESSAGES = {
     endsAtRequired: 'End date is required',
   },
   semesterController: {
-    semesterStateDateMustBeBeforeEndDate: 'Start date must be before end date',
+    semesterStartDateMustBeBeforeEndDate: 'Start date must be before end date',
     semesterStartDateMustBeTwoDaysAhead:
       'Start date must be at least two days ahead',
   },

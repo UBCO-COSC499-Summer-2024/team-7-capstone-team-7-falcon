@@ -4,44 +4,45 @@ import { UserModel } from '../user/entities/user.entity';
 import {
   CourseArchivedException,
   CourseNotFoundException,
+  FailToCreateCourseException,
   InvalidInviteCodeException,
-  UnidentifiedException,
-  UniqueConstraintException,
+  SemesterNotFoundException,
 } from '../../common/errors';
 import { CourseUserModel } from './entities/course-user.entity';
+import { CourseCreateDto } from './dto/course-create.dto';
+import { SemesterModel } from '../semesters/entities/semester.entity';
 
 @Injectable()
 export class CourseService {
   /**
-   * Search for courses based on user id
-   * @param user_id {number} - User id
-   * @returns {Promise<CourseUserModel[]>} - CourseUserModel[] promise
-   */
-  public async findAllCoursesById(user_id: number): Promise<CourseUserModel[]> {
-    const courses: CourseUserModel[] = await CourseUserModel.find({
-      where: { user: { id: user_id } },
-      relations: ['user', 'course'],
-    });
-    return courses;
-  }
-
-  /**
    * Create a new course
-   * @param course {CourseModel} - Course id
+   * @param course {CourseCreateDto} - user inputed fields required for course creation
    * @returns {Promise<boolean>} - Promise boolean (success/failure)
    */
-  public async create(course: CourseModel): Promise<boolean> {
-    try {
-      await course.save();
-      return true;
-    } catch (error) {
-      if (error.code === '23505') {
-        // unique constraint violation
-        throw new UniqueConstraintException();
-      } else {
-        throw new UnidentifiedException();
-      }
+  public async create(course: CourseCreateDto): Promise<boolean> {
+    const semester = await SemesterModel.findOne({
+      where: { id: course.semester_id },
+    });
+
+    if (!semester) {
+      throw new SemesterNotFoundException();
     }
+
+    const newCourse = CourseModel.create({
+      course_code: course.course_code,
+      course_name: course.course_name,
+      created_at: Date.now(),
+      updated_at: Date.now(),
+      is_archived: false,
+      section_name: course.section_name,
+      semester: semester,
+    });
+
+    await newCourse.save();
+    if (!newCourse) {
+      throw new FailToCreateCourseException();
+    }
+    return true;
   }
 
   /**

@@ -10,6 +10,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common/decorators';
@@ -33,6 +34,34 @@ import {
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  /**
+   * Get list of courses by student id
+   * @param res {Response} - Response object
+   * @param user_id {number} - User id
+   * @returns {Promise<Response>} - Response
+   */
+  @UseGuards(AuthGuard)
+  @Get('/all')
+  async findAllCoursesById(
+    @Res() res: Response,
+    @Query('user_id') user_id: number,
+    @User() user: UserModel,
+  ) {
+    if (user.id !== user_id) {
+      return res.status(HttpStatus.FORBIDDEN).send({
+        message: ERROR_MESSAGES.userController.editForbidden,
+      });
+    }
+
+    const courses = await this.userService.findAllCoursesById(user_id);
+    if (!courses) {
+      return res.status(HttpStatus.NOT_FOUND).send({
+        message: ERROR_MESSAGES.courseController.courseSearchFailed,
+      });
+    } else {
+      return res.status(HttpStatus.OK).send(courses);
+    }
+  }
   /**
    * Get information about user
    * @param req {Request} - Request object

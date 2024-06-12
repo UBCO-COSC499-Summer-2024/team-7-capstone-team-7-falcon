@@ -30,6 +30,9 @@ export const ERROR_MESSAGES = {
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
   },
+  semesterController: {
+    semesterNotFound: 'Semester not found',
+  },
   other: {
     unidentifiedException: 'Unidentified exception',
   },

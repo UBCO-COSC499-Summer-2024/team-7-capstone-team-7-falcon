@@ -5,6 +5,7 @@ import {
   BaseEntity,
   OneToMany,
   ManyToOne,
+  Generated,
 } from 'typeorm';
 import { CourseUserModel } from './course-user.entity';
 import { ExamModel } from '../../exams/entities/exam.entity';
@@ -31,6 +32,7 @@ export class CourseModel extends BaseEntity {
   is_archived: boolean;
 
   @Column()
+  @Generated('uuid')
   invite_code: string;
 
   @Column()

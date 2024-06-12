@@ -7,9 +7,11 @@ import {
 import { UserModel } from './entities/user.entity';
 import { EmployeeUserModel } from './entities/employee-user.entity';
 import { StudentUserModel } from './entities/student-user.entity';
-import { AuthTypeEnum } from '../../enums/user.enum';
+import { AuthTypeEnum, CourseRoleEnum } from '../../enums/user.enum';
 import { OAuthGoogleUserPayload } from '../../common/interfaces';
 import { faker } from '@faker-js/faker';
+import { CourseModel } from '../course/entities/course.entity';
+import { CourseUserModel } from '../course/entities/course-user.entity';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -350,6 +352,51 @@ describe('UserService', () => {
 
       expect(updatedStudentUser).toBeDefined();
       expect(updatedStudentUser.user.id).toBe(user.id);
+    });
+  });
+  describe('findAllCoursesById', () => {
+    it('should return all courses found', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const course2 = await CourseModel.create({
+        course_code: 'MATH 101',
+        course_name: 'Calculus I',
+        created_at: 1_000_000_001,
+        updated_at: 1_000_000_001,
+        section_name: '002',
+        invite_code: '456',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: { id: user.id },
+        course: { id: course.id },
+      }).save();
+
+      await CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: { id: user.id },
+        course: { id: course2.id },
+      }).save();
+
+      const result = await userService.findAllCoursesById(user.id);
+      expect(result).toHaveLength(2);
     });
   });
 });

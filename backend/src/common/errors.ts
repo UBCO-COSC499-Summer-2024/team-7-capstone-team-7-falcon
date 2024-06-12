@@ -90,8 +90,14 @@ export class CourseArchivedException extends Error {
   }
 }
 
-export class UnidentifiedException extends Error {
+export class SemesterNotFoundException extends Error {
   constructor() {
-    super(ERROR_MESSAGES.other.unidentifiedException);
+    super(ERROR_MESSAGES.semesterController.semesterNotFound);
+  }
+}
+
+export class FailToCreateCourseException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.courseController.courseCreationFailed);
   }
 }

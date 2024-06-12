@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebar from "../components/sidebar";
 import { UserInfoProvider } from "../contexts/userContext";
-
+import ContentContainer from "../components/contentContainer";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -12,9 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <UserInfoProvider>
       <div className="flex">
         <Sidebar />
-        <div className="relative h-full w-full overflow-y-auto">
-          {children}
-        </div>
+        <ContentContainer>{children}</ContentContainer>
       </div>
     </UserInfoProvider>
   );

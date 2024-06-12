@@ -205,13 +205,13 @@ describe('CourseService', () => {
         updated_at: 1_000_000_000,
       }).save();
 
-      CourseUserModel.create({
+      await CourseUserModel.create({
         course_role: CourseRoleEnum.STUDENT,
         user: { id: user.id },
         course: { id: course.id },
       }).save();
 
-      CourseUserModel.create({
+      await CourseUserModel.create({
         course_role: CourseRoleEnum.STUDENT,
         user: { id: user.id },
         course: { id: course2.id },

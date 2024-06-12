@@ -73,9 +73,8 @@ export class CourseService {
     });
 
     if (!userCourse) {
-      throw new CourseNotFoundException();
-    }
-    if (userCourse.course.is_archived) {
+      return userCourse;
+    } else if (userCourse.course.is_archived) {
       throw new CourseArchivedException();
     }
 

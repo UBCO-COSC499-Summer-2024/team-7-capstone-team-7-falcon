@@ -40,17 +40,22 @@ export class UserController {
    * @returns {Promise<Response>} - Response
    */
   @UseGuards(AuthGuard)
-  @Get('/all')
-  async findAllCoursesById(@Res() res: Response, @User() user: UserModel) {
-    const courses = await this.userService.findAllCoursesById(user.id);
+  @Get('/courses')
+  async findAllCoursesById(
+    @Res() res: Response,
+    @User() user: UserModel,
+  ): Promise<Response> {
+    const courses = await this.userService.findUserCoursesById(user.id);
+
     if (!courses) {
       return res.status(HttpStatus.NOT_FOUND).send({
-        message: ERROR_MESSAGES.courseController.courseSearchFailed,
+        message: ERROR_MESSAGES.courseController.coursesNotFound,
       });
     } else {
       return res.status(HttpStatus.OK).send(courses);
     }
   }
+
   /**
    * Get information about user
    * @param req {Request} - Request object

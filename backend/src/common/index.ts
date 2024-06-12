@@ -24,7 +24,7 @@ export const ERROR_MESSAGES = {
     invalidInviteCode: 'Invalid invite code',
     uniqueConstraintViolation: 'Unique constraint violated',
     courseCreationFailed: 'Course could not be created',
-    courseSearchFailed: 'Courses could not be found',
+    coursesNotFound: 'Courses could not be found',
     courseArchived: 'Course is archived. Cannot be accessed.',
   },
   courseEnrollDto: {

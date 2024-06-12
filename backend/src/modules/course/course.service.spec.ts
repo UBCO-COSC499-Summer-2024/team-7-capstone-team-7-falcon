@@ -205,13 +205,15 @@ describe('CourseService', () => {
   });
 
   describe('createCourse', () => {
-    it('verifies coures creation and some fields', async () => {
+    it('verifies course creation and some fields', async () => {
       const semesterData = await SemesterModel.create({
         name: 'Spring 2024',
-        starts_at: Date.now(),
-        ends_at: Date.now() + 1000 * 60 * 60 * 24 * 90,
-        created_at: Date.now(),
-        updated_at: Date.now(),
+        starts_at: parseInt(new Date('2021-01-01').getTime().toString()),
+        ends_at:
+          parseInt(new Date('2021-01-01').getTime().toString()) +
+          1000 * 60 * 60 * 24 * 90,
+        created_at: parseInt(new Date('2021-01-01').getTime().toString()),
+        updated_at: parseInt(new Date('2021-01-01').getTime().toString()),
       }).save();
 
       const courseDto = new CourseCreateDto();

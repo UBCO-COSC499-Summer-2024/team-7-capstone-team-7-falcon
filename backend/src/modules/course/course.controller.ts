@@ -20,14 +20,14 @@ import { User } from '../../decorators/user.decorator';
 import {
   CourseArchivedException,
   CourseNotFoundException,
-  FailToCreateCourseException,
   InvalidInviteCodeException,
-  SemesterCreationException,
+  SemesterNotFoundException,
 } from '../../common/errors';
 import { CourseRoleGuard } from '../../guards/course-role.guard';
 import { Roles } from '../../decorators/roles.decorator';
-import { CourseRoleEnum } from '../../enums/user.enum';
+import { UserRoleEnum, CourseRoleEnum } from '../../enums/user.enum';
 import { CourseCreateDto } from './dto/course-create.dto';
+import { SystemRoleGuard } from '../../guards/system-role.guard';
 
 @Controller('course')
 export class CourseController {
@@ -39,21 +39,24 @@ export class CourseController {
    * @param course {CourseCreateDto} - user entered fields for course creation
    * @returns {Promise<Response>} - Response object
    */
-  @UseGuards(AuthGuard, CourseRoleGuard)
-  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.PROFESSOR)
   @Post('/create')
-  async createCourse(@Res() res: Response, @Body() userData: CourseCreateDto) {
+  async createCourse(
+    @Res() res: Response,
+    @Body(new ValidationPipe()) userData: CourseCreateDto,
+  ): Promise<Response> {
     try {
       await this.courseService.createCourse(userData);
       return res.status(HttpStatus.OK).send({
         message: 'ok',
       });
     } catch (e) {
-      if (e instanceof SemesterCreationException) {
+      if (e instanceof SemesterNotFoundException) {
         return res.status(HttpStatus.BAD_REQUEST).send({
           message: e.message,
         });
-      } else if (e instanceof FailToCreateCourseException) {
+      } else {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
           message: e.message,
         });

@@ -354,7 +354,23 @@ describe('UserService', () => {
       expect(updatedStudentUser.user.id).toBe(user.id);
     });
   });
-  describe('findAllCoursesById', () => {
+
+  describe('findUserCoursesById', () => {
+    it('should return null when user not enrolled in any courses', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const result = await userService.findUserCoursesById(user.id);
+
+      expect(result).toBeNull();
+    });
+
     it('should return all courses found', async () => {
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -395,7 +411,7 @@ describe('UserService', () => {
         course: { id: course2.id },
       }).save();
 
-      const result = await userService.findAllCoursesById(user.id);
+      const result = await userService.findUserCoursesById(user.id);
       expect(result).toHaveLength(2);
     });
   });

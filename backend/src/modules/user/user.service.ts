@@ -20,13 +20,21 @@ export class UserService {
    * @param user_id {number} - User id
    * @returns {Promise<CourseUserModel[]>} - CourseUserModel[] promise
    */
-  public async findAllCoursesById(user_id: number): Promise<CourseUserModel[]> {
+  public async findUserCoursesById(
+    user_id: number,
+  ): Promise<CourseUserModel[]> {
     const courses: CourseUserModel[] = await CourseUserModel.find({
-      where: { user: { id: user_id } },
+      where: { user: { id: user_id }, course: { is_archived: false } },
       relations: ['user', 'course'],
     });
+
+    if (!courses || courses.length === 0) {
+      return null;
+    }
+
     return courses;
   }
+
   /**
    * Returns a user by id
    * @param id {number} - User id

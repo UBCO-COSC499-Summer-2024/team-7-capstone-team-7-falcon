@@ -4,7 +4,6 @@ import { UserModel } from '../user/entities/user.entity';
 import {
   CourseArchivedException,
   CourseNotFoundException,
-  FailToCreateCourseException,
   InvalidInviteCodeException,
   SemesterNotFoundException,
 } from '../../common/errors';
@@ -29,22 +28,17 @@ export class CourseService {
       throw new SemesterNotFoundException();
     }
 
+    const createdAt: number = parseInt(new Date().getTime().toString());
+
     const newCourse = CourseModel.create({
-      course_code: course.course_code,
-      course_name: course.course_name,
-      created_at: Date.now(),
-      updated_at: Date.now(),
-      is_archived: false,
-      section_name: course.section_name,
+      ...course,
       invite_code: uuidv4(),
-      semester: semester,
+      created_at: createdAt,
+      updated_at: createdAt,
+      semester,
     });
 
-    try {
-      await newCourse.save();
-    } catch (error) {
-      throw new FailToCreateCourseException();
-    }
+    await newCourse.save();
 
     return true;
   }

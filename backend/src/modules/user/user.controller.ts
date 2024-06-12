@@ -10,7 +10,6 @@ import {
   Get,
   Param,
   Patch,
-  Query,
   Res,
   UseGuards,
 } from '@nestjs/common/decorators';
@@ -42,18 +41,8 @@ export class UserController {
    */
   @UseGuards(AuthGuard)
   @Get('/all')
-  async findAllCoursesById(
-    @Res() res: Response,
-    @Query('user_id') user_id: number,
-    @User() user: UserModel,
-  ) {
-    if (user.id !== user_id) {
-      return res.status(HttpStatus.FORBIDDEN).send({
-        message: ERROR_MESSAGES.userController.editForbidden,
-      });
-    }
-
-    const courses = await this.userService.findAllCoursesById(user_id);
+  async findAllCoursesById(@Res() res: Response, @User() user: UserModel) {
+    const courses = await this.userService.findAllCoursesById(user.id);
     if (!courses) {
       return res.status(HttpStatus.NOT_FOUND).send({
         message: ERROR_MESSAGES.courseController.courseSearchFailed,

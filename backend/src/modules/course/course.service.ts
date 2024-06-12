@@ -20,7 +20,7 @@ export class CourseService {
    * @param course {CourseCreateDto} - user inputed fields required for course creation
    * @returns {Promise<boolean>} - Promise boolean (success/failure)
    */
-  public async create(course: CourseCreateDto): Promise<boolean> {
+  public async createCourse(course: CourseCreateDto): Promise<boolean> {
     const semester = await SemesterModel.findOne({
       where: { id: course.semester_id },
     });
@@ -40,10 +40,12 @@ export class CourseService {
       semester: semester,
     });
 
-    await newCourse.save();
-    if (!newCourse) {
+    try {
+      await newCourse.save();
+    } catch (error) {
       throw new FailToCreateCourseException();
     }
+
     return true;
   }
 

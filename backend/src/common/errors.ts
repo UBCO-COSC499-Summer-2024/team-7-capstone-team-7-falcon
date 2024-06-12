@@ -86,7 +86,7 @@ export class UniqueConstraintException extends Error {
  */
 export class CourseArchivedException extends Error {
   constructor() {
-    super(ERROR_MESSAGES.courseController.courseNotFound);
+    super(ERROR_MESSAGES.courseController.courseArchived);
   }
 }
 

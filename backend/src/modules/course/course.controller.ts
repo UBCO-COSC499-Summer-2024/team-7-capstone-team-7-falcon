@@ -20,7 +20,9 @@ import { User } from '../../decorators/user.decorator';
 import {
   CourseArchivedException,
   CourseNotFoundException,
+  FailToCreateCourseException,
   InvalidInviteCodeException,
+  SemesterCreationException,
 } from '../../common/errors';
 import { CourseRoleGuard } from '../../guards/course-role.guard';
 import { Roles } from '../../decorators/roles.decorator';
@@ -37,18 +39,25 @@ export class CourseController {
    * @param course {CourseCreateDto} - user entered fields for course creation
    * @returns {Promise<Response>} - Response object
    */
-  // @UseGuards(AuthGuard, CourseRoleGuard)
-  // @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
   @Post('/create')
-  async create(@Res() res: Response, @Body() userData: CourseCreateDto) {
-    const course = await this.courseService.create(userData);
-
-    if (!course) {
-      return res.status(HttpStatus.NOT_FOUND).send({
-        message: ERROR_MESSAGES.courseController.courseCreationFailed,
+  async createCourse(@Res() res: Response, @Body() userData: CourseCreateDto) {
+    try {
+      await this.courseService.createCourse(userData);
+      return res.status(HttpStatus.OK).send({
+        message: 'ok',
       });
-    } else {
-      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof SemesterCreationException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else if (e instanceof FailToCreateCourseException) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
     }
   }
 

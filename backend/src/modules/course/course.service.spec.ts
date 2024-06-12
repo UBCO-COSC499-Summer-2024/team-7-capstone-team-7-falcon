@@ -8,6 +8,8 @@ import { CourseModel } from './entities/course.entity';
 import { UserModel } from '../user/entities/user.entity';
 import { CourseUserModel } from './entities/course-user.entity';
 import { CourseRoleEnum } from '../../enums/user.enum';
+import { CourseCreateDto } from './dto/course-create.dto';
+import { SemesterModel } from '../semesters/entities/semester.entity';
 
 describe('CourseService', () => {
   let courseService: CourseService;
@@ -85,6 +87,37 @@ describe('CourseService', () => {
 
       expect(result).toBeDefined();
       expect(result).toMatchSnapshot();
+    });
+
+    it('should return courseArchivedException', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      await expect(
+        courseService.getUserByCourseAndUserId(course.id, user.id),
+      ).rejects.toThrow('Course is archived. Cannot be accessed.');
     });
   });
 
@@ -171,24 +204,45 @@ describe('CourseService', () => {
     });
   });
 
-  describe('create course', () => {
+  describe('createCourse', () => {
     it('verifies coures creation and some fields', async () => {
-      const course = await CourseModel.create({
-        course_code: 'COURSE101',
-        course_name: 'Introduction to Programming',
+      const semesterData = await SemesterModel.create({
+        name: 'Spring 2024',
+        starts_at: Date.now(),
+        ends_at: Date.now() + 1000 * 60 * 60 * 24 * 90,
         created_at: Date.now(),
         updated_at: Date.now(),
-        is_archived: false,
-        invite_code: 'ABC123',
-        section_name: 'A',
       }).save();
 
+      const courseDto = new CourseCreateDto();
+      courseDto.course_code = 'CS1010101';
+      courseDto.course_name = 'Introduction to Computer Science';
+      courseDto.semester_id = semesterData.id;
+      courseDto.section_name = '001';
+
+      await courseService.createCourse(courseDto);
+
       const createdCourse = await CourseModel.findOne({
-        where: { id: course.id },
+        where: { course_code: 'CS1010101' },
       });
+
       expect(createdCourse).toBeDefined();
-      expect(createdCourse.course_code).toBe('COURSE101');
-      expect(createdCourse.course_name).toBe('Introduction to Programming');
+      expect(createdCourse.course_code).toBe('CS1010101');
+      expect(createdCourse.course_name).toBe(
+        'Introduction to Computer Science',
+      );
+    });
+
+    it('should throw SemesterNotFound Exception', async () => {
+      const courseDto = new CourseCreateDto();
+      courseDto.course_code = 'CS101';
+      courseDto.course_name = 'Introduction to Computer Science';
+      courseDto.semester_id = 100;
+      courseDto.section_name = '001';
+
+      await expect(courseService.createCourse(courseDto)).rejects.toThrow(
+        'Semester not found',
+      );
     });
   });
 });

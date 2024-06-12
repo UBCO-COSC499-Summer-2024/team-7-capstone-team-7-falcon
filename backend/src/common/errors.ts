@@ -105,13 +105,13 @@ export class SemesterNotFoundException extends Error {
 export class FailToCreateCourseException extends Error {
   constructor() {
     super(ERROR_MESSAGES.courseController.courseCreationFailed);
-    
+  }
+}
 /**
  * Exception to be thrown when semester is not possible to create
  */
 export class SemesterCreationException extends Error {
   constructor(message: string) {
     super(message);
-
   }
 }

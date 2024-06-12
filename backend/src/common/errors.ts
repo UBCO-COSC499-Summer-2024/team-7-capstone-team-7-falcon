@@ -71,3 +71,12 @@ export class InvalidInviteCodeException extends Error {
     super(ERROR_MESSAGES.courseController.invalidInviteCode);
   }
 }
+
+/**
+ * Exception to be thrown when semester is not possible to create
+ */
+export class SemesterCreationException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}

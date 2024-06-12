@@ -35,6 +35,7 @@ export class CourseService {
       updated_at: Date.now(),
       is_archived: false,
       section_name: course.section_name,
+      invite_code: generateRandomString(8),
       semester: semester,
     });
 
@@ -120,4 +121,16 @@ export class CourseService {
 
     return;
   }
+}
+
+function generateRandomString(length: number): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+
+  return result;
 }

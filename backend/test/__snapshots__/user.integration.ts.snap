@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User Integration GET /:uid should return status 200 and user object 1`] = `
+{
+  "auth_type": "email",
+  "created_at": "1000000000",
+  "email": "john.doe@test.com",
+  "employee_user": null,
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "student_user": null,
+  "updated_at": "1000000000",
+}
+`;

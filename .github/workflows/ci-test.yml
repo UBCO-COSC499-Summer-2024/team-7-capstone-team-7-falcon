@@ -1,10 +1,9 @@
-name: CI - Tests
+name: CI - Tests (Backend)
 
 on:
   pull_request:
     paths:
       - 'backend/**'
-      - 'optical-marking-management/**'
 
 jobs:
   run-tests:

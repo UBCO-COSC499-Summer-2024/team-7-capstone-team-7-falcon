@@ -10,10 +10,10 @@ enum Role {
 // Define type for user information
 interface UserInfo {
   firstName: string;
-  lastName: string;
+  lastName: string | null;
   email: string | null;
   role: Role;
-  avatarUrl: string;
+  avatarUrl: string | null;
 }
 
 // Define context type
@@ -41,7 +41,7 @@ export const UserInfoProvider: React.FC<UserInfoProviderProps> = ({ children }: 
     lastName: "Doe",
     email: null,
     role: Role.STUDENT,
-    avatarUrl: 'https://lh3.googleusercontent.com/a/ACg8ocJGyUr16ouiYlFqBT3aDdB-KovZMc7vFuUslZdT93kJekVonRLY=s96-c',
+    avatarUrl: null,
   });
 
   return (

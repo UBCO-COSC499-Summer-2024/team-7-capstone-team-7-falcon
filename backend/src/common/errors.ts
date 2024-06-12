@@ -90,14 +90,28 @@ export class CourseArchivedException extends Error {
   }
 }
 
+/**
+ * Exception to be thrown when a semester cannot be found
+ */
 export class SemesterNotFoundException extends Error {
   constructor() {
     super(ERROR_MESSAGES.semesterController.semesterNotFound);
   }
 }
 
+/**
+ * Exception to be thrown when course creation fails
+ */
 export class FailToCreateCourseException extends Error {
   constructor() {
     super(ERROR_MESSAGES.courseController.courseCreationFailed);
+    
+/**
+ * Exception to be thrown when semester is not possible to create
+ */
+export class SemesterCreationException extends Error {
+  constructor(message: string) {
+    super(message);
+
   }
 }

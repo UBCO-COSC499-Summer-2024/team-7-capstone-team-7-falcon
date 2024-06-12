@@ -30,10 +30,16 @@ export const ERROR_MESSAGES = {
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
   },
-  semesterController: {
-    semesterNotFound: 'Semester not found',
+  semesterCreateDto: {
+    nameRequired: 'Name is required',
+    nameLength: 'Name must be between 2 and 15 characters',
+    startsAtRequired: 'Start date is required',
+    endsAtRequired: 'End date is required',
   },
-  other: {
-    unidentifiedException: 'Unidentified exception',
+  semesterController: {
+    semesterStartDateMustBeBeforeEndDate: 'Start date must be before end date',
+    semesterStartDateMustBeTwoDaysAhead:
+      'Start date must be at least two days ahead',
+    semesterNotFound: 'Semester not found',
   },
 };

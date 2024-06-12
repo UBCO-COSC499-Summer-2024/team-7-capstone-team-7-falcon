@@ -5,6 +5,7 @@ import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from './modules/datasource/typeorm.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CourseModule } from './modules/course/course.module';
+import { SemesterModule } from './modules/semesters/semester.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CourseModule } from './modules/course/course.module';
     AuthModule,
     UserModule,
     CourseModule,
+    SemesterModule,
   ],
 })
 export class AppModule {}

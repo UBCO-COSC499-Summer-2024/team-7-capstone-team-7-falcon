@@ -20,7 +20,7 @@ export default function SignupPage() {
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
-      <form className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md ">
+      <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
         <h1 className="text-center font-bold mb-3">OWLMARK</h1>
         <h2 className="text-md mb-6 text-center text-gray-400">Create an Account</h2>
 

@@ -8,8 +8,8 @@ import React from "react";
  */
 const StudentCourses: React.FC = () => {
   return (
-    <div>
-      <h1>Student Courses</h1>
+    <div className="flex justify-left p-5">
+      <h1>Joined Courses</h1>
     </div>
   );
 };

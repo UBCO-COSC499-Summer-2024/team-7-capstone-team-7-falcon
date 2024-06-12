@@ -10,6 +10,9 @@ Clockify report
   * #1: Authentication system. I have finished backend work to sign in and create user accounts on backend, so now I just need to support Paula and Ishika to complete frontend work
 
 ### Progress Update (since 6/7/2024)
+
+![GitHub Board](./images/github_06072024-06112024.png)
+
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>

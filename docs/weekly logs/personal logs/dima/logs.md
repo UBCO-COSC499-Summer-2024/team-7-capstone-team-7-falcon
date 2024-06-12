@@ -9,7 +9,7 @@ Clockify report
 ### Current Tasks (Provide sufficient detail)
   * #1: Authentication system. I have finished backend work to sign in and create user accounts on backend, so now I just need to support Paula and Ishika to complete frontend work
 
-### Progress Update (since 6/5/2024)
+### Progress Update (since 6/7/2024)
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>

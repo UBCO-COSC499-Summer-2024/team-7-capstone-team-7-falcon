@@ -108,10 +108,10 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-center space-x-10 mt-4">
           <Link
-            href="/signup"
+            href="#"
             className="text-purple-500 font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center mt-4 text-sm"
           >
-            Create Account
+            Forgot password
           </Link>
           <Link
             href="/signup"

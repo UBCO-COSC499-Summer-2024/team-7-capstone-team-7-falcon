@@ -80,7 +80,7 @@ export default function LoginPage() {
   onClick={onLogin}
   color="purple"
   size="xs"
-  className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"
+  className="w-full text-white bg-[#8F3DDE] text-xl font-bold py-3 rounded-md transition duration-300"
 >
   Login
 </Button>

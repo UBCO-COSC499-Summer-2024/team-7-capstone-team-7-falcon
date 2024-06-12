@@ -96,7 +96,7 @@ export default function SignupPage() {
   onClick={onSignup}
   color="purple"
   size="xs"
-  className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"
+  className="w-full text-white text-xl bg-[#8F3DDE] font-bold py-3 rounded-md transition duration-300"
 >
   Sign Up
 </Button>

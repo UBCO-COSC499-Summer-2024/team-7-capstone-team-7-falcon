@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import React from "react";
 import { useState } from "react";
-import { Button} from "flowbite-react";
+import { Button } from "flowbite-react";
 import CourseCreateModal from "./components/createCourse";
 
 /**
@@ -13,10 +13,19 @@ import CourseCreateModal from "./components/createCourse";
 const InstructorCourses: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div className="flex justify-between">
-      <h1 className="text-3xl font-bold">Managed Courses</h1>
-      <Button color="purple" onClick={() => setModalOpen(true)} className="flex align-right">Create course</Button>
-      <CourseCreateModal isOpen={modalOpen} closeModal={() => setModalOpen(false)} />
+    <div className="flex justify-between p-5">
+      <h1 className="text-2xl font-bold">Managed Courses</h1>
+      <Button
+        color="purple"
+        onClick={() => setModalOpen(true)}
+        className="flex align-right"
+      >
+        Create course
+      </Button>
+      <CourseCreateModal
+        isOpen={modalOpen}
+        closeModal={() => setModalOpen(false)}
+      />
     </div>
   );
 };

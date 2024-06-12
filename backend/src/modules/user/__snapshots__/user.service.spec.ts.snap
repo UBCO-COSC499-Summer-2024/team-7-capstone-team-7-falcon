@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserService findOrCreateUser should create user 1`] = `
+UserModel {
+  "auth_type": "google_oauth",
+  "avatar_url": "picture",
+  "email": "john.doe@test.com",
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "password": null,
+  "role": "student",
+}
+`;
+
+exports[`UserService getUserById should return user 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "created_at": "1000000000",
+  "email": "john.doe@test.com",
+  "employee_user": EmployeeUserModel {
+    "employee_id": 1,
+    "id": 1,
+  },
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "student_user": StudentUserModel {
+    "student_id": 1,
+  },
+  "updated_at": "1000000000",
+}
+`;

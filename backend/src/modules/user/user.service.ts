@@ -11,9 +11,30 @@ import { AuthTypeEnum } from '../../enums/user.enum';
 import { EmployeeUserModel } from './entities/employee-user.entity';
 import { StudentUserModel } from './entities/student-user.entity';
 import { UserEditDto } from './dto/user-edit.dto';
+import { CourseUserModel } from '../course/entities/course-user.entity';
 
 @Injectable()
 export class UserService {
+  /**
+   * Search for courses based on user id
+   * @param user_id {number} - User id
+   * @returns {Promise<CourseUserModel[]>} - CourseUserModel[] promise
+   */
+  public async findUserCoursesById(
+    user_id: number,
+  ): Promise<CourseUserModel[]> {
+    const courses: CourseUserModel[] = await CourseUserModel.find({
+      where: { user: { id: user_id }, course: { is_archived: false } },
+      relations: ['user', 'course'],
+    });
+
+    if (!courses || courses.length === 0) {
+      return null;
+    }
+
+    return courses;
+  }
+
   /**
    * Returns a user by id
    * @param id {number} - User id

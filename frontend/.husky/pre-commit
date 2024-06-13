@@ -1,1 +1,2 @@
-cd frontend
+#!/usr/bin/env sh
+cd frontend && npm run pre-commit

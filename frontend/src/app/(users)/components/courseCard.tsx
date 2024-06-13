@@ -5,19 +5,35 @@ interface CourseCardProps {
   courseCode: String;
   courseName: String;
   courseRole: String;
+  className?: string;
 }
 
-function openCourse() {
-  // Add a get request here to redirect to the course page
-}
-
+/**
+ * CourseCard component displays information about a course.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.courseCode - The code of the course.
+ * @param {string} props.courseName - The name of the course.
+ * @param {string} props.courseRole - The role of the user in the course.
+ * @param {string} [props.className="max-w-sm"] - The CSS class name for the component.
+ * @returns {JSX.Element} The rendered CourseCard component.
+ */
 const CourseCard: React.FC<CourseCardProps> = ({
   courseCode,
   courseName,
   courseRole,
+  className = "max-w-sm",
 }) => {
+  /**
+   * Opens the course.
+   */
+  const openCourse = () => {
+    // Add your logic to open the course here
+  };
+
   return (
-    <Card className="max-w-sm">
+    <Card className={className}>
       <div className="flex justify-end">
         <p className="text-purple-700 font-bold text-sm">
           {courseRole.toUpperCase()}

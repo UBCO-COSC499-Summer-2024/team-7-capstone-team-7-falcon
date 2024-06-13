@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { Button } from "flowbite-react";
 import CourseCreateModal from "./components/createCourse";
-import CourseCard from "../components/courseCard";
+import CourseGrid from "../components/courseGrid";
 
 /**
  * Renders the Instructor Courses component.
@@ -30,11 +30,7 @@ const InstructorCourses: React.FC = () => {
         />
       </div>
       <div>
-        <CourseCard
-          courseCode="COSC 111"
-          courseName="Introduction to Computer Science"
-          courseRole="instructor"
-        />
+        <CourseGrid />
       </div>
     </div>
   );

@@ -1,19 +1,19 @@
-'use client'
+"use client";
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
 enum Role {
-  STUDENT = 'student',
-  INSTRUCTOR = 'instructor',
+  STUDENT = "student",
+  INSTRUCTOR = "instructor",
 }
 
 // Define type for user information
 interface UserInfo {
   firstName: string;
-  lastName: string;
+  lastName: string | null;
   email: string | null;
   role: Role;
-  avatarUrl: string;
+  avatarUrl: string | null;
 }
 
 // Define context type
@@ -23,7 +23,9 @@ interface UserInfoContextType {
 }
 
 // Create context
-const userInfoContext = createContext<UserInfoContextType | undefined>(undefined);
+const userInfoContext = createContext<UserInfoContextType | undefined>(
+  undefined,
+);
 
 // Define props type for UserInfoProvider
 interface UserInfoProviderProps {
@@ -35,13 +37,15 @@ interface UserInfoProviderProps {
  * @param param0 {UserInfoProviderProps} - Children
  * @returns {JSX.Element} - User info provider
  */
-export const UserInfoProvider: React.FC<UserInfoProviderProps> = ({ children }: UserInfoProviderProps): JSX.Element => {
+export const UserInfoProvider: React.FC<UserInfoProviderProps> = ({
+  children,
+}: UserInfoProviderProps): JSX.Element => {
   const [userInfo, setUserInfo] = useState<UserInfo>({
     firstName: "John",
     lastName: "Doe",
     email: null,
     role: Role.STUDENT,
-    avatarUrl: 'https://lh3.googleusercontent.com/a/ACg8ocJGyUr16ouiYlFqBT3aDdB-KovZMc7vFuUslZdT93kJekVonRLY=s96-c',
+    avatarUrl: null,
   });
 
   return (
@@ -59,7 +63,7 @@ export const useUserInfo = (): UserInfoContextType => {
   const context = useContext(userInfoContext);
 
   if (context === undefined) {
-    throw new Error('useUserInfo must be used within a UserInfoProvider');
+    throw new Error("useUserInfo must be used within a UserInfoProvider");
   }
 
   return context;

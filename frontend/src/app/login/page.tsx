@@ -18,23 +18,6 @@ export default function LoginPage() {
   const onGoogleSignup = async () => {
     //handle Google Signup
     router.push("http://localhost:3001/api/v1/auth/oauth/google/");
-
-    // if (res.status === 200) {
-    //   console.log("Success: ", res);
-    // } else {
-    //   console.log("Error: ", res);
-    // }
-
-    // const router = useRouter();
-
-    //localhost:3001/api/v1/auth/oauth/google/
-    // await AuthModule
-    //   .then((res => {
-    //     router.push('/student') // TODO: change this based on roles
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
   };
 
   return (

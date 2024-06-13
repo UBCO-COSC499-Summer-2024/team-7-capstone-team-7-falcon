@@ -17,7 +17,9 @@ export default function LoginPage() {
 
   const onGoogleSignup = async () => {
     //handle Google Signup
-    router.push("http://localhost:3001/api/v1/auth/oauth/google/");
+    router.push(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/oauth/google/`,
+    );
   };
 
   return (

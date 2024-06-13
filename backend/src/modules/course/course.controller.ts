@@ -45,9 +45,10 @@ export class CourseController {
   async createCourse(
     @Res() res: Response,
     @Body(new ValidationPipe()) userData: CourseCreateDto,
+    @User() user: UserModel,
   ): Promise<Response> {
     try {
-      await this.courseService.createCourse(userData);
+      await this.courseService.createCourse(userData, user);
       return res.status(HttpStatus.OK).send({
         message: 'ok',
       });

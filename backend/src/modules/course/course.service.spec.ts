@@ -10,6 +10,7 @@ import { CourseUserModel } from './entities/course-user.entity';
 import { CourseRoleEnum } from '../../enums/user.enum';
 import { CourseCreateDto } from './dto/course-create.dto';
 import { SemesterModel } from '../semesters/entities/semester.entity';
+import { validate } from 'class-validator';
 
 describe('CourseService', () => {
   let courseService: CourseService;
@@ -89,7 +90,7 @@ describe('CourseService', () => {
       expect(result).toMatchSnapshot();
     });
 
-    it('should return courseArchivedException', async () => {
+    it('should return null if course is archived', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -115,9 +116,11 @@ describe('CourseService', () => {
         course_role: CourseRoleEnum.PROFESSOR,
       }).save();
 
-      await expect(
-        courseService.getUserByCourseAndUserId(course.id, user.id),
-      ).rejects.toThrow('Course is archived. Cannot be accessed.');
+      const userModel = await courseService.getUserByCourseAndUserId(
+        course.id,
+        user.id,
+      );
+      expect(userModel).toBeNull();
     });
   });
 
@@ -222,7 +225,16 @@ describe('CourseService', () => {
       courseDto.semester_id = semesterData.id;
       courseDto.section_name = '001';
 
-      await courseService.createCourse(courseDto);
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await courseService.createCourse(courseDto, user);
 
       const createdCourse = await CourseModel.findOne({
         where: { course_code: 'CS1010101' },
@@ -242,9 +254,30 @@ describe('CourseService', () => {
       courseDto.semester_id = 100;
       courseDto.section_name = '001';
 
-      await expect(courseService.createCourse(courseDto)).rejects.toThrow(
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(courseService.createCourse(courseDto, user)).rejects.toThrow(
         'Semester not found',
       );
+    });
+
+    it('should throw validate error', async () => {
+      const courseDto = new CourseCreateDto();
+      courseDto.course_code = 'CS101';
+      courseDto.course_name = 'Introduction to Computer Science';
+      courseDto.semester_id = 100;
+      courseDto.section_name = '001';
+
+      const errors = await validate(courseDto);
+
+      expect(errors.length > 0);
     });
   });
 });

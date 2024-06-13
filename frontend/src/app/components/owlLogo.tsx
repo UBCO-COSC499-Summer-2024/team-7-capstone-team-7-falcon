@@ -7,15 +7,25 @@ export interface LogoProps {
   background?: boolean;
 }
 
+/**
+ * Represents the OwlLogo SVG component.
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} [props.width="50%"] - The width of the logo.
+ * @param {string} [props.height="50%"] - The height of the logo.
+ * @param {string} [props.className=""] - The additional CSS class name for the logo.
+ * @param {boolean} [props.background=false] - Whether to show a background behind the logo.
+ * @returns {JSX.Element} The rendered OwlLogo component.
+ */
 const OwlLogo: React.FC<LogoProps> = ({
-    width = "50%",
-    height = "50%",
-    className = "",
+  width = "50%",
+  height = "50%",
+  className = "",
   background = false,
 }) => {
   return (
     <svg
-    className={className}
+      className={className}
       version="1.1"
       id="Layer_1"
       xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +40,7 @@ const OwlLogo: React.FC<LogoProps> = ({
         <rect width="100%" height="100%" rx="180" fill="#fef7e8" />
       )}
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -83,7 +93,7 @@ M666.303833,202.544952
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -132,7 +142,7 @@ M683.410034,672.443604
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -150,7 +160,7 @@ M401.012848,551.037231
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -172,7 +182,7 @@ M533.236511,486.059296
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -201,7 +211,7 @@ M428.808868,469.505371
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -218,7 +228,7 @@ M359.406982,809.283508
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -238,7 +248,7 @@ M771.242554,324.126221
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -250,7 +260,7 @@ M720.318848,757.009827
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -263,7 +273,7 @@ M381.069641,337.375366
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -279,7 +289,7 @@ M388.936890,750.000000
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -291,7 +301,7 @@ M343.562958,377.780487
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -308,7 +318,7 @@ M279.887695,862.982056
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -324,7 +334,7 @@ M673.077881,295.984833
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -341,7 +351,7 @@ M355.753082,456.310364
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -353,7 +363,7 @@ M611.907471,290.667694
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -368,7 +378,7 @@ M288.989716,703.653809
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -380,7 +390,7 @@ M281.153015,482.052979
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -393,7 +403,7 @@ M584.252686,760.797485
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="
@@ -405,7 +415,7 @@ M518.087769,807.559326
 z"
       />
       <path
-        fill="#651065"
+        fill="#7c22cd"
         opacity="1.000000"
         stroke="none"
         d="

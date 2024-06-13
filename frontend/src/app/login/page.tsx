@@ -17,12 +17,30 @@ export default function LoginPage() {
 
   const onGoogleSignup = async () => {
     //handle Google Signup
+    router.push("http://localhost:3001/api/v1/auth/oauth/google/");
+
+    // if (res.status === 200) {
+    //   console.log("Success: ", res);
+    // } else {
+    //   console.log("Error: ", res);
+    // }
+
+    // const router = useRouter();
+
+    //localhost:3001/api/v1/auth/oauth/google/
+    // await AuthModule
+    //   .then((res => {
+    //     router.push('/student') // TODO: change this based on roles
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
   };
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
       <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="font-bold mb-3">OWLMark Login Portal</h1>
+        <h1 className="font-bold mb-3">OwlMark OMS Portal Login</h1>
         <Button
           onClick={onGoogleSignup}
           color="white"

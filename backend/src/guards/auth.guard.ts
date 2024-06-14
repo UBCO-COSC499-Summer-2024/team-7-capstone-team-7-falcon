@@ -7,7 +7,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { getCookie } from '../common/helpers';
-import { auth } from 'google-auth-library';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -24,9 +23,9 @@ export class AuthGuard implements CanActivate {
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
-    console.log('request', request);
-    console.log('token', token);
+    const token =
+      this.extractTokenFromHeader(request) ??
+      this.extractTokenFromRawHeaders(request.rawHeaders);
 
     if (!token) {
       throw new UnauthorizedException();
@@ -51,5 +50,18 @@ export class AuthGuard implements CanActivate {
     const auth_token = getCookie(request, 'auth_token');
 
     return auth_token ? auth_token : undefined;
+  }
+
+  /**
+   * Extracts the token from the raw headers
+   * @param rawHeaders {string[]} - The raw headers
+   * @returns {string | undefined} - The token or undefined
+   */
+  private extractTokenFromRawHeaders(rawHeaders: string[]): string | undefined {
+    const auth_token = rawHeaders.find((header) =>
+      header.includes('auth_token'),
+    );
+
+    return auth_token ? auth_token.split('=')[1] : undefined;
   }
 }

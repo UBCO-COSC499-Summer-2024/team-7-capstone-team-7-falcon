@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzYyNjk1LCJleHAiOjE3MTg0NDkwOTV9.sn-3qc-3jXng-PpAJtt8GqJtsgF26ox9FsUUEYZgSGs";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4Mzc4Mjg0LCJleHAiOjE3MTg0NjQ2ODR9.wpXv7-dckoJc5KiOh8zj-ZwRvpatqIE6j2HM1b21xxI";
 
 interface CourseData {
   course_code: string;
@@ -14,14 +14,15 @@ interface CourseData {
 export const coursesAPI = {
   createCourse: async (courseData: CourseData) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/v1/course/create`, {
-        userData: courseData,
+      const response = await fetch(`${BACKEND_URL}/api/v1/course/create`, {
+        method: "POST",
         headers: {
-          Cookie: `auth_token=${AUTH_TOKEN}`,
+          "Content-Type": "application/json",
+          Authorization: `auth_token=${AUTH_TOKEN}`,
         },
-        withCredentials: true,
+        body: JSON.stringify(courseData),
       });
-      return await response.data;
+      return await response.json();
     } catch (error) {
       console.error("Failed to create course:", error);
     }

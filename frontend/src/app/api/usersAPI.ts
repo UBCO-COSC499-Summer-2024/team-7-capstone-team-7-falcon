@@ -8,7 +8,7 @@ export const usersAPI = {
     try {
       const response = await axios.get(`${BACKEND_URL}/api/v1/user/courses`, {
         headers: {
-          Authorization: `auth_token=${AUTH_TOKEN}`,
+          cookie: `auth_token=${AUTH_TOKEN}`,
         },
         withCredentials: true,
       });

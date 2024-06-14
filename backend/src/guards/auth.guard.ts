@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { getCookie } from '../common/helpers';
+import { auth } from 'google-auth-library';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -24,6 +25,9 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
+    console.log('request', request);
+    console.log('token', token);
+
     if (!token) {
       throw new UnauthorizedException();
     }

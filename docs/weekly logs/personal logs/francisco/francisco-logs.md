@@ -1,3 +1,4 @@
+
 ## Friday (6/12- 6/14)
 
 ### Timesheet
@@ -31,6 +32,7 @@ Clockify report
 ![clockify](06.07_06.12/clockify1.png)
 ![clockify](06.07_06.12/clockify2.png)
 ![clockify](06.07_06.12/clockify3.png)
+
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Finishing Student and Instructor Dashboards and Components

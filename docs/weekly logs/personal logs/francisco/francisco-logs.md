@@ -10,7 +10,7 @@ Clockify report
   * #2: Mini Presentation
   * #3 Full backend integration with frontend
 
-### Progress Update (since 6/5/2024) 
+### Progress Update (since 6/13/2024) 
 ![ProjectBoard](board.png)
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)

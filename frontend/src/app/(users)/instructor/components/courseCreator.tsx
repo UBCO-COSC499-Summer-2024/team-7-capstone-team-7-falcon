@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Select, Button, TextInput, Modal, Label } from "flowbite-react";
+import axios from "axios";
 
 interface CourseCreatorProps {
-  isOpen: boolean;
+  isOpen?: boolean;
   closeModal: () => void;
 }
 
@@ -11,23 +12,42 @@ interface CourseCreatorProps {
  * @param props {CourseCreatorProps} - The component props
  * @returns {React.JSX.Element} - Course creator component
  */
-const CourseCreatorModal: React.FC<CourseCreatorProps> = (props) => {
-  const { isOpen, closeModal } = props;
+const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
+  isOpen = false,
+  closeModal,
+}) => {
+  const [courseSemesters, setCourseSemesters] = useState([]);
 
   const courseCodeRef = useRef<HTMLInputElement>(null);
   const courseNameRef = useRef<HTMLInputElement>(null);
   const courseSectionRef = useRef<HTMLInputElement>(null);
   const courseSemesterRef = useRef<HTMLSelectElement>(null);
 
+  useEffect(() => {
+    const fetchSemesters = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/v1/semester/all",
+        );
+        setCourseSemesters(response.data);
+      } catch (error) {
+        console.error("Failed to fetch semesters:", error);
+      }
+    };
+
+    if (isOpen && courseSemesters.length === 0) fetchSemesters();
+  }, [isOpen]);
+
   const createCourse = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const courseData = {
-      courseCode: courseCodeRef.current?.value,
-      courseName: courseNameRef.current?.value,
-      courseSection: courseSectionRef.current?.value,
-      courseSemester: courseSemesterRef.current?.value,
+      course_code: courseCodeRef.current?.value,
+      course_name: courseNameRef.current?.value,
+      section_name: courseSectionRef.current?.value,
+      semester_id: courseSemesterRef.current?.value,
     };
-    console.log(courseData);
+
+    closeModal();
     // Implement course creation here
   };
 
@@ -76,9 +96,7 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = (props) => {
           </Label>
           <Select id="courseSemester" required ref={courseSemesterRef}>
             {/* Map options here */}
-            <option value="S2024T1-2">
-              Summer 2024 Terms 1-2 (S2024 T1-2)
-            </option>
+            <option value="S2024T1-2">{courseSemesters}</option>
             <option value="S2024T2">Summer 2024 Term 2 (S2024 T2)</option>
             <option value="S2024T1">Summer 2024 Term 1 (S2024 T1)</option>
           </Select>

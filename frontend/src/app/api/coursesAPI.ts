@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4Mzg0NjA2LCJleHAiOjE3MTg0NzEwMDZ9.f1HcaxbZN1r8aqLeE9aqOulVH5ZhfQeYsj_Y4gPblFM";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4Mzg2NzU1LCJleHAiOjE3MTg0NzMxNTV9.PtngcMYHC5uuRTyxuUiqWMcsQ_UzSdtCKsK1GlCBpb8";
 
 interface CourseData {
   course_code: string;

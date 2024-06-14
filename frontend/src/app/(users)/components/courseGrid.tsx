@@ -59,19 +59,9 @@ const CourseGrid: React.FC = () => {
   )
     return <div>No courses found</div>;
   return (
-    <div>
-      <div className="grid grid-cols-4 gap-4 mb-4">
+    <div className="mt-4">
+      <div className="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
         {userCourses.map((course: CourseRole) => (
-          <CourseCard
-            key={course.course.id}
-            courseCode={course.course.course_code}
-            courseName={course.course.course_name}
-            courseRole={course.course_role}
-          />
-        ))}
-      </div>
-      <div className="grid grid-cols-4 gap-4">
-        {userCourses.slice(4).map((course: CourseRole) => (
           <CourseCard
             key={course.course.id}
             courseCode={course.course.course_code}

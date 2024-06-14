@@ -1,14 +1,15 @@
 import axios from "axios";
+import { fetchAuthToken } from "./cookies/cookieAPI";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const AUTH_TOKEN = process.env.AUTH_TOKEN;
 
 export const semestersAPI = {
   getAllSemesters: async () => {
     try {
+      const auth_cookie = await fetchAuthToken();
       const response = await axios.get(`${BACKEND_URL}/api/v1/semester/all`, {
         headers: {
-          Cookie: `auth_token=${AUTH_TOKEN}`,
+          Authorization: auth_cookie,
         },
         withCredentials: true,
       });

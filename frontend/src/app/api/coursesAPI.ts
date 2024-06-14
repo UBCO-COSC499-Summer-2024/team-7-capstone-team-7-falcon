@@ -1,6 +1,4 @@
 import axios from "axios";
-import { METHODS } from "http";
-import Cookies from "js-cookie";
 import { fetchAuthToken } from "./cookies/cookieAPI";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -23,7 +21,7 @@ export const coursesAPI = {
         baseURL: `${BACKEND_URL}/api/v1/course/create`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `auth_cookie`,
+          Authorization: auth_cookie,
         },
       });
 

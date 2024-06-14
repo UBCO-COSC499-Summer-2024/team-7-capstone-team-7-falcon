@@ -7,7 +7,7 @@ Clockify report
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Finish Creating course endpoints in NestJS [S]
 
-### Progress Update (since 6/5/2024) 
+### Progress Update (since 6/12/2024) 
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>

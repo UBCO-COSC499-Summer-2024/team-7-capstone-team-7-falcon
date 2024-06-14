@@ -14,7 +14,7 @@ export const semestersAPI = {
       });
       return await response.data;
     } catch (error) {
-      console.error("Failed to fetch semesters:", error);
+      console.error("Failed to fetch courses:", error);
     }
   },
 };

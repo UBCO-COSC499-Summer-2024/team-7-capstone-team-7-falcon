@@ -7,8 +7,8 @@ import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 export default function AccountSetup() {
   const router = useRouter();
   const [user, setUser] = useState({
-    studentId: "", // should this be a number?
-    employeeId: "", // should this be a number?
+    studentId: number,
+    employeeId: number,
   });
 
   const onSetup = async () => {
@@ -35,7 +35,9 @@ export default function AccountSetup() {
             id="studentID"
             type="number"
             value={user.studentId}
-            onChange={(e) => setUser({ ...user, studentId: e.target.value })}
+            onChange={(e) =>
+              setUser({ ...user, studentId: parseInt(e.target.value) })
+            }
             placeholder="12345678"
           />
         </div>
@@ -52,7 +54,9 @@ export default function AccountSetup() {
             id="employeeID"
             type="number"
             value={user.employeeId}
-            onChange={(e) => setUser({ ...user, employeeId: e.target.value })}
+            onChange={(e) =>
+              setUser({ ...user, employeeId: parseInt(e.target.value) })
+            }
             placeholder="1234567"
           />
         </div>

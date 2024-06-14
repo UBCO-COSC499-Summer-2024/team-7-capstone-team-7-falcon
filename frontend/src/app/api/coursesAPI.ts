@@ -18,13 +18,16 @@ export const coursesAPI = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `auth_token=${AUTH_TOKEN}`,
+          Cookie: `auth_token=${AUTH_TOKEN}`,
         },
         body: JSON.stringify(courseData),
       });
+
       return await response.json();
     } catch (error) {
       console.error("Failed to create course:", error);
+      // Optionally rethrow the error or return a specific error object/value
+      throw error;
     }
   },
 };

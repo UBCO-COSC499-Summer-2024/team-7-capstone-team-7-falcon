@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Select, Button, TextInput, Modal, Label } from "flowbite-react";
 import axios from "axios";
 import { headers } from "next/headers";
+import { semestersAPI } from "@/app/api/semestersAPI";
 
 interface CourseCreatorProps {
   isOpen?: boolean;
@@ -24,40 +25,20 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
 }) => {
   const [courseSemesters, setCourseSemesters] = useState([]);
 
-  const courseCodeRef = useRef<HTMLInputElement>(null);
-  const courseNameRef = useRef<HTMLInputElement>(null);
-  const courseSectionRef = useRef<HTMLInputElement>(null);
-  const courseSemesterRef = useRef<HTMLSelectElement>(null);
-
   useEffect(() => {
     const fetchSemesters = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/semester/all`,
-          {
-            headers: {
-              Authorization:
-                "auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzM0Mjc0LCJleHAiOjE3MTg0MjA2NzR9.JVSAU_PTNlPpfO1U6qZ6V-8gNhqux0HafxllbJByi1k",
-            },
-            withCredentials: true,
-          },
-        );
-        setCourseSemesters(response.data);
-      } catch (error) {
-        console.error("Failed to fetch semesters:", error);
-      }
+      const fetchedSemesters = await semestersAPI.getAllSemesters();
+      setCourseSemesters(fetchedSemesters);
     };
-
     if (isOpen && courseSemesters.length === 0) fetchSemesters();
   }, [isOpen]);
 
-  const createCourse = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const createCourse = (formData) => {
     const courseData = {
-      course_code: courseCodeRef.current?.value,
-      course_name: courseNameRef.current?.value,
-      section_name: courseSectionRef.current?.value,
-      semester_id: courseSemesterRef.current?.value,
+      course_code: formData.get("course_code"),
+      course_name: formData.get("course_name"),
+      section_name: formData.get("section_name"),
+      semester_id: formData.get("semester_id"),
     };
 
     closeModal();
@@ -74,40 +55,37 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
     >
       <Modal.Header className="pl-2 pt-2">Create a new Course</Modal.Header>
       <Modal.Body className="mt-2">
-        <form onSubmit={createCourse}>
-          <Label htmlFor="courseCode">
+        <form action={createCourse}>
+          <Label htmlFor="course_code">
             <h2>Course Code</h2>
           </Label>
           <TextInput
-            id="courseCode"
+            id="course_code"
             placeholder="Enter course Code"
             required
             className="mb-2"
-            ref={courseCodeRef}
           />
-          <Label htmlFor="courseName">
+          <Label htmlFor="course_code">
             <h2 className="pt-2">Course Name</h2>
           </Label>
           <TextInput
-            id="courseName"
+            id="course_code"
             placeholder="Enter course name"
             required
             className="mb-2"
-            ref={courseNameRef}
           />
-          <Label htmlFor="courseSection" className="mb-2">
+          <Label htmlFor="section_name" className="mb-2">
             <h2 className="pt-2">Course Section</h2>
           </Label>
           <TextInput
-            id="courseSection"
+            id="section_name"
             placeholder="Enter course Section"
             required
-            ref={courseSectionRef}
           />
-          <Label htmlFor="courseSemester">
+          <Label htmlFor="semester_id">
             <h2 className="pt-2">Semester</h2>
           </Label>
-          <Select id="courseSemester" required ref={courseSemesterRef}>
+          <Select id="semester_id" required>
             {courseSemesters.map((semester: Semester) => (
               <option key={semester.id} value={semester.id}>
                 {semester.name}

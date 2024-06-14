@@ -1,15 +1,15 @@
+"use server";
+import { cookies } from "next/headers";
 export async function fetchAuthToken() {
   try {
-    const response = await fetch("/api/cookies", {
-      method: "GET",
-      cache: "no-cache",
-    });
+    // const response = await fetch("/api/cookies", {
+    //   method: "GET",
+    //   cache: "no-cache",
+    // });
+    const cookieStore = cookies();
+    const auth_token = cookieStore.get("auth_token");
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = response.headers.get("Get-Cookie");
+    const result = `auth_token=${auth_token?.value || ""}`;
 
     return result;
   } catch (error) {

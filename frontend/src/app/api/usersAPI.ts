@@ -22,17 +22,5 @@ export const usersAPI = {
     } catch (error) {
       console.error("Failed to fetch courses:", error);
     }
-    // try {
-    //   const auth_token = await fetchAuthToken();
-    //   const response = await axios.get(`${BACKEND_URL}/api/v1/user/courses`, {
-    //     headers: {
-    //       Authorization: auth_token,
-    //     },
-    //     withCredentials: true,
-    //   });
-    //   return await response.data;
-    // } catch (error) {
-    //   console.error("Failed to fetch courses:", error);
-    // }
   },
 };

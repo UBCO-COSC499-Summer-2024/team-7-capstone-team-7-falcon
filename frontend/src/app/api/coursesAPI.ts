@@ -15,13 +15,13 @@ interface CourseData {
 export const coursesAPI = {
   createCourse: async (courseData: CourseData) => {
     try {
-      const auth_cookie = await fetchAuthToken();
+      const auth_token = await fetchAuthToken();
 
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/course/create`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: auth_cookie,
+          Authorization: auth_token,
         },
       });
 

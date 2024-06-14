@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzUzNTU4LCJleHAiOjE3MTg0Mzk5NTh9.yWJplbbagH1MrN9AWENbzIJMsjjZLO1lEzGLhNtI8AU";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzYyNjk1LCJleHAiOjE3MTg0NDkwOTV9.sn-3qc-3jXng-PpAJtt8GqJtsgF26ox9FsUUEYZgSGs";
 
 interface CourseData {
   course_code: string;
@@ -11,24 +11,13 @@ interface CourseData {
   semester_id: number;
 }
 
-interface userData {
-  email: string;
-  first_name: string;
-  last_name: string;
-  role: string;
-  avatar_url: string;
-}
-
 export const coursesAPI = {
-  createCourse: async (
-    courseData: CourseData,
-    creatorRole: string = "instructor",
-  ) => {
+  createCourse: async (courseData: CourseData) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/course/create`, {
         userData: courseData,
         headers: {
-          Authentication: `auth_token=${AUTH_TOKEN}`,
+          Authorization: `auth_token=${AUTH_TOKEN}`,
         },
         withCredentials: true,
       });

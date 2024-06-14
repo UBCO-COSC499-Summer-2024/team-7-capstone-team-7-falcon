@@ -1,5 +1,4 @@
 import axios from "axios";
-import { cookies } from "next/headers";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const AUTH_TOKEN = process.env.AUTH_TOKEN;

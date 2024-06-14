@@ -1,5 +1,5 @@
 
-## Friday (6/12- 6/14)
+## Friday (6/12- 6/13)
 
 ### Timesheet
 Clockify report

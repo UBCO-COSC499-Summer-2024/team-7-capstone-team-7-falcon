@@ -94,7 +94,7 @@ export class CourseService {
   ): Promise<void> {
     const course: CourseModel = await CourseModel.findOne({
       where: { id: cid },
-      relations: ['users'],
+      relations: ['users', 'users.user'],
     });
 
     if (!course) {
@@ -105,7 +105,13 @@ export class CourseService {
       throw new InvalidInviteCodeException();
     }
 
-    const isEnrolled = course.users.some((u) => u.id === user.id);
+    let isEnrolled = false;
+
+    course.users.forEach((courseUser) => {
+      if (courseUser.user.id === user.id) {
+        isEnrolled = true;
+      }
+    });
 
     if (isEnrolled) {
       return;

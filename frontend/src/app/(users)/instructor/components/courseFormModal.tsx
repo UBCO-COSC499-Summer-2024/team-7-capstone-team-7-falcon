@@ -2,7 +2,6 @@ import React, { useEffect, useState, FormEvent } from "react";
 import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
 import { semestersAPI } from "@/app/api/semestersAPI";
 import { coursesAPI } from "@/app/api/coursesAPI";
-import { json } from "stream/consumers";
 
 interface CourseCreatorProps {
   isOpen?: boolean;
@@ -44,16 +43,16 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
     const formData = new FormData(event.currentTarget);
 
     const courseData = {
-      course_code: formData.get("course_code") ?? "",
-      course_name: formData.get("course_name") ?? "",
-      section_name: formData.get("section_name") ?? "",
+      course_code: String(formData.get("course_code") ?? ""),
+      course_name: String(formData.get("course_name") ?? ""),
+      section_name: String(formData.get("section_name") ?? ""),
       semester_id: Number(formData.get("semester_id") ?? -1),
     };
 
     const jsonData = JSON.stringify(courseData);
     console.log(jsonData);
 
-    await coursesAPI.createCourse(jsonData);
+    await coursesAPI.createCourse(courseData);
 
     closeModal();
     // Implement course creation here

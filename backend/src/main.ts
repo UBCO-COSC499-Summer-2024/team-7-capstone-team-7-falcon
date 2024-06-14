@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as morgan from 'morgan';
 import * as bodyparser from 'body-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -26,6 +27,16 @@ async function bootstrap() {
       },
     }),
   );
+
+  const corsOptions: CorsOptions = {
+    origin: process.env.FRONTEND_URL,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: true,
+  };
+
+  app.enableCors(corsOptions);
 
   await app.listen(3001);
 }

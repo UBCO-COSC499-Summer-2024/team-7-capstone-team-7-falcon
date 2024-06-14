@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, FormEvent } from "react";
 import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
 import { semestersAPI } from "@/app/api/semestersAPI";
+import { coursesAPI } from "@/app/api/coursesAPI";
+import { json } from "stream/consumers";
 
 interface CourseCreatorProps {
   isOpen?: boolean;
@@ -23,11 +25,12 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
 }) => {
   const [courseSemesters, setCourseSemesters] = useState([]);
 
+  const fetchSemesters = async () => {
+    const fetchedSemesters = await semestersAPI.getAllSemesters();
+    setCourseSemesters(fetchedSemesters);
+  };
+
   useEffect(() => {
-    const fetchSemesters = async () => {
-      const fetchedSemesters = await semestersAPI.getAllSemesters();
-      setCourseSemesters(fetchedSemesters);
-    };
     if (
       isOpen &&
       (courseSemesters === undefined || courseSemesters.length === 0)
@@ -35,24 +38,22 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
       fetchSemesters();
   }, [isOpen]);
 
-  const createCourse = (formData) => {
+  const createCourse = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
     const courseData = {
-      course_code: formData.get("course_code"),
-      course_name: formData.get("course_name"),
-      section_name: formData.get("section_name"),
-      semester_id: formData.get("semester_id"),
+      course_code: formData.get("course_code") ?? "",
+      course_name: formData.get("course_name") ?? "",
+      section_name: formData.get("section_name") ?? "",
+      semester_id: Number(formData.get("semester_id") ?? -1),
     };
 
-    // Validate form data
-    if (
-      !courseData.course_code ||
-      !courseData.course_name ||
-      !courseData.section_name ||
-      !courseData.semester_id
-    ) {
-      // Handle form validation error
-      return;
-    }
+    const jsonData = JSON.stringify(courseData);
+    console.log(jsonData);
+
+    await coursesAPI.createCourse(jsonData);
 
     closeModal();
     // Implement course creation here
@@ -68,38 +69,41 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
     >
       <Modal.Header className="pl-2 pt-2">Create a new Course</Modal.Header>
       <Modal.Body className="mt-2">
-        <form action={createCourse}>
-          <Label htmlFor="course_code">
+        <form onSubmit={createCourse}>
+          <Label htmlFor="courseCode">
             <h2>Course Code</h2>
           </Label>
           <TextInput
-            id="course_code"
+            id="courseCode"
             placeholder="Enter course Code"
+            name="course_code"
             required
             className="mb-2"
           />
-          <Label htmlFor="course_code">
+          <Label htmlFor="courseName">
             <h2 className="pt-2">Course Name</h2>
           </Label>
           <TextInput
-            id="course_code"
+            id="courseName"
+            name="course_name"
             placeholder="Enter course name"
             required
             className="mb-2"
           />
-          <Label htmlFor="section_name" className="mb-2">
+          <Label htmlFor="sectionName" className="mb-2">
             <h2 className="pt-2">Course Section</h2>
           </Label>
           <TextInput
-            id="section_name"
+            id="sectionName"
+            name="section_name"
             placeholder="Enter course Section"
             required
           />
-          <Label htmlFor="semester_id">
+          <Label htmlFor="semesterID">
             <h2 className="pt-2">Semester</h2>
           </Label>
           {courseSemesters !== undefined ? (
-            <Select id="semester_id" required>
+            <Select id="semesterID" name="semester_id" required>
               {courseSemesters.map((semester: Semester) => (
                 <option key={semester.id} value={semester.id}>
                   {semester.name}

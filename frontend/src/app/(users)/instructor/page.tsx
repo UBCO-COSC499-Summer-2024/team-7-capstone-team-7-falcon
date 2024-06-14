@@ -2,7 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import { Button } from "flowbite-react";
-import CourseCreatorModal from "./components/courseCreator";
+import CourseCreatorModal from "./components/courseFormModal";
 import CourseGrid from "../components/courseGrid";
 
 /**

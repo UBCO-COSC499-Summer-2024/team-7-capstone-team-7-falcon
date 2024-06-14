@@ -100,7 +100,8 @@ describe('Auth Integration', () => {
       return supertest()
         .get('/auth/logout')
         .set('Cookie', [`auth_token=${signJwtToken(1)}`])
-        .expect(HttpStatus.NO_CONTENT);
+        .expect(HttpStatus.FOUND)
+        .expect('Location', `${process.env.FRONTEND_URL}/login`)
     });
   });
 });

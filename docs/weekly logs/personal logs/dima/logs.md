@@ -7,7 +7,7 @@ Clockify report
 ![Clockify report](./images/time_report_06122024-06132024.png)
 
 ### Current Tasks (Provide sufficient detail)
-  * #1: Queue Controller implemetion: As per our system architecture diagram, we wanted to implement a middleware that would allow our workers (pythone scripts) to pick up jobs to create new bubble sheets and process exams. In the current cycle, I was able to impleement this middleware, but still working on covering all test cases.
+  * #1: Queue Controller implemetion: As per our system architecture diagram, we wanted to implement a middleware that would allow our workers (python scripts) to pick up jobs to create new bubble sheets and process exams. In the current cycle, I was able to impleement this middleware, but still working on covering all test cases.
   * #2: Reviewing PRs: Reviewing pull requests from other team members to ensure that all test cases are covered by our integration and unit tests.
 
 ### Progress Update (since 6/12/2024)
@@ -26,7 +26,7 @@ Clockify report
         <td>Issue #92
         </td>
         <!-- Status -->
-        <td>Complete (by the team the individual logs are merged)
+        <td>Complete (by the time the individual logs are merged)
         </td>
     </tr>
     <tr>

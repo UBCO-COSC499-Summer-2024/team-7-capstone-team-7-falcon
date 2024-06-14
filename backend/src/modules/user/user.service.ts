@@ -95,6 +95,12 @@ export class UserService {
     throw new Error('Invalid auth method');
   }
 
+  /**
+   * Edit user details
+   * @param uid {number} - User id
+   * @param userEditBody {UserEditDto} - User edit body
+   * @returns {Promise<UserModel>} - User object
+   */
   public async editUser(
     uid: number,
     userEditBody: UserEditDto,
@@ -158,6 +164,7 @@ export class UserService {
           user,
         }).save();
         user.student_user = studentUserRecord;
+        await user.student_user.save();
       } else {
         user.student_user.student_id = userEditBody.student_id;
         await user.student_user.save();

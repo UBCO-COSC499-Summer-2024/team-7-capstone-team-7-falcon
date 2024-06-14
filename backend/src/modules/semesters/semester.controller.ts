@@ -28,6 +28,8 @@ export class SemesterController {
 
   /**
    * Get all semesters
+   * @param res {Response} - The response object
+   * @returns {Promise<Response>} - The response object with semesters or error message
    */
   @UseGuards(AuthGuard)
   @Get('all')

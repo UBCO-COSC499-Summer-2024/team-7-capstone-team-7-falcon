@@ -158,9 +158,10 @@ export class UserService {
           user,
         }).save();
         user.student_user = studentUserRecord;
+        user.student_user.save();
       } else {
         user.student_user.student_id = userEditBody.student_id;
-        await user.student_user.save();
+        user.student_user.save();
       }
     }
     await user.save();

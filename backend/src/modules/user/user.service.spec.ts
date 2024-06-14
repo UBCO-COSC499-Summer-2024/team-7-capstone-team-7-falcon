@@ -352,6 +352,8 @@ describe('UserService', () => {
 
       expect(updatedStudentUser).toBeDefined();
       expect(updatedStudentUser.user.id).toBe(user.id);
+
+      expect(await StudentUserModel.count()).toBe(1);
     });
   });
 

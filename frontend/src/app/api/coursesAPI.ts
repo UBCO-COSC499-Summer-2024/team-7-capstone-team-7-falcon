@@ -17,7 +17,7 @@ export const coursesAPI = {
       const response = await axios.post(`${BACKEND_URL}/api/v1/course/create`, {
         userData: courseData,
         headers: {
-          Authorization: `auth_token=${AUTH_TOKEN}`,
+          Cookie: `auth_token=${AUTH_TOKEN}`,
         },
         withCredentials: true,
       });

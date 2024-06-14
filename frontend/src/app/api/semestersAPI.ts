@@ -8,7 +8,7 @@ export const semestersAPI = {
     try {
       const response = await axios.get(`${BACKEND_URL}/api/v1/semester/all`, {
         headers: {
-          Authorization: `auth_token=${AUTH_TOKEN}`,
+          Cookie: `auth_token=${AUTH_TOKEN}`,
         },
         withCredentials: true,
       });

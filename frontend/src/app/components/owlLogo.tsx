@@ -34,7 +34,7 @@ const OwlLogo: React.FC<LogoProps> = ({
       width={width}
       height={height}
       viewBox="200 100 700 900"
-      enable-background="new 0 0 1024 1024"
+      enableBackground="new 0 0 1024 1024"
     >
       {background && (
         <rect width="100%" height="100%" rx="180" fill="#fef7e8" />

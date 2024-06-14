@@ -3,8 +3,6 @@ import { AppModule } from './app.module';
 import * as morgan from 'morgan';
 import * as bodyparser from 'body-parser';
 import { ValidationPipe } from '@nestjs/common';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,7 +15,6 @@ async function bootstrap() {
   app.use(morgan('dev'));
   app.use(bodyparser.json({ limit: '150mb' }));
   app.use(bodyparser.urlencoded({ limit: '150mb', extended: true }));
-  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -30,16 +27,10 @@ async function bootstrap() {
     }),
   );
 
-  const corsOptions: CorsOptions = {
-    origin: process.env.FRONTEND_URL,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
+  app.enableCors({
+    origin: true,
     credentials: true,
-    allowedHeaders: 'Content-Type, Authorization',
-  };
-
-  app.enableCors(corsOptions);
+  });
 
   await app.listen(3001);
 }

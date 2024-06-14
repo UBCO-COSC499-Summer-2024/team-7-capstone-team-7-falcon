@@ -2,7 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import { Button } from "flowbite-react";
-import CourseCreateModal from "./components/createCourse";
+import CourseCreatorModal from "./components/courseCreator";
 import CourseGrid from "../components/courseGrid";
 
 /**
@@ -24,7 +24,7 @@ const InstructorCourses: React.FC = () => {
         >
           Create course
         </Button>
-        <CourseCreateModal
+        <CourseCreatorModal
           isOpen={modalOpen}
           closeModal={() => setModalOpen(false)}
         />

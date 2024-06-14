@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Select, Button, TextInput, Modal, Label } from "flowbite-react";
 import axios from "axios";
+import { headers } from "next/headers";
 
 interface CourseCreatorProps {
   isOpen?: boolean;
   closeModal: () => void;
+}
+
+interface Semester {
+  id: number;
+  name: string;
 }
 
 /**
@@ -27,7 +33,14 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
     const fetchSemesters = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/v1/semester/all",
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/semester/all`,
+          {
+            headers: {
+              Authorization:
+                "auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzM0Mjc0LCJleHAiOjE3MTg0MjA2NzR9.JVSAU_PTNlPpfO1U6qZ6V-8gNhqux0HafxllbJByi1k",
+            },
+            withCredentials: true,
+          },
         );
         setCourseSemesters(response.data);
       } catch (error) {
@@ -95,10 +108,11 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
             <h2 className="pt-2">Semester</h2>
           </Label>
           <Select id="courseSemester" required ref={courseSemesterRef}>
-            {/* Map options here */}
-            <option value="S2024T1-2">{courseSemesters}</option>
-            <option value="S2024T2">Summer 2024 Term 2 (S2024 T2)</option>
-            <option value="S2024T1">Summer 2024 Term 1 (S2024 T1)</option>
+            {courseSemesters.map((semester: Semester) => (
+              <option key={semester.id} value={semester.id}>
+                {semester.name}
+              </option>
+            ))}
           </Select>
           <div className="flex gap-4 mt-4 justify-left items-start">
             <Button type="submit" color="purple">

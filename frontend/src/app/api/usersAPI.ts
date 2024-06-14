@@ -2,10 +2,17 @@ import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const AUTH_TOKEN = process.env.AUTH_TOKEN;
 
 export const usersAPI = {
-  findAllCoursesById: async () => {
+  /**
+   * Fetches all courses for a user by their ID from the backend API.
+   *
+   * @async
+   * @function findAllCoursesById
+   * @returns {Promise<any>} - A promise that resolves to the data containing all courses for the user.
+   * @throws Will log an error message to the console if fetching the courses fails.
+   */
+  findAllCoursesById: async (): Promise<any> => {
     try {
       const auth_token = await fetchAuthToken();
 
@@ -21,6 +28,7 @@ export const usersAPI = {
       return response.data;
     } catch (error) {
       console.error("Failed to fetch courses:", error);
+      throw error;
     }
   },
 };

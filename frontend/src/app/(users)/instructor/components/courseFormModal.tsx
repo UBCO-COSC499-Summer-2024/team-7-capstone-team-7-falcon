@@ -2,6 +2,7 @@ import React, { useEffect, useState, FormEvent } from "react";
 import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
 import { semestersAPI } from "@/app/api/semestersAPI";
 import { coursesAPI } from "@/app/api/coursesAPI";
+import { revalidatePath } from "next/cache";
 
 interface CourseCreatorProps {
   isOpen?: boolean;
@@ -15,20 +16,32 @@ interface Semester {
 
 /**
  * Renders the course creator component
- * @param props {CourseCreatorProps} - The component props
+ * @component
+ * @param {CourseCreatorProps} props - The component props
  * @returns {React.JSX.Element} - Course creator component
  */
 const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
   isOpen = false,
   closeModal,
 }) => {
-  const [courseSemesters, setCourseSemesters] = useState([]);
+  const [courseSemesters, setCourseSemesters] = useState<Semester[]>([]);
 
-  const fetchSemesters = async () => {
+  /**
+   * Fetches all semesters from the API and sets them in the state.
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
+  const fetchSemesters = async (): Promise<void> => {
     const fetchedSemesters = await semestersAPI.getAllSemesters();
     setCourseSemesters(fetchedSemesters);
   };
 
+  /**
+   * Fetches semesters when the modal is opened and the semesters are not already loaded.
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     if (
       isOpen &&
@@ -37,7 +50,16 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
       fetchSemesters();
   }, [isOpen]);
 
-  const createCourse = async (event: FormEvent<HTMLFormElement>) => {
+  /**
+   * Handles the form submission to create a new course.
+   * @async
+   * @function
+   * @param {FormEvent<HTMLFormElement>} event - The form submission event
+   * @returns {Promise<void>}
+   */
+  const createCourse = async (
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
@@ -49,12 +71,9 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
       semester_id: Number(formData.get("semester_id") ?? -1),
     };
 
-    const jsonData = JSON.stringify(courseData);
-
     await coursesAPI.createCourse(courseData);
 
     closeModal();
-    // Implement course creation here
   };
 
   return (

@@ -33,12 +33,22 @@ interface CourseRole {
   course: Course;
 }
 
+/**
+ * CourseGrid component that displays a grid of course cards.
+ * @returns {React.JSX.Element} - The CourseGrid component.
+ */
 const CourseGrid: React.FC = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
-  const [userCourses, setUserCourses] = React.useState([]);
+  const [userCourses, setUserCourses] = React.useState<CourseRole[]>([]);
 
+  /**
+   * Fetches the courses of the user from the API.
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
   useEffect(() => {
-    const fetchDataAsync = async () => {
+    const fetchDataAsync = async (): Promise<void> => {
       try {
         const data = await usersAPI.findAllCoursesById();
         setUserCourses(data);

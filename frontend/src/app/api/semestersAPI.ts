@@ -4,7 +4,15 @@ import { fetchAuthToken } from "./cookieAPI";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const semestersAPI = {
-  getAllSemesters: async () => {
+  /**
+   * Fetches all semesters from the backend API.
+   *
+   * @async
+   * @function getAllSemesters
+   * @returns {Promise<any>} - A promise that resolves to the data containing all semesters.
+   * @throws Will log an error message to the console if fetching the semesters fails.
+   */
+  getAllSemesters: async (): Promise<any> => {
     try {
       const auth_token = await fetchAuthToken();
 
@@ -20,6 +28,7 @@ export const semestersAPI = {
       return response.data;
     } catch (error) {
       console.error("Failed to fetch semesters:", error);
+      throw error;
     }
   },
 };

@@ -1,11 +1,16 @@
 "use server";
 import { cookies } from "next/headers";
+
+/**
+ * Fetches the 'auth_token' from the cookies.
+ *
+ * @async
+ * @function fetchAuthToken
+ * @returns {Promise<string>} - A promise that resolves to a string containing the 'auth_token'.
+ * @throws Will log an error message to the console if fetching the 'auth_token' fails.
+ */
 export async function fetchAuthToken() {
   try {
-    // const response = await fetch("/api/cookies", {
-    //   method: "GET",
-    //   cache: "no-cache",
-    // });
     const cookieStore = cookies();
     const auth_token = cookieStore.get("auth_token");
 

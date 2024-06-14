@@ -13,6 +13,15 @@ interface CourseData {
 }
 
 export const coursesAPI = {
+  /**
+   * Creates a new course using the provided course data.
+   *
+   * @async
+   * @function createCourse
+   * @param {CourseData} courseData - The data for the course to be created.
+   * @returns {Promise<axios.AxiosResponse<any>>} - The response from the backend API.
+   * @throws Will log an error message to the console and rethrow the error if creating the course fails.
+   */
   createCourse: async (courseData: CourseData) => {
     try {
       const auth_token = await fetchAuthToken();

@@ -17,6 +17,67 @@ describe('Semester Integration', () => {
     );
   });
 
+  describe('GET /semester/all', () => {
+    it('should return status 401 if no token is provided', async () => {
+      await supertest().get('/semester/all').expect(401);
+    });
+
+    it('should return 404 if no semesters are found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await supertest()
+        .get('/semester/all')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(404)
+        .expect({
+          message: 'Semesters not found',
+        });
+    });
+
+    it('should return 200 if semesters are found', async () => {
+      const currentDate = parseInt(new Date().getTime().toString());
+
+      await SemesterModel.create({
+        name: 'Test Semester',
+        created_at: currentDate,
+        updated_at: currentDate,
+        starts_at: currentDate,
+        ends_at: currentDate,
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await supertest()
+        .get('/semester/all')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(200)
+        .expect([
+          {
+            id: 1,
+            name: 'Test Semester',
+            starts_at: currentDate.toString(),
+            ends_at: currentDate.toString(),
+            created_at: currentDate.toString(),
+            updated_at: currentDate.toString(),
+          },
+        ]);
+    });
+  });
+
   describe('POST /semester/create', () => {
     it('should return status 401 if no token is provided', async () => {
       await supertest().post('/semester/create').expect(401);

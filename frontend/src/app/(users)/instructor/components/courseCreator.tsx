@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Select, Button, TextInput, Modal, Label } from "flowbite-react";
-import axios from "axios";
-import { headers } from "next/headers";
+import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
 import { semestersAPI } from "@/app/api/semestersAPI";
 
 interface CourseCreatorProps {
@@ -30,7 +28,11 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
       const fetchedSemesters = await semestersAPI.getAllSemesters();
       setCourseSemesters(fetchedSemesters);
     };
-    if (isOpen && courseSemesters.length === 0) fetchSemesters();
+    if (
+      isOpen &&
+      (courseSemesters === undefined || courseSemesters.length === 0)
+    )
+      fetchSemesters();
   }, [isOpen]);
 
   const createCourse = (formData) => {
@@ -40,6 +42,17 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
       section_name: formData.get("section_name"),
       semester_id: formData.get("semester_id"),
     };
+
+    // Validate form data
+    if (
+      !courseData.course_code ||
+      !courseData.course_name ||
+      !courseData.section_name ||
+      !courseData.semester_id
+    ) {
+      // Handle form validation error
+      return;
+    }
 
     closeModal();
     // Implement course creation here
@@ -85,13 +98,17 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
           <Label htmlFor="semester_id">
             <h2 className="pt-2">Semester</h2>
           </Label>
-          <Select id="semester_id" required>
-            {courseSemesters.map((semester: Semester) => (
-              <option key={semester.id} value={semester.id}>
-                {semester.name}
-              </option>
-            ))}
-          </Select>
+          {courseSemesters !== undefined ? (
+            <Select id="semester_id" required>
+              {courseSemesters.map((semester: Semester) => (
+                <option key={semester.id} value={semester.id}>
+                  {semester.name}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <Alert color="failure">Failed to fetch semesters</Alert>
+          )}
           <div className="flex gap-4 mt-4 justify-left items-start">
             <Button type="submit" color="purple">
               Create Course

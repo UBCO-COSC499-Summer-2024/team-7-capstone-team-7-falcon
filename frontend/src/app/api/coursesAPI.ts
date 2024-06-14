@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4Mzg0NjA2LCJleHAiOjE3MTg0NzEwMDZ9.f1HcaxbZN1r8aqLeE9aqOulVH5ZhfQeYsj_Y4gPblFM";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzgxODU3LCJleHAiOjE3MTg0NjgyNTd9.j6j-KNfSd1HTxiblVBPcgvN3YKsJ9TsPWCZfkNVlvCo";
 
 interface CourseData {
   course_code: string;
@@ -14,30 +14,11 @@ interface CourseData {
 export const coursesAPI = {
   createCourse: async (courseData: CourseData) => {
     try {
-      // const response = await fetch(`${BACKEND_URL}/api/v1/course/create`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `auth_token=${AUTH_TOKEN}`,
-      //   },
-      //   body: JSON.stringify(courseData),
-      // });
-
-      // const response = await axios.post(
-      //   `${BACKEND_URL}/api/v1/course/create`,
-      //   courseData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Cookie: `auth_token=${AUTH_TOKEN}`,
-      //     },
-      //   }
-      // );
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/course/create`,
         headers: {
           "Content-Type": "application/json",
-          Cookie: `auth_token=${AUTH_TOKEN}`,
+          Authorization: `auth_token=${AUTH_TOKEN}`,
         },
       });
 

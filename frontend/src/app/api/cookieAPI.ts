@@ -2,7 +2,6 @@ export async function fetchAuthToken() {
   try {
     const response = await fetch("/api/cookies", {
       method: "GET",
-      credentials: "include",
       cache: "no-cache",
     });
 

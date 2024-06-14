@@ -1,5 +1,5 @@
 import axios from "axios";
-import { fetchAuthToken } from "./cookies/cookieAPI";
+import { fetchAuthToken } from "./cookieAPI";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 

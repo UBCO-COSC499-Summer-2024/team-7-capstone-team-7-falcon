@@ -52,7 +52,11 @@ const CourseGrid: React.FC = () => {
   }, []);
 
   if (!isLoaded) return <div>Loading...</div>;
-  if (userCourses.length === 0 || userCourses[0] === "")
+  if (
+    userCourses === undefined ||
+    userCourses.length === 0 ||
+    userCourses[0] === ""
+  )
     return <div>No courses found</div>;
   return (
     <div>

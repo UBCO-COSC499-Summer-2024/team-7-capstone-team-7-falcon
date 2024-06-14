@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4Mzg2NzU1LCJleHAiOjE3MTg0NzMxNTV9.PtngcMYHC5uuRTyxuUiqWMcsQ_UzSdtCKsK1GlCBpb8";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzgxODU3LCJleHAiOjE3MTg0NjgyNTd9.j6j-KNfSd1HTxiblVBPcgvN3YKsJ9TsPWCZfkNVlvCo";
 
 interface CourseData {
   course_code: string;
@@ -14,25 +14,6 @@ interface CourseData {
 export const coursesAPI = {
   createCourse: async (courseData: CourseData) => {
     try {
-      // const response = await fetch(`${BACKEND_URL}/api/v1/course/create`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `auth_token=${AUTH_TOKEN}`,
-      //   },
-      //   body: JSON.stringify(courseData),
-      // });
-
-      // const response = await axios.post(
-      //   `${BACKEND_URL}/api/v1/course/create`,
-      //   courseData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Cookie: `auth_token=${AUTH_TOKEN}`,
-      //     },
-      //   }
-      // );
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/course/create`,
         headers: {
@@ -48,6 +29,8 @@ export const coursesAPI = {
       return response;
     } catch (error) {
       console.error("Failed to create course:", error);
+      // Optionally rethrow the error or return a specific error object/value
+      throw error;
     }
   },
 };

@@ -2,7 +2,7 @@
 
 ### Timesheet
 Clockify report
-![clockify](06.12_06.14/clockify.png)
+![clockify](clockify.png)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Finishing Student and Instructor Dashboards and Components
@@ -10,7 +10,7 @@ Clockify report
   * #3 Full backend integration with frontend
 
 ### Progress Update (since 6/5/2024) 
-![ProjectBoard](06.12_06.14/board.png)
+![ProjectBoard](board.png)
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 I was not able to finish everything I wanted for the week, authorization issues on the backend and delays in some deliverables caused slow progress

@@ -22,6 +22,10 @@ export const ERROR_MESSAGES = {
   courseController: {
     courseNotFound: 'Course not found',
     invalidInviteCode: 'Invalid invite code',
+    uniqueConstraintViolation: 'Unique constraint violated',
+    courseCreationFailed: 'Course could not be created',
+    coursesNotFound: 'Courses could not be found',
+    courseArchived: 'Course is archived. Cannot be accessed.',
   },
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
@@ -36,5 +40,6 @@ export const ERROR_MESSAGES = {
     semesterStartDateMustBeBeforeEndDate: 'Start date must be before end date',
     semesterStartDateMustBeTwoDaysAhead:
       'Start date must be at least two days ahead',
+    semesterNotFound: 'Semester not found',
   },
 };

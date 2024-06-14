@@ -1,4 +1,7 @@
 import axios from "axios";
+import { METHODS } from "http";
+import Cookies from "js-cookie";
+import { fetchAuthToken } from "./cookies/cookieAPI";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const AUTH_TOKEN =
@@ -14,11 +17,13 @@ interface CourseData {
 export const coursesAPI = {
   createCourse: async (courseData: CourseData) => {
     try {
+      const auth_cookie = await fetchAuthToken();
+
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/course/create`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `auth_token=${AUTH_TOKEN}`,
+          Authorization: `auth_cookie`,
         },
       });
 

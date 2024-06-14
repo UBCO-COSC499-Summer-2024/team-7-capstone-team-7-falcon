@@ -50,7 +50,6 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = ({
     };
 
     const jsonData = JSON.stringify(courseData);
-    console.log(jsonData);
 
     await coursesAPI.createCourse(courseData);
 

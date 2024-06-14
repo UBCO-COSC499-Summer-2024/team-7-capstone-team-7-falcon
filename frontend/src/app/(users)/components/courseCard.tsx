@@ -41,7 +41,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       </div>
       <div>
         <h1 className="font-bold text-2xl">{courseCode}</h1>
-        <h2 className="text-lg text-wrap">{courseName}</h2>
+        <h2 className="text-md mt-2 text-wrap text-[#858585]">{courseName}</h2>
         <Button
           color="purple"
           className="mt-4 w-full"

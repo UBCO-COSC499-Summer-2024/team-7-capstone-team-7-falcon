@@ -67,7 +67,7 @@ export class AuthController {
           httpOnly: true,
           secure: this.isSecure(),
         })
-        .redirect(process.env.FRONTEND_URL);
+        .redirect(`${process.env.FRONTEND_URL}`);
     } catch (e) {
       if (e instanceof OAuthGoogleErrorException) {
         return res.status(HttpStatus.UNAUTHORIZED).send({ error: e.message });
@@ -88,11 +88,10 @@ export class AuthController {
    */
   @UseGuards(AuthGuard)
   @Get('logout')
-  logout(@Res() res: Response): Response {
+  logout(@Res() res: Response): void {
     return res
-      .status(HttpStatus.NO_CONTENT)
       .clearCookie('auth_token', { httpOnly: true, secure: this.isSecure() })
-      .send();
+      .redirect(`${process.env.FRONTEND_URL}/login`);
   }
 
   /**

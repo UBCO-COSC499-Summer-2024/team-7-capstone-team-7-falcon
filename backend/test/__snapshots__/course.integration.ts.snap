@@ -41,3 +41,21 @@ CourseUserModel {
   },
 }
 `;
+
+exports[`Course Integration POST /course/create should return 200 if course is created 1`] = `
+CourseModel {
+  "course_code": "COSC 499",
+  "course_name": "Capstone Project",
+  "id": 1,
+  "is_archived": false,
+  "section_name": "001",
+  "semester": SemesterModel {
+    "created_at": "1000000000",
+    "ends_at": "1000000000",
+    "id": 1,
+    "name": "Semester 1",
+    "starts_at": "1000000000",
+    "updated_at": "1000000000",
+  },
+}
+`;

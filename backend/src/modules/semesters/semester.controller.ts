@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
   Res,
@@ -15,6 +16,7 @@ import { UserRoleEnum } from '../../enums/user.enum';
 import { SemesterService } from './semester.service';
 import { Response } from 'express';
 import { SemesterCreationException } from '../../common/errors';
+import { ERROR_MESSAGES } from '../../common';
 
 @Controller('semester')
 export class SemesterController {
@@ -23,6 +25,25 @@ export class SemesterController {
    * @param semesterService {SemesterService} - The semester service
    */
   constructor(private readonly semesterService: SemesterService) {}
+
+  /**
+   * Get all semesters
+   * @param res {Response} - The response object
+   * @returns {Promise<Response>} - The response object with semesters or error message
+   */
+  @UseGuards(AuthGuard)
+  @Get('all')
+  async getAll(@Res() res: Response) {
+    const semesters = await this.semesterService.getAllSemesters();
+
+    if (!semesters) {
+      return res.status(HttpStatus.NOT_FOUND).send({
+        message: ERROR_MESSAGES.semesterController.semestersNotFound,
+      });
+    }
+
+    return res.status(HttpStatus.OK).send(semesters);
+  }
 
   /**
    * Create a new semester

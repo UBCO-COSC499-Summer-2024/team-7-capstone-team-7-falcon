@@ -11,9 +11,30 @@ import { AuthTypeEnum } from '../../enums/user.enum';
 import { EmployeeUserModel } from './entities/employee-user.entity';
 import { StudentUserModel } from './entities/student-user.entity';
 import { UserEditDto } from './dto/user-edit.dto';
+import { CourseUserModel } from '../course/entities/course-user.entity';
 
 @Injectable()
 export class UserService {
+  /**
+   * Search for courses based on user id
+   * @param user_id {number} - User id
+   * @returns {Promise<CourseUserModel[]>} - CourseUserModel[] promise
+   */
+  public async findUserCoursesById(
+    user_id: number,
+  ): Promise<CourseUserModel[]> {
+    const courses: CourseUserModel[] = await CourseUserModel.find({
+      where: { user: { id: user_id }, course: { is_archived: false } },
+      relations: ['user', 'course'],
+    });
+
+    if (!courses || courses.length === 0) {
+      return null;
+    }
+
+    return courses;
+  }
+
   /**
    * Returns a user by id
    * @param id {number} - User id
@@ -74,6 +95,12 @@ export class UserService {
     throw new Error('Invalid auth method');
   }
 
+  /**
+   * Edit user details
+   * @param uid {number} - User id
+   * @param userEditBody {UserEditDto} - User edit body
+   * @returns {Promise<UserModel>} - User object
+   */
   public async editUser(
     uid: number,
     userEditBody: UserEditDto,
@@ -137,6 +164,7 @@ export class UserService {
           user,
         }).save();
         user.student_user = studentUserRecord;
+        await user.student_user.save();
       } else {
         user.student_user.student_id = userEditBody.student_id;
         await user.student_user.save();

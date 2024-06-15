@@ -58,8 +58,8 @@ export class StudentIdAlreadyExistsException extends Error {
  * Exception to be thrown when a course is not found
  */
 export class CourseNotFoundException extends Error {
-  constructor() {
-    super(ERROR_MESSAGES.courseController.courseNotFound);
+  constructor(message?: string) {
+    super(message ?? ERROR_MESSAGES.courseController.courseNotFound);
   }
 }
 

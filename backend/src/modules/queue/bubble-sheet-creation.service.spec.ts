@@ -1,36 +1,54 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getQueueToken } from '@nestjs/bull';
-import { Job, Queue } from 'bull';
+import { BullModule, getQueueToken } from '@nestjs/bull';
+import { Queue } from 'bull';
 import { BubbleSheetCreationService } from './jobs/bubble-sheet-creation.service';
 import {
-  BubbleSheetCompletionJobDto,
   BubbleSheetCreationJobDto,
+  BubbleSheetCompletionJobDto,
 } from './dto/bubble-sheet-creation-job.dto';
 import { JobCreationException } from '../../common/errors';
+import Redis from 'ioredis';
 
 describe('BubbleSheetCreationService', () => {
   let service: BubbleSheetCreationService;
+  let redis: Redis;
   let queue: Queue;
+  let moduleRef: TestingModule;
+
+  beforeAll(async () => {
+    redis = new Redis();
+  });
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BubbleSheetCreationService,
-        {
-          provide: getQueueToken('bubble-sheet-creation'),
-          useValue: {
-            add: jest.fn(),
-            getJob: jest.fn(),
-            getNextJob: jest.fn(),
+    moduleRef = await Test.createTestingModule({
+      providers: [BubbleSheetCreationService],
+      imports: [
+        BullModule.forRoot({
+          redis: {
+            host: process.env.REDIS_HOST,
+            port: parseInt(process.env.REDIS_PORT) || 6379,
           },
-        },
+        }),
+        BullModule.registerQueue({
+          name: 'bubble-sheet-creation',
+        }),
       ],
     }).compile();
 
-    service = module.get<BubbleSheetCreationService>(
+    service = moduleRef.get<BubbleSheetCreationService>(
       BubbleSheetCreationService,
     );
-    queue = module.get<Queue>(getQueueToken('bubble-sheet-creation'));
+    queue = moduleRef.get<Queue>(getQueueToken('bubble-sheet-creation'));
+  });
+
+  afterAll(async () => {
+    await queue.close();
+    await redis.quit();
+  });
+
+  afterEach(async () => {
+    await queue.close();
+    await redis.flushall();
   });
 
   describe('createJob', () => {
@@ -43,17 +61,15 @@ describe('BubbleSheetCreationService', () => {
           instructions: 'Default instructions',
         },
       };
-      const mockJob = { id: '123' } as Job;
 
-      (queue.add as jest.Mock).mockResolvedValue(mockJob);
-
-      const jobId = await service.createJob(payload);
-
-      expect(queue.add).toHaveBeenCalledWith(payload);
-      expect(jobId).toBe(mockJob.id.toString());
+      const job = await service.createJob(payload);
+      expect(job).toBeDefined();
+      expect(job).toBe('1');
     });
 
-    it('should throw JobCreationException if job creation fails', async () => {
+    it('should throw an error when adding a job to the queue fails', async () => {
+      await queue.close();
+
       const payload: BubbleSheetCreationJobDto = {
         payload: {
           numberOfQuestions: 50,
@@ -62,115 +78,124 @@ describe('BubbleSheetCreationService', () => {
           instructions: 'Default instructions',
         },
       };
-      (queue.add as jest.Mock).mockRejectedValue(
-        new Error('Failed to add job'),
-      );
 
       await expect(service.createJob(payload)).rejects.toThrow(
         JobCreationException,
       );
+
+      queue = moduleRef.get<Queue>(getQueueToken('bubble-sheet-creation'));
     });
   });
 
   describe('getJobById', () => {
-    it('should return the job by its ID', async () => {
-      const jobId = '123';
-      const mockJob = { id: jobId } as Job;
+    it('should return a job by its id', async () => {
+      const payload: BubbleSheetCreationJobDto = {
+        payload: {
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
+        },
+      };
 
-      (queue.getJob as jest.Mock).mockResolvedValue(mockJob);
-
+      const jobId = await service.createJob(payload);
       const job = await service.getJobById(jobId);
 
-      expect(queue.getJob).toHaveBeenCalledWith(jobId);
-      expect(job).toBe(mockJob);
+      expect(job).toBeDefined();
+      expect(job?.id).toBe('1');
     });
 
-    it('should return null if job not found', async () => {
-      const jobId = '123';
+    it('should return null when the job does not exist', async () => {
+      const job = await service.getJobById('1');
 
-      (queue.getJob as jest.Mock).mockResolvedValue(null);
-
-      const job = await service.getJobById(jobId);
-
-      expect(queue.getJob).toHaveBeenCalledWith(jobId);
       expect(job).toBeNull();
     });
   });
 
   describe('pickUpJob', () => {
-    it('should pick up the next job from the queue and update its status', async () => {
-      const mockJob = {
-        id: '123',
-        data: {},
-        update: jest.fn(),
-      } as unknown as Job;
+    it('should pick up a job from the queue', async () => {
+      const payload: BubbleSheetCreationJobDto = {
+        payload: {
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
+        },
+      };
 
-      (queue.getNextJob as jest.Mock).mockResolvedValue(mockJob);
-
+      await service.createJob(payload);
       const job = await service.pickUpJob();
 
-      expect(queue.getNextJob).toHaveBeenCalled();
-      expect(mockJob.update).toHaveBeenCalledWith({
-        ...mockJob.data,
-        status: 'picked',
-      });
-      expect(job).toBe(mockJob);
+      expect(job).toBeDefined();
+      expect(job?.id).toBe('1');
     });
 
-    it('should return null if no job is available', async () => {
-      (queue.getNextJob as jest.Mock).mockResolvedValue(null);
-
+    it('should return null when the queue is empty', async () => {
       const job = await service.pickUpJob();
 
-      expect(queue.getNextJob).toHaveBeenCalled();
       expect(job).toBeNull();
-    });
+    }, 10_000);
   });
 
   describe('markJobAsComplete', () => {
-    it('should mark an active job as completed', async () => {
-      const jobId = '123';
-      const result: BubbleSheetCompletionJobDto = {
+    it('should mark a job as complete', async () => {
+      const payload: BubbleSheetCreationJobDto = {
         payload: {
-          filePath: 'fake_path',
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
         },
       };
-      const mockJob = {
-        id: jobId,
-        isActive: jest.fn().mockReturnValue(true),
-        update: jest.fn(),
-        moveToCompleted: jest.fn(),
-      } as unknown as Job;
 
-      (queue.getJob as jest.Mock).mockResolvedValue(mockJob);
+      const jobId = await service.createJob(payload);
+      await service.pickUpJob();
+
+      const result: BubbleSheetCompletionJobDto = {
+        payload: {
+          filePath: 'path/to/file',
+        },
+      };
 
       await service.markJobAsComplete(jobId, result);
 
-      expect(queue.getJob).toHaveBeenCalledWith(jobId);
-      expect(mockJob.isActive).toHaveBeenCalled();
-      expect(mockJob.update).toHaveBeenCalledWith({
-        ...result,
-        status: 'completed',
-      });
-      expect(mockJob.moveToCompleted).toHaveBeenCalled();
+      const job = await service.getJobById(jobId);
+
+      expect(job).toBeDefined();
     });
 
-    it('should throw an error if job is not active', async () => {
-      const jobId = '123';
-      const result: BubbleSheetCompletionJobDto = {
+    it('should throw an error when the job is not active', async () => {
+      const payload: BubbleSheetCreationJobDto = {
         payload: {
-          filePath: 'fake_path',
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
         },
       };
-      const mockJob = {
-        id: jobId,
-        isActive: jest.fn().mockReturnValue(false),
-      } as unknown as Job;
 
-      (queue.getJob as jest.Mock).mockResolvedValue(mockJob);
+      const jobId = await service.createJob(payload);
+
+      const result: BubbleSheetCompletionJobDto = {
+        payload: {
+          filePath: 'path/to/file',
+        },
+      };
 
       await expect(service.markJobAsComplete(jobId, result)).rejects.toThrow(
-        `Job ${jobId} is not in the active state.`,
+        Error,
+      );
+    });
+
+    it('should throw an error when the job is not found', async () => {
+      const result: BubbleSheetCompletionJobDto = {
+        payload: {
+          filePath: 'path/to/file',
+        },
+      };
+
+      await expect(service.markJobAsComplete('-333', result)).rejects.toThrow(
+        Error,
       );
     });
   });

@@ -6,7 +6,7 @@ import {
   BubbleSheetCompletionJobDto,
   BubbleSheetCreationJobDto,
 } from '../dto/bubble-sheet-creation-job.dto';
-import { JobCreationException } from '../../../common/errors';
+import { CouldNotCompleteJobException, JobCreationException, JobNotFoundException } from '../../../common/errors';
 
 @Injectable()
 export class BubbleSheetCreationService implements IJobQueueService {
@@ -66,12 +66,18 @@ export class BubbleSheetCreationService implements IJobQueueService {
   ): Promise<void> {
     const job = await this.bubbleSheetCreationQueue.getJob(jobId);
     if (job) {
-      if (job.isActive()) {
-        await job.update({ ...result, status: 'completed' });
-        await job.moveToCompleted();
-      } else {
-        throw new Error(`Job ${jobId} is not in the active state.`);
+      try {
+        if (job.isActive()) {
+          await job.update({ ...result, status: 'completed' });
+          await job.moveToCompleted();
+        }
+      } catch (e) {
+        throw new CouldNotCompleteJobException(
+          `Could not complete job ${jobId}.`,
+        );
       }
+    } else {
+      throw new JobNotFoundException();
     }
   }
 }

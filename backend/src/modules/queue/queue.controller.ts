@@ -17,8 +17,8 @@ import { SystemRoleGuard } from '../../guards/system-role.guard';
 import { UserRoleEnum } from '../../enums/user.enum';
 import { Roles } from '../../decorators/roles.decorator';
 import {
-  BubbleSheetCompletionJobDto,
   BubbleSheetCreationJobDto,
+  BubbleSheetCompletionJobDto,
 } from './dto/bubble-sheet-creation-job.dto';
 import { Job } from 'bull';
 import { QueueAuthGuard } from '../../guards/queue-auth.guard';
@@ -71,7 +71,7 @@ export class QueueController {
         job = await this.bubbleSheetCreationQueueService.pickUpJob();
         break;
       default:
-        job = null;
+        return res.status(HttpStatus.BAD_REQUEST).send();
     }
 
     if (!job) {

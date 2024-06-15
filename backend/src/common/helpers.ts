@@ -7,7 +7,7 @@ import { Request } from 'express';
  * @returns {string} - The cookie value or null
  */
 export function getCookie(req: Request, cookieName: string): string {
-  const cookieHeader = req.headers?.cookie ?? req.body?.headers?.cookie;
+  const cookieHeader = req.headers?.cookie;
   console.log('req.cookies', req.cookies);
   if (!cookieHeader) {
     return null;

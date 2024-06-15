@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User Integration GET /:uid should return status 200 and user object 1`] = `
+{
+  "auth_type": "email",
+  "avatar_url": null,
+  "created_at": "1000000000",
+  "email": "john.doe@test.com",
+  "employee_user": null,
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "admin",
+  "student_user": null,
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`User Integration GET /courses should return status 200 and courses 1`] = `
+[
+  {
+    "course": {
+      "course_code": "COSC 499",
+      "course_name": "Capstone Project",
+      "created_at": "1000000000",
+      "id": 1,
+      "invite_code": "123",
+      "is_archived": false,
+      "section_name": "001",
+      "updated_at": "1000000000",
+    },
+    "course_role": "student",
+    "id": 1,
+    "user": {
+      "auth_type": "email",
+      "avatar_url": null,
+      "created_at": "1000000000",
+      "email": "john.doe@test.com",
+      "first_name": "John",
+      "id": 1,
+      "last_name": "Doe",
+      "password": "password",
+      "role": "student",
+      "updated_at": "1000000000",
+    },
+  },
+]
+`;

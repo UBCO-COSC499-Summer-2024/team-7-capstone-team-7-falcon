@@ -2,7 +2,8 @@
 import React from "react";
 import { useState } from "react";
 import { Button } from "flowbite-react";
-import CourseCreateModal from "./components/createCourse";
+import CourseCreatorModal from "./components/courseCreator";
+import CourseGrid from "../components/courseGrid";
 
 /**
  * Renders the Instructor Courses component.
@@ -13,19 +14,24 @@ import CourseCreateModal from "./components/createCourse";
 const InstructorCourses: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div className="flex justify-between p-5">
-      <h1 className="text-2xl font-bold">Managed Courses</h1>
-      <Button
-        color="purple"
-        onClick={() => setModalOpen(true)}
-        className="flex align-right"
-      >
-        Create course
-      </Button>
-      <CourseCreateModal
-        isOpen={modalOpen}
-        closeModal={() => setModalOpen(false)}
-      />
+    <div>
+      <div className="flex justify-between p-5">
+        <h1 className="text-2xl font-bold">Managed Courses</h1>
+        <Button
+          color="purple"
+          onClick={() => setModalOpen(true)}
+          className="flex align-right"
+        >
+          Create course
+        </Button>
+        <CourseCreatorModal
+          isOpen={modalOpen}
+          closeModal={() => setModalOpen(false)}
+        />
+      </div>
+      <div>
+        <CourseGrid />
+      </div>
     </div>
   );
 };

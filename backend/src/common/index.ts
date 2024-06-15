@@ -41,5 +41,6 @@ export const ERROR_MESSAGES = {
     semesterStartDateMustBeTwoDaysAhead:
       'Start date must be at least two days ahead',
     semesterNotFound: 'Semester not found',
+    semestersNotFound: 'Semesters not found',
   },
 };

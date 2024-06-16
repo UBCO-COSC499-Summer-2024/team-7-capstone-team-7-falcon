@@ -24,6 +24,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
    */
   const fetchSemesters = async (): Promise<void> => {
     const fetchedSemesters = await semestersAPI.getAllSemesters();
+    console.log("fetc", fetchedSemesters);
     setCourseSemesters(fetchedSemesters);
     setIsLoaded(true);
   };
@@ -42,7 +43,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
       <Label htmlFor="semesterID">
         <h2 className="pt-2">{labelText}</h2>
       </Label>
-      {courseSemesters.length > 0 ? (
+      {courseSemesters !== undefined ? (
         <Select id="semesterID" name={name} required={required}>
           {courseSemesters.map((semester: Semester) => (
             <option key={semester.id} value={semester.id}>

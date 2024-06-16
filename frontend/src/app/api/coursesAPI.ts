@@ -1,5 +1,7 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
+import { Toast } from "flowbite-react";
+import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -32,15 +34,27 @@ export const coursesAPI = {
         },
       });
 
-      const response = await instance.post(
-        `${BACKEND_URL}/api/v1/course/create`,
-        courseData,
-      );
-      return response;
+      await instance
+        .post(`${BACKEND_URL}/api/v1/course/create`, courseData)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+        });
     } catch (error) {
-      console.error("Failed to create course:", error);
-      // Optionally rethrow the error or return a specific error object/value
-      throw error;
+      console.log("error", error);
     }
   },
 };

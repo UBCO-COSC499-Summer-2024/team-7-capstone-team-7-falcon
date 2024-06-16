@@ -44,7 +44,7 @@ export const UserInfoProvider: React.FC<UserInfoProviderProps> = ({
     firstName: "John",
     lastName: "Doe",
     email: null,
-    role: Role.STUDENT,
+    role: Role.INSTRUCTOR,
     avatarUrl: null,
   });
 

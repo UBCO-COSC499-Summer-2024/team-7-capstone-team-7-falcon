@@ -24,6 +24,55 @@ describe('SemesterService', () => {
     await moduleRef.close();
   });
 
+  describe('getAllSemesters', () => {
+    it('should return all semesters', async () => {
+      const currentDate: number = parseInt(new Date().getTime().toString());
+
+      await SemesterModel.create({
+        name: 'Test Semester',
+        created_at: currentDate,
+        updated_at: currentDate,
+        starts_at: currentDate,
+        ends_at: currentDate,
+      }).save();
+
+      const semesters = await semesterService.getAllSemesters();
+      expect(semesters).toBeDefined();
+    });
+
+    it('should return semesters that are within the last three months', async () => {
+      const currentDate: number = parseInt(new Date().getTime().toString());
+      const threeMonthsAgoDate: number =
+        currentDate - 1000 * 60 * 60 * 24 * 30 * 3;
+
+      await SemesterModel.create({
+        name: 'Test Semester',
+        created_at: currentDate,
+        updated_at: currentDate,
+        starts_at: currentDate,
+        ends_at: currentDate,
+      }).save();
+
+      await SemesterModel.create({
+        name: 'Test Semester 2',
+        created_at: threeMonthsAgoDate,
+        updated_at: threeMonthsAgoDate,
+        starts_at: threeMonthsAgoDate,
+        ends_at: threeMonthsAgoDate,
+      }).save();
+
+      const semesters = await semesterService.getAllSemesters();
+
+      expect(semesters).toHaveLength(1);
+    });
+
+    it('should return null if no semesters are found', async () => {
+      const semesters = await semesterService.getAllSemesters();
+
+      expect(semesters).toBeNull();
+    });
+  });
+
   describe('createSemester', () => {
     it('should throw an error if the start date is after the end date', async () => {
       const semesterDetails: SemesterCreateDto = {

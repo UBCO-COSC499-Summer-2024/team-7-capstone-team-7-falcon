@@ -18,6 +18,7 @@ export async function fetchAuthToken() {
 
     return result;
   } catch (error) {
-    console.error("Failed to fetch auth token:", error);
+    console.error("Failed to fetch auth token", error);
+    return "";
   }
 }

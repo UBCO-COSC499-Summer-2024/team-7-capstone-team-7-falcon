@@ -2,16 +2,11 @@ import React, { useEffect, useState, FormEvent } from "react";
 import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
 import { semestersAPI } from "@/app/api/semestersAPI";
 import { coursesAPI } from "@/app/api/coursesAPI";
-import { revalidatePath } from "next/cache";
+import { Semester } from "@/app/typings/backendDataTypes";
 
 interface CourseCreatorProps {
   isOpen?: boolean;
   closeModal: () => void;
-}
-
-interface Semester {
-  id: number;
-  name: string;
 }
 
 /**

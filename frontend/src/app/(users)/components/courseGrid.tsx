@@ -1,37 +1,7 @@
 import React, { useEffect } from "react";
 import CourseCard from "./courseCard";
 import { usersAPI } from "@/app/api/usersAPI";
-
-interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
-  auth_type: string;
-  email: string;
-  password: string | null;
-  avatar_url: string;
-}
-
-interface Course {
-  id: number;
-  course_code: string;
-  course_name: string;
-  created_at: string;
-  updated_at: string;
-  is_archived: boolean;
-  invite_code: string;
-  section_name: string;
-}
-
-interface CourseRole {
-  id: number;
-  course_role: string;
-  user: User;
-  course: Course;
-}
+import { CourseRole } from "@/app/typings/backendDataTypes";
 
 /**
  * CourseGrid component that displays a grid of course cards.
@@ -65,7 +35,7 @@ const CourseGrid: React.FC = () => {
   if (
     userCourses === undefined ||
     userCourses.length === 0 ||
-    userCourses[0] === ""
+    userCourses[0].course_role === ""
   )
     return <div>No courses found</div>;
   return (

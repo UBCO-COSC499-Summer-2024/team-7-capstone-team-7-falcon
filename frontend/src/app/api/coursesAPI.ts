@@ -2,8 +2,6 @@ import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzgxODU3LCJleHAiOjE3MTg0NjgyNTd9.j6j-KNfSd1HTxiblVBPcgvN3YKsJ9TsPWCZfkNVlvCo";
 
 interface CourseData {
   course_code: string;

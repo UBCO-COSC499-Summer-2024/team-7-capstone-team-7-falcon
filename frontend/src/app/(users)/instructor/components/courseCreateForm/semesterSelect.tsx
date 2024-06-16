@@ -15,7 +15,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
   labelText,
 }) => {
   const [courseSemesters, setCourseSemesters] = useState<Semester[]>([]);
-
+  const [isLoaded, setIsLoaded] = useState(false);
   /**
    * Fetches all semesters from the API and sets them in the state.
    * @async
@@ -25,6 +25,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
   const fetchSemesters = async (): Promise<void> => {
     const fetchedSemesters = await semestersAPI.getAllSemesters();
     setCourseSemesters(fetchedSemesters);
+    setIsLoaded(true);
   };
 
   /**
@@ -33,8 +34,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
    * @returns {void}
    */
   useEffect(() => {
-    if (courseSemesters === undefined || courseSemesters.length === 0)
-      fetchSemesters();
+    if (courseSemesters.length === 0) fetchSemesters();
   }, []);
 
   return (
@@ -42,8 +42,8 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
       <Label htmlFor="semesterID">
         <h2 className="pt-2">{labelText}</h2>
       </Label>
-      {courseSemesters !== undefined ? (
-        <Select id="semesterID" name="semester_id" required>
+      {courseSemesters.length > 0 ? (
+        <Select id="semesterID" name={name} required={required}>
           {courseSemesters.map((semester: Semester) => (
             <option key={semester.id} value={semester.id}>
               {semester.name}
@@ -51,7 +51,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
           ))}
         </Select>
       ) : (
-        <Alert color="failure">Failed to fetch semesters</Alert>
+        isLoaded && <Alert color="failure">Failed to fetch semesters</Alert> // Only show the alert if the semesters have been loaded from backend but are empty
       )}
     </>
   );

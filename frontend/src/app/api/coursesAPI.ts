@@ -42,19 +42,18 @@ export const coursesAPI = {
         .catch((error) => {
           if (error.response) {
             // The request was made and the server responded with a status code
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            console.error(error.response.data);
+            console.error(error.response.status);
           } else if (error.request) {
             // The request was made but no response was received
-            console.log(error.request);
+            console.error(error.request);
           } else {
             // Something happened in setting up the request that triggered an Error
-            console.log("Error", error.message);
+            console.error("Error", error.message);
           }
         });
     } catch (error) {
-      console.log("error", error);
+      console.error("Error, failed to create course", error);
     }
   },
 };

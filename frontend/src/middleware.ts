@@ -12,27 +12,12 @@ const userRoleMap = {
   admin: "/admin",
 };
 
-function isPublicResource(pathname: string): boolean {
-  // Define paths or patterns that are considered public resources
-  const publicPaths = [
-    "/",
-    "/login",
-    "/signup",
-    "/favicon.ico",
-    "/scripts/",
-    "/styles/",
-    "/api/",
-  ];
-
-  return publicPaths.some((publicPath) => pathname.startsWith(publicPath));
-}
-
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
   const auth_token = await fetchAuthToken();
 
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
-  const hasVerifiedToken = auth_token.substring(11) !== ""; // based on implementation of fetchAuthToken
+  const hasVerifiedToken = auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
 
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
@@ -41,7 +26,8 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
-    const userRole = await usersAPI.getUserRole();
+    const userDetails = await usersAPI.getUserDetails();
+    const userRole = userDetails["role" as keyof typeof userDetails];
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
     );
@@ -49,8 +35,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect to login page if user is not authenticated
-  // Example refinement
-  if (!hasVerifiedToken && !isPublicResource(nextUrl.pathname)) {
+  if (!hasVerifiedToken) {
     const response = NextResponse.redirect(new URL("/login", url));
     response.cookies.delete("auth_token");
     return response;
@@ -58,8 +43,8 @@ export async function middleware(request: NextRequest) {
 
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
-
-  const userRole = await usersAPI.getUserRole();
+  const userDetails = await usersAPI.getUserDetails();
+  const userRole = userDetails["role" as keyof typeof userDetails];
   const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
   if (!nextUrl.pathname.startsWith(userRolePath)) {
     const response = NextResponse.redirect(new URL(userRolePath, url));
@@ -69,5 +54,17 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// define pages which do not require authentication
-export const config = { matcher: auth_pages };
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - scripts
+     * - styles
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|scripts|styles).*)",
+  ],
+};

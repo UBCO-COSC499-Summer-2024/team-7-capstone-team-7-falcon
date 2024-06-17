@@ -33,14 +33,14 @@ export const usersAPI = {
   },
 
   /**
-   * Fetches the role of an authenticated user from the backend API.
+   * Fetches the details of an authenticated user from the backend API.
    *
    * @async
-   * @function getUserRole
-   * @returns {Promise<string>} - A promise that resolves to the role of an authenticated user.
-   * @throws Will log an error message to the console if fetching the user role fails.
+   * @function getUserDetails
+   * @returns {Promise<any>} - A promise that resolves to the details of an authenticated user.
+   * @throws Will log an error message to the console if fetching the user details fails.
    */
-  getUserRole: async (): Promise<string> => {
+  getUserDetails: async (): Promise<string> => {
     try {
       const auth_token = await fetchAuthToken();
 
@@ -53,7 +53,7 @@ export const usersAPI = {
       });
 
       const response = await instance.get(`${BACKEND_URL}/api/v1/user/`);
-      return response.data["role"];
+      return response.data;
     } catch (error) {
       throw error;
     }

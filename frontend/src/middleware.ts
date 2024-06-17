@@ -4,12 +4,28 @@ import { usersAPI } from "@/app/api/usersAPI";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
 
 const auth_pages = ["/login", "/signup"];
-const isAuthPages = (url) => auth_pages.some((page) => page.startsWith(url));
+const isAuthPages = (url: string) =>
+  auth_pages.some((page) => page.startsWith(url));
 const userRoleMap = {
   student: "/student",
   professor: "/instructor",
   admin: "/admin",
 };
+
+function isPublicResource(pathname: string): boolean {
+  // Define paths or patterns that are considered public resources
+  const publicPaths = [
+    "/",
+    "/login",
+    "/signup",
+    "/favicon.ico",
+    "/scripts/",
+    "/styles/",
+    "/api/",
+  ];
+
+  return publicPaths.some((publicPath) => pathname.startsWith(publicPath));
+}
 
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
@@ -33,7 +49,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect to login page if user is not authenticated
-  if (!hasVerifiedToken) {
+  // Example refinement
+  if (!hasVerifiedToken && !isPublicResource(nextUrl.pathname)) {
     const response = NextResponse.redirect(new URL("/login", url));
     response.cookies.delete("auth_token");
     return response;
@@ -41,6 +58,7 @@ export async function middleware(request: NextRequest) {
 
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
+
   const userRole = await usersAPI.getUserRole();
   const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
   if (!nextUrl.pathname.startsWith(userRolePath)) {

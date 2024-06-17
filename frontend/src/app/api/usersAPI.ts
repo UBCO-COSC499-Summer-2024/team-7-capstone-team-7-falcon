@@ -55,7 +55,6 @@ export const usersAPI = {
       const response = await instance.get(`${BACKEND_URL}/api/v1/user/`);
       return response.data["role"];
     } catch (error) {
-      console.error("Failed to fetch user role:", error);
       throw error;
     }
   },

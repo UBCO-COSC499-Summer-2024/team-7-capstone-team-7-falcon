@@ -107,3 +107,30 @@ export class SemesterCreationException extends Error {
     super(message);
   }
 }
+
+/**
+ * Exception to be thrown when a job creation fails
+ */
+export class JobCreationException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception to be thrown when a job could not be completed
+ */
+export class CouldNotCompleteJobException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception to be thrown when a job is not found
+ */
+export class JobNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.queueController.jobNotFound);
+  }
+}

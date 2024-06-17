@@ -1,6 +1,8 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import { CourseData } from "../typings/backendDataTypes";
+import { Toast } from "flowbite-react";
+import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
@@ -9,7 +11,7 @@ const AUTH_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE4MzgxODU3LCJleHAiOjE3MTg0NjgyNTd9.j6j-KNfSd1HTxiblVBPcgvN3YKsJ9TsPWCZfkNVlvCo";
 
 export const coursesAPI = {
-  getCourse: async (courseId: number) => {
+    getCourse: async (courseId: number) => {
     try {
       const auth_token = await fetchAuthToken();
       console.log(auth_token);
@@ -51,7 +53,7 @@ export const coursesAPI = {
       return null;
     }
   },
-
+  
   /**
    * Creates a new course using the provided course data.
    *

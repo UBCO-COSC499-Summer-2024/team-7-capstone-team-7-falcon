@@ -1,3 +1,4 @@
+
 export interface CourseData {
   course_code: string;
   course_name: string;
@@ -48,3 +49,4 @@ export enum Status {
   Failure = "FAILURE",
   Pending = "PENDING",
 }
+

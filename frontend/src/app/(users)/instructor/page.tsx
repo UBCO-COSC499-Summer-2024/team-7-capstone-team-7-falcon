@@ -5,6 +5,7 @@ import { Button, Modal } from "flowbite-react";
 import CourseGrid from "../components/courseGrid";
 import CourseCreator from "./components/courseCreateForm/courseCreateForm";
 
+import { Toaster } from "react-hot-toast";
 /**
  * Represents the InstructorCourses component.
  * This component displays a list of managed courses for an instructor.
@@ -25,6 +26,7 @@ const InstructorCourses: React.FC = () => {
   return (
     <>
       <div className="flex justify-between p-5">
+        <Toaster />
         <h1 className="text-2xl font-bold">Managed Courses</h1>
         <Button
           color="purple"
@@ -46,6 +48,7 @@ const InstructorCourses: React.FC = () => {
           </Modal.Body>
         </Modal>
       </div>
+      <CourseGrid />
       <CourseGrid />
     </>
   );

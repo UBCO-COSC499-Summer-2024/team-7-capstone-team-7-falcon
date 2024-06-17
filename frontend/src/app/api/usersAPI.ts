@@ -31,4 +31,32 @@ export const usersAPI = {
       throw error;
     }
   },
+
+  /**
+   * Fetches the role of an authenticated user from the backend API.
+   *
+   * @async
+   * @function getUserRole
+   * @returns {Promise<string>} - A promise that resolves to the role of an authenticated user.
+   * @throws Will log an error message to the console if fetching the user role fails.
+   */
+  getUserRole: async (): Promise<string> => {
+    try {
+      const auth_token = await fetchAuthToken();
+
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user/`,
+        headers: {
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.get(`${BACKEND_URL}/api/v1/user/`);
+      return response.data["role"];
+    } catch (error) {
+      console.error("Failed to fetch user role:", error);
+      throw error;
+    }
+  },
 };

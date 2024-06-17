@@ -23,7 +23,7 @@ const InstructorCourses: React.FC = () => {
   }
 
   return (
-    <div>
+    <>
       <div className="flex justify-between p-5">
         <h1 className="text-2xl font-bold">Managed Courses</h1>
         <Button
@@ -46,10 +46,8 @@ const InstructorCourses: React.FC = () => {
           </Modal.Body>
         </Modal>
       </div>
-      <div>
-        <CourseGrid />
-      </div>
-    </div>
+      <CourseGrid />
+    </>
   );
 };
 

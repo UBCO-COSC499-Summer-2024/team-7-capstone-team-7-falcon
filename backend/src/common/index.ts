@@ -44,4 +44,7 @@ export const ERROR_MESSAGES = {
     semesterNotFound: 'Semester not found',
     semestersNotFound: 'Semesters not found',
   },
+  queueController: {
+    jobNotFound: 'Job not found',
+  },
 };

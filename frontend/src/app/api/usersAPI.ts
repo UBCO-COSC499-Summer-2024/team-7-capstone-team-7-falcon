@@ -40,7 +40,7 @@ export const usersAPI = {
    * @returns {Promise<any>} - A promise that resolves to the details of an authenticated user.
    * @throws Will log an error message to the console if fetching the user details fails.
    */
-  getUserDetails: async (): Promise<string> => {
+  getUserDetails: async (): Promise<any> => {
     try {
       const auth_token = await fetchAuthToken();
 

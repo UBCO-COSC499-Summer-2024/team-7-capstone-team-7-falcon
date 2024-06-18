@@ -18,7 +18,7 @@ jobs:
       - name: Run black linter
         uses: psf/black@stable
         with:
-          options: '--check --versbose'
+          options: '--check --verbose'
           src: "./tasks"
 
   run-linter-backend:

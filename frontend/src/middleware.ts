@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { usersAPI } from "@/app/api/usersAPI";
+import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
 
 const auth_pages = ["/login", "/signup"];
@@ -10,6 +11,24 @@ const userRoleMap = {
   student: "/student",
   professor: "/instructor",
   admin: "/admin",
+};
+
+/**
+ * Fetches user details and extracts the role property.
+ *
+ * @async
+ * @function getUserRole
+ * @returns {Promise<string>} - A promise that resolves to the role of the user.
+ * @throws Will log an error message to the console if fetching the user details fails.
+ */
+const getUserRole = async (): Promise<string> => {
+  try {
+    const userDetails: User = await usersAPI.getUserDetails();
+    const userRole: string = userDetails.role;
+    return userRole;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export async function middleware(request: NextRequest) {
@@ -26,8 +45,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
-    const userDetails = await usersAPI.getUserDetails();
-    const userRole = userDetails.role;
+    const userRole = await getUserRole();
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
     );
@@ -43,8 +61,7 @@ export async function middleware(request: NextRequest) {
 
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
-  const userDetails = await usersAPI.getUserDetails();
-  const userRole = userDetails.role;
+  const userRole = await getUserRole();
   const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
   if (!nextUrl.pathname.startsWith(userRolePath)) {
     const response = NextResponse.redirect(new URL(userRolePath, url));

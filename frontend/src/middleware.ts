@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
       return response;
     }
     const userDetails = await usersAPI.getUserDetails();
-    const userRole = userDetails["role" as keyof typeof userDetails];
+    const userRole = userDetails.role;
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
     );
@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
   const userDetails = await usersAPI.getUserDetails();
-  const userRole = userDetails["role" as keyof typeof userDetails];
+  const userRole = userDetails.role;
   const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
   if (!nextUrl.pathname.startsWith(userRolePath)) {
     const response = NextResponse.redirect(new URL(userRolePath, url));

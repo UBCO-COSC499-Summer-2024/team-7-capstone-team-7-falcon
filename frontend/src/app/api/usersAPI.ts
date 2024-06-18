@@ -1,5 +1,6 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
+import { User } from "@/app/typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -37,10 +38,10 @@ export const usersAPI = {
    *
    * @async
    * @function getUserDetails
-   * @returns {Promise<any>} - A promise that resolves to the details of an authenticated user.
+   * @returns {Promise<User>} - A promise that resolves to the details of an authenticated user.
    * @throws Will log an error message to the console if fetching the user details fails.
    */
-  getUserDetails: async (): Promise<any> => {
+  getUserDetails: async (): Promise<User> => {
     try {
       const auth_token = await fetchAuthToken();
 
@@ -52,7 +53,7 @@ export const usersAPI = {
         withCredentials: true,
       });
 
-      const response = await instance.get(`${BACKEND_URL}/api/v1/user/`);
+      const response = await instance.get<User>(`${BACKEND_URL}/api/v1/user/`);
       return response.data;
     } catch (error) {
       throw error;

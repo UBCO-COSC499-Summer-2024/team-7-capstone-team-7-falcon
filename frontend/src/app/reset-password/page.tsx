@@ -25,14 +25,14 @@ export default function ResetPasswordPage() {
         <div className="mb-4">
           <Label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
+            htmlFor="email"
           >
             Email
           </Label>
           <TextInput
             className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="email"
-            type="password"
+            type="email"
             value={user.email}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
             placeholder="john123@gmail.com"

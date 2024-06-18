@@ -41,7 +41,7 @@ const StudentCourses: React.FC = () => {
         >
           <Modal.Header className="pl-2 pt-2">Join a new Course</Modal.Header>
           <Modal.Body className="mt-2">
-            {/* <CourseCreator onSubmission={() => closeModal()} /> */}
+            {/* Add form to join a course */}
           </Modal.Body>
         </Modal>
       </div>

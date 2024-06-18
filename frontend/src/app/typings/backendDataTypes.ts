@@ -1,4 +1,3 @@
-
 export interface CourseData {
   course_code: string;
   course_name: string;
@@ -43,10 +42,15 @@ export interface Semester {
   name: string;
 }
 
+export interface ExamData {
+  exam_name: string;
+  exam_date: string;
+  pdf: File | null;
+}
+
 export enum Status {
   Success = "SUCCESS",
   WrongCode = "WRONG CODE",
   Failure = "FAILURE",
   Pending = "PENDING",
 }
-

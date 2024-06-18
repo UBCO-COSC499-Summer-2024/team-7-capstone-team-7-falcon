@@ -17,7 +17,7 @@ const ButtonTemplate: React.FC<ButtonTemplateProps> = ({
 }) => {
   return (
     <button
-      className={`p-1 pr-2.5 text-xl items-center space-x-2 text-black bg-white hover:bg-purple-700 hover:text-white
+      className={`p-1 pr-2.5 text-xl items-center space-x-2 text-black hover:bg-purple-700 hover:text-white
         focus:outline-none ring ring-gray-200 hover:ring-purple-800 rounded-lg ${className}`}
     >
       <Link href={link} className="flex space-x-4">

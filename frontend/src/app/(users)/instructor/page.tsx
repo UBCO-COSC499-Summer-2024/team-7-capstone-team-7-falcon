@@ -49,7 +49,6 @@ const InstructorCourses: React.FC = () => {
         </Modal>
       </div>
       <CourseGrid />
-      <CourseGrid />
     </>
   );
 };

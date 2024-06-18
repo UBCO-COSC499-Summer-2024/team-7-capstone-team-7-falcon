@@ -64,7 +64,7 @@ export default function SignupPage() {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
-            email
+            Email
           </Label>
           <TextInput
             className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
@@ -81,7 +81,7 @@ export default function SignupPage() {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
-            password
+            Password
           </Label>
           <TextInput
             className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"

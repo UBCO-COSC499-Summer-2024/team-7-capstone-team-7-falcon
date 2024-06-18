@@ -4,9 +4,24 @@ on:
   pull_request:
     paths:
       - 'backend/**'
+      - 'tasks/**'
 
 jobs:
-  run-tests:
+  run-linter-tasks:
+    name: Run Lint (Tasks)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run black linter
+        uses: psf/black@stable
+        with:
+          options: '--check --versbose'
+          src: "./tasks"
+
+  run-linter-backend:
     name: Run Lint (Backend)
     runs-on: ubuntu-latest
 

@@ -15,3 +15,6 @@ yarn-error.log*
 
 node_modules/
 coverage
+
+# Python files
+__pycache__/

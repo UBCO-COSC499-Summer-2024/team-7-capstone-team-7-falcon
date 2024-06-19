@@ -58,8 +58,8 @@ export class StudentIdAlreadyExistsException extends Error {
  * Exception to be thrown when a course is not found
  */
 export class CourseNotFoundException extends Error {
-  constructor() {
-    super(ERROR_MESSAGES.courseController.courseNotFound);
+  constructor(message?: string) {
+    super(message ?? ERROR_MESSAGES.courseController.courseNotFound);
   }
 }
 
@@ -73,10 +73,64 @@ export class InvalidInviteCodeException extends Error {
 }
 
 /**
+ * Exception to be thrown when an invalid invite code is provided
+ */
+export class UniqueConstraintException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.courseController.uniqueConstraintViolation);
+  }
+}
+
+/**
+ * Exception to be thrown when a course instance from an archived course is accessed
+ */
+export class CourseArchivedException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.courseController.courseArchived);
+  }
+}
+
+/**
+ * Exception to be thrown when a semester cannot be found
+ */
+export class SemesterNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.semesterController.semesterNotFound);
+  }
+}
+
+/**
  * Exception to be thrown when semester is not possible to create
  */
 export class SemesterCreationException extends Error {
   constructor(message: string) {
     super(message);
+  }
+}
+
+/**
+ * Exception to be thrown when a job creation fails
+ */
+export class JobCreationException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception to be thrown when a job could not be completed
+ */
+export class CouldNotCompleteJobException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception to be thrown when a job is not found
+ */
+export class JobNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.queueController.jobNotFound);
   }
 }

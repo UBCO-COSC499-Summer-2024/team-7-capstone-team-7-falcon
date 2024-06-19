@@ -17,12 +17,15 @@ export default function LoginPage() {
 
   const onGoogleSignup = async () => {
     //handle Google Signup
+    router.push(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/oauth/google/`,
+    );
   };
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
       <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="font-bold mb-3">OWLMark Login Portal</h1>
+        <h1 className="font-bold mb-3">OwlMark OMS Portal Login</h1>
         <Button
           onClick={onGoogleSignup}
           color="white"

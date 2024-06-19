@@ -1,3 +1,11 @@
+
+export interface CourseData {
+  course_code: string;
+  course_name: string;
+  section_name: string;
+  semester_id: number;
+}
+
 export interface User {
   id: number;
   first_name: string;
@@ -34,3 +42,11 @@ export interface Semester {
   id: number;
   name: string;
 }
+
+export enum Status {
+  Success = "SUCCESS",
+  WrongCode = "WRONG CODE",
+  Failure = "FAILURE",
+  Pending = "PENDING",
+}
+

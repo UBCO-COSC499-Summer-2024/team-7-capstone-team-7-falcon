@@ -25,7 +25,7 @@ describe('User Integration', () => {
     );
   });
 
-  describe('GET /', () => {
+  describe('GET /user', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/user').expect(HttpStatus.UNAUTHORIZED);
     });
@@ -48,7 +48,7 @@ describe('User Integration', () => {
     });
   });
 
-  describe('GET /:uid', () => {
+  describe('GET /user/:uid', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
@@ -131,7 +131,7 @@ describe('User Integration', () => {
     });
   });
 
-  describe('PATCH /:uid', () => {
+  describe('PATCH /user/:uid', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().patch('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
@@ -394,7 +394,7 @@ describe('User Integration', () => {
     });
   });
 
-  describe('GET /courses', () => {
+  describe('GET /user/courses', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/user/courses').expect(HttpStatus.UNAUTHORIZED);
     });

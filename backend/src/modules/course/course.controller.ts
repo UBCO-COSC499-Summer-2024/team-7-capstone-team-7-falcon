@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Res,
   UseGuards,
   ValidationPipe,
@@ -28,6 +30,7 @@ import { Roles } from '../../decorators/roles.decorator';
 import { UserRoleEnum, CourseRoleEnum } from '../../enums/user.enum';
 import { CourseCreateDto } from './dto/course-create.dto';
 import { SystemRoleGuard } from '../../guards/system-role.guard';
+import { PageOptionsDto } from '../../dto/page-options.dto';
 
 @Controller('course')
 export class CourseController {
@@ -55,6 +58,39 @@ export class CourseController {
     } catch (e) {
       if (e instanceof SemesterNotFoundException) {
         return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Delete member from course
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR)
+  @Delete('/:cid/member/:uid')
+  async removeStudentFromCourse(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Param('uid', ParseIntPipe) uid: number,
+  ): Promise<Response> {
+    try {
+      await this.courseService.removeMemberFromCourse(cid, uid);
+      return res.status(HttpStatus.OK).send({
+        message: 'ok',
+      });
+    } catch (e) {
+      if (e instanceof CourseNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
           message: e.message,
         });
       } else {
@@ -128,6 +164,35 @@ export class CourseController {
           message: e.message,
         });
       }
+    }
+  }
+
+  /**
+   * Get course members
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param pageOptionsDto {PageOptionsDto} - Page options
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:cid/members')
+  async getCourseMembers(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Query(new ValidationPipe()) pageOptionsDto: PageOptionsDto,
+  ): Promise<Response> {
+    try {
+      const course = await this.courseService.getCourseMembers(
+        cid,
+        pageOptionsDto,
+      );
+
+      return res.status(HttpStatus.OK).send(course);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
     }
   }
 }

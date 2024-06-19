@@ -1,10 +1,38 @@
-## Friday (6/7- 6/12)
+
+## Friday (6/12- 6/13)
 
 ### Timesheet
 Clockify report
-![clockify](clockify1.png)
-![clockify](clockify2.png)
-![clockify](clockify3.png)
+![clockify](clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Finishing Student and Instructor Dashboards and Components
+  * #2: Mini Presentation
+  * #3 Full backend integration with frontend
+
+### Progress Update (since 6/13/2024) 
+![ProjectBoard](board.png)
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+I was not able to finish everything I wanted for the week, authorization issues on the backend and delays in some deliverables caused slow progress
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * OMR Model Start
+  * Finish Backend Integration
+  * Bubblesheet creation Start
+
+---
+---
+---
+
+## Wednesday (6/7- 6/12)
+
+### Timesheet
+Clockify report
+![clockify](06.07_06.12/clockify1.png)
+![clockify](06.07_06.12/clockify2.png)
+![clockify](06.07_06.12/clockify3.png)
+
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Finishing Student and Instructor Dashboards and Components

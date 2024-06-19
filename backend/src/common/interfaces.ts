@@ -1,3 +1,5 @@
+import { PageOptionsDto } from '../dto/page-options.dto';
+
 /**
  * Google OAuth user payload interface
  */
@@ -8,7 +10,7 @@ export interface OAuthGoogleUserPayload {
   picture: string;
 }
 
-/**
+/*
  * Jobs queue service interface
  */
 export interface IJobQueueService {
@@ -26,4 +28,12 @@ export interface IBubbleSheetPayload {
   defaultPointsPerQuestion: number;
   numberOfAnswers: number;
   instructions: string;
+}
+
+/**
+ * Page meta dto parameters
+ */
+export interface PageMetaDtoParameters {
+  pageOptionsDto: PageOptionsDto;
+  itemCount: number;
 }

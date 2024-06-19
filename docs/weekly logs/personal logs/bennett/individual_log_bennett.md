@@ -52,7 +52,6 @@ The issues can now be created.
   * Create more issues
   * Finish instructor create exam page
 
-
 ## Wednesday (6/12- 6/13)
 
 ### Timesheet

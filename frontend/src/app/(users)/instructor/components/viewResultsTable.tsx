@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   Table,
   Header,
@@ -14,10 +14,11 @@ import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { nodes } from "./mockData";
 import { usePagination } from "@table-library/react-table-library/pagination";
+import ExamTable from "./examTable";
 
 const key = "Composed Table";
 
-const Component = () => {
+const TableComponent = ({ children }: { children: ReactNode }) => {
   const data = { nodes };
 
   const theme = useTheme(getTheme());
@@ -29,7 +30,7 @@ const Component = () => {
   const handleDelete = (event: any) => {};
   return (
     <>
-      <div className="container mx-auto py-8 flex flex-col  justify-center min-h-screen">
+      <div className="container pt-10 flex flex-col items-center">
         <div className="w-1/2 overflow-x-auto">
           <label htmlFor="search"></label>
 
@@ -60,42 +61,10 @@ const Component = () => {
             />
           </div>
         </div>
-        <div className="flex w-full max-w-4xl mx-auto">
-          <div className="w-1/2 overflow-x-auto">
-            <Table data={data} theme={theme}>
-              {(tableList: any) => (
-                <>
-                  <Header>
-                    <HeaderRow className="bg-gray-700">
-                      <HeaderCell className="py-2">#</HeaderCell>
-                      <HeaderCell className="py-2">Name</HeaderCell>
-                      <HeaderCell className="py-2">Score</HeaderCell>
-                      <HeaderCell className="py-2">Exam Graded</HeaderCell>
-                    </HeaderRow>
-                  </Header>
-
-                  <Body>
-                    {tableList.map((item: any) => (
-                      <Row key={item.id} item={item} className="bg-white">
-                        <Cell className="py-1">{item.id}</Cell>
-                        <Cell className="py-2">{item.name}</Cell>
-                        <Cell className="py-2">
-                          <span className="inline-block bg-gray-200 text-[#8F3DDE] text-sm font-semibold py-1 px-3 rounded w-24">
-                            {item.score}
-                          </span>
-                        </Cell>
-                        <Cell className="py-2">{item.examgraded}</Cell>
-                      </Row>
-                    ))}
-                  </Body>
-                </>
-              )}
-            </Table>
-          </div>
-        </div>
+        <div className="flex w-100% max-w-4xl">{children}</div>
       </div>
     </>
   );
 };
 
-export default Component;
+export default TableComponent;

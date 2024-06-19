@@ -1,5 +1,6 @@
 import React from "react";
-import Component from "../components/viewResultsTable";
+import TableComponent from "../components/viewResultsTable";
+import ExamTable from "../components/examTable";
 /**
  * Renders the page component for the exams the instructor has created.
  * @component
@@ -8,8 +9,17 @@ import Component from "../components/viewResultsTable";
 const instructorExams: React.FC = () => {
   return (
     <div>
-      <h1>Instructor Exams</h1>
-      <Component />
+      <h1 className="text-2xl font-bold">Instructor Exams</h1>
+      <div className="grid grid-cols-6">
+        <div className="col-span-4">
+          <TableComponent>
+            <ExamTable />
+          </TableComponent>
+        </div>
+        <div className="col-span-2">
+          <h1>Exam Details</h1>
+        </div>
+      </div>
     </div>
   );
 };

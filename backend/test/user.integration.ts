@@ -2,18 +2,27 @@ import { HttpStatus } from '@nestjs/common';
 import { UserModel } from '../src/modules/user/entities/user.entity';
 import { UserModule } from '../src/modules/user/user.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
-import { UserRoleEnum } from '../src/enums/user.enum';
+import { CourseRoleEnum, UserRoleEnum } from '../src/enums/user.enum';
 import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
 import { StudentUserModel } from '../src/modules/user/entities/student-user.entity';
+import { CourseModel } from '../src/modules/course/entities/course.entity';
+import { CourseUserModel } from '../src/modules/course/entities/course-user.entity';
 
 describe('User Integration', () => {
   const supertest = setUpIntegrationTests(UserModule);
 
   beforeEach(async () => {
-    // Clear user table
+    await CourseUserModel.delete({});
+    await CourseModel.delete({});
     await UserModel.delete({});
-    // Reset user id sequence (also known as auto increment)
+
+    await CourseModel.query(
+      'ALTER SEQUENCE course_model_id_seq RESTART WITH 1',
+    );
     await UserModel.query('ALTER SEQUENCE user_model_id_seq RESTART WITH 1');
+    await CourseUserModel.query(
+      'ALTER SEQUENCE course_user_model_id_seq RESTART WITH 1',
+    );
   });
 
   describe('GET /', () => {
@@ -382,6 +391,95 @@ describe('User Integration', () => {
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .send({ first_name: 'Jane', employee_id: 1, student_id: 1 })
         .expect(HttpStatus.INTERNAL_SERVER_ERROR);
+    });
+  });
+
+  describe('GET /courses', () => {
+    it('should return status 401 when no token is provided', () => {
+      return supertest().get('/user/courses').expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 404 when there are no courses', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const response = await supertest()
+        .get('/user/courses')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
+    });
+
+    it('should return status 200 and courses', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: user,
+        course: course,
+      }).save();
+
+      const response = await supertest()
+        .get('/user/courses')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body).toMatchSnapshot();
+    });
+
+    it('should return status 400 when user is enrolled in the course, but course is archived', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: user,
+        course: course,
+      }).save();
+
+      const response = await supertest()
+        .get('/user/courses')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 });

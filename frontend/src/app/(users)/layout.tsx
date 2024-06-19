@@ -1,7 +1,6 @@
 import React from "react";
 import Sidebar from "../components/sidebar";
 import { UserInfoProvider } from "../contexts/userContext";
-import Background from "../components/contentContainer";
 import ContentContainer from "../components/contentContainer";
 
 interface LayoutProps {

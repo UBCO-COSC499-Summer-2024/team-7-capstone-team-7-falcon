@@ -28,7 +28,8 @@ UserModel {
   "last_name": "Doe",
   "role": "student",
   "student_user": StudentUserModel {
-    "student_id": 1,
+    "id": 1,
+    "student_id": "1",
   },
   "updated_at": "1000000000",
 }

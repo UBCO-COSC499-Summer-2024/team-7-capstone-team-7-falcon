@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -18,22 +19,91 @@ import { CourseEnrollDto } from './dto/course-enroll.dto';
 import { UserModel } from '../user/entities/user.entity';
 import { User } from '../../decorators/user.decorator';
 import {
+  CourseArchivedException,
   CourseNotFoundException,
   InvalidInviteCodeException,
+  SemesterNotFoundException,
 } from '../../common/errors';
 import { CourseRoleGuard } from '../../guards/course-role.guard';
 import { Roles } from '../../decorators/roles.decorator';
-import { CourseRoleEnum } from '../../enums/user.enum';
+import { UserRoleEnum, CourseRoleEnum } from '../../enums/user.enum';
+import { CourseCreateDto } from './dto/course-create.dto';
+import { SystemRoleGuard } from '../../guards/system-role.guard';
 
 @Controller('course')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
   /**
+   * Create new course using CourseCreateDto (pass in JSON)
+   * @param res {Response} - Response object
+   * @param course {CourseCreateDto} - user entered fields for course creation
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.PROFESSOR)
+  @Post('/create')
+  async createCourse(
+    @Res() res: Response,
+    @Body(new ValidationPipe()) userData: CourseCreateDto,
+    @User() user: UserModel,
+  ): Promise<Response> {
+    try {
+      await this.courseService.createCourse(userData, user);
+      return res.status(HttpStatus.OK).send({
+        message: 'ok',
+      });
+    } catch (e) {
+      if (e instanceof SemesterNotFoundException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Delete member from course
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR)
+  @Delete('/:cid/member/:uid')
+  async removeStudentFromCourse(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Param('uid', ParseIntPipe) uid: number,
+  ): Promise<Response> {
+    try {
+      await this.courseService.removeMemberFromCourse(cid, uid);
+      return res.status(HttpStatus.OK).send({
+        message: 'ok',
+      });
+    } catch (e) {
+      if (e instanceof CourseNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
    * Get course by id
    * @param res {Response} - Response object
    * @param cid {number} - Course id
-   * @returns {Promise<Response>} - Course object
+   * @returns {Promise<Response>} - Response object
    */
   @UseGuards(AuthGuard, CourseRoleGuard)
   @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
@@ -81,6 +151,10 @@ export class CourseController {
         });
       } else if (e instanceof InvalidInviteCodeException) {
         return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else if (e instanceof CourseArchivedException) {
+        return res.status(HttpStatus.UNAUTHORIZED).send({
           message: e.message,
         });
       } else {

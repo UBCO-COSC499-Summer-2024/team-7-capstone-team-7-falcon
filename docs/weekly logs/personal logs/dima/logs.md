@@ -1,6 +1,64 @@
 # Individual Logs
 
-## Wednesday (6/12- 6/13)
+## Wednesday (6/14 - 6/18)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_06142024-06182024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Merge PR that allows professors and TAs to see students in the course (after the team reviews it)
+  * #2: Review other PRs from the team
+  * #3: Prepare for the demo on Wednesday
+  * #4: Prepare development branch PR to be merged to master on Friday
+
+### Progress Update (since 6/14/2024)
+
+![GitHub Board](./images/github_06142024-06182024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #128
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #142
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #131
+        </td>
+        <!-- Status -->
+        <td>Pending team review / Complete
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+Since the last cycle, I promised to finish implementation of queue controller (Done) for python scripts. However, the work on retrieving exams information got deprioritized to accomodate new UI pages other team members are working on. As a result of this change, I focused on implementing backend endpoint to retrieve users' list for the course using a pagination approach of data retrieval to reduce the load on database. I also investigated and implemented a python script (a close to be done skeleton) for custom bubble sheet generator. The left over part for this script is to connect it to our backend and make fields customizable based on the input from backend.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Implement backend endpoint to create exams in the course
+  * Look into / investigate implementation of backend endpoints for creating user accounts with email and passwords (alternative to Sign in with Google). The full functionality should be implemented next Wednesday
+  * Fix minor bugs with UI and backend, which were found during the team meeting on Tuesday
+
+## Wednesday (6/12 - 6/13)
 
 ### Timesheet
 Clockify report

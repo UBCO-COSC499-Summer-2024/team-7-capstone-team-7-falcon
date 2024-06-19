@@ -6,6 +6,10 @@ Time Sheet(CLOCKIFY)
 
 <img width="1045" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/d0af08ec-e6e8-4627-a4ac-d7e5d89b6b17">
 
+Project Board
+<img width="419" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/8ddd6386-faa0-444e-9193-2f84255374e3">
+
+
 
 CURRENT TASKS
 1. UI for both instructor and student tables.

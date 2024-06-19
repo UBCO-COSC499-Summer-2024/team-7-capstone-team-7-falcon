@@ -416,7 +416,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
-        role: UserRoleEnum.PROFESSOR
+        role: UserRoleEnum.PROFESSOR,
       }).save();
 
       return supertest()
@@ -425,7 +425,7 @@ describe('Course Integration', () => {
         .expect(400)
         .expect({
           message: 'Bad Request',
-          statusCode: 400
+          statusCode: 400,
         });
     });
 
@@ -680,6 +680,155 @@ describe('Course Integration', () => {
       const courseRoaster = await CourseUserModel.count();
 
       expect(courseRoaster).toBe(1);
+    });
+  });
+
+  describe('GET /course/:cid/members', () => {
+    it('should return 401 if not authenticated', async () => {
+      await supertest().get('/course/1/members').expect(401);
+    });
+
+    it('should return 401 if user is not professor', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      return supertest()
+        .get('/course/1/members')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 200 if user is professor with default query parameters', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'professor@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: `Doe-${Math.abs(i - 1)}`,
+          email: `john.doe-${i}@test.com`,
+          password: 'password',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        await CourseUserModel.create({
+          user: user,
+          course,
+        }).save();
+      }
+
+      const result = await supertest()
+        .get(`/course/${course.id}/members`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`]);
+
+      expect(result.body).toMatchSnapshot();
+    });
+
+    it('should throw 400 if page is not a number', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'professor@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      await supertest()
+        .get(`/course/${course.id}/members?page=abc`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`])
+        .expect(400);
+    });
+
+    it('should return 200 if user is professor with 2 members', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'professor@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      for (let i = 0; i < 9; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: `Doe-${Math.abs(i - 1)}`,
+          email: `john.doe-${i}@test.com`,
+          password: 'password',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        await CourseUserModel.create({
+          user: user,
+          course,
+        }).save();
+      }
+
+      const result = await supertest()
+        .get(`/course/${course.id}/members?take=2&page=1`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`]);
+
+      expect(result.body).toMatchSnapshot();
     });
   });
 });

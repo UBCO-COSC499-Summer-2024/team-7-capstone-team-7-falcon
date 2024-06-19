@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -55,6 +56,39 @@ export class CourseController {
     } catch (e) {
       if (e instanceof SemesterNotFoundException) {
         return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Delete member from course
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR)
+  @Delete('/:cid/member/:uid')
+  async removeStudentFromCourse(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Param('uid', ParseIntPipe) uid: number,
+  ): Promise<Response> {
+    try {
+      await this.courseService.removeMemberFromCourse(cid, uid);
+      return res.status(HttpStatus.OK).send({
+        message: 'ok',
+      });
+    } catch (e) {
+      if (e instanceof CourseNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
           message: e.message,
         });
       } else {

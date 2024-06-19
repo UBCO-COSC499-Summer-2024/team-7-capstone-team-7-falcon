@@ -6,7 +6,7 @@ on:
       - 'backend/**'
 
 jobs:
-  run-tests:
+  run-linter:
     name: Run Lint (Backend)
     runs-on: ubuntu-latest
 

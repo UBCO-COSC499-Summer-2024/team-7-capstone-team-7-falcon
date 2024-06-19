@@ -1,0 +1,43 @@
+export const nodes = [
+  {
+    name: "Mark Adams",
+    exampublished: "12-03-2024",
+    gradereleased: "12-03-2024",
+    grade: "75",
+    actions: "view exam",
+  },
+  {
+    name: "John Adams",
+    exampublished: "15-03-2024",
+    gradereleased: "12-03-2024",
+    grade: "75",
+    actions: "view exam",
+  },
+  {
+    name: "John Adams",
+    exampublished: "15-03-2024",
+    gradereleased: "12-03-2024",
+    grade: "75",
+    actions: "view exam",
+  },
+  {
+    id: "4",
+    name: "John Adams",
+    role: "Instructor",
+    email: "mark_adams@ubc.ca",
+    exampublished: "17-03-2024",
+    gradereleased: "12-03-2024",
+    grade: "75",
+    actions: "view exam",
+  },
+  {
+    id: "5",
+    name: "John Adams",
+    role: "Instructor",
+    email: "mark_adams@ubc.ca",
+    gradereleased: "12-03-2024",
+    exampublished: "19-03-2024",
+    grade: "75",
+    actions: "view exam",
+  },
+];

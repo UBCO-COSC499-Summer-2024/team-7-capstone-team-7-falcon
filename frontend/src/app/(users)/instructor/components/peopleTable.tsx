@@ -77,7 +77,7 @@ const Component = () => {
                 <Body>
                   {tableList.map((item: any) => (
                     <Row key={item.id} item={item} className="bg-white">
-                      <Cell className="py-2">{item.id}</Cell>
+                      <Cell className="py-1">{item.id}</Cell>
                       <Cell className="py-2">{item.name}</Cell>
                       <Cell className="py-2">
                         <span className="inline-block bg-gray-200 text-[#8F3DDE] text-sm font-semibold py-1 px-3 rounded w-24">

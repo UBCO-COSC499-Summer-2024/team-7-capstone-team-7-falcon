@@ -2,7 +2,7 @@
 
 ### Timesheet
 Clockify report
-![alt text](06.14_06.18.png)
+![time for 06.14_- 06.18](06.14_06.18.png)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Create Join course Page [S]
@@ -48,7 +48,7 @@ The issues can now be created.
 
 ### Timesheet
 Clockify report
-![alt text](06.12_06.13)
+![time for 06.12_- 06.13](06.12_06.13)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Finish Creating course endpoints in NestJS [S]
@@ -84,7 +84,7 @@ The process is going smoothly, the team is using the project board effectively t
 
 ### Timesheet
 Clockify report
-![alt text](06.07_06.11)
+![time for 06.07_- 06.11](06.07_06.11)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Setup database in TypeORM [S]

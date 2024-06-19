@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
@@ -35,6 +36,10 @@ export class CourseRoleGuard implements CanActivate {
     const userId = request['user'].id;
 
     const { cid } = request.params;
+
+    if (isNaN(cid)) {
+      throw new BadRequestException();
+    }
 
     return this.validateUserCourseRole(cid, userId, roles);
   }

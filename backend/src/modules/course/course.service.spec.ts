@@ -282,6 +282,55 @@ describe('CourseService', () => {
     });
   });
 
+  describe('removeMemberFromCourse', () => {
+    it('should remove member from course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const courseUser = await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      expect(courseUser).toBeDefined();
+
+      await courseService.removeMemberFromCourse(course.id, user.id);
+
+      const actual = await CourseUserModel.count();
+      expect(actual).toBe(0);
+    });
+
+    it('should throw CourseNotFoundException if user is not enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        courseService.removeMemberFromCourse(1, user.id),
+      ).rejects.toThrow('User is not enrolled in the course');
+    });
+  });
+
   describe('getCourseMembers', () => {
     it('should return course members from first page', async () => {
       const course = await CourseModel.create({

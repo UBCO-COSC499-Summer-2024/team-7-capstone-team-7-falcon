@@ -14,9 +14,31 @@ import { CourseRoleEnum } from '../../enums/user.enum';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
+import { ERROR_MESSAGES } from '../../common';
 
 @Injectable()
 export class CourseService {
+  /**
+   * Remove member from course
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<void>} - Promise object
+   */
+  async removeMemberFromCourse(cid: number, uid: number): Promise<void> {
+    const userCourse = await this.getUserByCourseAndUserId(cid, uid);
+
+    if (!userCourse) {
+      throw new CourseNotFoundException(
+        ERROR_MESSAGES.courseController.userNotEnrolledInCourse,
+      );
+    }
+
+    await CourseUserModel.delete({
+      course: { id: cid },
+      user: userCourse.user,
+    });
+  }
+
   /**
    * Create a new course
    * @param course {CourseCreateDto} - user inputed fields required for course creation

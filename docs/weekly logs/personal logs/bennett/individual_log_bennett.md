@@ -2,7 +2,7 @@
 
 ### Timesheet
 Clockify report
-![alt text](06.14_06.18)
+![alt text](06.14_06.18.png)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Create Join course Page [S]

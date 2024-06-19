@@ -1,9 +1,38 @@
+## Wednesday (6/13-6/19)
+
+### Timesheet
+Clockify report
+![clockify](06.13_06.19/time1.png)
+![clockify](06.13_06.19/time2.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  1. Creating a Training Corpus for the YOLO model
+  2. Programming backend preprocessing for uploaded files to OMR (i.e. ensuring right file types and file handling)
+  3. Implementing openCV edge detection and some masking to supplement the model training  
+
+### Progress Update (since 6/13/2024) 
+![ProjectBoard](06.13_06.19/board.png)
+
+  1. Finished Instructor Dashboard
+  2. Finished Front end course creation
+  3. Added API endpoints for the front end
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+I was able to complete my main front end goals, and was able to help teammates with issues they are having with frontend tasks.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  1. Have the file preprocessing done 
+  2. Have the corpus examples completed for image labeling
+
+---
+---
+---
 
 ## Friday (6/12- 6/13)
 
 ### Timesheet
 Clockify report
-![clockify](clockify.png)
+![clockify](06.12_06.13/clockify.png)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   * #1: Finishing Student and Instructor Dashboards and Components
@@ -11,7 +40,7 @@ Clockify report
   * #3 Full backend integration with frontend
 
 ### Progress Update (since 6/13/2024) 
-![ProjectBoard](board.png)
+![ProjectBoard](06.12_06.13/board.png)
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 I was not able to finish everything I wanted for the week, authorization issues on the backend and delays in some deliverables caused slow progress

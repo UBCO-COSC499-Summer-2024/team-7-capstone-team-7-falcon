@@ -1,17 +1,17 @@
-## Wednesday (6/13-6/19)
+## Wednesday (6/14-6/19)
 
 ### Timesheet
 Clockify report
-![clockify](06.13_06.19/time1.png)
-![clockify](06.13_06.19/time2.png)
+![clockify](06.14_06.19/time1.png)
+![clockify](06.14_06.19/time2.png)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
   1. Creating a Training Corpus for the YOLO model
   2. Programming backend preprocessing for uploaded files to OMR (i.e. ensuring right file types and file handling)
   3. Implementing openCV edge detection and some masking to supplement the model training  
 
-### Progress Update (since 6/13/2024) 
-![ProjectBoard](06.13_06.19/board.png)
+### Progress Update (since 6/14/2024) 
+![ProjectBoard](06.14_06.19/board.png)
 
   1. Finished Instructor Dashboard
   2. Finished Front end course creation

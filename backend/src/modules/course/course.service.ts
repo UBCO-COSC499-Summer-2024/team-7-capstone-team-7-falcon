@@ -11,9 +11,31 @@ import { CourseCreateDto } from './dto/course-create.dto';
 import { SemesterModel } from '../semesters/entities/semester.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { CourseRoleEnum } from '../../enums/user.enum';
+import { ERROR_MESSAGES } from '../../common';
 
 @Injectable()
 export class CourseService {
+  /**
+   * Remove member from course
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<void>} - Promise object
+   */
+  async removeMemberFromCourse(cid: number, uid: number): Promise<void> {
+    const userCourse = await this.getUserByCourseAndUserId(cid, uid);
+
+    if (!userCourse) {
+      throw new CourseNotFoundException(
+        ERROR_MESSAGES.courseController.userNotEnrolledInCourse,
+      );
+    }
+
+    await CourseUserModel.delete({
+      course: { id: cid },
+      user: userCourse.user,
+    });
+  }
+
   /**
    * Create a new course
    * @param course {CourseCreateDto} - user inputed fields required for course creation

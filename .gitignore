@@ -18,3 +18,7 @@ coverage
 
 # Python files
 __pycache__/
+
+.env.docker
+.env
+.env*.local

@@ -1,5 +1,8 @@
 import {
+<<<<<<< HEAD
   BadRequestException,
+=======
+>>>>>>> 16cce916afa18bd46395a5268d32ba695ffa7492
   CanActivate,
   ExecutionContext,
   Injectable,

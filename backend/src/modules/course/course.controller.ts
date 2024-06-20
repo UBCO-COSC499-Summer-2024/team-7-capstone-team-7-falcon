@@ -105,8 +105,9 @@ export class CourseController {
    * @param cid {number} - Course id
    * @returns {Promise<Response>} - Response object
    */
-  @UseGuards(AuthGuard, CourseRoleGuard)
-  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
+  // @UseGuards(AuthGuard, CourseRoleGuard)
+  @UseGuards(AuthGuard)
+  // @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
   @Get('/:cid')
   async getCourseById(
     @Res() res: Response,

@@ -1,5 +1,5 @@
-
 export interface CourseData {
+  id: number;
   course_code: string;
   course_name: string;
   section_name: string;
@@ -49,4 +49,3 @@ export enum Status {
   Failure = "FAILURE",
   Pending = "PENDING",
 }
-

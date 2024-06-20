@@ -13,6 +13,15 @@ exports[`Course Integration GET /course/:cid should return course if course is f
 }
 `;
 
+exports[`Course Integration GET /course/:cid/public should return course if course is found 1`] = `
+{
+  "course_code": "COSC 499",
+  "course_name": "Capstone Project",
+  "id": 1,
+  "section_name": "001",
+}
+`;
+
 exports[`Course Integration POST /course/:cid/enroll should return 200 if user is not already enrolled 1`] = `
 CourseUserModel {
   "course": CourseModel {

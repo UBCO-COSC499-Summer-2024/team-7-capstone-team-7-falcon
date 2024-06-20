@@ -13,6 +13,177 @@ exports[`Course Integration GET /course/:cid should return course if course is f
 }
 `;
 
+exports[`Course Integration GET /course/:cid/members should return 200 if user is professor with 2 members 1`] = `
+{
+  "data": [
+    {
+      "course_role": "professor",
+      "id": 1,
+      "user": {
+        "avatar_url": null,
+        "email": "professor@test.com",
+        "first_name": "John",
+        "id": 1,
+        "last_name": "Doe",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 3,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-1@test.com",
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe-0",
+      },
+    },
+  ],
+  "meta": {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": "1",
+    "pageCount": 5,
+    "take": "2",
+  },
+}
+`;
+
+exports[`Course Integration GET /course/:cid/members should return 200 if user is professor with default query parameters 1`] = `
+{
+  "data": [
+    {
+      "course_role": "professor",
+      "id": 1,
+      "user": {
+        "avatar_url": null,
+        "email": "professor@test.com",
+        "first_name": "John",
+        "id": 1,
+        "last_name": "Doe",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 3,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-1@test.com",
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe-0",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 2,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-0@test.com",
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe-1",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 4,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-2@test.com",
+        "first_name": "John",
+        "id": 4,
+        "last_name": "Doe-1",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 5,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-3@test.com",
+        "first_name": "John",
+        "id": 5,
+        "last_name": "Doe-2",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 6,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-4@test.com",
+        "first_name": "John",
+        "id": 6,
+        "last_name": "Doe-3",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 7,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-5@test.com",
+        "first_name": "John",
+        "id": 7,
+        "last_name": "Doe-4",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 8,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-6@test.com",
+        "first_name": "John",
+        "id": 8,
+        "last_name": "Doe-5",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 9,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-7@test.com",
+        "first_name": "John",
+        "id": 9,
+        "last_name": "Doe-6",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 10,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-8@test.com",
+        "first_name": "John",
+        "id": 10,
+        "last_name": "Doe-7",
+      },
+    },
+    {
+      "course_role": "student",
+      "id": 11,
+      "user": {
+        "avatar_url": null,
+        "email": "john.doe-9@test.com",
+        "first_name": "John",
+        "id": 11,
+        "last_name": "Doe-8",
+      },
+    },
+  ],
+  "meta": {
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "itemCount": 11,
+    "pageCount": null,
+  },
+}
+`;
+
 exports[`Course Integration GET /course/:cid/public should return course if course is found 1`] = `
 {
   "course_code": "COSC 499",

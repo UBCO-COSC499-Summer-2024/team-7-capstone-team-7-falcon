@@ -11,6 +11,9 @@ import { CourseCreateDto } from './dto/course-create.dto';
 import { SemesterModel } from '../semesters/entities/semester.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { CourseRoleEnum } from '../../enums/user.enum';
+import { PageOptionsDto } from '../../dto/page-options.dto';
+import { PageMetaDto } from '../../dto/page-meta.dto';
+import { PageDto } from '../../dto/page.dto';
 import { ERROR_MESSAGES } from '../../common';
 
 @Injectable()
@@ -145,5 +148,44 @@ export class CourseService {
     }).save();
 
     return;
+  }
+
+  /**
+   * Get course members
+   * @param cid {number} - Course id
+   * @param pageOptionsDto {PageOptionsDto} - Page options
+   * @returns {Promise<PageDto<any>>} - Page dto object
+   */
+  async getCourseMembers(
+    cid: number,
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<any>> {
+    const queryBuilder = CourseUserModel.createQueryBuilder('course_user');
+
+    // NOTE: We are exluding any sensitive information from the query
+    queryBuilder
+      .select(['course_user.id', 'course_user.course_role'])
+      .addSelect([
+        'user.id',
+        'user.first_name',
+        'user.last_name',
+        'user.email',
+        'user.avatar_url',
+      ])
+      .leftJoin('course_user.user', 'user')
+      .where('course_user.course_id = :cid', { cid })
+      .orderBy('user.last_name', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const usersCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({
+      itemCount: usersCount,
+      pageOptionsDto,
+    });
+
+    return new PageDto(entities, pageMetaDto);
   }
 }

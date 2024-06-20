@@ -3,16 +3,20 @@ import ButtonTemplate from "../../components/buttonTemplate";
 import { ChartLineUp } from "flowbite-react-icons/outline";
 
 interface AnalyticsButtonProps {
+  course_id: number;
   className?: string;
 }
 
-const AnalyticsButton: React.FC<AnalyticsButtonProps> = (className) => {
+const AnalyticsButton: React.FC<AnalyticsButtonProps> = ({
+  course_id,
+  className,
+}) => {
   return (
     <ButtonTemplate
       icon={ChartLineUp}
       text={"Analytics"}
-      link={`http://localhost:3000/instructor/course/analytics`}
-      className={className.className}
+      link={`/instructor/course/${course_id}/analytics`}
+      className={className}
     ></ButtonTemplate>
   );
 };

@@ -45,8 +45,20 @@ export interface Semester {
 
 export interface ExamData {
   exam_name: string;
-  exam_date: string;
-  pdf: File | null;
+  exam_date: number;
+  payload?: JSON;
+}
+
+// will be changed later once the form is actually made
+export interface BubblesheetPayload {
+  examName: string;
+  examDate: Date;
+  questions: ExamQuestion[];
+}
+
+export interface ExamQuestion {
+  question: string;
+  answer: string;
 }
 
 export enum Status {
@@ -54,4 +66,5 @@ export enum Status {
   WrongCode = "WRONG CODE",
   Failure = "FAILURE",
   Pending = "PENDING",
+  InvalidDate = "INVALID DATE",
 }

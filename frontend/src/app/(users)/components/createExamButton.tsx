@@ -3,16 +3,20 @@ import ButtonTemplate from "../../components/buttonTemplate";
 import { FileCirclePlus } from "flowbite-react-icons/solid";
 
 interface CreateExamButtonProps {
+  course_id: number;
   className?: string;
 }
 
-const CreateExamButton: React.FC<CreateExamButtonProps> = (className) => {
+const CreateExamButton: React.FC<CreateExamButtonProps> = ({
+  course_id,
+  className,
+}) => {
   return (
     <ButtonTemplate
       icon={FileCirclePlus}
       text={"Create Exam"}
-      link={`http://localhost:3000/instructor/course/create_exam`}
-      className={className.className}
+      link={`/instructor/course/${course_id}/create_exam`}
+      className={className}
     ></ButtonTemplate>
   );
 };

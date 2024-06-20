@@ -20,7 +20,8 @@ export const coursesAPI = {
       });
       const response = await instance.get(`/${courseId}`);
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      // always axios error
       console.error("Failed to find course:", error);
       return error;
     }
@@ -43,7 +44,8 @@ export const coursesAPI = {
       };
       const response = await instance.post(`/${courseId}/enroll`, enrollData);
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      //always axios error
       console.error("Failed to enroll in course: ", error);
       return error;
     }

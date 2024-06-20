@@ -7,10 +7,9 @@ import { coursesAPI } from "../../../../../api/coursesAPI";
 import { Course, CourseData } from "../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
 
-type ButtonType = "Exam" | "People" | "Analytics";
-
 const CreateExam = async ({ params }: { params: { course_id: string } }) => {
-  const response = await coursesAPI.getCourse(Number(params.course_id));
+  const cid = Number(params.course_id);
+  const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };
 
@@ -23,12 +22,15 @@ const CreateExam = async ({ params }: { params: { course_id: string } }) => {
       <h1 className="text-4xl">{courseData.course_name}</h1>
       <h2 className="text-xl">{courseData.course_code}</h2>
       <div className="flex space-x-6">
-        <CreateExamButton className="bg-purple-700 ring-purple-800 text-white" />
-        <PeopleButton />
-        <AnalyticsButton />
+        <CreateExamButton
+          course_id={cid}
+          className="bg-purple-700 ring-purple-800 text-white"
+        />
+        <PeopleButton course_id={cid} />
+        <AnalyticsButton course_id={cid} />
       </div>
       <h1 className="text-xl font-bold">Create Exam:</h1>
-      <InputExam />
+      <InputExam course_id={cid} />
     </div>
   );
 };

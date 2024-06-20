@@ -8,7 +8,6 @@ import { Request } from 'express';
  */
 export function getCookie(req: Request, cookieName: string): string {
   const cookieHeader = req.headers?.cookie;
-  console.log('req.cookies', req.cookies);
   if (!cookieHeader) {
     return null;
   }

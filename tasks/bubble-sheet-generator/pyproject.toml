@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bubble-sheet-generator"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["fperellaholfeld <fperellaholfeld@gmail.com>"]
 readme = "README.md"
@@ -8,6 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 requests = "^2.32.3"
+reportlab = "^4.2.0"
+pillow = "^10.3.0"
+pypdf = "^4.2.0"
 
 
 [tool.poetry.group.dev.dependencies]

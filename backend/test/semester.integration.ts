@@ -1,6 +1,6 @@
 import { UserModel } from '../src/modules/user/entities/user.entity';
-import { SemesterModel } from '../src/modules/semesters/entities/semester.entity';
-import { SemesterModule } from '../src/modules/semesters/semester.module';
+import { SemesterModel } from '../src/modules/semester/entities/semester.entity';
+import { SemesterModule } from '../src/modules/semester/semester.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { UserRoleEnum } from '../src/enums/user.enum';
 

@@ -7,8 +7,8 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { CourseUserModel } from './course-user.entity';
-import { ExamModel } from '../../exams/entities/exam.entity';
-import { SemesterModel } from '../../semesters/entities/semester.entity';
+import { ExamModel } from '../../exam/entities/exam.entity';
+import { SemesterModel } from '../../semester/entities/semester.entity';
 
 @Entity('course_model')
 export class CourseModel extends BaseEntity {

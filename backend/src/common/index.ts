@@ -26,6 +26,7 @@ export const ERROR_MESSAGES = {
     courseCreationFailed: 'Course could not be created',
     coursesNotFound: 'Courses could not be found',
     courseArchived: 'Course is archived. Cannot be accessed.',
+    userNotEnrolledInCourse: 'User is not enrolled in the course',
   },
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
@@ -42,5 +43,8 @@ export const ERROR_MESSAGES = {
       'Start date must be at least two days ahead',
     semesterNotFound: 'Semester not found',
     semestersNotFound: 'Semesters not found',
+  },
+  queueController: {
+    jobNotFound: 'Job not found',
   },
 };

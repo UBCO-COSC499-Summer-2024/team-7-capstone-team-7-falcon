@@ -1,0 +1,21 @@
+name: Lint (Python)
+
+on:
+  pull_request:
+    paths:
+      - 'tasks/**'
+
+jobs:
+  run-linter:
+    name: Run Lint (Tasks)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run linter
+        uses: psf/black@stable
+        with:
+          options: '--check --verbose'
+          src: "./tasks"

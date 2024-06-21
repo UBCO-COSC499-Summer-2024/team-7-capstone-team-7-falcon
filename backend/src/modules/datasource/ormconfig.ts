@@ -4,11 +4,11 @@ import { StudentUserModel } from '../user/entities/student-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import * as path from 'path';
-import { ExamModel } from '../exams/entities/exam.entity';
-import { SubmissionModel } from '../exams/entities/submission.entity';
+import { ExamModel } from '../exam/entities/exam.entity';
+import { SubmissionModel } from '../exam/entities/submission.entity';
 import { CourseModel } from '../course/entities/course.entity';
 import { CourseUserModel } from '../course/entities/course-user.entity';
-import { SemesterModel } from '../semesters/entities/semester.entity';
+import { SemesterModel } from '../semester/entities/semester.entity';
 
 config();
 

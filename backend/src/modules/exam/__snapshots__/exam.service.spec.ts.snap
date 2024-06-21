@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExamService createExam should create an exam 1`] = `
+ExamModel {
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Test Exam",
+  "questions": {},
+}
+`;

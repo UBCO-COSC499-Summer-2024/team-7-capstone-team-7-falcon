@@ -27,7 +27,7 @@ export class ExamModel extends BaseEntity {
   @Column({ type: 'bigint' })
   exam_date: number;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', nullable: true })
   grades_released_at: number;
 
   @Column({ type: 'json' })

@@ -10,7 +10,6 @@ export const coursesAPI = {
   getCourse: async (courseId: number) => {
     try {
       const auth_token = await fetchAuthToken();
-      console.log(auth_token);
       const instance = axios.create({
         baseURL: `${BACKEND_URL_SERVER}/api/v1/course`,
         headers: {
@@ -19,7 +18,7 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/${courseId}`);
+      const response = await instance.get(`/${courseId}/public`);
       return response;
     } catch (error) {
       console.error("Failed to find course:", error);

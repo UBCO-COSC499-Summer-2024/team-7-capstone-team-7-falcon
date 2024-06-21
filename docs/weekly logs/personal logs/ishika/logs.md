@@ -7,7 +7,7 @@ Clockify report
 
 ###Project Board
 
-
+<img width="725" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/1e57e1dc-1cb9-4c7e-a2a2-fc79df46a0f9">
 
 ### Current Tasks 
   * #1: Finish UI for both the student and instructor tables. This includes any styling changes, adding pagination, horizontal scrolling etc - S

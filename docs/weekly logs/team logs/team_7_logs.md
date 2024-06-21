@@ -4,6 +4,80 @@
 
 ## Date Range
 
+- June 14 - June 18
+
+## Features in the Project Plan Cycle
+
+- Queue controller
+- OMR
+  - Bubble sheet generator python module
+  - YOLO environment setup
+  - Corpus creation
+  - Image preprocessing
+- Student dashboard
+- Instructor dashboard (front end and backend integration)
+- Authentication pages
+- Reusable UI component: user table
+- 'Create Exam' form
+- Role-based access
+- Joining course via invite link
+- Custom bubble sheet creation
+- Backend
+  - Remove students from course
+  - Retrieve students enrolled in course
+
+## Associated Tasks from Project Board
+
+!["tasks_this_cycle_06.14_06.18"](images/this_cycle/tasks_this_cycle_06.14_06.18.png)
+
+## Tasks for Next Cycle
+
+!["tasks_next_cycle_06.14_06.18"](images/next_cycle/tasks_next_cycle_06.14_06.18.png)
+
+## Burn-up Chart (Velocity)
+
+### This cycle
+
+!["This_cycle_burn_up_chart"](images/burn_up_chart/this_cycle/burn_up_this_cycle_06.14_06.18.png)
+
+### Overall
+
+!["Overall_burn_up_chart_so_far"](images/burn_up_chart/overall/burn_up_overall_06.14_06.18.png)
+
+## Times for Team/Individual
+
+!["time-tracking"](images/clockify/clockify_06.14_06.18.png)
+
+## Completed Tasks
+
+!["completed_this_cycle"](images/completed/completed_06.14_06.18.png)
+
+## In Progress Tasks/ To do
+
+!["todo_06.14_06.18"](images/next_cycle/tasks_next_cycle_06.14_06.18.png)
+
+## Test Report / Testing Status
+
+Backend unit tests. Note that the red tests are files that are covered by integration tests that are not reported.
+
+!["unit_tests_backend_06.14_06.18"](images/testing/unit_tests_backend_06.14_06.18.png)
+
+Backend integration tests.
+
+!["integration_tests_backend_06.14_06.18"](images/testing/integration_tests_backend_06.14_06.18.png)
+
+Python tests for OMR system
+
+!["python_tests_06.14_06.18"](images/testing/python_tests_06.14_06.18.png)
+
+## Overview
+
+This cycle, the team focused on the frontend (and integration with the backend) since a lot of the backend features have been implemented. Role-based access is ready, and we have started to explore options for the OMR module. The next steps would be to finish most of the UI for the instructor and student views and to focus on creating a viable OMR model for the MVP.
+
+---
+
+## Date Range
+
 - June 12 - June 13
 
 ## Features in the Project Plan Cycle

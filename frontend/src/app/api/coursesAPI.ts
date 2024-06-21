@@ -18,7 +18,7 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/${courseId}`);
+      const response = await instance.get(`/${courseId}/public`);
       return response;
     } catch (error) {
       console.error("Failed to find course:", error);
@@ -30,7 +30,7 @@ export const coursesAPI = {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
-        baseURL: `${BACKEND_URL_CLIENT}/api/v1/course/public`,
+        baseURL: `${BACKEND_URL_CLIENT}/api/v1/course`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,

@@ -1,6 +1,5 @@
 # Individual Logs
 
-<<<<<<< HEAD
 ## Friday (6/19 - 6/20)
 
 ### Timesheet
@@ -43,8 +42,6 @@ To conclude, since it was a very short cycle, I haven't done additional work bes
   * Implement user login, registration, password restore, and user email confirmation on backend
   * Look into what other endpoints can be implemented on backend based on the team's frontend page deliveries during the cycle. Most likely I will focus on shipping backend endpoints for exams and course pages.
 
-=======
->>>>>>> b1e76c295ef800ac1136d9a5b583c96b7339777b
 ## Wednesday (6/14 - 6/18)
 
 ### Timesheet

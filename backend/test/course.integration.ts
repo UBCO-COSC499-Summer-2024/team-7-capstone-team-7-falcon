@@ -4,7 +4,7 @@ import { CourseModule } from '../src/modules/course/course.module';
 import { CourseUserModel } from '../src/modules/course/entities/course-user.entity';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { UserModel } from '../src/modules/user/entities/user.entity';
-import { SemesterModel } from '../src/modules/semesters/entities/semester.entity';
+import { SemesterModel } from '../src/modules/semester/entities/semester.entity';
 import { CourseRoleEnum, UserRoleEnum } from '../src/enums/user.enum';
 
 describe('Course Integration', () => {

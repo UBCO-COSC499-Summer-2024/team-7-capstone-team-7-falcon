@@ -1,4 +1,4 @@
-## Friday (6/19-6/21)
+## Friday (6/19-6/20)
 
 ### Timesheet
 Clockify report
@@ -8,7 +8,7 @@ Clockify report
   1. Labeling the training corpus for the OMR model
   2. Implementing openCV edge detection and masking to supplement the model training  
 
-### Progress Update (since 6/14/2024) 
+### Progress Update (since 6/19/2024)
 ![ProjectBoard](06.19_06.21/board.png)
 
   1. Finished creating a corpus for labeling and training
@@ -26,6 +26,7 @@ I was able to implement the conversion utility which also helped me prepare the 
 ---
 ---
 ---
+
 ## Wednesday (6/14-6/19)
 
 ### Timesheet

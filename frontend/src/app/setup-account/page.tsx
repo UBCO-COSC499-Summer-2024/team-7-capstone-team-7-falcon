@@ -44,12 +44,12 @@ export default function AccountSetup() {
 
           <div className="flex items-center gap-2">
             <Radio
-              id="instructor-role"
+              id="employee-role"
               name="roles"
               value="instructor"
               onChange={(e) => setUser({ ...user, userRole: "instructor" })}
             />
-            <Label htmlFor="instructor-role">instructor</Label>
+            <Label htmlFor="employee-role">employee</Label>
           </div>
         </div>
 
@@ -66,7 +66,7 @@ export default function AccountSetup() {
             type="number"
             value={user.studentId}
             onChange={(e) => setUser({ ...user, studentId: e.target.value })}
-            disabled={user.userRole === "instructor"}
+            disabled={user.userRole !== "student"}
             placeholder="12345678"
           />
         </div>
@@ -93,7 +93,7 @@ export default function AccountSetup() {
           onClick={onSetup}
           color="purple"
           size="xs"
-          className="w-full text-white text-xl bg-[#8F3DDE] font-bold py-3 rounded-md transition duration-300"
+          className="w-full text-white text-xl purple-700 font-bold py-3 rounded-md transition duration-300"
         >
           Setup Account
         </Button>

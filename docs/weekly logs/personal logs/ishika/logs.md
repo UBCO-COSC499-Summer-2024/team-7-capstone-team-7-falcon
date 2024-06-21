@@ -1,3 +1,28 @@
+
+Friday(June 19 - June 20)
+
+Time Sheet(CLOCKIFY)
+
+<img width="1139" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/603e45f3-0f29-4326-ba0d-0b2501c4ff8e">
+
+
+CURRENT TASKS
+
+1. Fetching data for tables from backend, converting hardcoded mock data as props
+2. PR Reviews
+
+PROGRESS UPDATE
+1. Created one general table component for all the child tables, and made some styling changes
+2. Discussed with people working on backend regarding fetching data for tables.
+
+CYCLE GOAL REVIEW
+1. Majority of the work is done, I am yet to finish fetching data from API endpoints
+
+GOALS FOR THE CYCLE
+1. Complete all the syling changes for the tables
+2. Get this PR merged into development
+
+
 June 14 - June 19
 
 Wednesday(June14-June18)

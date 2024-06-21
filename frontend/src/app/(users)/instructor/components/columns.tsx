@@ -1,6 +1,6 @@
 import { DataItem } from "./type";
 
-interface Column {
+export interface Column {
   Header: string;
   accessor: string;
 }

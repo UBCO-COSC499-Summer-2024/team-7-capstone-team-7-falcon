@@ -1,6 +1,6 @@
 export interface DataItem {
-  id: string;
+  id: number;
   name: string;
-  score: string;
-  examgraded: string;
+  score: number;
+  examgraded: number;
 }

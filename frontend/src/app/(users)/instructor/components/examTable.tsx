@@ -12,29 +12,35 @@ import {
 } from "@table-library/react-table-library/table";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
-import { nodes } from "./mockData";
-import { COLUMNS } from "./columns"; //
 import { DataItem } from "./type";
+import { Column } from "./columns";
 
-const ExamTable: React.FC = ({ data, columns }) => {
+type ExamTableProps = {
+  data: DataItem[];
+  columns: Column[];
+};
+
+const ExamTable: React.FC<ExamTableProps> = ({ data, columns }) => {
   const theme = useTheme(getTheme());
   const [search, setSearch] = React.useState("");
+
+  function generateColumns(data: DataItem[]) {}
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
 
-  const filteredData = data.nodes.filter((item) =>
+  const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
-    <Table columns={COLUMNS} data={{ nodes: filteredData }} theme={theme}>
+    <Table columns={columns} data={{ nodes: filteredData }} theme={theme}>
       {() => (
         <>
           <Header>
             <HeaderRow className="bg-gray-700">
-              {COLUMNS.map((column) => (
+              {columns.map((column) => (
                 <HeaderCell key={column.accessor as string} className="py-2">
                   {column.Header}
                 </HeaderCell>
@@ -45,7 +51,7 @@ const ExamTable: React.FC = ({ data, columns }) => {
           <Body>
             {filteredData.map((item) => (
               <Row key={item.id} item={item} className="bg-white">
-                {COLUMNS.map((column) => (
+                {columns.map((column) => (
                   <Cell key={column.accessor as string} className="py-2">
                     {item[column.accessor]}
                   </Cell>

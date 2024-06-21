@@ -1,12 +1,12 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { Button, Label, TextInput, Radio } from "flowbite-react";
 
 export default function AccountSetup() {
   const router = useRouter();
   const [user, setUser] = useState({
+    userRole: "student",
     studentId: "",
     employeeId: "",
   });
@@ -18,10 +18,40 @@ export default function AccountSetup() {
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
       <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="text-center font-bold mb-3">OWLMARK</h1>
+        <h1 className="text-center font-bold mb-3">OwlMark</h1>
         <h2 className="text-md mb-6 text-center text-gray-400">
           You are almost done
         </h2>
+
+        <div className="mb-4">
+          <Label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="role"
+          >
+            I am a/an...
+          </Label>
+
+          <div className="flex items-center gap-2 mb-2">
+            <Radio
+              id="student-role"
+              name="roles"
+              value="student"
+              onChange={(e) => setUser({ ...user, userRole: "student" })}
+              defaultChecked
+            />
+            <Label htmlFor="student-role">student</Label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Radio
+              id="instructor-role"
+              name="roles"
+              value="instructor"
+              onChange={(e) => setUser({ ...user, userRole: "instructor" })}
+            />
+            <Label htmlFor="instructor-role">instructor</Label>
+          </div>
+        </div>
 
         <div className="mb-4">
           <Label
@@ -36,6 +66,7 @@ export default function AccountSetup() {
             type="number"
             value={user.studentId}
             onChange={(e) => setUser({ ...user, studentId: e.target.value })}
+            disabled={user.userRole === "instructor"}
             placeholder="12345678"
           />
         </div>
@@ -53,6 +84,7 @@ export default function AccountSetup() {
             type="number"
             value={user.employeeId}
             onChange={(e) => setUser({ ...user, employeeId: e.target.value })}
+            disabled={user.userRole === "student"}
             placeholder="1234567"
           />
         </div>

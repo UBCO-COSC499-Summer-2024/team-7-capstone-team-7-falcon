@@ -4,9 +4,17 @@ import { usersAPI } from "@/app/api/usersAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
 
-const auth_pages = ["/login", "/signup"];
+const auth_pages = [
+  "/login",
+  "/signup",
+  "/reset-password",
+  "/change-password",
+  "/setup-account",
+];
+
 const isAuthPages = (url: string) =>
   auth_pages.some((page) => page.startsWith(url));
+
 const userRoleMap = {
   student: "/student",
   professor: "/instructor",

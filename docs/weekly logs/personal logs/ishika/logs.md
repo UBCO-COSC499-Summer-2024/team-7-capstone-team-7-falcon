@@ -1,3 +1,35 @@
+
+## Friday (6/19-6/20)
+
+### Timesheet
+Clockify report
+<img width="1146" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/909f1023-f3ab-4650-a772-001e9a040438">
+
+###Project Board
+
+<img width="725" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/1e57e1dc-1cb9-4c7e-a2a2-fc79df46a0f9">
+
+### Current Tasks 
+  * #1: Finish UI for both the student and instructor tables. This includes any styling changes, adding pagination, horizontal scrolling etc - S
+  * #2: Connect frontend with the course and exam API endpoints to fetch data from the API - S
+  * #3: Work on student exam page for the upcoming cycle. - M
+
+### Progress Update (since 19/6/2024) 
+   * #1: I changed all the hardcoded data into props to pass it into table components. 
+   * #2: I made one generalized table component and created other table instances as child components.
+   * #3: I reset my docker setup and fixed the issues I was having with it. 
+   * #4: I researched and discussed on the API endpoints for the middleware.
+
+### Cycle Goal Review 
+Majority of the Component/Table feature is implemented. I was able to complete most of the tasks, however, need to fetch data from API to be able to merge this PR
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * I am going to finish this Component/Table feature and ensure its merged into development.
+  * I am going to work on the other half of Student Exam page(UI)
+  * I am going to review code for the PRs that are ready to be merged.
+
+
+
 June 14 - June 19
 
 Wednesday(June14-June18)

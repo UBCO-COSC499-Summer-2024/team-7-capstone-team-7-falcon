@@ -1,0 +1,2 @@
+# Ignore any saved image files so that our Repo doesn't get flooded with unnecessary images
+sample_sheets/image_output/*

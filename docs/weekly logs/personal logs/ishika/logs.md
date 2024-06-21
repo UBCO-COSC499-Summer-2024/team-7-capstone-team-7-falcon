@@ -1,30 +1,29 @@
-gi
-Friday(June 19 - June 20)
 
-Time Sheet(CLOCKIFY)
+## Friday (6/19-6/20)
 
-<img width="1139" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/603e45f3-0f29-4326-ba0d-0b2501c4ff8e">
+### Timesheet
+Clockify report
+![alt text](image_url_here)
 
-PROJECT BOARD
-<img width="722" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/c52fa01c-5fe1-464d-a483-fc46dd0be504">
+### Current Tasks 
+  * #1: Finish UI for both the student and instructor tables. This includes any styling changes, adding pagination, horizontal scrolling etc - S
+  * #2: Connect frontend with the course and exam API endpoints to fetch data from the API - S
+  * #3: Work on student exam page for the upcoming cycle. - M
 
+### Progress Update (since 19/6/2024) 
+   * #1: I changed all the hardcoded data into props to pass it into table components. 
+   * #2: I made one generalized table component and created other table instances as child components.
+   * #3: I reset my docker setup and fixed the issues I was having with it. 
+   * #4: I researched and discussed on the API endpoints for the middleware.
 
+### Cycle Goal Review 
+Majority of the Component/Table feature is implemented. I was able to complete most of the tasks, however, need to fetch data from API to be able to merge this PR
 
-CURRENT TASKS
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * I am going to finish this Component/Table feature and ensure its merged into development.
+  * I am going to work on the other half of Student Exam page(UI)
+  * I am going to review code for the PRs that are ready to be merged.
 
-1. Fetching data for tables from backend, converting hardcoded mock data as props
-2. PR Reviews
-
-PROGRESS UPDATE
-1. Created one general table component for all the child tables, and made some styling changes
-2. Discussed with people working on backend regarding fetching data for tables.
-
-CYCLE GOAL REVIEW
-1. Majority of the work is done, I am yet to finish fetching data from API endpoints
-
-GOALS FOR THE CYCLE
-1. Complete all the syling changes for the tables
-2. Get this PR merged into development
 
 
 June 14 - June 19

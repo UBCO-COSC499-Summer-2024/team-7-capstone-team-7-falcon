@@ -39,6 +39,11 @@ I completed both tasks I set out to complete. Overall the process is going smoot
 velocity. I think one area we can improve on is having everyone on the team review PRs faster since we often have many
 outstanding PRs.
 
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Work on the view exam results page
+  * Work on some of the frontend API endpoints
+  * Work on the admin add semester page
+
 ## Tuesday (6/14- 6/18)
 
 ### Timesheet
@@ -85,6 +90,7 @@ The issues can now be created.
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Create more issues
   * Finish instructor create exam page
+
 ## Wednesday (6/12- 6/13)
 
 ### Timesheet

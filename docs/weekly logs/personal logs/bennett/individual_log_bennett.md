@@ -39,6 +39,11 @@ I completed both tasks I set out to complete. Overall the process is going smoot
 velocity. I think one area we can improve on is having everyone on the team review PRs faster since we often have many
 outstanding PRs.
 
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Work on the view exam results page
+  * Work on some of the frontend API endpoints
+  * Work on the admin add semester page
+
 ## Tuesday (6/14- 6/18)
 
 ### Timesheet
@@ -77,20 +82,15 @@ Clockify report
     </tr>
 </table>
 
-### Next Cycle Goals (What are you going to accomplish during the next cycle)
-  * Finish the
-  * Finish instructor create exam page
-
-
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 I completed task 1 almost finished task 2. Overall it is a bit unclear what tasks need to be worked on or are being worked on
 because there aren't issues created for them yet. Today we had a meeting to clear up what everyone is working/plan to work on.
 The issues can now be created.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
-  * Work on the view exam results page
-  * Work on some of the frontend API endpoints
-  * Work on the admin add semester page
+  * Create more issues
+  * Finish instructor create exam page
+
 ## Wednesday (6/12- 6/13)
 
 ### Timesheet

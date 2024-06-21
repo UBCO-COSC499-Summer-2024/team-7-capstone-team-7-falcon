@@ -80,7 +80,7 @@ if __name__ == "__main__":
     start_time = time.time()
     if len(sys.argv) != 5:
         print(
-            "Usage: python script.py <pdf_path> <output_path> <num_pages_per_sheet> <save_images>"
+            "Usage: python pdf_to_images.py <pdf_path: String> <output_path: String> <num_pages_per_sheet: int> <save_images: boolean>"
         )
         sys.exit(1)
 

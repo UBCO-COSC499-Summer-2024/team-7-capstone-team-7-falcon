@@ -1,3 +1,44 @@
+## Tuesday (6/19- 6/20)
+
+### Timesheet
+Clockify report
+![time for 06.14_- 06.18](06.19_06.20.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Add more Issues to project board [XS]
+  * #2: Instructor create exam page [S]
+
+### Progress Update (since 6/19/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create Join course Page N/A
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor create exam page #136
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+I completed both tasks I set out to complete. Overall the process is going smoothly and I have no complaints about our project
+velocity. I think one area we can improve on is having everyone on the team review PRs faster since we often have many
+outstanding PRs.
+
 ## Tuesday (6/14- 6/18)
 
 ### Timesheet

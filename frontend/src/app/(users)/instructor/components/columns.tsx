@@ -2,7 +2,7 @@ import { DataItem } from "./type";
 
 interface Column {
   Header: string;
-  accessor: keyof DataItem;
+  accessor: string;
 }
 
 export const COLUMNS = [
@@ -17,6 +17,7 @@ export const COLUMNS = [
   {
     Header: "Score",
     accessor: "score",
+    className: "score-column",
   },
   {
     Header: "Exam Graded",

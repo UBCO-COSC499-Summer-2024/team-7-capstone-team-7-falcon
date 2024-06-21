@@ -13,11 +13,10 @@ import {
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { nodes } from "./mockData";
-import { COLUMNS } from "./columns";
+import { COLUMNS } from "./columns"; //
 import { DataItem } from "./type";
 
-const ExamTable: React.FC<string> = () => {
-  const data = { nodes };
+const ExamTable: React.FC = ({ data, columns }) => {
   const theme = useTheme(getTheme());
   const [search, setSearch] = React.useState("");
 
@@ -30,7 +29,7 @@ const ExamTable: React.FC<string> = () => {
   );
 
   return (
-    <Table data={{ nodes: filteredData }} theme={theme}>
+    <Table columns={COLUMNS} data={{ nodes: filteredData }} theme={theme}>
       {() => (
         <>
           <Header>

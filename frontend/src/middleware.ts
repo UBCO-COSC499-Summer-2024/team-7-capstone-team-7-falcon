@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { usersAPI } from "@/app/api/usersAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
+import { jwtDecode } from "jwt-decode";
 
 const auth_pages = ["/login", "/signup"];
 const isAuthPages = (url: string) =>
@@ -11,6 +12,25 @@ const userRoleMap = {
   student: "/student",
   professor: "/instructor",
   admin: "/admin",
+};
+
+/**
+ * Verifies if a jwt token is expired.
+ *
+ * @function isTokenExpired
+ * @returns { boolean } - A boolean indicating if the token is expired.
+ * @throws Will log an error message to the console if an error occurs when decoding the token.
+ */
+const isTokenExpired = (token) => {
+  if (!token) return true;
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp < currentTime;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return true;
+  }
 };
 
 /**
@@ -33,10 +53,11 @@ const getUserRole = async (): Promise<string> => {
 
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
-  const auth_token = await fetchAuthToken();
+  const fetched_auth_token = await fetchAuthToken();
+  const auth_token = fetched_auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
 
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
-  const hasVerifiedToken = auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
+  const hasVerifiedToken = !isTokenExpired(auth_token);
 
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {

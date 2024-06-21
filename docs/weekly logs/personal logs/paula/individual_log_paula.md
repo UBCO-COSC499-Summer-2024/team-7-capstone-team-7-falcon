@@ -1,5 +1,35 @@
 # Individual Logs for Paula
 
+## Wednesday (6/14- 6/18)
+
+### Timesheet
+
+Clockify report
+!["timesheet_06.14_06.18"](images/clockify_06.14_06.18.png)
+
+### Current Tasks
+
+!["current_tasks_06.14_06.18"](images/current_tasks_06.14_06.18.png)
+
+  * #1: Setup role-based authentication
+  * #2: Create account setup page ("you are almost there") - some updates were added to the design
+  * #3: Created the change/reset password pages
+  * #4: Working on the student dashboard
+
+### Progress Update (since 6/14/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I was able to complete the set up for role-based authentication (RBAC) as well as to create the UI for several pages. I think I am starting to better understand the code on both the frontend and backend, but am still unclear on several parts. I will need more time on the weekend to review TypeScript itself. Task #2 was complete, but we decided to add a new feature to improve user experience so that is to be completed in the next cycle. One issue I personally found (as Bennett also pointed out) was that it was unclear what we had to work on, but we discussed the tasks to be prioritised today and I now have a better idea of what to do.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  * Finish authentication pages and student dashboard
+  * Work on more UI
+  * Help Fran make training data for the OMR model
+
 ## Friday (6/12- 6/13)
 
 ### Timesheet

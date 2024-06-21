@@ -23,13 +23,22 @@ const PageSidebar: React.FC = () => {
     const fetchUserDetails = async () => {
       try {
         const userDetails = await usersAPI.getUserDetails();
+
+        let userRole;
+        if (userDetails.role === "instructor") {
+          userRole = Role.INSTRUCTOR;
+        } else if (userDetails.role === "admin") {
+          userRole = Role.ADMIN;
+        } else {
+          userRole = Role.STUDENT;
+        }
+
         setUserInfo({
           ...userInfo,
           firstName: userDetails.first_name,
           lastName: userDetails.last_name,
           email: userDetails.email,
-          role:
-            userDetails.role === "instructor" ? Role.INSTRUCTOR : Role.STUDENT,
+          role: userRole,
           avatarUrl: userDetails.avatar_url,
         });
       } catch (error) {

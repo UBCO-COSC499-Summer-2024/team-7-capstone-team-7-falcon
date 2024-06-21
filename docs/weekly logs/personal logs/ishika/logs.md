@@ -5,6 +5,10 @@ Time Sheet(CLOCKIFY)
 
 <img width="1139" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/603e45f3-0f29-4326-ba0d-0b2501c4ff8e">
 
+PROJECT BOARD
+<img width="722" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/c52fa01c-5fe1-464d-a483-fc46dd0be504">
+
+
 
 CURRENT TASKS
 

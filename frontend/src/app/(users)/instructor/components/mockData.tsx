@@ -1,4 +1,6 @@
-export const nodes = [
+import { DataItem } from "./type";
+
+export const nodes: DataItem[] = [
   {
     id: "1",
     name: "Mark Adams",

@@ -47,4 +47,7 @@ export const ERROR_MESSAGES = {
   queueController: {
     jobNotFound: 'Job not found',
   },
+  examController: {
+    examDateError: 'Exam date must be in the future',
+  },
 };

@@ -31,7 +31,7 @@ const TableComponent = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <div className="container pt-10 flex flex-col items-center">
-        <div className="w-1/2 overflow-x-auto">
+        <div className="w-full overflow-x-auto">
           <label htmlFor="search"></label>
 
           <div className="relative">
@@ -56,7 +56,7 @@ const TableComponent = ({ children }: { children: ReactNode }) => {
               type="text"
               value={search}
               onChange={handleSearch}
-              className="border border-gray-300 pl-10 pr-4 py-2 w-full"
+              className="border border-gray-300 pl-10  w-full"
               placeholder="Search for Member"
             />
           </div>

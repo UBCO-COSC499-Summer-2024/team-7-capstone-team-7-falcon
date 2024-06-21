@@ -1,4 +1,4 @@
-## Friday (6/19-6/21)
+## Friday (6/19-6/20)
 
 ### Timesheet
 Clockify report

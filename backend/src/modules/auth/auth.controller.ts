@@ -41,11 +41,17 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
+  /**
+   * Register a new user
+   * @param res {Response} - The response object
+   * @param body {UserCreateDto} - The user create dto
+   * @returns {Promise<Response>} - The response object
+   */
   @Post('register')
   async register(
     @Res() res: Response,
     @Body(new ValidationPipe()) body: UserCreateDto,
-  ) {
+  ): Promise<Response> {
     try {
       await this.userService.findOrCreateUser(body, AuthTypeEnum.EMAIL);
       return res.status(HttpStatus.CREATED).send({ message: 'ok' });

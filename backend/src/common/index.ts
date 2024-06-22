@@ -9,6 +9,7 @@ export const ERROR_MESSAGES = {
     userAlreadyExists: 'User already exists with different auth type',
     invalidAuthMethod: 'Invalid auth method',
     googleAuthError: 'Error authenticating with Google',
+    emailNotVerified: 'Email not verified',
   },
   userEditDto: {
     firstNameString: 'First name must be a string',

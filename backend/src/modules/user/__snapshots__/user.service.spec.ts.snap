@@ -5,6 +5,7 @@ UserModel {
   "auth_type": "google_oauth",
   "avatar_url": "picture",
   "email": "john.doe@test.com",
+  "email_verified": false,
   "first_name": "John",
   "id": 1,
   "last_name": "Doe",
@@ -19,6 +20,7 @@ UserModel {
   "avatar_url": null,
   "created_at": "1000000000",
   "email": "john.doe@test.com",
+  "email_verified": false,
   "employee_user": EmployeeUserModel {
     "employee_id": 1,
     "id": 1,

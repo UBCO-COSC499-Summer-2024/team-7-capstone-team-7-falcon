@@ -38,6 +38,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -61,6 +62,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -77,6 +79,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -99,6 +102,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -118,6 +122,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -144,6 +149,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -165,6 +171,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -191,6 +198,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const userTwo = await UserModel.create({
@@ -200,6 +208,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -220,6 +229,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -238,6 +248,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -248,6 +259,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -269,6 +281,7 @@ describe('User Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -289,6 +302,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const userTwo = await UserModel.create({
@@ -298,6 +312,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const employeeIdRecord = await EmployeeUserModel.create({
@@ -326,6 +341,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const userTwo = await UserModel.create({
@@ -335,6 +351,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const studentIdRecord = await StudentUserModel.create({
@@ -363,6 +380,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -383,6 +401,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       // Relies on the fact that previous test case creates a student_id record
@@ -407,6 +426,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -433,6 +453,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({
@@ -467,6 +488,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({

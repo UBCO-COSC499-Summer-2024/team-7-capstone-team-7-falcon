@@ -7,6 +7,7 @@ import {
   UserAlreadyExistsException,
 } from '../src/common/errors';
 import { HttpStatus } from '@nestjs/common';
+import { UserModel } from '../src/modules/user/entities/user.entity';
 
 const mockAuthService = {
   // We need to mock the signInWithGoogle method to avoid calling the Google API
@@ -30,6 +31,11 @@ describe('Auth Integration', () => {
     (t: TestingModuleBuilder) =>
       t.overrideProvider(AuthService).useValue(mockAuthService),
   );
+
+  beforeEach(async () => {
+    await UserModel.delete({});
+    await UserModel.query('ALTER SEQUENCE user_model_id_seq RESTART WITH 1');
+  });
 
   describe('GET oauth/:provider', () => {
     it('should return status 400 when provider is not supported', () => {
@@ -96,12 +102,38 @@ describe('Auth Integration', () => {
       return supertest().get('/auth/logout').expect(HttpStatus.UNAUTHORIZED);
     });
 
-    it('should return status 204 when token is provided', () => {
+    it('should return status 403 when user email is not verified', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
       return supertest()
         .get('/auth/logout')
-        .set('Cookie', [`auth_token=${signJwtToken(1)}`])
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.FORBIDDEN);
+    });
+
+    it('should return status 204 when token is provided', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      return supertest()
+        .get('/auth/logout')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.FOUND)
-        .expect('Location', `${process.env.FRONTEND_URL}/login`)
+        .expect('Location', `${process.env.FRONTEND_URL}/login`);
     });
   });
 });

@@ -13,6 +13,7 @@ import { faker } from '@faker-js/faker';
 import { CourseModel } from '../course/entities/course.entity';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { TokenModule } from '../token/token.module';
+import { UserCreateDto } from '../auth/dto/user-create.dto';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -102,6 +103,199 @@ describe('UserService', () => {
       await expect(
         userService.findOrCreateUser(userPayload, AuthTypeEnum.GOOGLE_OAUTH),
       ).rejects.toThrow('User already exists');
+    });
+
+    it('should throw an error when user already exists with the same auth type for EMAIL AccountType', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+      };
+
+      await expect(
+        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+      ).rejects.toThrow('User already exists');
+    });
+
+    it('should throw an error when user does not have student or employee field for EMAIL AccountType', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+      };
+
+      await expect(
+        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+      ).rejects.toThrow('Student or employee ID fields are missing');
+    });
+
+    it('should throw an error when employee id already exists for EMAIL AccountType', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@email.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 1,
+        user: user,
+      }).save();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        employee_id: 1,
+      };
+
+      await expect(
+        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+      ).rejects.toThrow('Employee ID already exists');
+    });
+
+    it('should throw an error when student id already exists for EMAIL AccountType', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@email.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 1,
+        user: user,
+      }).save();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        student_id: 1,
+      };
+
+      await expect(
+        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+      ).rejects.toThrow('Student ID already exists');
+    });
+
+    it('should create user with email auth type and student id', async () => {
+      const password = 'password';
+      const email = 'email@email.com';
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        student_id: 1,
+      };
+
+      const user = await userService.findOrCreateUser(
+        userPayload,
+        AuthTypeEnum.EMAIL,
+      );
+
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.password;
+      delete user.tokens[0].created_at;
+      delete user.tokens[0].expires_at;
+      delete user.tokens[0].token;
+      delete user.student_user.user;
+
+      expect(user).toMatchSnapshot();
+    });
+
+    it('should create user with email auth type and employee id', async () => {
+      const password = 'password';
+      const email = 'email@email.com';
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        employee_id: 1,
+      };
+
+      const user = await userService.findOrCreateUser(
+        userPayload,
+        AuthTypeEnum.EMAIL,
+      );
+
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.password;
+      delete user.tokens[0].created_at;
+      delete user.tokens[0].expires_at;
+      delete user.tokens[0].token;
+      delete user.employee_user.user;
+
+      expect(user).toMatchSnapshot();
+    });
+
+    it('should create user with email auth type and student id and employee id', async () => {
+      const password = 'password';
+      const email = 'email@email.com';
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        employee_id: 1,
+        student_id: 1,
+      };
+
+      const user = await userService.findOrCreateUser(
+        userPayload,
+        AuthTypeEnum.EMAIL,
+      );
+
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.password;
+      delete user.tokens[0].created_at;
+      delete user.tokens[0].expires_at;
+      delete user.tokens[0].token;
+      delete user.employee_user.user;
+      delete user.student_user.user;
+
+      expect(user).toMatchSnapshot();
     });
 
     it('should throw an error when auth type is not supported', async () => {

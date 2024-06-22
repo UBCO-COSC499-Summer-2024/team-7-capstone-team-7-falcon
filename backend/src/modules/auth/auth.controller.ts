@@ -14,8 +14,11 @@ import { Response } from 'express';
 import { ProviderAuthPipe } from './pipes/auth.pipe';
 import { AuthService } from './auth.service';
 import {
+  EmployeeIdAlreadyExistsException,
   OAuthGoogleErrorException,
+  StudentIdAlreadyExistsException,
   UserAlreadyExistsException,
+  UserStudentEmployeeFieldException,
 } from '../../common/errors';
 import { CodeAuthPipe } from './pipes/code-auth.pipe';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -44,15 +47,18 @@ export class AuthController {
     @Body(new ValidationPipe()) body: UserCreateDto,
   ) {
     try {
-      const user = await this.userService.findOrCreateUser(
-        body,
-        AuthTypeEnum.EMAIL,
-      );
-      return res.status(HttpStatus.CREATED).send(user);
+      await this.userService.findOrCreateUser(body, AuthTypeEnum.EMAIL);
+      return res.status(HttpStatus.CREATED).send({ message: 'ok' });
     } catch (e) {
       if (e instanceof UserAlreadyExistsException) {
         return res.status(HttpStatus.CONFLICT).send({ error: e.message });
-      } else if (e instanceof Error) {
+      } else if (
+        e instanceof UserStudentEmployeeFieldException ||
+        e instanceof EmployeeIdAlreadyExistsException ||
+        e instanceof StudentIdAlreadyExistsException
+      ) {
+        return res.status(HttpStatus.BAD_REQUEST).send({ error: e.message });
+      } else {
         return res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .send({ error: e.message });

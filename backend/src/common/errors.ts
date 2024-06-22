@@ -143,3 +143,14 @@ export class ExamCreationException extends Error {
     super(message);
   }
 }
+
+/**
+ * Exception to be thrown when both student and employee fields are not provided
+ */
+export class UserStudentEmployeeFieldException extends Error {
+  constructor() {
+    super(
+      ERROR_MESSAGES.userController.userStudentEmployeeIdFieldsMissingError,
+    );
+  }
+}

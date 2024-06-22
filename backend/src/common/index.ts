@@ -4,6 +4,8 @@ export const ERROR_MESSAGES = {
     editForbidden: 'You are not allowed to edit this user',
     employeeIdAlreadyExists: 'Employee ID already exists',
     studentIdAlreadyExists: 'Student ID already exists',
+    userStudentEmployeeIdFieldsMissingError:
+      'Student or employee ID fields are missing',
   },
   authController: {
     userAlreadyExists: 'User already exists with different auth type',

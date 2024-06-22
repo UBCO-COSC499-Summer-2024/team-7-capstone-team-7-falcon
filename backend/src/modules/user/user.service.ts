@@ -6,6 +6,7 @@ import {
   StudentIdAlreadyExistsException,
   UserAlreadyExistsException,
   UserNotFoundException,
+  UserStudentEmployeeFieldException,
 } from '../../common/errors';
 import { AuthTypeEnum } from '../../enums/user.enum';
 import { EmployeeUserModel } from './entities/employee-user.entity';
@@ -79,9 +80,10 @@ export class UserService {
       where: { email: userPayload.email },
     });
 
+    const currentTime = parseInt(new Date().getTime().toString());
+
     if (method === AuthTypeEnum.GOOGLE_OAUTH) {
       if (!user) {
-        const currentTime = parseInt(new Date().getTime().toString());
         // Override userPayload type to OAuthGoogleUserPayload as we know it's a Google OAuth user
         userPayload = userPayload as OAuthGoogleUserPayload;
 
@@ -106,8 +108,33 @@ export class UserService {
       if (user) {
         throw new UserAlreadyExistsException();
       }
+
       // Override userPayload type to UserCreateDto as we know it's an email user
       userPayload = userPayload as UserCreateDto;
+
+      if (!userPayload.employee_id && !userPayload.student_id) {
+        throw new UserStudentEmployeeFieldException();
+      }
+
+      if (userPayload.employee_id) {
+        const employeeUser: EmployeeUserModel = await this.findEmployeeNumber(
+          userPayload.employee_id,
+        );
+
+        if (employeeUser) {
+          throw new EmployeeIdAlreadyExistsException();
+        }
+      }
+
+      if (userPayload.student_id) {
+        const studentUser: StudentUserModel = await this.findStudentNumber(
+          userPayload.student_id,
+        );
+
+        if (studentUser) {
+          throw new StudentIdAlreadyExistsException();
+        }
+      }
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(userPayload.password, salt);
@@ -119,18 +146,12 @@ export class UserService {
         auth_type: AuthTypeEnum.EMAIL,
         password: hashedPassword,
         tokens: [await this.tokenService.createToken()],
+        created_at: currentTime,
+        updated_at: currentTime,
       }).save();
 
-      // Create employee number
+      // Create employee number record
       if (userPayload.employee_id) {
-        const employeeUser: EmployeeUserModel = await this.findEmployeeNumber(
-          userPayload.employee_id,
-        );
-
-        if (employeeUser && employeeUser.user.id !== user.id) {
-          throw new EmployeeIdAlreadyExistsException();
-        }
-
         const employeeUserRecord: EmployeeUserModel =
           await EmployeeUserModel.create({
             employee_id: userPayload.employee_id,
@@ -140,16 +161,8 @@ export class UserService {
         user.employee_user = employeeUserRecord;
       }
 
-      // Create student number
+      // Create student number record
       if (userPayload.student_id) {
-        const studentUser: StudentUserModel = await this.findStudentNumber(
-          userPayload.student_id,
-        );
-
-        if (studentUser && studentUser.user.id !== user.id) {
-          throw new StudentIdAlreadyExistsException();
-        }
-
         const studentUserRecord: StudentUserModel =
           await StudentUserModel.create({
             student_id: userPayload.student_id,

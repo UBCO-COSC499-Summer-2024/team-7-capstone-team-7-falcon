@@ -12,6 +12,7 @@ import { OAuthGoogleUserPayload } from '../../common/interfaces';
 import { faker } from '@faker-js/faker';
 import { CourseModel } from '../course/entities/course.entity';
 import { CourseUserModel } from '../course/entities/course-user.entity';
+import { TokenModule } from '../token/token.module';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -20,7 +21,7 @@ describe('UserService', () => {
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       providers: [UserService],
-      imports: [TestTypeOrmModule, TestConfigModule],
+      imports: [TestTypeOrmModule, TestConfigModule, TokenModule],
     }).compile();
 
     userService = moduleRef.get<UserService>(UserService);
@@ -112,7 +113,7 @@ describe('UserService', () => {
       };
 
       await expect(
-        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+        userService.findOrCreateUser(userPayload, 'invalid_auth_type'),
       ).rejects.toThrow('Invalid auth method');
     });
   });

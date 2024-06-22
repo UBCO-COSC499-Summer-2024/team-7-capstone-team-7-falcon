@@ -12,6 +12,7 @@ import { EmployeeUserModel } from './employee-user.entity';
 import { StudentUserModel } from './student-user.entity';
 import { Exclude } from 'class-transformer';
 import { CourseUserModel } from '../../course/entities/course-user.entity';
+import { TokenModel } from '../../token/entities/token.entity';
 
 @Entity('user_model')
 export class UserModel extends BaseEntity {
@@ -64,4 +65,7 @@ export class UserModel extends BaseEntity {
 
   @OneToMany(() => CourseUserModel, (courseUser) => courseUser.user)
   courses: CourseUserModel[];
+
+  @OneToMany(() => TokenModel, (token) => token.user)
+  tokens: TokenModel[];
 }

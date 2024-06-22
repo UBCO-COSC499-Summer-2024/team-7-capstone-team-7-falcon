@@ -1,11 +1,14 @@
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
   Param,
+  Post,
   Query,
   Res,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ProviderAuthPipe } from './pipes/auth.pipe';
@@ -16,13 +19,46 @@ import {
 } from '../../common/errors';
 import { CodeAuthPipe } from './pipes/code-auth.pipe';
 import { AuthGuard } from '../../guards/auth.guard';
+import { UserCreateDto } from './dto/user-create.dto';
+import { UserService } from '../user/user.service';
+import { AuthTypeEnum } from '../../enums/user.enum';
 
 @Controller('auth')
 export class AuthController {
   private GOOGLE_AUTH_URL: string =
     'https://accounts.google.com/o/oauth2/v2/auth';
 
-  constructor(private readonly authService: AuthService) {}
+  /**
+   * Constructor
+   * @param authService {AuthService} - The auth service
+   * @param userService {UserService} - The user service
+   */
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
+
+  @Post('register')
+  async register(
+    @Res() res: Response,
+    @Body(new ValidationPipe()) body: UserCreateDto,
+  ) {
+    try {
+      const user = await this.userService.findOrCreateUser(
+        body,
+        AuthTypeEnum.EMAIL,
+      );
+      return res.status(HttpStatus.CREATED).send(user);
+    } catch (e) {
+      if (e instanceof UserAlreadyExistsException) {
+        return res.status(HttpStatus.CONFLICT).send({ error: e.message });
+      } else if (e instanceof Error) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ error: e.message });
+      }
+    }
+  }
 
   /**
    * Redirect to the OAuth provider

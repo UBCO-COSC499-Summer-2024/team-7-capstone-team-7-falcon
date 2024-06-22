@@ -12,9 +12,18 @@ import { EmployeeUserModel } from './entities/employee-user.entity';
 import { StudentUserModel } from './entities/student-user.entity';
 import { UserEditDto } from './dto/user-edit.dto';
 import { CourseUserModel } from '../course/entities/course-user.entity';
+import { UserCreateDto } from '../auth/dto/user-create.dto';
+import { TokenService } from '../token/token.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  /**
+   * Constructor
+   * @param tokenService {TokenService} - The token service
+   */
+  constructor(private readonly tokenService: TokenService) {}
+
   /**
    * Search for courses based on user id
    * @param user_id {number} - User id
@@ -58,20 +67,23 @@ export class UserService {
 
   /**
    * Returns a user by email
-   * @param email {string} - User email
+   * @params userPayload {OAuthGoogleUserPayload | UserCreateDto} - User payload
+   * @params method {string} - Auth method
    * @returns {Promise<UserModel>} - User object
    */
   public async findOrCreateUser(
-    userPayload: OAuthGoogleUserPayload,
+    userPayload: OAuthGoogleUserPayload | UserCreateDto,
     method: string,
   ): Promise<UserModel> {
-    if (method === AuthTypeEnum.GOOGLE_OAUTH) {
-      let user: UserModel = await UserModel.findOne({
-        where: { email: userPayload.email },
-      });
+    let user: UserModel = await UserModel.findOne({
+      where: { email: userPayload.email },
+    });
 
+    if (method === AuthTypeEnum.GOOGLE_OAUTH) {
       if (!user) {
         const currentTime = parseInt(new Date().getTime().toString());
+        // Override userPayload type to OAuthGoogleUserPayload as we know it's a Google OAuth user
+        userPayload = userPayload as OAuthGoogleUserPayload;
 
         user = new UserModel();
         user.email = userPayload.email;
@@ -88,6 +100,66 @@ export class UserService {
       if (user && user.auth_type !== AuthTypeEnum.GOOGLE_OAUTH) {
         throw new UserAlreadyExistsException();
       }
+      return user;
+    } else if (method === AuthTypeEnum.EMAIL) {
+      // Logic to check if user already exists is different here as OAuth logic is different
+      if (user) {
+        throw new UserAlreadyExistsException();
+      }
+      // Override userPayload type to UserCreateDto as we know it's an email user
+      userPayload = userPayload as UserCreateDto;
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userPayload.password, salt);
+
+      user = await UserModel.create({
+        email: userPayload.email,
+        first_name: userPayload.first_name,
+        last_name: userPayload.last_name,
+        auth_type: AuthTypeEnum.EMAIL,
+        password: hashedPassword,
+        tokens: [await this.tokenService.createToken()],
+      }).save();
+
+      // Create employee number
+      if (userPayload.employee_id) {
+        const employeeUser: EmployeeUserModel = await this.findEmployeeNumber(
+          userPayload.employee_id,
+        );
+
+        if (employeeUser && employeeUser.user.id !== user.id) {
+          throw new EmployeeIdAlreadyExistsException();
+        }
+
+        const employeeUserRecord: EmployeeUserModel =
+          await EmployeeUserModel.create({
+            employee_id: userPayload.employee_id,
+            user,
+          }).save();
+
+        user.employee_user = employeeUserRecord;
+      }
+
+      // Create student number
+      if (userPayload.student_id) {
+        const studentUser: StudentUserModel = await this.findStudentNumber(
+          userPayload.student_id,
+        );
+
+        if (studentUser && studentUser.user.id !== user.id) {
+          throw new StudentIdAlreadyExistsException();
+        }
+
+        const studentUserRecord: StudentUserModel =
+          await StudentUserModel.create({
+            student_id: userPayload.student_id,
+            user,
+          }).save();
+
+        user.student_user = studentUserRecord;
+      }
+
+      await user.save();
 
       return user;
     }

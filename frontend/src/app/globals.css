@@ -28,6 +28,20 @@
     rgb(var(--background-start-rgb));
 } */
 
+@layer components {
+  .btn-primary {
+    @apply font-medium rounded-lg text-sm text-center px-5 py-2.5;
+    @apply text-white bg-purple-700 hover:bg-purple-800;
+    @apply focus:ring-4 focus:outline-none focus:ring-purple-300;
+  }
+
+  .btn-secondary {
+    @apply text-sm font-medium text-gray-900 py-2.5 px-5 ms-3;
+    @apply bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700;
+    @apply focus:z-10 focus:ring-4 focus:ring-gray-100 focus:outline-none;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

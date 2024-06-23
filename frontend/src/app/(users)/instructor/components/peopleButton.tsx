@@ -1,5 +1,5 @@
 "use client";
-import ButtonTemplate from "../../components/buttonTemplate";
+import ButtonTemplate from "../../../components/buttonTemplate";
 import { UsersGroup } from "flowbite-react-icons/solid";
 
 interface PeopleButtonProps {

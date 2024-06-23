@@ -6,7 +6,6 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const examsAPI = {
   createExam: async (examData: ExamData, courseId: number) => {
-    console.log("here");
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({

@@ -9,11 +9,11 @@ import { Status } from "../../../typings/backendDataTypes";
 import ModalMessage from "../../student/components/modalMessage";
 import { redirect } from "next/navigation";
 
-interface InputExamProps {
+interface CreateExamFormProps {
   course_id: number;
 }
 
-const InputExam: React.FC<InputExamProps> = ({ course_id }) => {
+const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
   const [status, setStatus] = useState(Status.Pending);
   const [examData, setData] = useState<ExamData>({
     exam_name: "",
@@ -124,4 +124,4 @@ const InputExam: React.FC<InputExamProps> = ({ course_id }) => {
   );
 };
 
-export default InputExam;
+export default CreateExamForm;

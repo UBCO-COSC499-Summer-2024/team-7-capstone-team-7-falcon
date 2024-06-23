@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import CreateExamButton from "../../../../components/createExamButton";
-import PeopleButton from "../../../../components/peopleButton";
-import AnalyticsButton from "../../../../components/analyticsButton";
-import InputExam from "../../../components/createExam";
+import CreateExamButton from "../../../components/createExamButton";
+import PeopleButton from "../../../components/peopleButton";
+import AnalyticsButton from "../../../components/analyticsButton";
+import CreateExamForm from "../../../components/createExamForm";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import { Course, CourseData } from "../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
@@ -30,7 +30,7 @@ const CreateExam = async ({ params }: { params: { course_id: string } }) => {
         <AnalyticsButton course_id={cid} />
       </div>
       <h1 className="text-xl font-bold">Create Exam:</h1>
-      <InputExam course_id={cid} />
+      <CreateExamForm course_id={cid} />
     </div>
   );
 };

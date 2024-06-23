@@ -1,8 +1,8 @@
 import React from "react";
-import CreateExamButton from "../../../components/createExamButton";
+import CreateExamButton from "../../components/createExamButton";
 
 const CreateExam: React.FC = () => {
-  return <CreateExamButton />;
+  return <></>; // be added in a later issue
 };
 
 export default CreateExam;

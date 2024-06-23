@@ -1,5 +1,5 @@
 "use client";
-import ButtonTemplate from "../../components/buttonTemplate";
+import ButtonTemplate from "../../../components/buttonTemplate";
 import { ChartLineUp } from "flowbite-react-icons/outline";
 
 interface AnalyticsButtonProps {

@@ -69,7 +69,7 @@ describe('Auth Integration', () => {
       expect(request.status).toBe(HttpStatus.BAD_REQUEST);
       expect(request.body).toStrictEqual({
         statusCode: HttpStatus.BAD_REQUEST,
-        message: ['Password and confirm password do not match'],
+        message: ['Password and confirmation password do not match'],
         error: 'Bad Request',
       });
     });

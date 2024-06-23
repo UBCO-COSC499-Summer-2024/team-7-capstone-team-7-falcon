@@ -26,11 +26,11 @@ export const ERROR_MESSAGES = {
     emailRequired: 'Email is required',
     passwordString: 'Password must be a string',
     passwordRequired: 'Password is required',
-    confirmPasswordRequired: 'Confirm password is required',
-    confirmPasswordString: 'Confirm password must be a string',
+    confirmPasswordRequired: 'Confirmation password is required',
+    confirmPasswordString: 'Confirmation password must be a string',
     passwordStrong:
       'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one symbol',
-    passwordMustMatch: 'Password and confirm password do not match',
+    passwordMustMatch: 'Password and confirmation password do not match',
   },
   courseController: {
     courseNotFound: 'Course not found',

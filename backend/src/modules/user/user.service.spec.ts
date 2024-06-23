@@ -105,7 +105,7 @@ describe('UserService', () => {
       ).rejects.toThrow('User already exists');
     });
 
-    it('should throw an error when user already exists with the same auth type for EMAIL AccountType', async () => {
+    it('should throw an error when user already exists with the same email', async () => {
       const password = faker.internet.password();
       const email = faker.internet.email();
 

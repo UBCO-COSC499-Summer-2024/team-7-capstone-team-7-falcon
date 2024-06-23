@@ -145,7 +145,7 @@ export class ExamCreationException extends Error {
 }
 
 /**
- * Exception to be thrown when both student and employee fields are not provided
+ * Exception thrown when none of the student and employee fields are provided
  */
 export class UserStudentEmployeeFieldException extends Error {
   constructor() {

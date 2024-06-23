@@ -10,6 +10,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Res,
   UseGuards,
 } from '@nestjs/common/decorators';
@@ -24,14 +25,29 @@ import { UserEditDto } from './dto/user-edit.dto';
 import { UserModel } from './entities/user.entity';
 import { User } from '../../decorators/user.decorator';
 import {
+  EmailNotVerifiedException,
   EmployeeIdAlreadyExistsException,
+  InvalidAuthMethodException,
   StudentIdAlreadyExistsException,
+  TokenExpiredException,
+  TokenInvalidException,
   UserNotFoundException,
 } from '../../common/errors';
+import { UserEmailDto } from './dto/user-email.dto';
+import { UserPasswordResetDto } from './dto/user-password-reset.dto';
+import { TokenService } from '../token/token.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  /**
+   * Constructor
+   * @param tokenService {TokenService} - Token service
+   * @param userService {UserService} - User service
+   */
+  constructor(
+    private readonly tokenService: TokenService,
+    private readonly userService: UserService,
+  ) {}
 
   /**
    * Get list of courses by student id
@@ -98,6 +114,70 @@ export class UserController {
       });
     } else {
       return res.status(HttpStatus.OK).send(user);
+    }
+  }
+
+  /**
+   * Request to reset password by email
+   * @param res {Response} - Response object
+   * @param body {UserEmailDto} - User email object
+   * @returns {Promise<Response>} - Response object
+   */
+  @Post('/password/request_reset')
+  async resetPassword(
+    @Res() res: Response,
+    @Body(new ValidationPipe()) body: UserEmailDto,
+  ): Promise<Response> {
+    try {
+      await this.userService.sendResetPasswordEmail(body.email);
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof UserNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (
+        e instanceof InvalidAuthMethodException ||
+        e instanceof EmailNotVerifiedException
+      ) {
+        return res.status(HttpStatus.FORBIDDEN).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          error: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Confirm password reset
+   * @param res {Response} - Response object
+   * @param body {UserPasswordResetDto} - User password reset object
+   * @returns {Promise<Response>} - Response object
+   */
+  @Post('/password/reset')
+  async resetPasswordConfirm(
+    @Res() res: Response,
+    @Body(new ValidationPipe()) body: UserPasswordResetDto,
+  ): Promise<Response> {
+    try {
+      const userToken = await this.tokenService.findTokenAndUser(body.token);
+      await this.userService.resetPassword(userToken.user, body.password);
+      // token is null as we don't want to send duplicate request to Database to find token again
+      await this.tokenService.update(null, userToken);
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof TokenInvalidException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({ message: e.message });
+      } else if (e instanceof TokenExpiredException) {
+        return res.status(HttpStatus.FORBIDDEN).send({ message: e.message });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ message: e.message });
+      }
     }
   }
 

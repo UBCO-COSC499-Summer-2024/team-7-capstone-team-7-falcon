@@ -417,4 +417,65 @@ describe('UserService', () => {
       expect(result).toHaveLength(2);
     });
   });
+
+  describe('findUserCoursesById', () => {
+    it('should return null when user not enrolled in any courses', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const result = await userService.findUserCoursesById(user.id);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return all courses found', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const course2 = await CourseModel.create({
+        course_code: 'MATH 101',
+        course_name: 'Calculus I',
+        created_at: 1_000_000_001,
+        updated_at: 1_000_000_001,
+        section_name: '002',
+        invite_code: '456',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: { id: user.id },
+        course: { id: course.id },
+      }).save();
+
+      await CourseUserModel.create({
+        course_role: CourseRoleEnum.STUDENT,
+        user: { id: user.id },
+        course: { id: course2.id },
+      }).save();
+
+      const result = await userService.findUserCoursesById(user.id);
+      expect(result).toHaveLength(2);
+    });
+  });
 });

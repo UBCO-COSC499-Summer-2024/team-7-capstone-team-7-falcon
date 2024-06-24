@@ -126,6 +126,36 @@ export class CourseController {
   }
 
   /**
+   * Get course by id with a limited information
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard)
+  @Get('/:cid/public')
+  async getPublicCourseInformation(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+  ): Promise<Response> {
+    const course = await this.courseService.getCourseById(cid);
+
+    if (!course) {
+      return res.status(HttpStatus.NOT_FOUND).send({
+        message: ERROR_MESSAGES.courseController.courseNotFound,
+      });
+    } else {
+      const coursePartial = {
+        id: course.id,
+        course_code: course.course_code,
+        course_name: course.course_name,
+        section_name: course.section_name,
+      };
+
+      return res.status(HttpStatus.OK).send(coursePartial);
+    }
+  }
+
+  /**
    * Enroll in a course
    * @param res {Response} - Response object
    * @param cid {number} - Course id

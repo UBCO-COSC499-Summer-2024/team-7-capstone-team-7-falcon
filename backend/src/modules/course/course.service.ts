@@ -8,7 +8,7 @@ import {
 } from '../../common/errors';
 import { CourseUserModel } from './entities/course-user.entity';
 import { CourseCreateDto } from './dto/course-create.dto';
-import { SemesterModel } from '../semesters/entities/semester.entity';
+import { SemesterModel } from '../semester/entities/semester.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { CourseRoleEnum } from '../../enums/user.enum';
 import { PageOptionsDto } from '../../dto/page-options.dto';

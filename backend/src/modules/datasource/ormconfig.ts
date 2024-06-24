@@ -9,6 +9,7 @@ import { SubmissionModel } from '../exam/entities/submission.entity';
 import { CourseModel } from '../course/entities/course.entity';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { SemesterModel } from '../semester/entities/semester.entity';
+import { TokenModel } from '../token/entities/token.entity';
 
 config();
 
@@ -30,6 +31,7 @@ const ormconfig: DataSourceOptions = {
     CourseModel,
     CourseUserModel,
     SemesterModel,
+    TokenModel,
   ],
   migrations: [path.join(__dirname, '..', '..', '..', 'migrations', '*')],
 };

@@ -1,20 +1,28 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { getCookie } from '../common/helpers';
+import { UserService } from '../modules/user/user.service';
+import { AuthTypeEnum } from '../enums/user.enum';
+import { ERROR_MESSAGES } from '../common';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   /**
    * Constructor
    * @param jwtService {JwtService} - The JWT service
+   * @param userService {UserService} - The user service
    */
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private userService: UserService,
+  ) {}
 
   /**
    * Check if the request is authorized
@@ -38,6 +46,9 @@ export class AuthGuard implements CanActivate {
     } catch {
       throw new UnauthorizedException();
     }
+
+    await this.validateEmailVerified(request);
+
     return true;
   }
 
@@ -63,5 +74,25 @@ export class AuthGuard implements CanActivate {
     );
 
     return auth_token ? auth_token.split('=')[1] : undefined;
+  }
+
+  /**
+   * Validates if the email is verified
+   * @param request {Request} - The request object
+   */
+  private async validateEmailVerified(request: Request): Promise<void> {
+    const user = await this.userService.getUserById(request['user'].id);
+    // Additional check to ensure that the user exists
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    // We should only raise an error if the user is trying to login with AuthType that requires email & password only
+    if (!user.email_verified && user.auth_type === AuthTypeEnum.EMAIL) {
+      // Frontend should redirect to the email verification page based on the Forbidden status code
+      throw new ForbiddenException(
+        ERROR_MESSAGES.authController.emailNotVerified,
+      );
+    }
   }
 }

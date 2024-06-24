@@ -74,7 +74,7 @@ export class UserService {
    */
   public async findOrCreateUser(
     userPayload: OAuthGoogleUserPayload | UserCreateDto,
-    method: string,
+    method: AuthTypeEnum,
   ): Promise<UserModel> {
     let user: UserModel = await UserModel.findOne({
       where: { email: userPayload.email },
@@ -176,8 +176,6 @@ export class UserService {
 
       return user;
     }
-
-    throw new Error('Invalid auth method');
   }
 
   /**

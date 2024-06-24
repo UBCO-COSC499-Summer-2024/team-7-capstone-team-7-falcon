@@ -15,7 +15,7 @@ const CreateExamButton: React.FC<CreateExamButtonProps> = ({
     <ButtonTemplate
       icon={FileCirclePlus}
       text={"Create Exam"}
-      link={`/instructor/course/${course_id}/create_exam`}
+      link={`/instructor/course/${course_id}/create-exam`}
       className={className}
     ></ButtonTemplate>
   );

@@ -212,6 +212,7 @@ CourseUserModel {
     "avatar_url": null,
     "created_at": "1000000000",
     "email": "john.doe@test.com",
+    "email_verified": true,
     "first_name": "John",
     "id": 1,
     "last_name": "Doe",

@@ -9,6 +9,7 @@ import { CourseModel } from '../course/entities/course.entity';
 import { ExamModel } from './entities/exam.entity';
 import { CourseService } from '../course/course.service';
 import { UserService } from '../user/user.service';
+import { TokenService } from '../token/token.service';
 
 describe('ExamService', () => {
   let examService: ExamService;
@@ -16,7 +17,7 @@ describe('ExamService', () => {
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
-      providers: [ExamService, CourseService, UserService],
+      providers: [ExamService, CourseService, UserService, TokenService],
       imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 

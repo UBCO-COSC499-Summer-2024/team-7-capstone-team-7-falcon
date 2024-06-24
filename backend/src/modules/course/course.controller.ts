@@ -126,7 +126,7 @@ export class CourseController {
   }
 
   /**
-   * Get course by id with a limited information
+   * Get course by id and return limited course information for security purposes
    * @param res {Response} - Response object
    * @param cid {number} - Course id
    * @returns {Promise<Response>} - Response object

@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserModel } from './user.entity';
-import { SubmissionModel } from '../../../modules/exams/entities/submission.entity';
+import { SubmissionModel } from '../../../modules/exam/entities/submission.entity';
 
 @Entity('student_user_model')
 export class StudentUserModel extends BaseEntity {

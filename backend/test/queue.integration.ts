@@ -58,6 +58,7 @@ describe('Queue Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -82,6 +83,7 @@ describe('Queue Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -132,6 +134,7 @@ describe('Queue Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -189,6 +192,7 @@ describe('Queue Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -252,6 +256,7 @@ describe('Queue Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const response = await supertest()

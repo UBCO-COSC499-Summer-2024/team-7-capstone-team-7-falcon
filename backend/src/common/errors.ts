@@ -134,3 +134,23 @@ export class JobNotFoundException extends Error {
     super(ERROR_MESSAGES.queueController.jobNotFound);
   }
 }
+
+/**
+ * Exception to be thrown when exam was failed to create
+ */
+export class ExamCreationException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception thrown when none of the student and employee fields are provided
+ */
+export class UserStudentEmployeeFieldException extends Error {
+  constructor() {
+    super(
+      ERROR_MESSAGES.userController.userStudentEmployeeIdFieldsMissingError,
+    );
+  }
+}

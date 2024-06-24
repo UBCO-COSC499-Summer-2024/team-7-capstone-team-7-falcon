@@ -184,6 +184,15 @@ exports[`Course Integration GET /course/:cid/members should return 200 if user i
 }
 `;
 
+exports[`Course Integration GET /course/:cid/public should return course if course is found 1`] = `
+{
+  "course_code": "COSC 499",
+  "course_name": "Capstone Project",
+  "id": 1,
+  "section_name": "001",
+}
+`;
+
 exports[`Course Integration POST /course/:cid/enroll should return 200 if user is not already enrolled 1`] = `
 CourseUserModel {
   "course": CourseModel {
@@ -203,6 +212,7 @@ CourseUserModel {
     "avatar_url": null,
     "created_at": "1000000000",
     "email": "john.doe@test.com",
+    "email_verified": true,
     "first_name": "John",
     "id": 1,
     "last_name": "Doe",

@@ -6,15 +6,25 @@ import {
   StudentIdAlreadyExistsException,
   UserAlreadyExistsException,
   UserNotFoundException,
+  UserStudentEmployeeFieldException,
 } from '../../common/errors';
 import { AuthTypeEnum } from '../../enums/user.enum';
 import { EmployeeUserModel } from './entities/employee-user.entity';
 import { StudentUserModel } from './entities/student-user.entity';
 import { UserEditDto } from './dto/user-edit.dto';
 import { CourseUserModel } from '../course/entities/course-user.entity';
+import { UserCreateDto } from '../auth/dto/user-create.dto';
+import { TokenService } from '../token/token.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  /**
+   * Constructor
+   * @param tokenService {TokenService} - The token service
+   */
+  constructor(private readonly tokenService: TokenService) {}
+
   /**
    * Search for courses based on user id
    * @param user_id {number} - User id
@@ -58,20 +68,24 @@ export class UserService {
 
   /**
    * Returns a user by email
-   * @param email {string} - User email
+   * @params userPayload {OAuthGoogleUserPayload | UserCreateDto} - User payload
+   * @params method {string} - Auth method
    * @returns {Promise<UserModel>} - User object
    */
   public async findOrCreateUser(
-    userPayload: OAuthGoogleUserPayload,
-    method: string,
+    userPayload: OAuthGoogleUserPayload | UserCreateDto,
+    method: AuthTypeEnum,
   ): Promise<UserModel> {
-    if (method === AuthTypeEnum.GOOGLE_OAUTH) {
-      let user: UserModel = await UserModel.findOne({
-        where: { email: userPayload.email },
-      });
+    let user: UserModel = await UserModel.findOne({
+      where: { email: userPayload.email },
+    });
 
+    const currentTime = parseInt(new Date().getTime().toString());
+
+    if (method === AuthTypeEnum.GOOGLE_OAUTH) {
       if (!user) {
-        const currentTime = parseInt(new Date().getTime().toString());
+        // Override userPayload type to OAuthGoogleUserPayload as we know it's a Google OAuth user
+        userPayload = userPayload as OAuthGoogleUserPayload;
 
         user = new UserModel();
         user.email = userPayload.email;
@@ -88,11 +102,80 @@ export class UserService {
       if (user && user.auth_type !== AuthTypeEnum.GOOGLE_OAUTH) {
         throw new UserAlreadyExistsException();
       }
+      return user;
+    } else if (method === AuthTypeEnum.EMAIL) {
+      // Logic to check if user already exists is different here as OAuth logic is different
+      if (user) {
+        throw new UserAlreadyExistsException();
+      }
+
+      // Override userPayload type to UserCreateDto as we know it's an email user
+      userPayload = userPayload as UserCreateDto;
+
+      if (!userPayload.employee_id && !userPayload.student_id) {
+        throw new UserStudentEmployeeFieldException();
+      }
+
+      if (userPayload.employee_id) {
+        const employeeUser: EmployeeUserModel = await this.findEmployeeNumber(
+          userPayload.employee_id,
+        );
+
+        if (employeeUser) {
+          throw new EmployeeIdAlreadyExistsException();
+        }
+      }
+
+      if (userPayload.student_id) {
+        const studentUser: StudentUserModel = await this.findStudentNumber(
+          userPayload.student_id,
+        );
+
+        if (studentUser) {
+          throw new StudentIdAlreadyExistsException();
+        }
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userPayload.password, salt);
+
+      user = await UserModel.create({
+        email: userPayload.email,
+        first_name: userPayload.first_name,
+        last_name: userPayload.last_name,
+        auth_type: AuthTypeEnum.EMAIL,
+        password: hashedPassword,
+        tokens: [await this.tokenService.createToken()],
+        created_at: currentTime,
+        updated_at: currentTime,
+      }).save();
+
+      // Create employee number record
+      if (userPayload.employee_id) {
+        const employeeUserRecord: EmployeeUserModel =
+          await EmployeeUserModel.create({
+            employee_id: userPayload.employee_id,
+            user,
+          }).save();
+
+        user.employee_user = employeeUserRecord;
+      }
+
+      // Create student number record
+      if (userPayload.student_id) {
+        const studentUserRecord: StudentUserModel =
+          await StudentUserModel.create({
+            student_id: userPayload.student_id,
+            user,
+          }).save();
+
+        user.student_user = studentUserRecord;
+      }
+
+      await user.save();
 
       return user;
     }
-
-    throw new Error('Invalid auth method');
   }
 
   /**

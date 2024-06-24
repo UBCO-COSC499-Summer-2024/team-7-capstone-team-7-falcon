@@ -5,7 +5,7 @@ import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
 import { jwtDecode } from "jwt-decode";
 
-const auth_pages = ["/login", "/signup"];
+const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
 const isAuthPages = (url: string) =>
   auth_pages.some((page) => page.startsWith(url));
 const userRoleMap = {

@@ -20,6 +20,7 @@ import { TokenService } from '../token/token.service';
 import * as bcrypt from 'bcrypt';
 import { ERROR_MESSAGES } from '../../common';
 import { TokenTypeEnum } from '../../enums/token-type.enum';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
@@ -32,6 +33,7 @@ export class UserService {
   constructor(
     @Inject(forwardRef(() => TokenService))
     private readonly tokenService: TokenService,
+    private readonly mailService: MailService,
   ) {}
 
   /**
@@ -148,13 +150,14 @@ export class UserService {
       const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
       const hashedPassword = await bcrypt.hash(userPayload.password, salt);
 
+      const token = await this.tokenService.createToken();
       user = await UserModel.create({
         email: userPayload.email,
         first_name: userPayload.first_name,
         last_name: userPayload.last_name,
         auth_type: AuthTypeEnum.EMAIL,
         password: hashedPassword,
-        tokens: [await this.tokenService.createToken()],
+        tokens: [token],
         created_at: currentTime,
         updated_at: currentTime,
       }).save();
@@ -182,6 +185,8 @@ export class UserService {
       }
 
       await user.save();
+
+      await this.mailService.sendUserConfirmation(user, token.token);
 
       return user;
     }
@@ -306,6 +311,8 @@ export class UserService {
     user.tokens.push(token);
 
     await user.save();
+
+    await this.mailService.sendPasswordReset(user, token.token);
   }
 
   /**

@@ -10,14 +10,30 @@ import { ExamModel } from './entities/exam.entity';
 import { CourseService } from '../course/course.service';
 import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
+import { MailService } from '../mail/mail.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 describe('ExamService', () => {
   let examService: ExamService;
   let moduleRef: TestingModule;
 
   beforeEach(async () => {
+    const mockMailerService = {
+      sendMail: jest.fn(),
+    };
+
     moduleRef = await Test.createTestingModule({
-      providers: [ExamService, CourseService, UserService, TokenService],
+      providers: [
+        ExamService,
+        CourseService,
+        UserService,
+        TokenService,
+        MailService,
+        {
+          provide: MailerService,
+          useValue: mockMailerService,
+        },
+      ],
       imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 

@@ -15,6 +15,8 @@ import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserCreateDto } from '../auth/dto/user-create.dto';
 import { TokenService } from '../token/token.service';
 import * as bcrypt from 'bcrypt';
+import { MailService } from '../mail/mail.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -22,8 +24,20 @@ describe('UserService', () => {
   let moduleRef: TestingModule;
 
   beforeEach(async () => {
+    const mockMailerService = {
+      sendMail: jest.fn().mockResolvedValue(Promise.resolve()),
+    };
+
     moduleRef = await Test.createTestingModule({
-      providers: [TokenService, UserService],
+      providers: [
+        MailService,
+        {
+          provide: MailerService,
+          useValue: mockMailerService,
+        },
+        TokenService,
+        UserService,
+      ],
       imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 

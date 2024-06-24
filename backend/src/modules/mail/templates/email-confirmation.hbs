@@ -1,0 +1,38 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Email Confirmation</title>
+    <style>
+      body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin:
+      0; padding: 0; } .container { max-width: 600px; margin: 20px auto;
+      background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow:
+      0 0 10px rgba(0, 0, 0, 0.1); } .header { padding-bottom: 20px; } .header
+      img { width: 100px; height: auto; vertical-align: middle; margin-right:
+      10px; } .header h1 { display: inline-block; margin: 0; font-size: 24px;
+      line-height: 1; vertical-align: middle; } .content p { color: #666666; }
+      .button { display: inline-block; padding: 10px 20px; margin-top: 20px;
+      background-color: #8F3DDE; color: #ffffff; text-decoration: none;
+      border-radius: 5px; } .footer { padding-top: 20px; font-size: 12px; color:
+      #999999; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <img src='https://i.imgur.com/xLu2jT0.png' />
+        <h1>OwlMark</h1>
+      </div>
+      <div class='content'>
+        <h3>Email Confirmation</h3>
+        <p>Hi {{name}},</p>
+        <p>Thank you for signing up. Please confirm your email address by
+          clicking the button below:</p>
+        <a href='{{url}}' class='button'>Confirm Email</a>
+      </div>
+      <div class='footer'>
+        <p>If you did not sign up for this account, you can ignore this email.</p>
+      </div>
+    </div>
+  </body>
+</html>

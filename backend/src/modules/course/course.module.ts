@@ -3,10 +3,11 @@ import { CourseController } from './course.controller';
 import { CourseService } from './course.service';
 import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
+import { MailService } from '../mail/mail.service';
 
 @Module({
   controllers: [CourseController],
-  providers: [CourseService, UserService, TokenService],
+  providers: [CourseService, UserService, TokenService, MailService],
   exports: [CourseService],
 })
 export class CourseModule {}

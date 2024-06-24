@@ -185,8 +185,6 @@ export class UserService {
 
       return user;
     }
-
-    throw new Error('Invalid auth method');
   }
 
   /**

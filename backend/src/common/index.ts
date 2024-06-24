@@ -42,6 +42,16 @@ export const ERROR_MESSAGES = {
     employeeNumberMustBeNumber: 'Employee number must be a number',
     employeeNumberMustBeGreater: 'Employee number must be greater than 0',
   },
+  userCreateDto: {
+    emailRequired: 'Email is required',
+    passwordString: 'Password must be a string',
+    passwordRequired: 'Password is required',
+    confirmPasswordRequired: 'Confirmation password is required',
+    confirmPasswordString: 'Confirmation password must be a string',
+    passwordStrong:
+      'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one symbol',
+    passwordMustMatch: 'Password and confirmation password do not match',
+  },
   courseController: {
     courseNotFound: 'Course not found',
     invalidInviteCode: 'Invalid invite code',

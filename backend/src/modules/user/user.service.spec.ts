@@ -300,19 +300,6 @@ describe('UserService', () => {
 
       expect(user).toMatchSnapshot();
     });
-
-    it('should throw an error when auth type is not supported', async () => {
-      const userPayload: OAuthGoogleUserPayload = {
-        email: 'john.doe@test.com',
-        given_name: 'John',
-        family_name: 'Doe',
-        picture: 'picture',
-      };
-
-      await expect(
-        userService.findOrCreateUser(userPayload, 'invalid_auth_type'),
-      ).rejects.toThrow('Invalid auth method');
-    });
   });
 
   describe('editUser', () => {

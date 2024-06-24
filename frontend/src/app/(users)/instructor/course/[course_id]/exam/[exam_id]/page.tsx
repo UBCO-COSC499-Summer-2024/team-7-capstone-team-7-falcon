@@ -8,6 +8,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Upload, Download, CheckPlusCircle } from "flowbite-react-icons/solid";
 import { Button } from "flowbite-react";
+import ExamPerformance from "../../../../components/examPerformance";
+import DangerZone from "../../../../components/dangerZone";
 
 const ViewExam = async ({
   params,
@@ -66,6 +68,8 @@ const ViewExam = async ({
               Release Grades
             </Link>
           </button>
+          <ExamPerformance />
+          <DangerZone />
         </div>
       </div>
     </div>

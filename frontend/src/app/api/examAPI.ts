@@ -25,4 +25,6 @@ export const examsAPI = {
       return error;
     }
   },
+
+  getExamStats: async () => {},
 };

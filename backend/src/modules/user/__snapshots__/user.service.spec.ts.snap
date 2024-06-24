@@ -5,11 +5,85 @@ UserModel {
   "auth_type": "google_oauth",
   "avatar_url": "picture",
   "email": "john.doe@test.com",
+  "email_verified": false,
   "first_name": "John",
   "id": 1,
   "last_name": "Doe",
   "password": null,
   "role": "student",
+}
+`;
+
+exports[`UserService findOrCreateUser should create user with email auth type and employee id 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "email": "email@email.com",
+  "email_verified": false,
+  "employee_user": EmployeeUserModel {
+    "employee_id": 1,
+    "id": 1,
+  },
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "tokens": [
+    TokenModel {
+      "id": 1,
+      "type": "EMAIL_VERIFICATION",
+    },
+  ],
+}
+`;
+
+exports[`UserService findOrCreateUser should create user with email auth type and student id 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "email": "email@email.com",
+  "email_verified": false,
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "student_user": StudentUserModel {
+    "id": 1,
+    "student_id": 1,
+  },
+  "tokens": [
+    TokenModel {
+      "id": 1,
+      "type": "EMAIL_VERIFICATION",
+    },
+  ],
+}
+`;
+
+exports[`UserService findOrCreateUser should create user with email auth type and student id and employee id 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "email": "email@email.com",
+  "email_verified": false,
+  "employee_user": EmployeeUserModel {
+    "employee_id": 1,
+    "id": 1,
+  },
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "student_user": StudentUserModel {
+    "id": 1,
+    "student_id": 1,
+  },
+  "tokens": [
+    TokenModel {
+      "id": 1,
+      "type": "EMAIL_VERIFICATION",
+    },
+  ],
 }
 `;
 
@@ -19,6 +93,7 @@ UserModel {
   "avatar_url": null,
   "created_at": "1000000000",
   "email": "john.doe@test.com",
+  "email_verified": false,
   "employee_user": EmployeeUserModel {
     "employee_id": 1,
     "id": 1,

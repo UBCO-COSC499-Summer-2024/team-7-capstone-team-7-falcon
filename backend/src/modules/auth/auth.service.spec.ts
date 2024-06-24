@@ -6,6 +6,7 @@ import {
   TestConfigModule,
   TestTypeOrmModule,
 } from '../../../test/utils/testUtils';
+import { TokenService } from '../token/token.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -14,7 +15,7 @@ describe('AuthService', () => {
 
   beforeAll(async () => {
     moduleRef = await Test.createTestingModule({
-      providers: [AuthService, UserService, JwtService],
+      providers: [AuthService, UserService, JwtService, TokenService],
       imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 

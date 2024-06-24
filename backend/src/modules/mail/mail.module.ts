@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
-// jest.mock('@nestjs-modules/mailer/dist/adapters/handlebars.adapter', () => {
-//   return {
-//     HandlebarsAdapter: jest.fn().mockImplementation(),
-//   };
-// });
+jest.mock('@nestjs-modules/mailer/dist/adapters/handlebars.adapter', () => {
+  return {
+    HandlebarsAdapter: jest.fn().mockImplementation(),
+  };
+});
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { config } from 'dotenv';
 

@@ -14,6 +14,12 @@ export const COLUMNS = [
     Header: "Name",
     accessor: "name",
   },
+
+  {
+    Header: "email",
+    accessor: "email",
+  },
+
   {
     Header: "Score",
     accessor: "score",
@@ -23,4 +29,18 @@ export const COLUMNS = [
     Header: "Exam Graded",
     accessor: "examgraded",
   },
+  {
+    Header: "Role",
+    accessor: "role",
+  },
+  { Header: "", accessor: "" },
+
+  { Header: "ExamName", accessor: "" },
+  { Header: "Exam Published", accessor: "exam published" },
+  {
+    Header: "Grade Released",
+    accessor: "grade released",
+  },
+
+  { Header: "Actions", accessor: "actions" },
 ];

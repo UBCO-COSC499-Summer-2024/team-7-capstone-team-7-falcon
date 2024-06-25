@@ -17,8 +17,14 @@ pytest = "^8.2.2"
 
 [tool.poetry.group.train.dependencies]
 tensorboardx = "^2.6.2.2"
-torch = "^2.3.1"
 numpy = "^2.0.0"
+ipykernel = "^6.29.4"
+scikit-image = "^0.24.0"
+matplotlib = "^3.9.0"
+tqdm = "^4.66.4"
+easydict = "^1.13"
+pillow = "^10.3.0"
+torch = "^2.3.1"
 
 [build-system]
 requires = ["poetry-core"]

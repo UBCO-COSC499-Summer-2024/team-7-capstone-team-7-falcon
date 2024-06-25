@@ -34,6 +34,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, columns }) => {
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
+  const onPaginationChange = () => {
+    //
+  };
   const pagination = usePagination(data, {
     state: {
       page: 0,
@@ -41,6 +44,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, columns }) => {
     },
     onChange: onPaginationChange,
   });
+
   return (
     <div className="container pt-10 flex flex-col items-center">
       <div className="w-full overflow-x-auto">

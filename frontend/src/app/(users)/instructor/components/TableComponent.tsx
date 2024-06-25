@@ -14,6 +14,7 @@ import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { DataItem } from "./type";
 import { Column } from "./columns";
+import { usePagination } from "@table-library/react-table-library/pagination";
 
 type TableComponentProps = {
   data: DataItem[];
@@ -33,7 +34,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, columns }) => {
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
-
+  const pagination = usePagination(data, {
+    state: {
+      page: 0,
+      size: 2,
+    },
+    onChange: onPaginationChange,
+  });
   return (
     <div className="container pt-10 flex flex-col items-center">
       <div className="w-full overflow-x-auto">
@@ -53,7 +60,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, columns }) => {
       </div>
 
       <div className="flex w-100% max-w-4xl">
-        <Table columns={columns} data={{ nodes: filteredData }} theme={theme}>
+        <Table
+          columns={columns}
+          data={{ nodes: filteredData }}
+          theme={theme}
+          pagination={pagination}
+        >
           {() => (
             <>
               <Header>
@@ -83,6 +95,26 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, columns }) => {
             </>
           )}
         </Table>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <span>Total Pages: {pagination.state.getTotalPages(data)}</span>
+
+        <span>
+          Page:{" "}
+          {pagination.state.getPages(data).map((_: any, index: any) => (
+            <button
+              key={index}
+              type="button"
+              style={{
+                fontWeight: pagination.state.page === index ? "bold" : "normal",
+              }}
+              onClick={() => pagination.fns.onSetPage(index)}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </span>
       </div>
     </div>
   );

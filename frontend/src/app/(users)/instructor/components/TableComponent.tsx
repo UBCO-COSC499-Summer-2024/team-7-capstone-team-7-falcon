@@ -65,6 +65,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, columns }) => {
           data={{ nodes: filteredData }}
           theme={theme}
           pagination={pagination}
+          layout={{ fixedHeader: true }}
         >
           {() => (
             <>

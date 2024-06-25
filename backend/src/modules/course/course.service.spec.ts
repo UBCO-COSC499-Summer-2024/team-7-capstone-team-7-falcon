@@ -9,7 +9,7 @@ import { UserModel } from '../user/entities/user.entity';
 import { CourseUserModel } from './entities/course-user.entity';
 import { CourseRoleEnum } from '../../enums/user.enum';
 import { CourseCreateDto } from './dto/course-create.dto';
-import { SemesterModel } from '../semesters/entities/semester.entity';
+import { SemesterModel } from '../semester/entities/semester.entity';
 import { validate } from 'class-validator';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 

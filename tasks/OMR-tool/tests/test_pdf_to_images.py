@@ -8,10 +8,10 @@ class TestConvertToImage:
     A test class for the `convert_to_image` function.
     """
 
-    PDF_PATH = "sample_sheets/UBC_100_questions.pdf"
-    IMG_PATH = "sample_sheets/sample_image.jpg"
-    INVALID_TYPE_PATH = "sample_sheets/sample_invalid_type.txt"
-    INVALID_PDF_PATH = "sample_sheets/invalid_pdf.pdf"
+    PDF_PATH = "fixtures/UBC_100_questions.pdf"
+    IMG_PATH = "fixtures/sample_image.jpg"
+    INVALID_TYPE_PATH = "fixtures/sample_invalid_type.txt"
+    INVALID_PDF_PATH = "fixtures/invalid_pdf.pdf"
 
     @pytest.fixture(scope="class")
     def output_path(self, tmp_path_factory):

@@ -38,6 +38,7 @@ describe('Exam Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -63,6 +64,7 @@ describe('Exam Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -94,6 +96,7 @@ describe('Exam Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -129,6 +132,7 @@ describe('Exam Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -167,6 +171,7 @@ describe('Exam Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({

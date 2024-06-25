@@ -30,6 +30,7 @@ describe('Semester Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -59,6 +60,7 @@ describe('Semester Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -91,6 +93,7 @@ describe('Semester Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -108,6 +111,7 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -137,6 +141,7 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -162,6 +167,7 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
+        email_verified: true,
       }).save();
 
       await supertest()

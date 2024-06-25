@@ -62,14 +62,14 @@ export default function SignupPage() {
         <div className="mb-4">
           <Label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
+            htmlFor="email"
           >
-            email
+            Email
           </Label>
           <TextInput
             className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="email"
-            type="password"
+            type="email"
             value={user.email}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
             placeholder="john123@gmail.com"
@@ -81,7 +81,7 @@ export default function SignupPage() {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
-            password
+            Password
           </Label>
           <TextInput
             className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"

@@ -6,12 +6,14 @@ import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { UserModel } from '../src/modules/user/entities/user.entity';
 import { SemesterModel } from '../src/modules/semester/entities/semester.entity';
 import { CourseRoleEnum, UserRoleEnum } from '../src/enums/user.enum';
+import { ExamModel } from '../src/modules/exam/entities/exam.entity';
 
 describe('Course Integration', () => {
   const supertest = setUpIntegrationTests(CourseModule);
 
   beforeEach(async () => {
     // Delete dependent rows first
+    await ExamModel.delete({});
     await CourseUserModel.delete({});
     await CourseModel.delete({});
     await UserModel.delete({});
@@ -27,6 +29,7 @@ describe('Course Integration', () => {
     await CourseUserModel.query(
       'ALTER SEQUENCE course_user_model_id_seq RESTART WITH 1',
     );
+    await ExamModel.query('ALTER SEQUENCE exam_model_id_seq RESTART WITH 1');
   });
 
   describe('GET /course/:cid', () => {
@@ -42,6 +45,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -67,6 +71,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -106,6 +111,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -139,6 +145,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const result = await supertest()
@@ -156,6 +163,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -178,6 +186,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const result = await supertest()
@@ -198,6 +207,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return await supertest()
@@ -219,6 +229,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return await supertest()
@@ -248,6 +259,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return await supertest()
@@ -277,6 +289,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({
@@ -311,6 +324,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -348,6 +362,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -364,6 +379,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.PROFESSOR,
       }).save();
 
@@ -392,6 +408,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.PROFESSOR,
       }).save();
 
@@ -427,6 +444,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       await supertest()
@@ -472,6 +490,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -489,6 +508,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -510,6 +530,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -547,6 +568,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const student = await UserModel.create({
@@ -592,6 +614,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const student = await UserModel.create({
@@ -602,6 +625,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -652,6 +676,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const student = await UserModel.create({
@@ -662,6 +687,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -709,6 +735,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const student = await UserModel.create({
@@ -719,6 +746,7 @@ describe('Course Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
       }).save();
 
       const course = await CourseModel.create({
@@ -768,6 +796,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -793,6 +822,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({
@@ -809,6 +839,7 @@ describe('Course Integration', () => {
           password: 'password',
           created_at: 1_000_000_000,
           updated_at: 1_000_000_000,
+          email_verified: true,
         }).save();
 
         await CourseUserModel.create({
@@ -841,6 +872,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({
@@ -872,6 +904,7 @@ describe('Course Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({
@@ -888,6 +921,7 @@ describe('Course Integration', () => {
           password: 'password',
           created_at: 1_000_000_000,
           updated_at: 1_000_000_000,
+          email_verified: true,
         }).save();
 
         await CourseUserModel.create({
@@ -899,6 +933,217 @@ describe('Course Integration', () => {
       const result = await supertest()
         .get(`/course/${course.id}/members?take=2&page=1`)
         .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`]);
+
+      expect(result.body).toMatchSnapshot();
+    });
+  });
+
+  describe('GET /course/:cid/exams', () => {
+    it('should return 401 if not authenticated', async () => {
+      await supertest().get('/course/1/exams').expect(401);
+    });
+
+    it('should return 401 if user is not enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+      }).save();
+
+      return await supertest()
+        .get(`/course/${course.id}/exams`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401)
+        .expect({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+    });
+
+    it('should return 401 if course is archived', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      return await supertest()
+        .get(`/course/${course.id}/exams`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401)
+        .expect({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+    });
+
+    it('should return 200 if user is enrolled with default query parameters', async () => {
+      let course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: {
+          id: course.id,
+        },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: 1_000_000_000 + i,
+          course,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+        }).save();
+
+        course.exams.push(exam);
+      }
+
+      await course.save();
+
+      const result = await supertest()
+        .get(`/course/${course.id}/exams`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.body).toMatchSnapshot();
+    });
+
+    it('should throw 400 if page is not a number', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      await supertest()
+        .get(`/course/${course.id}/exams?page=abc`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(400)
+    });
+
+    it('should return 200 when only two exams are requested', async () => {
+      let course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: {
+          id: course.id,
+        },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: 1_000_000_000 + i,
+          course,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+        }).save();
+
+        course.exams.push(exam);
+      }
+
+      await course.save();
+
+      const result = await supertest()
+        .get(`/course/${course.id}/exams?take=2&page=1`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
       expect(result.body).toMatchSnapshot();
     });

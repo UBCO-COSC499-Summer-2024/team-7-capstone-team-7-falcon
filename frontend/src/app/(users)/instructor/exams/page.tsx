@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import TableComponent from "../components/viewResultsTable";
-import ExamTable from "../components/examTable";
+import TableComponent from "../components/TableComponent";
 import { TabItem } from "flowbite-react";
 import { nodes } from "../components/mockData";
 import { COLUMNS as columns } from "../components/columns"; //
@@ -26,9 +25,7 @@ const instructorExams: React.FC = () => {
       <h1 className="text-2xl font-bold">Instructor Exams</h1>
       <div className="grid grid-cols-6">
         <div className="col-span-4">
-          <TableComponent>
-            <ExamTable data={nodes} columns={columns} />
-          </TableComponent>
+          <TableComponent data={nodes} columns={columns}></TableComponent>
         </div>
         <div className="col-span-2">
           <h1>Exam Details</h1>

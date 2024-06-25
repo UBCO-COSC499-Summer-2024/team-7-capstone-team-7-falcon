@@ -72,8 +72,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ data, columns }) => {
               <Body>
                 {filteredData.map((item) => (
                   <Row key={item.id} item={item} className="bg-white">
-                    {columns.map((column) => (
-                      <Cell key={column.accessor as string} className="py-2">
+                    {data.map((item) => (
+                      <Cell key={item.accessor as string} className="py-2">
                         {item[column.accessor]}
                       </Cell>
                     ))}

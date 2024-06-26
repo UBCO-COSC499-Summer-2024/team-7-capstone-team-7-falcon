@@ -9,6 +9,9 @@ import { ExamModel } from './entities/exam.entity';
 import { CourseService } from '../course/course.service';
 import { SubmissionModel } from './entities/submission.entity';
 import { pick } from 'lodash';
+import { PageOptionsDto } from '../../dto/page-options.dto';
+import { PageMetaDto } from '../../dto/page-meta.dto';
+import { PageDto } from '../../dto/page.dto';
 
 @Injectable()
 export class ExamService {
@@ -17,6 +20,37 @@ export class ExamService {
    * @param courseService {CourseService} instance of CourseService
    */
   constructor(private readonly courseService: CourseService) {}
+
+  /**
+   * Get exams by course id
+   * @param cid {number} course id
+   * @param pageOptionsDto {PageOptionsDto} page options dto
+   * @returns {Promise<PageDto<any>>} page dto of exams
+   */
+  public async getExamsByCourseId(
+    cid: number,
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<any>> {
+    const queryBuilder = ExamModel.createQueryBuilder('exam');
+
+    queryBuilder
+      .leftJoin('exam.course', 'course')
+      .where('course.id = :cid', { cid })
+      .andWhere('course.is_archived = false')
+      .orderBy('exam.exam_date', 'DESC')
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const examsCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({
+      itemCount: examsCount,
+      pageOptionsDto,
+    });
+
+    return new PageDto(entities, pageMetaDto);
+  }
 
   /**
    * Create an exam

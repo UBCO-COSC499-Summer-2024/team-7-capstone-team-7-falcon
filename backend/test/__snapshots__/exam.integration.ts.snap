@@ -1,15 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ExamService createExam should create an exam 1`] = `
-ExamModel {
-  "grades_released_at": null,
-  "id": 1,
-  "name": "Test Exam",
-  "questions": {},
-}
-`;
-
-exports[`ExamService getSubmissionsByExamId should return submissions by exam id 1`] = `
+exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if exam submissions are returned 1`] = `
 [
   {
     "created_at": "1000000000",
@@ -21,7 +12,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 10,
+        "id": 11,
         "last_name": "Doe",
       },
     },
@@ -37,7 +28,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 9,
+        "id": 10,
         "last_name": "Doe",
       },
     },
@@ -53,7 +44,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 8,
+        "id": 9,
         "last_name": "Doe",
       },
     },
@@ -69,7 +60,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 7,
+        "id": 8,
         "last_name": "Doe",
       },
     },
@@ -85,7 +76,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 6,
+        "id": 7,
         "last_name": "Doe",
       },
     },
@@ -101,7 +92,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 5,
+        "id": 6,
         "last_name": "Doe",
       },
     },
@@ -117,7 +108,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 4,
+        "id": 5,
         "last_name": "Doe",
       },
     },
@@ -133,7 +124,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 3,
+        "id": 4,
         "last_name": "Doe",
       },
     },
@@ -149,7 +140,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 2,
+        "id": 3,
         "last_name": "Doe",
       },
     },
@@ -165,7 +156,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
       "user": {
         "avatar_url": null,
         "first_name": "John",
-        "id": 1,
+        "id": 2,
         "last_name": "Doe",
       },
     },

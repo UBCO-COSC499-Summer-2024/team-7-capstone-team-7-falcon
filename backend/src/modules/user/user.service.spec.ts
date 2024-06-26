@@ -12,20 +12,23 @@ import { OAuthGoogleUserPayload } from '../../common/interfaces';
 import { faker } from '@faker-js/faker';
 import { CourseModel } from '../course/entities/course.entity';
 import { CourseUserModel } from '../course/entities/course-user.entity';
-import { TokenModule } from '../token/token.module';
 import { UserCreateDto } from '../auth/dto/user-create.dto';
+import { TokenService } from '../token/token.service';
+import * as bcrypt from 'bcrypt';
 
 describe('UserService', () => {
   let userService: UserService;
+  let tokenService: TokenService;
   let moduleRef: TestingModule;
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
-      providers: [UserService],
-      imports: [TestTypeOrmModule, TestConfigModule, TokenModule],
+      providers: [TokenService, UserService],
+      imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 
     userService = moduleRef.get<UserService>(UserService);
+    tokenService = moduleRef.get<TokenService>(TokenService);
   });
 
   afterEach(async () => {
@@ -600,8 +603,9 @@ describe('UserService', () => {
     });
   });
 
-  describe('findUserCoursesById', () => {
-    it('should return null when user not enrolled in any courses', async () => {
+  describe('verifyEmail', () => {
+    it('should verify email', async () => {
+
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -635,6 +639,53 @@ describe('UserService', () => {
         invite_code: '456',
       }).save();
 
+      await userService.verifyEmail(user);
+
+      const updatedUser = await UserModel.findOne({ where: { id: user.id } });
+
+      expect(updatedUser.email_verified).toBe(true);
+    });
+  });
+
+  describe('sendResetPasswordEmail', () => {
+    it('should throw an error when user is not found', async () => {
+      await expect(
+        userService.sendResetPasswordEmail('email@notfound.com'),
+      ).rejects.toThrow('User not found');
+    });
+
+    it('should throw an error when user auth type is not email', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        auth_type: AuthTypeEnum.GOOGLE_OAUTH,
+      }).save();
+
+      await expect(
+        userService.sendResetPasswordEmail(user.email),
+      ).rejects.toThrow('User account has unsupported authentication type');
+    });
+
+    it('should throw an error when user email is not verified', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        userService.sendResetPasswordEmail(user.email),
+      ).rejects.toThrow('Email not verified');
+    });
+
+    it('should send reset password email', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -658,6 +709,78 @@ describe('UserService', () => {
 
       const result = await userService.findUserCoursesById(user.id);
       expect(result).toHaveLength(2);
+        email_verified: true,
+      }).save();
+
+      await userService.sendResetPasswordEmail(user.email);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['tokens'],
+      });
+
+      expect(updatedUser.tokens).toHaveLength(1);
+
+      const token = updatedUser.tokens[0];
+      expect(token.type).toBe('PASSWORD_RESET');
+
+      const tokenRecord = await tokenService.findTokenAndUser(token.token);
+
+      expect(tokenRecord.type).toBe('PASSWORD_RESET');
+    });
+
+    it('should handle case when user already has tokens', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await userService.sendResetPasswordEmail(user.email);
+      await userService.sendResetPasswordEmail(user.email);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['tokens'],
+      });
+
+      expect(updatedUser.tokens).toHaveLength(2);
+
+      updatedUser.tokens.forEach((token) => {
+        expect(token.type).toBe('PASSWORD_RESET');
+      });
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should reset password', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const newPassword = faker.internet.password();
+
+      await userService.resetPassword(user, newPassword);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+      });
+
+      bcrypt.compare(newPassword, updatedUser.password, (_err, result) => {
+        if (result) {
+          expect(result).toBeTruthy();
+        }
+      });
     });
   });
 });

@@ -2,9 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { OAuthGoogleUserPayload } from '../../common/interfaces';
-import { OAuthGoogleErrorException } from '../../common/errors';
+import {
+  EmailNotVerifiedException,
+  InvalidAuthMethodException,
+  InvalidPasswordException,
+  OAuthGoogleErrorException,
+  UserNotFoundException,
+} from '../../common/errors';
 import { JwtService } from '@nestjs/jwt';
 import { AuthTypeEnum } from '../../enums/user.enum';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -62,6 +69,43 @@ export class AuthService {
       userPayload,
       AuthTypeEnum.GOOGLE_OAUTH,
     );
+
+    return {
+      access_token: this.jwtService.sign({ id: user.id }),
+    };
+  }
+
+  /**
+   * Sign in with email and password
+   * @param email {string} - The email {string} to sign in
+   * @param password {string} - The password {string} to sign in
+   * @returns {Promise<{ access_token: string }>} - The access token
+   */
+  async signInWithCredentials(
+    email: string,
+    password: string,
+  ): Promise<{
+    access_token: string;
+  }> {
+    const user = await this.userService.findUserByEmail(email);
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    if (user.auth_type !== AuthTypeEnum.EMAIL) {
+      throw new InvalidAuthMethodException();
+    }
+
+    if (!user.email_verified) {
+      throw new EmailNotVerifiedException();
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new InvalidPasswordException();
+    }
 
     return {
       access_token: this.jwtService.sign({ id: user.id }),

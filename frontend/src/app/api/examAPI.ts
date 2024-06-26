@@ -20,7 +20,7 @@ export const examsAPI = {
       return response;
     } catch (error: any) {
       //always axios error
-      console.error("Failed to enroll in course: ", error);
+      console.error("Failed to create exam: ", error);
       return error;
     }
   },

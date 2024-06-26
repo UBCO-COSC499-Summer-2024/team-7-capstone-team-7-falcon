@@ -15,7 +15,7 @@ Clockify report
 * #2: Chores such as fixing the page titles
 * #3: Instructor bubble sheet creation page
 
-### Progress Update (since 6/19/2024)
+### Progress Update (since 6/21/2024)
 
 See the image in the previous section.
 

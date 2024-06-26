@@ -84,8 +84,9 @@ export default function AccountSetup() {
             type="number"
             value={user.employeeId}
             onChange={(e) => setUser({ ...user, employeeId: e.target.value })}
-            disabled={user.userRole === "student"}
-            placeholder="1234567"
+            placeholder={
+              user.userRole === "student" ? "(Optional) 1234567" : "1234567"
+            }
           />
         </div>
 

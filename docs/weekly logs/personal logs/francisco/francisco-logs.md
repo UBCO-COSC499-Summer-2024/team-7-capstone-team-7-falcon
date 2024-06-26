@@ -1,3 +1,32 @@
+## Friday (6/19-6/20)
+
+### Timesheet
+Clockify report
+![clockify](06.19_06.21/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  1. Labeling the training corpus for the OMR model
+  2. Implementing openCV edge detection and masking to supplement the model training  
+
+### Progress Update (since 6/19/2024)
+![ProjectBoard](06.19_06.21/board.png)
+
+  1. Finished creating a corpus for labeling and training
+  2. Implemented a utility which handles PDFs and converts them into PIL Image Objects for saving or further processing
+  3. Scaffolded a component solution with a teammate
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+I was able to implement the conversion utility which also helped me prepare the corpus for labeling, Some small changes to the dockerfile were also necessary for the utility to work in the container but it went smoothly and tests all passed. The process is going well, image labeling is tedious.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  1. Have all of the images Labeled
+  2. Have a model trained on the corpus
+  3. Have bubble row slicing and masking implemented (if objects are properly detected by the model) 
+
+---
+---
+---
+
 ## Wednesday (6/14-6/19)
 
 ### Timesheet

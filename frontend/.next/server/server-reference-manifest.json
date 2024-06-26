@@ -1,0 +1,14 @@
+{
+  "node": {
+    "c7583a11ab30cdfd605d305b737799a681bd36df": {
+      "workers": {
+        "app/(users)/instructor/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Fsrc%2Fapp%2Fapi%2FcookieAPI.ts%22%2C%5B%22fetchAuthToken%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/(users)/instructor/page": "action-browser"
+      }
+    }
+  },
+  "edge": {},
+  "encryptionKey": "499h72ztkeD5GP5a9KwMqU8pYz0owT94El7KV/YOz3w="
+}

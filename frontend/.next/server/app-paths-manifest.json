@@ -1,0 +1,4 @@
+{
+  "/(users)/instructor/exams/page": "app/(users)/instructor/exams/page.js",
+  "/(users)/instructor/page": "app/(users)/instructor/page.js"
+}

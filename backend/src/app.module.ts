@@ -8,6 +8,7 @@ import { CourseModule } from './modules/course/course.module';
 import { SemesterModule } from './modules/semester/semester.module';
 import QueueModule from './modules/queue/queue.module';
 import { ExamModule } from './modules/exam/exam.module';
+import { TokenModule } from './modules/token/token.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ExamModule } from './modules/exam/exam.module';
     SemesterModule,
     QueueModule,
     ExamModule,
+    TokenModule,
   ],
 })
 export class AppModule {}

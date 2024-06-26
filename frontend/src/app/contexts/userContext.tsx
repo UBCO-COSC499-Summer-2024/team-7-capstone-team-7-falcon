@@ -2,9 +2,10 @@
 
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
-enum Role {
+export enum Role {
   STUDENT = "student",
   INSTRUCTOR = "instructor",
+  ADMIN = "admin",
 }
 
 // Define type for user information

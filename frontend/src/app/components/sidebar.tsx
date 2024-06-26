@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Sidebar } from "flowbite-react";
-import { useUserInfo } from "../contexts/userContext";
+import { Role, useUserInfo } from "../contexts/userContext";
+import { usersAPI } from "@/app/api/usersAPI";
 import StudentNavigation from "../(users)/student/components/navigation";
 import { ArrowRightToBracket } from "flowbite-react-icons/outline";
 import Link from "next/link";
@@ -16,7 +17,37 @@ import OwlLogo from "./owlLogo";
  * @returns TSX Element
  */
 const PageSidebar: React.FC = () => {
-  const { userInfo } = useUserInfo();
+  const { userInfo, setUserInfo } = useUserInfo();
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userDetails = await usersAPI.getUserDetails();
+
+        let userRole;
+        if (userDetails.role === "instructor") {
+          userRole = Role.INSTRUCTOR;
+        } else if (userDetails.role === "admin") {
+          userRole = Role.ADMIN;
+        } else {
+          userRole = Role.STUDENT;
+        }
+
+        setUserInfo({
+          ...userInfo,
+          firstName: userDetails.first_name,
+          lastName: userDetails.last_name,
+          email: userDetails.email,
+          role: userRole,
+          avatarUrl: userDetails.avatar_url,
+        });
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   return (
     <Sidebar

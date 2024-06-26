@@ -8,3 +8,123 @@ ExamModel {
   "questions": {},
 }
 `;
+
+exports[`ExamService getExamsByCourseId should return course exams from first page 1`] = `
+PageDto {
+  "data": [
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000009",
+      "grades_released_at": null,
+      "id": 10,
+      "name": "Exam 9",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000008",
+      "grades_released_at": null,
+      "id": 9,
+      "name": "Exam 8",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000007",
+      "grades_released_at": null,
+      "id": 8,
+      "name": "Exam 7",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000006",
+      "grades_released_at": null,
+      "id": 7,
+      "name": "Exam 6",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000005",
+      "grades_released_at": null,
+      "id": 6,
+      "name": "Exam 5",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": 1,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`ExamService getExamsByCourseId should return course exams from second page 1`] = `
+PageDto {
+  "data": [
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000004",
+      "grades_released_at": null,
+      "id": 5,
+      "name": "Exam 4",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000003",
+      "grades_released_at": null,
+      "id": 4,
+      "name": "Exam 3",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000002",
+      "grades_released_at": null,
+      "id": 3,
+      "name": "Exam 2",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000001",
+      "grades_released_at": null,
+      "id": 2,
+      "name": "Exam 1",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000000",
+      "grades_released_at": null,
+      "id": 1,
+      "name": "Exam 0",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": true,
+    "itemCount": 10,
+    "page": 2,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;

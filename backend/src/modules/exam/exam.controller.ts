@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Param,
   Post,
@@ -53,6 +54,29 @@ export class ExamController {
           message: e.message,
         });
       }
+    }
+  }
+
+  /**
+   * Get all exams for the course
+   * @param res {Response} - Response object
+   * @param eid {number} - Exam id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:cid/:eid/submissions')
+  async getExam(
+    @Res() res: Response,
+    @Param('eid', new ValidationPipe()) eid: number,
+  ): Promise<Response> {
+    try {
+      const exam = await this.examService.getSubmissionsByExamId(eid);
+      return res.status(HttpStatus.OK).send(exam);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
     }
   }
 }

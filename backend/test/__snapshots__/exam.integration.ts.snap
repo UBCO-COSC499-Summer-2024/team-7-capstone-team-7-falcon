@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if exam submissions are returned 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "id": 10,
+    "score": 9,
+    "student": {
+      "id": 10,
+      "student_id": "9",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 11,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 9,
+    "score": 8,
+    "student": {
+      "id": 9,
+      "student_id": "8",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 10,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 8,
+    "score": 7,
+    "student": {
+      "id": 8,
+      "student_id": "7",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 9,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 7,
+    "score": 6,
+    "student": {
+      "id": 7,
+      "student_id": "6",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 8,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 6,
+    "score": 5,
+    "student": {
+      "id": 6,
+      "student_id": "5",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 7,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 5,
+    "score": 4,
+    "student": {
+      "id": 5,
+      "student_id": "4",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 6,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 4,
+    "score": 3,
+    "student": {
+      "id": 4,
+      "student_id": "3",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 5,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 3,
+    "score": 2,
+    "student": {
+      "id": 3,
+      "student_id": "2",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 4,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 2,
+    "score": 1,
+    "student": {
+      "id": 2,
+      "student_id": "1",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 1,
+    "score": 0,
+    "student": {
+      "id": 1,
+      "student_id": "0",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+]
+`;

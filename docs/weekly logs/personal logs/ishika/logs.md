@@ -8,6 +8,9 @@ Clockify report
 
 ### Project Board
 
+<img width="761" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/07d03816-acb7-4b26-8931-6b3a8298aace">
+
+
 
 
 ### Current Tasks

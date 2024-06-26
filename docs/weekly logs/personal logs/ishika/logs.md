@@ -1,5 +1,36 @@
+## Wednesday (6/21-6/25)
 
-## Friday (6/19-6/20)
+### Timesheet
+Clockify report
+
+
+### Project Board
+
+
+
+### Current Tasks
+#1. Make changes to the current Table Component Library to be able to handle pagination. 
+#2. Do some styling fixes on the UI of other table instances of instructor and student dashboard
+
+### Progress Update (since 20/06/2024)
+#1. I implemented pagination, fixed header, and vertical scrolling to the initial Table component
+#2. I reviewed and understood other PRs for UI to be able to implement other components for next cycle
+#3. I worked with Benett to figure out the best way to pass data from backend to our tables.
+
+
+### Cycle Goal Review
+Due to having finals on Monday, I wasn't able to complete all my goals. However, I think I made a decent progress on the features I was assigned. 
+After discussion with Benett, I got more clarity on the library functions our table is currently using and what can be modified.
+
+
+### Next Cycle Goals
+#1. I am still going to focus on table instances and their styling since it is occupying most of our UI
+#2. I am going to explore React-Tables and see if our code can be refactored for the best functionality
+#3. I am going to review other PRs and understand some of the backend endpoints written for the tables.
+
+
+
+# Friday (6/19-6/20)
 
 ### Timesheet
 Clockify report

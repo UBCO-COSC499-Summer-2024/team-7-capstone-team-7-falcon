@@ -14,9 +14,9 @@ const studentLinks = [
   },
   {
     title: "Help",
-    href: "/student/help",
+    href: "/student/faq",
     icon: <QuestionCircle />,
-  }
+  },
 ];
 
 /**
@@ -25,6 +25,6 @@ const studentLinks = [
  */
 const StudentNavigation: React.FC = () => {
   return <Navigation links={studentLinks} />;
-}
+};
 
 export default StudentNavigation;

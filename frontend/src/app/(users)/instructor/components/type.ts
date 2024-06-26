@@ -1,6 +1,10 @@
-export interface DataItem {
-  id: number;
+export interface DataItem<T> {
   name: string;
-  score: number;
-  examgraded: number;
+  id: number;
+  data: T;
+}
+
+export interface Column {
+  label: string;
+  renderCell: (item: any) => React.ReactNode;
 }

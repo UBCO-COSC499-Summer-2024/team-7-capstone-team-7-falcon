@@ -1,11 +1,9 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import { CourseData } from "../typings/backendDataTypes";
-
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
 const BACKEND_URL_SERVER = process.env.NEXT_PUBLIC_BACKEND_URL_SERVER;
-
 export const coursesAPI = {
   getCourse: async (courseId: number) => {
     try {
@@ -20,35 +18,34 @@ export const coursesAPI = {
       });
       const response = await instance.get(`/${courseId}/public`);
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      // always axios error
       console.error("Failed to find course:", error);
       return error;
     }
   },
-
   enrollCourse: async (courseId: number, invite_code: string) => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
-        baseURL: `${BACKEND_URL_CLIENT}/api/v1/course`,
+        baseURL: `${BACKEND_URL_CLIENT}/api/v1/course/public`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
         withCredentials: true,
       });
-
       const enrollData = {
         invite_code: invite_code,
       };
       const response = await instance.post(`/${courseId}/enroll`, enrollData);
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      //always axios error
       console.error("Failed to enroll in course: ", error);
       return error;
     }
   },
-
   /**
    * Creates a new course using the provided course data.
    *
@@ -61,7 +58,6 @@ export const coursesAPI = {
   createCourse: async (courseData: CourseData) => {
     try {
       const auth_token = await fetchAuthToken();
-
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/course/create`,
         headers: {
@@ -69,7 +65,6 @@ export const coursesAPI = {
           Authorization: auth_token,
         },
       });
-
       await instance
         .post(`${BACKEND_URL}/api/v1/course/create`, courseData)
         .then((response) => {
@@ -90,6 +85,26 @@ export const coursesAPI = {
         });
     } catch (error) {
       console.error("Error, failed to create course", error);
+    }
+  },
+
+  getAllExams: async (course_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/${course_id}/exams`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exams: ", error);
+      return error;
     }
   },
 };

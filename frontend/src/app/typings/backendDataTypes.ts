@@ -5,7 +5,6 @@ export interface CourseData {
   section_name: string;
   semester_id: number;
 }
-
 export interface User {
   id: number;
   first_name: string;
@@ -18,7 +17,6 @@ export interface User {
   password?: string | null;
   avatar_url: string;
 }
-
 export interface Course {
   id: number;
   course_code: string;
@@ -31,16 +29,44 @@ export interface Course {
   invite_code: string;
 }
 
+export interface Exam {
+  id: number;
+  name: string;
+  created_at: number;
+  updated_at: number;
+  exam_date: number;
+}
+
 export interface CourseRole {
   id: number;
   course_role: string;
-  user: User;
-  course: Course;
+}
+export interface Semester {
+  name: string;
 }
 
-export interface Semester {
-  id: number;
-  name: string;
+export interface ExamData {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
+}
+
+export interface StudentExamResult {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
+}
+
+// will be changed later once the form is actually made
+export interface BubblesheetPayload {
+  examName: string;
+  examDate: Date;
+  questions: ExamQuestion[];
+}
+
+export interface ExamQuestion {
+  question: string;
+  answer: string;
 }
 
 export enum Status {
@@ -48,4 +74,5 @@ export enum Status {
   WrongCode = "WRONG CODE",
   Failure = "FAILURE",
   Pending = "PENDING",
+  InvalidDate = "INVALID DATE",
 }

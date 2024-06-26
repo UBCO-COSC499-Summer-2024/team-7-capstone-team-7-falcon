@@ -1,31 +1,33 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import TableComponent from "../components/TableComponent";
 import { TabItem } from "flowbite-react";
-import { nodes } from "../components/mockData";
-import { COLUMNS as columns } from "../components/columns"; //
+import { ExamColumn } from "../components/columns"; //
 import { DataItem } from "../components/type";
+import ExamTable from "../components/examTable";
+import { coursesAPI } from "../../../api/coursesAPI";
+import { Course, CourseData } from "../../../typings/backendDataTypes";
+
 /**
  * Renders the page component for the exams the instructor has created.
  * @component
  * @returns TSX Element
  */
-const instructorExams: React.FC = () => {
-  // const [data, setData] = useState<DataItem>({ nodes });
-  // const [columns, setColumns] = useState<Column[]>([]);
-
-  useEffect(() => {
-    //fetches data from the server
-    //setcolumns
-    // setData
-  }, []);
+const ViewExam = async ({
+  params,
+}: {
+  params: { course_id: string; exam_id: string };
+}) => {
+  const cid = Number(params.course_id);
+  const response = await coursesAPI.getCourse(cid);
+  const course: Course = response?.data;
+  const courseData: CourseData = { ...course };
 
   return (
     <div>
       <h1 className="text-2xl font-bold">Instructor Exams</h1>
       <div className="grid grid-cols-6">
         <div className="col-span-4">
-          <TableComponent data={nodes} columns={columns}></TableComponent>
+          <ExamTable course_id={cid} />
         </div>
         <div className="col-span-2">
           <h1>Exam Details</h1>
@@ -35,4 +37,4 @@ const instructorExams: React.FC = () => {
   );
 };
 
-export default instructorExams;
+export default ViewExam;

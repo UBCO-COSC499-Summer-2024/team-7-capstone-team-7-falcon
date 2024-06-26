@@ -2,6 +2,8 @@
 
 ### Timesheet
 Clockify report
+<img width="1025" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/1e025ab9-9cf6-4949-bb0e-299f87bfbf27">
+
 
 
 ### Project Board

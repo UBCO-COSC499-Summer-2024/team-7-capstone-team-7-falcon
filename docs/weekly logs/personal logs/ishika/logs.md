@@ -2,9 +2,11 @@
 
 ## Timesheet
 
+<img width="1019" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/ef4e8c57-d923-46fe-8850-9843f473f764">
 
 ##Project Board
 
+<img width="739" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/6bf726db-d1eb-4690-85e0-16aff1e85e42">
 
 ### Current Tasks
 #1. Create table instances for the current edited Table Component

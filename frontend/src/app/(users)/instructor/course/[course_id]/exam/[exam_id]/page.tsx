@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CreateExamButton from "../../../../../components/createExamButton";
 import PeopleButton from "../../../../../components/peopleButton";
 import AnalyticsButton from "../../../../../components/analyticsButton";
@@ -7,9 +7,9 @@ import { Course, CourseData } from "../../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Upload, Download, CheckPlusCircle } from "flowbite-react-icons/solid";
-import { Button } from "flowbite-react";
 import ExamPerformance from "../../../../components/examPerformance";
 import DangerZone from "../../../../components/dangerZone";
+import ExamTable from "../../../../components/examTable";
 
 const ViewExam = async ({
   params,
@@ -48,7 +48,9 @@ const ViewExam = async ({
       </div>
       <h1 className="text-xl font-bold">Filler text:</h1>
       <div className="grid grid-cols-3 gap-4 ">
-        <div className="col-span-2"></div>
+        <div className="col-span-2">
+          <ExamTable course_id={cid} />
+        </div>
         <div className="space-y-4">
           <button type="button" className="btn-primary block">
             <Link href={""} className="flex space-x-4">

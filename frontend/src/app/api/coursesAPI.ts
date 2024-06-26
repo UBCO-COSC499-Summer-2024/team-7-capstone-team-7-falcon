@@ -94,4 +94,24 @@ export const coursesAPI = {
       console.error("Error, failed to create course", error);
     }
   },
+
+  getAllExams: async (course_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/${course_id}/exams`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exams: ", error);
+      return error;
+    }
+  },
 };

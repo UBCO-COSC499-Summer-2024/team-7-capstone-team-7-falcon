@@ -31,6 +31,14 @@ export interface Course {
   invite_code: string;
 }
 
+export interface Exam {
+  id: number;
+  name: string;
+  created_at: number;
+  updated_at: number;
+  exam_date: number;
+}
+
 export interface CourseRole {
   id: number;
   course_role: string;
@@ -44,6 +52,12 @@ export interface Semester {
 }
 
 export interface ExamData {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
+}
+
+export interface StudentExamResult {
   exam_name: string;
   exam_date: number;
   payload?: JSON;

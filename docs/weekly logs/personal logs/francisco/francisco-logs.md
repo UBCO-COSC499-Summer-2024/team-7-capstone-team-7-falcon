@@ -1,3 +1,31 @@
+## Wednesday (6/21-6/25)
+
+### Timesheet
+Clockify report
+![clockify](06.22-06.25/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  1. Training model with pytorch and YOLOv4
+  2. Creating utilities for handling different object types from model
+
+### Progress Update (since 6/22/2024)
+![ProjectBoard](06.22-06.25/board.png)
+
+  1. Finished all image labeling and augmentations, downloaded the dataset for training
+  2. Trained 50 Epochs on Roboflow generated yolov4 weights. Need to change my approach as inference utilities on that fork are deprecated and unmaintained
+  3. Have begun setup to retrain on a custom fork of pytorch-yolov4 that I have created as a submodule for training.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+I have been struggling quite a bit with getting YOLOv4 to run on pytorch and actually get useful results. I was able to train 50 Epochs but know I need quite a bit more (mAP standards suggest a minimum of 273) to actually get useful object inference. My goal is to have a functional, trained model by the end of this week. If that does not happen, I will need to revise my approach.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  1. Have a functional model with at least the minimum epochs trained for fine-tuning
+  2. The rest of the slicing and thresholding utilities should be completed
+
+---
+---
+---
+
 ## Friday (6/19-6/20)
 
 ### Timesheet

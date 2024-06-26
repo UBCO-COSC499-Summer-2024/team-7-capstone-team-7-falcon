@@ -54,6 +54,13 @@ const getUserRole = async (): Promise<string> => {
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
   const auth_token = await fetchAuthToken();
+
+  const isAuthPageRequested = isAuthPages(nextUrl.pathname);
+  const hasVerifiedToken = auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
+  const { url, nextUrl, cookies } = request;
+  const fetched_auth_token = await fetchAuthToken();
+  const auth_token = fetched_auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
+
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const hasVerifiedToken = auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
   // Redirect to dashboard if user is authenticated and tries to access login/signup page

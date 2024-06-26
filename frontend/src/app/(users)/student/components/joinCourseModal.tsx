@@ -21,7 +21,7 @@ const JoinCourseModal: React.FC<{
     coursesAPI
       .enrollCourse(courseData.id as number, inviteCode)
       .then((response) => {
-        if (!response || response?.status != 200) {
+        if (!response || response.status != 200) {
           setStatus(Status.WrongCode);
         } else {
           setStatus(Status.Success);
@@ -70,17 +70,13 @@ const JoinCourseModal: React.FC<{
         </Modal.Body>
         <Modal.Footer>
           <div className="flex items-center p-2 border-gray-200 rounded-b dark:border-gray-600">
-            <button
-              onClick={enroll}
-              type="button"
-              className="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
+            <button onClick={enroll} type="button" className="btn-primary">
               Join Course
             </button>
             <button
               onClick={toggleModal}
               type="button"
-              className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
+              className="btn-secondary"
             >
               Decline
             </button>

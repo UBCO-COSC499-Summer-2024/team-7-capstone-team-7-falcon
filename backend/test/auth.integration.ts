@@ -3,10 +3,19 @@ import { AuthModule } from '../src/modules/auth/auth.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { AuthService } from '../src/modules/auth/auth.service';
 import {
+  EmailNotVerifiedException,
+  InvalidAuthMethodException,
+  InvalidPasswordException,
   OAuthGoogleErrorException,
   UserAlreadyExistsException,
+  UserNotFoundException,
 } from '../src/common/errors';
 import { HttpStatus } from '@nestjs/common';
+import { UserModel } from '../src/modules/user/entities/user.entity';
+import { faker } from '@faker-js/faker';
+import { TokenModel } from '../src/modules/token/entities/token.entity';
+import { StudentUserModel } from '../src/modules/user/entities/student-user.entity';
+import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
 
 const mockAuthService = {
   // We need to mock the signInWithGoogle method to avoid calling the Google API
@@ -22,6 +31,20 @@ const mockAuthService = {
         throw new Error();
     }
   },
+  signInWithCredentials: async (_email: any, password: any) => {
+    switch (password) {
+      case 'not_exist':
+        throw new UserNotFoundException();
+      case 'auth_method_invalid':
+        throw new InvalidAuthMethodException();
+      case 'email_not_verified':
+        throw new EmailNotVerifiedException();
+      case 'invalid_password':
+        throw new InvalidPasswordException();
+      default:
+        return { access_token: 'access' };
+    }
+  },
 };
 
 describe('Auth Integration', () => {
@@ -31,7 +54,202 @@ describe('Auth Integration', () => {
       t.overrideProvider(AuthService).useValue(mockAuthService),
   );
 
-  describe('GET oauth/:provider', () => {
+  beforeEach(async () => {
+    await TokenModel.delete({});
+    await UserModel.delete({});
+    await StudentUserModel.delete({});
+    await EmployeeUserModel.delete({});
+
+    await UserModel.query('ALTER SEQUENCE user_model_id_seq RESTART WITH 1');
+    await StudentUserModel.query(
+      'ALTER SEQUENCE student_user_model_id_seq RESTART WITH 1',
+    );
+    await EmployeeUserModel.query(
+      'ALTER SEQUENCE employee_user_model_id_seq RESTART WITH 1',
+    );
+    await TokenModel.query('ALTER SEQUENCE token_model_id_seq RESTART WITH 1');
+  });
+
+  describe('POST /auth/register', () => {
+    it('should return status 400 when body is invalid', () => {
+      return supertest().post('/auth/register').expect(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should return status 400 when password and confirm password do not match', async () => {
+      const request = await supertest().post('/auth/register').send({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: faker.internet.email(),
+        password: 'p@ssw0rD',
+        confirm_password: 'password1',
+      });
+
+      expect(request.status).toBe(HttpStatus.BAD_REQUEST);
+      expect(request.body).toStrictEqual({
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: ['Password and confirmation password do not match'],
+        error: 'Bad Request',
+      });
+    });
+
+    it('should return status 201 when body is valid', async () => {
+      const password = 'p@ssw0rD';
+      const request = await supertest().post('/auth/register').send({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: faker.internet.email(),
+        password: password,
+        confirm_password: password,
+        student_id: 1,
+      });
+
+      expect(request.status).toBe(HttpStatus.CREATED);
+    });
+
+    it('should return status 409 when user already exists', async () => {
+      const password = 'p@ssw0rD';
+      const email = faker.internet.email();
+
+      await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const request = await supertest().post('/auth/register').send({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        student_id: 1,
+      });
+
+      expect(request.status).toBe(HttpStatus.CONFLICT);
+    });
+
+    it('should return status 400 when student id already exists', async () => {
+      const password = 'p@ssw0rD';
+      const email = faker.internet.email();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 1,
+        user: user,
+      }).save();
+
+      const request = await supertest().post('/auth/register').send({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: faker.internet.email(),
+        password: password,
+        confirm_password: password,
+        student_id: 1,
+      });
+
+      expect(request.status).toBe(HttpStatus.BAD_REQUEST);
+      expect(request.body).toStrictEqual({
+        error: 'Student ID already exists',
+      });
+    });
+
+    it('should return status 400 when employee id already exists', async () => {
+      const password = 'p@ssw0rD';
+      const email = faker.internet.email();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 1,
+        user: user,
+      }).save();
+
+      const request = await supertest().post('/auth/register').send({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: faker.internet.email(),
+        password: password,
+        confirm_password: password,
+        employee_id: 1,
+      });
+
+      expect(request.status).toBe(HttpStatus.BAD_REQUEST);
+      expect(request.body).toStrictEqual({
+        error: 'Employee ID already exists',
+      });
+    });
+  });
+
+  describe('POST /auth/login', () => {
+    it('should return status 400 when body is invalid', () => {
+      return supertest().post('/auth/login').expect(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should return status 404 when user is not found', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'not_exist',
+      });
+
+      expect(request.status).toBe(HttpStatus.NOT_FOUND);
+    });
+
+    it('should return status 403 when auth method is invalid', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'auth_method_invalid',
+      });
+
+      expect(request.status).toBe(HttpStatus.FORBIDDEN);
+    });
+
+    it('should return status 401 when email is not verified', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'email_not_verified',
+      });
+
+      expect(request.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 401 when password is invalid', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'invalid_password',
+      });
+
+      expect(request.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 200 when body is valid', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'password',
+      });
+
+      expect(request.status).toBe(HttpStatus.OK);
+    });
+  });
+
+  describe('GET /auth/oauth/:provider', () => {
     it('should return status 400 when provider is not supported', () => {
       return supertest()
         .get('/auth/oauth/unknown')
@@ -46,7 +264,7 @@ describe('Auth Integration', () => {
     });
   });
 
-  describe('GET oauth/:provider/callback', () => {
+  describe('GET /auth/oauth/:provider/callback', () => {
     it('should return status 400 when provider is not supported', () => {
       return supertest()
         .get('/auth/oauth/unknown/callback')
@@ -91,17 +309,43 @@ describe('Auth Integration', () => {
     });
   });
 
-  describe('GET logout', () => {
+  describe('GET /auth/logout', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/auth/logout').expect(HttpStatus.UNAUTHORIZED);
     });
 
-    it('should return status 204 when token is provided', () => {
+    it('should return status 403 when user email is not verified', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
       return supertest()
         .get('/auth/logout')
-        .set('Cookie', [`auth_token=${signJwtToken(1)}`])
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.FORBIDDEN);
+    });
+
+    it('should return status 204 when token is provided', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      return supertest()
+        .get('/auth/logout')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.FOUND)
-        .expect('Location', `${process.env.FRONTEND_URL}/login`)
+        .expect('Location', `${process.env.FRONTEND_URL}/login`);
     });
   });
 });

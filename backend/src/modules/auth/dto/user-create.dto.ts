@@ -21,11 +21,11 @@ export class UserCreateDto {
   readonly last_name?: string;
 
   @IsEmail()
-  @IsNotEmpty({ message: ERROR_MESSAGES.userCreateDto.emailRequired })
+  @IsNotEmpty({ message: ERROR_MESSAGES.common.emailRequired })
   readonly email!: string;
 
-  @IsString({ message: ERROR_MESSAGES.userCreateDto.passwordString })
-  @IsNotEmpty({ message: ERROR_MESSAGES.userCreateDto.passwordRequired })
+  @IsString({ message: ERROR_MESSAGES.common.passwordString })
+  @IsNotEmpty({ message: ERROR_MESSAGES.common.passwordRequired })
   @IsStrongPassword(
     {
       minLength: 8,
@@ -34,14 +34,14 @@ export class UserCreateDto {
       minNumbers: 1,
       minSymbols: 1,
     },
-    { message: ERROR_MESSAGES.userCreateDto.passwordStrong },
+    { message: ERROR_MESSAGES.common.passwordStrong },
   )
   readonly password!: string;
 
-  @IsString({ message: ERROR_MESSAGES.userCreateDto.confirmPasswordString })
-  @IsNotEmpty({ message: ERROR_MESSAGES.userCreateDto.confirmPasswordRequired })
+  @IsString({ message: ERROR_MESSAGES.common.confirmPasswordString })
+  @IsNotEmpty({ message: ERROR_MESSAGES.common.confirmPasswordRequired })
   @MatchPasswords('password', {
-    message: ERROR_MESSAGES.userCreateDto.passwordMustMatch,
+    message: ERROR_MESSAGES.common.passwordMustMatch,
   })
   readonly confirm_password!: string;
 

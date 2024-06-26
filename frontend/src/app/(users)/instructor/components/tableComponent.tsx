@@ -51,7 +51,7 @@ const TableComponent = <T,>({ data, columns }: TableComponentProps<T>) => {
           value={search}
           onChange={handleSearch}
           className="border border-gray-300 pl-2"
-          placeholder="Search for Member"
+          placeholder="Search by Name"
         />
       </div>
 

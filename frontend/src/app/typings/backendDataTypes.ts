@@ -39,6 +39,13 @@ export interface Exam {
   exam_date: number;
 }
 
+export interface Submission {
+  student_id: string;
+  user: string;
+  score: number;
+  updated_at: number;
+}
+
 export interface CourseRole {
   id: number;
   course_role: string;
@@ -81,4 +88,11 @@ export enum Status {
   Failure = "FAILURE",
   Pending = "PENDING",
   InvalidDate = "INVALID DATE",
+}
+
+export enum SelectedButton {
+  Create_Exam = "CREATE EXAM",
+  People = "PEOPLE",
+  Analytics = "ANALYTICS",
+  None = "NONE",
 }

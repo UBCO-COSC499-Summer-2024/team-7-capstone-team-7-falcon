@@ -31,10 +31,19 @@ import { UserRoleEnum, CourseRoleEnum } from '../../enums/user.enum';
 import { CourseCreateDto } from './dto/course-create.dto';
 import { SystemRoleGuard } from '../../guards/system-role.guard';
 import { PageOptionsDto } from '../../dto/page-options.dto';
+import { ExamService } from '../exam/exam.service';
 
 @Controller('course')
 export class CourseController {
-  constructor(private readonly courseService: CourseService) {}
+  /**
+   * Constructor of CourseController
+   * @param courseService {CourseService} - instance of CourseService
+   * @param examService {ExamService} - instance of ExamService
+   */
+  constructor(
+    private readonly courseService: CourseService,
+    private readonly examService: ExamService,
+  ) {}
 
   /**
    * Create new course using CourseCreateDto (pass in JSON)
@@ -219,6 +228,35 @@ export class CourseController {
       );
 
       return res.status(HttpStatus.OK).send(course);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
+   * Get exams by course id
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param pageOptionsDto {PageOptionsDto} - Page options
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
+  @Get('/:cid/exams')
+  async getExamsByCourseId(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Query(new ValidationPipe()) pageOptionsDto: PageOptionsDto,
+  ): Promise<Response> {
+    try {
+      const exams = await this.examService.getExamsByCourseId(
+        cid,
+        pageOptionsDto,
+      );
+
+      return res.status(HttpStatus.OK).send(exams);
     } catch (e) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: e.message,

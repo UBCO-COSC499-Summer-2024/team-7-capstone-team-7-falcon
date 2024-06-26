@@ -29,6 +29,7 @@ export class UserService {
   /**
    * Constructor
    * @param tokenService {TokenService} - The token service
+   * @param mailService {MailService} - The mail service
    */
   constructor(
     @Inject(forwardRef(() => TokenService))
@@ -190,8 +191,6 @@ export class UserService {
 
       return user;
     }
-
-    throw new Error('Invalid auth method');
   }
 
   /**

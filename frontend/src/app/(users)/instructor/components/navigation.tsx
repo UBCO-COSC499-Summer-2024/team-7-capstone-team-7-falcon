@@ -14,9 +14,9 @@ const instructorLinks = [
   },
   {
     title: "Help",
-    href: "/instructor/help",
+    href: "/instructor/faq",
     icon: <QuestionCircle />,
-  }
+  },
 ];
 
 /**
@@ -25,6 +25,6 @@ const instructorLinks = [
  */
 const InstructorNavigation: React.FC = () => {
   return <Navigation links={instructorLinks} />;
-}
+};
 
 export default InstructorNavigation;

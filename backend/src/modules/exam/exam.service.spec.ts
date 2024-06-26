@@ -12,6 +12,9 @@ import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
 import { MailService } from '../mail/mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
+import { UserModel } from '../user/entities/user.entity';
+import { StudentUserModel } from '../user/entities/student-user.entity';
+import { SubmissionModel } from './entities/submission.entity';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 
 describe('ExamService', () => {
@@ -113,6 +116,77 @@ describe('ExamService', () => {
       await expect(
         examService.createExam(course.id, examDetails),
       ).rejects.toThrow('Exam date must be in the future');
+    });
+  });
+
+  describe('getSubmissionsByExamId', () => {
+    it('should return submissions by exam id', async () => {
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john.doe-${i}@test.com`,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          email_verified: true,
+        }).save();
+
+        const studentUser = await StudentUserModel.create({
+          user,
+          student_id: i,
+        }).save();
+
+        const submission = await SubmissionModel.create({
+          exam,
+          student: studentUser,
+          answers: {},
+          score: i,
+          document_path: 'path',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        exam.submissions.push(submission);
+      }
+      exam.save();
+
+      const submissions = await examService.getSubmissionsByExamId(exam.id);
+
+      expect(submissions).toBeDefined();
+      expect(submissions).toMatchSnapshot();
+    });
+
+    it('should return an empty array if no submissions are found', async () => {
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      const submissions = await examService.getSubmissionsByExamId(exam.id);
+
+      expect(submissions).toEqual([]);
+    });
+
+    it('should return an empty array if the exam is not found', async () => {
+      const submissions = await examService.getSubmissionsByExamId(1);
+
+      expect(submissions).toEqual([]);
     });
   });
 

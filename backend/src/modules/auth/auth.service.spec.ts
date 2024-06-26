@@ -161,7 +161,7 @@ describe('AuthService', () => {
       ).rejects.toThrow('Invalid password');
     });
 
-    it('should return the access token', async () => {
+    it('should return the access token when user provided valid login credentials', async () => {
       const password = 'password';
       const hashedPassword = await bcrypt.hash(password, 10);
 

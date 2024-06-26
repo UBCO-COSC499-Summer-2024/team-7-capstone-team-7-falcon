@@ -1,3 +1,47 @@
+## Tuesday (6/21- 6/25)
+
+### Timesheet
+Clockify report
+![time for 06.21_- 06.25](06.21_06.25.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Create instructor view exam results page [S]
+  * #2: Work on the table template [S]
+
+### Progress Update (since 6/21/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create instructor view exam results page #169
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Work on the table template #102
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I completed all styling for the view exam results page and all the components on the page. I also wrote the frontend API
+endpoint to get exams and connected it to the table. I spent a lot of time helping Ishika fix the abstract table component. Overall,
+many both frontend and backend are making good progress but we may need to meet more in order to make sure everyone is on the same page.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Write the frontend API for retrieving exam submissions and create the table component to render it
+
 ## Tuesday (6/19- 6/20)
 
 ### Timesheet

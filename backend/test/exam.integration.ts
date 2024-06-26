@@ -222,7 +222,7 @@ describe('Exam Integration', () => {
       await supertest().get('/exam/1/1/submissions').expect(401);
     });
 
-    it('should return 401 if user not enrolled in course', async () => {
+    it('should return 401 if user not assigned to the course', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',

@@ -8,3 +8,288 @@ ExamModel {
   "questions": {},
 }
 `;
+
+exports[`ExamService getExamsByCourseId should return course exams from first page 1`] = `
+PageDto {
+  "data": [
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000009",
+      "grades_released_at": null,
+      "id": 10,
+      "name": "Exam 9",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000008",
+      "grades_released_at": null,
+      "id": 9,
+      "name": "Exam 8",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000007",
+      "grades_released_at": null,
+      "id": 8,
+      "name": "Exam 7",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000006",
+      "grades_released_at": null,
+      "id": 7,
+      "name": "Exam 6",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000005",
+      "grades_released_at": null,
+      "id": 6,
+      "name": "Exam 5",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": 1,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`ExamService getExamsByCourseId should return course exams from second page 1`] = `
+PageDto {
+  "data": [
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000004",
+      "grades_released_at": null,
+      "id": 5,
+      "name": "Exam 4",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000003",
+      "grades_released_at": null,
+      "id": 4,
+      "name": "Exam 3",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000002",
+      "grades_released_at": null,
+      "id": 3,
+      "name": "Exam 2",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000001",
+      "grades_released_at": null,
+      "id": 2,
+      "name": "Exam 1",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000000",
+      "grades_released_at": null,
+      "id": 1,
+      "name": "Exam 0",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": true,
+    "itemCount": 10,
+    "page": 2,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`ExamService getSubmissionsByExamId should return submissions by exam id 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "id": 10,
+    "score": 9,
+    "student": {
+      "id": 10,
+      "student_id": "9",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 10,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 9,
+    "score": 8,
+    "student": {
+      "id": 9,
+      "student_id": "8",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 9,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 8,
+    "score": 7,
+    "student": {
+      "id": 8,
+      "student_id": "7",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 8,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 7,
+    "score": 6,
+    "student": {
+      "id": 7,
+      "student_id": "6",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 7,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 6,
+    "score": 5,
+    "student": {
+      "id": 6,
+      "student_id": "5",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 6,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 5,
+    "score": 4,
+    "student": {
+      "id": 5,
+      "student_id": "4",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 5,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 4,
+    "score": 3,
+    "student": {
+      "id": 4,
+      "student_id": "3",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 4,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 3,
+    "score": 2,
+    "student": {
+      "id": 3,
+      "student_id": "2",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 2,
+    "score": 1,
+    "student": {
+      "id": 2,
+      "student_id": "1",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 1,
+    "score": 0,
+    "student": {
+      "id": 1,
+      "student_id": "0",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 1,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+]
+`;

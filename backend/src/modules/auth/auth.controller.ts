@@ -1,28 +1,118 @@
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
   Param,
+  Post,
   Query,
   Res,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ProviderAuthPipe } from './pipes/auth.pipe';
 import { AuthService } from './auth.service';
 import {
+  EmailNotVerifiedException,
+  EmployeeIdAlreadyExistsException,
+  InvalidAuthMethodException,
+  InvalidPasswordException,
   OAuthGoogleErrorException,
+  StudentIdAlreadyExistsException,
   UserAlreadyExistsException,
+  UserNotFoundException,
+  UserStudentEmployeeFieldException,
 } from '../../common/errors';
 import { CodeAuthPipe } from './pipes/code-auth.pipe';
 import { AuthGuard } from '../../guards/auth.guard';
+import { UserCreateDto } from './dto/user-create.dto';
+import { UserService } from '../user/user.service';
+import { AuthTypeEnum } from '../../enums/user.enum';
+import { UserLoginDto } from './dto/user-login.dto';
 
 @Controller('auth')
 export class AuthController {
   private GOOGLE_AUTH_URL: string =
     'https://accounts.google.com/o/oauth2/v2/auth';
 
-  constructor(private readonly authService: AuthService) {}
+  /**
+   * Constructor
+   * @param authService {AuthService} - The auth service
+   * @param userService {UserService} - The user service
+   */
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
+
+  /**
+   * Register a new user
+   * @param res {Response} - The response object
+   * @param body {UserCreateDto} - The user create dto
+   * @returns {Promise<Response>} - The response object
+   */
+  @Post('register')
+  async register(
+    @Res() res: Response,
+    @Body(new ValidationPipe()) body: UserCreateDto,
+  ): Promise<Response> {
+    try {
+      await this.userService.findOrCreateUser(body, AuthTypeEnum.EMAIL);
+      return res.status(HttpStatus.CREATED).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof UserAlreadyExistsException) {
+        return res.status(HttpStatus.CONFLICT).send({ error: e.message });
+      } else if (
+        e instanceof UserStudentEmployeeFieldException ||
+        e instanceof EmployeeIdAlreadyExistsException ||
+        e instanceof StudentIdAlreadyExistsException
+      ) {
+        return res.status(HttpStatus.BAD_REQUEST).send({ error: e.message });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ error: e.message });
+      }
+    }
+  }
+
+  /**
+   * Log in the user with email and password
+   * @param res {Response} - The response object
+   * @param body {UserLoginDto} - The user login dto
+   * @returns {Promise<Response>} - The response object
+   */
+  @Post('login')
+  async login(
+    @Res() res: Response,
+    @Body(new ValidationPipe()) body: UserLoginDto,
+  ): Promise<Response> {
+    try {
+      const result = await this.authService.signInWithCredentials(
+        body.email,
+        body.password,
+      );
+      return res
+        .status(HttpStatus.OK)
+        .send({ access_token: result.access_token });
+    } catch (e) {
+      if (e instanceof UserNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({ error: e.message });
+      } else if (e instanceof InvalidAuthMethodException) {
+        return res.status(HttpStatus.FORBIDDEN).send({ error: e.message });
+      } else if (
+        e instanceof EmailNotVerifiedException ||
+        e instanceof InvalidPasswordException
+      ) {
+        return res.status(HttpStatus.UNAUTHORIZED).send({ error: e.message });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ error: e.message });
+      }
+    }
+  }
 
   /**
    * Redirect to the OAuth provider

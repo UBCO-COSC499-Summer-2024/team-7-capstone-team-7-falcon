@@ -1,5 +1,36 @@
 # Individual Logs for Paula
 
+## Friday (6/19- 6/20)
+
+### Timesheet
+
+Clockify report
+!["timesheet_06.19_06.20"](images/clockify_06.19_06.20.png)
+
+### Current Tasks
+
+!["current_tasks_06.19_06.20"](images/current_tasks_06.19_06.20.png)
+
+  * #1: Authentication pages (frontend and backend)
+  * #2: Create student dashboard page
+  * #3: Chores such as fixing the page titles
+  * #4: Instructor bubble sheet creation page
+  * #5: Middleware Bug fix
+
+### Progress Update (since 6/19/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I completed the tasks I promised but also had to spend some time fixing the error that the middleware was throwing. Dima pointed out that the issue is that expired tokens were not being deleted. I pushed a fix, but need to test it further. I feel good about the project overall, but wish the size of the PRs were smaller. It already takes me longer to read the code since the language is unfamiliar to me, and the large size of the PRs do not help =( 
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  * Brush up on typescript and react on the weekend
+  * Complete the authentication component (link pages, integrate with backend) once the backend endpoints will be available.
+  * Start working on the instructor bubble sheet creation page
+
 ## Wednesday (6/14- 6/18)
 
 ### Timesheet

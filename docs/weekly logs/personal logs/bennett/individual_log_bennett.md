@@ -1,3 +1,49 @@
+## Tuesday (6/19- 6/20)
+
+### Timesheet
+Clockify report
+![time for 06.19_- 06.20](06.19_06.20.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Add more Issues to project board [XS]
+  * #2: Instructor create exam page [S]
+
+### Progress Update (since 6/19/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create Join course Page N/A
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor create exam page #136
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+I completed both tasks I set out to complete. Overall the process is going smoothly and I have no complaints about our project
+velocity. I think one area we can improve on is having everyone on the team review PRs faster since we often have many
+outstanding PRs.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Work on the view exam results page
+  * Work on some of the frontend API endpoints
+  * Work on the admin add semester page
+
 ## Tuesday (6/14- 6/18)
 
 ### Timesheet
@@ -44,6 +90,7 @@ The issues can now be created.
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Create more issues
   * Finish instructor create exam page
+
 ## Wednesday (6/12- 6/13)
 
 ### Timesheet

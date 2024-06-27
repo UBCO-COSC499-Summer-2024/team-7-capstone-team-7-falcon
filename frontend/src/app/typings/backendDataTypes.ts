@@ -37,6 +37,7 @@ export interface Exam {
   created_at: number;
   updated_at: number;
   exam_date: number;
+  grades_released_at: number;
 }
 
 export interface Submission {

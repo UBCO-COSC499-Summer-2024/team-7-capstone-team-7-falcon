@@ -10,13 +10,19 @@ import {
 } from "../../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Upload, Download, CheckPlusCircle } from "flowbite-react-icons/solid";
+import {
+  Upload,
+  Download,
+  CheckPlusCircle,
+  Edit,
+} from "flowbite-react-icons/solid";
 import ExamPerformance from "../../../../components/examPerformance";
 import DangerZone from "../../../../components/dangerZone";
 import ExamTable from "../../../../components/examTable";
 import SubmissionTable from "../../../../components/submissionsTable";
 import CourseHeader from "../../../../components/courseHeader";
 import { examsAPI } from "../../../../../../api/examAPI";
+import { ArrowLeft } from "flowbite-react-icons/outline";
 
 const ViewExam = async ({
   params,
@@ -48,12 +54,31 @@ const ViewExam = async ({
 
   return (
     <div className="p-0">
-      <CourseHeader
-        course_code={courseData.course_code}
-        course_desc={courseData.course_name}
-        course_id={course.id}
-        selected={SelectedButton.None}
-      />
+      <div className="grid grid-cols-2">
+        <div className="col-span-1">
+          <CourseHeader
+            course_code={courseData.course_code}
+            course_desc={courseData.course_name}
+            course_id={course.id}
+            selected={SelectedButton.None}
+          />
+        </div>
+        <div className="justify-self-end space-y-4">
+          <button type="button" className="btn-primary">
+            <Link href={""} className="space-x-4 flex items-center">
+              <Edit />
+              Course Settings
+            </Link>
+          </button>
+          <button type="button" className="btn-primary block">
+            <Link href={""} className="space-x-4 flex items-center">
+              <ArrowLeft />
+              Back
+            </Link>
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-5 gap-24 mt-4 border-t-2 border-black">
         <div className="col-span-3 p-4">
           <p className="">{}</p>

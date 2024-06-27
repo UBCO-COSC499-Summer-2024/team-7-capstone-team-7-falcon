@@ -25,7 +25,7 @@ export default function LoginPage() {
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
       <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="font-bold mb-3">OwlMark OMS Portal Login</h1>
+        <h1 className="font-bold mb-3">OwlMark OMS Portal</h1>
         <Button
           onClick={onGoogleSignup}
           color="white"
@@ -111,7 +111,7 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-center space-x-10 mt-4">
           <Link
-            href="#"
+            href="/reset-password"
             className="text-purple-500 font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center mt-4 text-sm"
           >
             Forgot password

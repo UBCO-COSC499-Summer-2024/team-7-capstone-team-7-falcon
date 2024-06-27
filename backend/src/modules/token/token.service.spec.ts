@@ -9,14 +9,28 @@ import { UserService } from '../user/user.service';
 import { faker } from '@faker-js/faker';
 import { UserModel } from '../user/entities/user.entity';
 import { TokenModel } from './entities/token.entity';
+import { MailService } from '../mail/mail.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 describe('TokenService', () => {
   let tokenService: TokenService;
   let moduleRef: TestingModule;
 
   beforeEach(async () => {
+    const mockMailerService = {
+      sendMail: jest.fn(),
+    };
+
     moduleRef = await Test.createTestingModule({
-      providers: [TokenService, UserService],
+      providers: [
+        TokenService,
+        UserService,
+        MailService,
+        {
+          provide: MailerService,
+          useValue: mockMailerService,
+        },
+      ],
       imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 

@@ -10,6 +10,8 @@ import { ExamModel } from './entities/exam.entity';
 import { CourseService } from '../course/course.service';
 import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
+import { MailService } from '../mail/mail.service';
+import { MailerService } from '@nestjs-modules/mailer';
 import { UserModel } from '../user/entities/user.entity';
 import { StudentUserModel } from '../user/entities/student-user.entity';
 import { SubmissionModel } from './entities/submission.entity';
@@ -20,8 +22,22 @@ describe('ExamService', () => {
   let moduleRef: TestingModule;
 
   beforeEach(async () => {
+    const mockMailerService = {
+      sendMail: jest.fn(),
+    };
+
     moduleRef = await Test.createTestingModule({
-      providers: [ExamService, CourseService, UserService, TokenService],
+      providers: [
+        ExamService,
+        CourseService,
+        UserService,
+        TokenService,
+        MailService,
+        {
+          provide: MailerService,
+          useValue: mockMailerService,
+        },
+      ],
       imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 

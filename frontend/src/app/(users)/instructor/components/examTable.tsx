@@ -14,7 +14,7 @@ import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { Column, DataItem } from "./type";
 import { examsAPI } from "../../../api/examAPI";
-import TableComponent from "./tableComponent";
+import TableComponent from "./TableComponent";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { Exam } from "../../../typings/backendDataTypes";
 

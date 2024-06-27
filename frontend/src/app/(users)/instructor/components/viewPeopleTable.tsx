@@ -1,31 +1,24 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Header,
-  HeaderRow,
-  Body,
-  Row,
-  HeaderCell,
-  Cell,
-} from "@table-library/react-table-library/table";
-import { useTheme } from "@table-library/react-table-library/theme";
-import { getTheme } from "@table-library/react-table-library/baseline";
 import { Column, DataItem } from "./type";
 import TableComponent from "./tableComponent";
 import { usersAPI } from "../../../api/usersAPI";
 import { User } from "../../../typings/backendDataTypes";
 
 const user_columns: Column[] = [
-  { label: "#", renderCell: (item) => item.id },
-  { label: "Name", renderCell: (item) => item.name },
+  { label: "#", renderCell: (item) => item.student_id },
+  { label: "Name", renderCell: (item) => item.first_name },
+  { label: "Profile", renderCell: (item) => item.profile },
   { label: "Role", renderCell: (item) => item.role },
   { label: "Email", renderCell: (item) => item.email },
-  { label: "Actions", renderCell: (item) => item.actions },
 ];
 
-const PeopleTable: React.FC = () => {
+type PeopleTableProps = {
+  student_id: number;
+};
+
+const PeopleTable: React.FC<PeopleTableProps> = ({ student_id }) => {
   const [data, setData] = useState<DataItem<User>[] | null>(null);
 
   useEffect(() => {
@@ -34,13 +27,13 @@ const PeopleTable: React.FC = () => {
       console.log("user data: ", result);
       const users: DataItem<User>[] = result.data.data.map((item: any) => ({
         name: item.name,
-        id: item.id,
+        id: item.student_id,
         data: {
-          id: item.id,
+          id: item.student_id,
           name: item.name,
+          avatar_url: item.profile,
           role: item.role,
           email: item.email,
-          actions: item.actions,
         },
       }));
       setData(users);

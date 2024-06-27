@@ -7,10 +7,11 @@ import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 export default function SignupPage() {
   const router = useRouter();
   const [user, setUser] = useState({
-    email: "",
-    password: "",
     firstname: "",
     lastname: "",
+    email: "",
+    password: "",
+    confirm_password: "",
   });
 
   const onSignup = async () => {
@@ -89,6 +90,25 @@ export default function SignupPage() {
             type="password"
             value={user.password}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
+            placeholder="********"
+          />
+        </div>
+
+        <div className="mb-4">
+          <Label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="password_confirmation"
+          >
+            Confirm Password
+          </Label>
+          <TextInput
+            className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            id="password_confirmation"
+            type="password"
+            value={user.confirm_password}
+            onChange={(e) =>
+              setUser({ ...user, confirm_password: e.target.value })
+            }
             placeholder="********"
           />
         </div>

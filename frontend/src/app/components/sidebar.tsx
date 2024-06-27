@@ -30,9 +30,9 @@ const PageSidebar: React.FC = () => {
     const fetchUserDetails = async () => {
       try {
         const userDetails = await usersAPI.getUserDetails();
-
+        console.log("userDetails", userDetails);
         let userRole;
-        if (userDetails.role === "instructor") {
+        if (userDetails.role === "professor") {
           userRole = Role.INSTRUCTOR;
         } else if (userDetails.role === "admin") {
           userRole = Role.ADMIN;

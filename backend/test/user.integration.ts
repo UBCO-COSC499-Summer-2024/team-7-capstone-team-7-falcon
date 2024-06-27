@@ -14,9 +14,17 @@ import { CourseUserModel } from '../src/modules/course/entities/course-user.enti
 import { TokenModel } from '../src/modules/token/entities/token.entity';
 import { TokenTypeEnum } from '../src/enums/token-type.enum';
 import * as bcrypt from 'bcrypt';
+import { TestingModuleBuilder } from '@nestjs/testing';
+import { MailService } from '../src/modules/mail/mail.service';
 
 describe('User Integration', () => {
-  const supertest = setUpIntegrationTests(UserModule);
+  const supertest = setUpIntegrationTests(
+    UserModule,
+    (t: TestingModuleBuilder) =>
+      t.overrideProvider(MailService).useValue({
+        sendPasswordReset: jest.fn().mockResolvedValue(Promise.resolve()),
+      }),
+  );
 
   beforeEach(async () => {
     await TokenModel.delete({});

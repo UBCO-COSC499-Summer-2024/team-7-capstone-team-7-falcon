@@ -1,19 +1,55 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, FormEvent } from "next/navigation";
 import { Button, Label, TextInput, Radio } from "flowbite-react";
 
 export default function AccountSetup() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+    student_id: null,
+    employee_id: null,
     userRole: "student",
-    studentId: "",
-    employeeId: "",
   });
 
-  const onSetup = async () => {
-    //handle Setup
-  };
+  const [userRole, setUserRole] = useState({
+    role: "student",
+  });
+
+  async function onSetup(event: FormEvent<HTMLFormElement>) {
+    // send the data to set-up account if passwords match
+    // event.preventDefault()
+    // setIsLoading(true)
+    // setError(null) // Clear previous errors when a new request starts
+    // const jsonPayload = JSON.stringify(user);
+    // try {
+    //   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`, {
+    //     method: 'POST',
+    //     body: jsonPayload,
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //   })
+    //   if (!response.ok) {
+    //     throw new Error('Failed to submit the data. Please try again.')
+    //   }
+    //   // Handle response if necessary
+    //   // const data = await response.json()
+    //   // ...
+    // } catch (error) {
+    //   // Capture the error message to display to the user
+    //   setError(error.message)
+    //   console.error(error)
+    // } finally {
+    //   setIsLoading(false)
+    // }
+  }
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
@@ -36,7 +72,7 @@ export default function AccountSetup() {
               id="student-role"
               name="roles"
               value="student"
-              onChange={(e) => setUser({ ...user, userRole: "student" })}
+              onChange={(e) => setUserRole({ ...userRole, role: "student" })}
               defaultChecked
             />
             <Label htmlFor="student-role">student</Label>
@@ -47,7 +83,7 @@ export default function AccountSetup() {
               id="employee-role"
               name="roles"
               value="instructor"
-              onChange={(e) => setUser({ ...user, userRole: "instructor" })}
+              onChange={(e) => setUserRole({ ...userRole, role: "instructor" })}
             />
             <Label htmlFor="employee-role">employee</Label>
           </div>
@@ -62,11 +98,11 @@ export default function AccountSetup() {
           </Label>
           <TextInput
             className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            id="studentID"
+            id="student_id"
             type="number"
-            value={user.studentId}
-            onChange={(e) => setUser({ ...user, studentId: e.target.value })}
-            disabled={user.userRole !== "student"}
+            value={user.student_id}
+            onChange={(e) => setUser({ ...user, student_id: e.target.value })}
+            disabled={userRole.role !== "student"}
             placeholder="12345678"
           />
         </div>
@@ -80,12 +116,12 @@ export default function AccountSetup() {
           </Label>
           <TextInput
             className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            id="employeeID"
+            id="employee_id"
             type="number"
-            value={user.employeeId}
-            onChange={(e) => setUser({ ...user, employeeId: e.target.value })}
+            value={user.employee_id}
+            onChange={(e) => setUser({ ...user, employee_id: e.target.value })}
             placeholder={
-              user.userRole === "student" ? "(Optional) 1234567" : "1234567"
+              userRole.role === "student" ? "(Optional) 1234567" : "1234567"
             }
           />
         </div>

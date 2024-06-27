@@ -1,26 +1,49 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { useFormUserInfo } from "../../contexts/SignUpFormContext";
 
-export default function SignupPage() {
+export default function SignUpPage() {
   const router = useRouter();
-  const [user, setUser] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const { formUserInfo, setFormUserInfo } = useFormUserInfo();
 
-  const onSignup = async () => {
-    //handle Signup
-  };
+  console.log(formUserInfo);
+  async function onSignUp(event: FormEvent<HTMLFormElement>) {
+    // missing the student_id and employee_id fields (at least one required by backend)
+    // so cannot send the data to the database yet
+
+    // send the data to set-up account if passwords match
+    // hash the password??
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null); // Clear previous errors when a new request starts
+
+    console.log(formUserInfo);
+
+    // try {
+    //   if (!response.ok) {
+    //     throw new Error('Failed to submit the data. Please try again.')
+    //   }
+
+    // } catch (error) {
+    //   // Capture the error message to display to the user
+    //   setError(error.message)
+    //   console.error(error)
+    // } finally {
+    //   setIsLoading(false)
+    // }
+  }
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
-      <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
+      <form
+        onSubmit={onSignUp}
+        className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md "
+      >
         <h1 className="text-center font-bold mb-3">OwlMark OMS Portal</h1>
         <h2 className="text-md mb-6 text-center text-gray-400">
           Create an Account
@@ -29,16 +52,18 @@ export default function SignupPage() {
         <div className="mb-4">
           <Label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="first-name"
+            htmlFor="first_name"
           >
             First Name
           </Label>
           <TextInput
             className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            id="firstname"
+            id="first_name"
             type="text"
-            value={user.firstname}
-            onChange={(e) => setUser({ ...user, firstname: e.target.value })}
+            value={formUserInfo.first_name}
+            onChange={(e) =>
+              setFormUserInfo({ ...formUserInfo, first_name: e.target.value })
+            }
             placeholder="John"
           />
         </div>
@@ -46,16 +71,18 @@ export default function SignupPage() {
         <div className="mb-4">
           <Label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="last-name"
+            htmlFor="last_name"
           >
             Last Name
           </Label>
           <TextInput
             className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            id="lastname"
+            id="last_name"
             type="text"
-            value={user.lastname}
-            onChange={(e) => setUser({ ...user, lastname: e.target.value })}
+            value={formUserInfo.last_name}
+            onChange={(e) =>
+              setFormUserInfo({ ...formUserInfo, last_name: e.target.value })
+            }
             placeholder="Adams"
           />
         </div>
@@ -71,8 +98,10 @@ export default function SignupPage() {
             className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="email"
             type="email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            value={formUserInfo.email}
+            onChange={(e) =>
+              setFormUserInfo({ ...formUserInfo, email: e.target.value })
+            }
             placeholder="john123@gmail.com"
           />
         </div>
@@ -88,8 +117,10 @@ export default function SignupPage() {
             className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="password"
             type="password"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            value={formUserInfo.password}
+            onChange={(e) =>
+              setFormUserInfo({ ...formUserInfo, password: e.target.value })
+            }
             placeholder="********"
           />
         </div>
@@ -97,24 +128,27 @@ export default function SignupPage() {
         <div className="mb-4">
           <Label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password_confirmation"
+            htmlFor="confirm_password"
           >
             Confirm Password
           </Label>
           <TextInput
             className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            id="password_confirmation"
+            id="confirm_password"
             type="password"
-            value={user.confirm_password}
+            value={formUserInfo.confirm_password}
             onChange={(e) =>
-              setUser({ ...user, confirm_password: e.target.value })
+              setFormUserInfo({
+                ...formUserInfo,
+                confirm_password: e.target.value,
+              })
             }
             placeholder="********"
           />
         </div>
 
         <Button
-          onClick={onSignup}
+          type="submit"
           color="purple"
           size="xs"
           className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"

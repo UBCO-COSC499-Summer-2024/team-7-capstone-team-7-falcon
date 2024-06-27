@@ -22,6 +22,11 @@ export class ExamService {
    */
   constructor(private readonly courseService: CourseService) {}
 
+  /**
+   * Get exam by id
+   * @param examId {number} exam id
+   * @returns {Promise<ExamModel>} exam model
+   */
   public async getExamById(examId: number): Promise<ExamModel> {
     const exam = await ExamModel.findOne({ where: { id: examId } });
 

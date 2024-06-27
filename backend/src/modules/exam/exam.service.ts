@@ -3,6 +3,7 @@ import { ExamCreateDto } from './dto/exam-create.dto';
 import {
   CourseNotFoundException,
   ExamCreationException,
+  ExamNotFoundException,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
 import { ExamModel } from './entities/exam.entity';
@@ -20,6 +21,16 @@ export class ExamService {
    * @param courseService {CourseService} instance of CourseService
    */
   constructor(private readonly courseService: CourseService) {}
+
+  public async getExamById(examId: number): Promise<ExamModel> {
+    const exam = await ExamModel.findOne({ where: { id: examId } });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    return exam;
+  }
 
   /**
    * Get exams by course id

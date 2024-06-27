@@ -164,3 +164,15 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
   },
 ]
 `;
+
+exports[`Exam Integration GET /exam/:cid/exam/:eid should return 200 if exam is found 1`] = `
+{
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "updated_at": "1000000000",
+}
+`;

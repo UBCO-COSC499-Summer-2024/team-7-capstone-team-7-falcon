@@ -36,8 +36,15 @@ type ExamTableProps = {
   course_id: number;
 };
 
+type TableFilter = "Graded" | "Upcoming";
+
 const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
   const [data, setData] = useState<DataItem<Exam>[] | null>(null);
+  const [activeHeader, setActiveHeader] = useState("Graded");
+
+  const handleClick = (header: TableFilter) => {
+    setActiveHeader(header);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +72,31 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
     return <p>Data not found</p>;
   }
 
-  return <TableComponent<Exam> data={data} columns={exam_columns} />;
+  return (
+    <div className="flex flex-col items-left">
+      <div className="flex space-x-8 pt-4 pl-3">
+        <h2
+          className={`cursor-pointer ${activeHeader === "Graded" ? "text-purple-500" : "text-gray-500"}`}
+          onClick={() => handleClick("Graded")}
+        >
+          Graded Exams
+        </h2>
+        <h2
+          className={`cursor-pointer ${activeHeader === "Upcoming" ? "text-purple-500" : "text-gray-500"}`}
+          onClick={() => handleClick("Upcoming")}
+        >
+          Upcoming Exams
+        </h2>
+      </div>
+      <div className="p-0 mt-0">
+        <TableComponent<Exam>
+          data={data}
+          columns={exam_columns}
+          showSearch={false}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default ExamTable;

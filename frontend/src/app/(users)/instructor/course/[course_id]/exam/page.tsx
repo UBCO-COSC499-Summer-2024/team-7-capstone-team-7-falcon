@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
@@ -13,10 +14,10 @@ const ExamPage = async ({ params }: { params: { course_id: string } }) => {
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };
+
   return (
     <div>
       <div className="grid grid-cols-2">
-        <span className="col-span-2">Graded Exams</span>
         <div className="col-span-1">
           <CourseHeader
             course_code={courseData.course_code}

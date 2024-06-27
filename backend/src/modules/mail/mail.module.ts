@@ -39,8 +39,5 @@ config();
   providers: [MailService],
   exports: [MailService],
 })
-<<<<<<< HEAD
+
 export class MailModule { }
-=======
-export class MailModule {}
->>>>>>> 2bd7d612ebb28a5340104d4727123a99269f4794

@@ -53,16 +53,12 @@ const getUserRole = async (): Promise<string> => {
 
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
-  const auth_token = await fetchAuthToken();
-
-  const isAuthPageRequested = isAuthPages(nextUrl.pathname);
-  const hasVerifiedToken = auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
-  const { url, nextUrl, cookies } = request;
   const fetched_auth_token = await fetchAuthToken();
   const auth_token = fetched_auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
 
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
-  const hasVerifiedToken = auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
+  const hasVerifiedToken = !isTokenExpired(auth_token);
+
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
     if (!hasVerifiedToken) {
@@ -76,12 +72,14 @@ export async function middleware(request: NextRequest) {
     );
     return response;
   }
+
   // Redirect to login page if user is not authenticated
   if (!hasVerifiedToken) {
     const response = NextResponse.redirect(new URL("/login", url));
     response.cookies.delete("auth_token");
     return response;
   }
+
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
   const userRole = await getUserRole();
@@ -90,6 +88,7 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.redirect(new URL(userRolePath, url));
     return response;
   }
+
   return NextResponse.next();
 }
 

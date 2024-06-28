@@ -22,7 +22,7 @@ export class UserModel extends BaseEntity {
   @Column()
   first_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   last_name: string;
 
   @Column({ default: UserRoleEnum.STUDENT })

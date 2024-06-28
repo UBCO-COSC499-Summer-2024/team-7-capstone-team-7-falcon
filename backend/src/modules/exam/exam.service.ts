@@ -3,6 +3,7 @@ import { ExamCreateDto } from './dto/exam-create.dto';
 import {
   CourseNotFoundException,
   ExamCreationException,
+  ExamNotFoundException,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
 import { ExamModel } from './entities/exam.entity';
@@ -12,6 +13,10 @@ import { pick } from 'lodash';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
+import { MoreThan } from 'typeorm';
+import { CourseUserModel } from '../course/entities/course-user.entity';
+import { UserModel } from '../user/entities/user.entity';
+import { UpcomingExamsInterface } from '../../common/interfaces';
 
 @Injectable()
 export class ExamService {
@@ -20,6 +25,21 @@ export class ExamService {
    * @param courseService {CourseService} instance of CourseService
    */
   constructor(private readonly courseService: CourseService) {}
+
+  /**
+   * Get exam by id
+   * @param examId {number} exam id
+   * @returns {Promise<ExamModel>} exam model
+   */
+  public async getExamById(examId: number): Promise<ExamModel> {
+    const exam = await ExamModel.findOne({ where: { id: examId } });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    return exam;
+  }
 
   /**
    * Get exams by course id
@@ -123,5 +143,44 @@ export class ExamService {
     ) as SubmissionModel[];
 
     return modifiedSubmissions;
+  }
+
+  /**
+   * Get upcoming exams by user
+   * @param user {UserModel} user
+   * @returns {Promise<UpcomingExamsInterface[]>} list of upcoming exams
+   */
+  async getUpcomingExamsByUser(
+    user: UserModel,
+  ): Promise<UpcomingExamsInterface[]> {
+    const userCourses = await CourseUserModel.find({
+      where: {
+        user,
+        course: {
+          is_archived: false,
+          exams: {
+            exam_date: MoreThan(parseInt(new Date().getTime().toString())),
+          },
+        },
+      },
+      relations: ['course', 'course.exams'],
+    });
+
+    const modifiedResponse: UpcomingExamsInterface[] = userCourses.map(
+      (userCourse) => ({
+        courseId: userCourse.course.id,
+        courseName: userCourse.course.course_name,
+        courseCode: userCourse.course.course_code,
+        exams: [
+          ...userCourse.course.exams.map((exam) => ({
+            id: exam.id,
+            name: exam.name,
+            examDate: exam.exam_date,
+          })),
+        ],
+      }),
+    );
+
+    return modifiedResponse;
   }
 }

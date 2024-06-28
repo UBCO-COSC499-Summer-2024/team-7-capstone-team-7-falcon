@@ -16,6 +16,7 @@ import { faker } from '@faker-js/faker';
 import { TokenModel } from '../src/modules/token/entities/token.entity';
 import { StudentUserModel } from '../src/modules/user/entities/student-user.entity';
 import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
+import { MailService } from '../src/modules/mail/mail.service';
 
 const mockAuthService = {
   // We need to mock the signInWithGoogle method to avoid calling the Google API
@@ -47,11 +48,19 @@ const mockAuthService = {
   },
 };
 
+const mockMailService = {
+  sendUserConfirmation: jest.fn().mockResolvedValue(Promise.resolve()),
+};
+
 describe('Auth Integration', () => {
   const supertest = setUpIntegrationTests(
     AuthModule,
     (t: TestingModuleBuilder) =>
-      t.overrideProvider(AuthService).useValue(mockAuthService),
+      t
+        .overrideProvider(AuthService)
+        .useValue(mockAuthService)
+        .overrideProvider(MailService)
+        .useValue(mockMailService),
   );
 
   beforeEach(async () => {

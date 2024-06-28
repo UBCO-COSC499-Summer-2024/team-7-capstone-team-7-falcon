@@ -357,4 +357,27 @@ describe('ExamService', () => {
       expect(exams).toMatchSnapshot();
     });
   });
+
+  describe('getExamById', () => {
+    it('should return an exam by id', async () => {
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      const foundExam = await examService.getExamById(exam.id);
+
+      expect(foundExam).toBeDefined();
+      expect(foundExam).toMatchSnapshot();
+    });
+
+    it('should return undefined if the exam is not found', async () => {
+      await expect(examService.getExamById(1)).rejects.toThrow(
+        'Exam not found',
+      );
+    });
+  });
 });

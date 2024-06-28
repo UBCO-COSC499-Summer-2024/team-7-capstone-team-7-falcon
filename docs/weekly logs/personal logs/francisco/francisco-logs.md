@@ -12,7 +12,7 @@ Clockify report
   1. Handoff to Paula for model validation
   2. Working on Thresholding tasks and splitting masks
 
-### Progress Update (since 6/22/2024)
+### Progress Update (since 6/26/2024)
 
 ![ProjectBoard](06.26-06.27/board.png)
 

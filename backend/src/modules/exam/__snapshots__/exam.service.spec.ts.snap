@@ -293,3 +293,102 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
   },
 ]
 `;
+
+exports[`ExamService getUpcomingExamsByCourseUser should return upcoming exams for user 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "courseName": "Introduction to Computer Science",
+    "exams": [
+      {
+        "id": 1,
+        "name": "Exam 0",
+      },
+      {
+        "id": 2,
+        "name": "Exam 1",
+      },
+      {
+        "id": 3,
+        "name": "Exam 2",
+      },
+      {
+        "id": 4,
+        "name": "Exam 3",
+      },
+      {
+        "id": 5,
+        "name": "Exam 4",
+      },
+      {
+        "id": 6,
+        "name": "Exam 5",
+      },
+      {
+        "id": 7,
+        "name": "Exam 6",
+      },
+      {
+        "id": 8,
+        "name": "Exam 7",
+      },
+      {
+        "id": 9,
+        "name": "Exam 8",
+      },
+      {
+        "id": 10,
+        "name": "Exam 9",
+      },
+    ],
+  },
+  {
+    "courseCode": "CS102",
+    "courseId": 2,
+    "courseName": "Introduction to Computer Science II",
+    "exams": [
+      {
+        "id": 11,
+        "name": "Exam 0",
+      },
+      {
+        "id": 12,
+        "name": "Exam 1",
+      },
+      {
+        "id": 13,
+        "name": "Exam 2",
+      },
+      {
+        "id": 14,
+        "name": "Exam 3",
+      },
+      {
+        "id": 15,
+        "name": "Exam 4",
+      },
+      {
+        "id": 16,
+        "name": "Exam 5",
+      },
+      {
+        "id": 17,
+        "name": "Exam 6",
+      },
+      {
+        "id": 18,
+        "name": "Exam 7",
+      },
+      {
+        "id": 19,
+        "name": "Exam 8",
+      },
+      {
+        "id": 20,
+        "name": "Exam 9",
+      },
+    ],
+  },
+]
+`;

@@ -1,5 +1,132 @@
 # Individual Logs
 
+## Wednesday (6/26 - 6/27)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_06262024-06282024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Implement backend endpoint to retrieve "Graded exams" for students
+
+### Progress Update (since 6/26/2024)
+
+![GitHub Board](./images/github_06262024-06282024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #182
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #223
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #219
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #169
+        </td>
+        <!-- Status -->
+        <td>Complete (Backend portion)
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #226
+        </td>
+        <!-- Status -->
+        <td>In progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The cycle was a bit short, as usual. Hoewever, I was able to implement the backend endpoint to retrieve exam information requested by a team member. I was also able to implement the endpoint to retrieve upcoming exams. Unfortunately, my original assumption from the previous cycle was incorrect, and some of the endpoints require additional validation logic and queries to retrieve correct information. Thus, I was not able to achieve the goals that I planned for this cycle. However, after discussion with my team, we realised that at least one backend endpoint is not needed, therefore, it should reduce the amount of time I need to spend for the next cycle
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Implement API endpoints to return PDF file and grade for the student view when they will look at their exams
+  * Finish implementation of retrieving graded exams from courses for the user
+  * Review Pull requests from other team members
+
+## Wednesday (6/21 - 6/25)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_06212024-06252024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Implement backend endpoint to retrieve "Graded exams" for students (upcoming)
+  * #2: Implement backend endpoint to retrieve "Exams Today" for students (upcoming)
+  * #3: Implement backend endpoint to retrieve "Upcoming Exams" for student (upcoming)
+
+### Progress Update (since 6/21/2024)
+
+![GitHub Board](./images/github_06212024-06252024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #205
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #182
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #169
+        </td>
+        <!-- Status -->
+        <td>In review (include both backend and frontend components, I have implemented backend)
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+Overall, I am happy with a progress I have made on implementing registration and authentication process for users that will not use Google OAuth. This took me about 2-3 days to implement as it required me to research SMTP service that will deliver emails to the users; and of course, make a logic compatible with any other mail delivery services. During this cycle, I was also able to implement important endpoints to retrieve all exams and individual submission for exam. This is an important milestone as we are very close on finishing work around backend API.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * As mentioned in the current tasks section, I will create and pick tasks to implement backend endpoints for the users to view exams in the student dashboard. I expect that a lot of the code will be reusable, which, hopefully, will allow me to complete these tasks before Friday's cycle
+  * I will possibly start looking at the API endpoints to return PDF file and grade for the student view when they will look at their exams
+
 ## Friday (6/19 - 6/20)
 
 ### Timesheet

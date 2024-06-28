@@ -1,3 +1,50 @@
+## Tuesday (6/26- 6/27)
+
+### Timesheet
+Clockify report
+![time for 06.26_- 06.27](06.26_06.27.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Finish the view exam page [S]
+        -Create view exam page
+        -Create view submissions page (added)
+    #2: Optimize/refactor API calls within components [S]
+
+### Progress Update (since 6/26/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create view exam page #169
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Optimize/refactor API calls within components N/A
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I completed both tables to retrieve exam submissions and exams. I wrote the 
+frontend API endpoints for both of these tables. I also started refactoring some of the
+API calls between pages using contexes and layouts. I had trouble figuring out some errors in react but received help with it. Overall, the process is going well and the
+team is communicating well what requirements/tasks/blockers exist.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Complete the two pages I was working on once the endpoints are done. 
+  * Finish refactoring the API calls with contexes
+
 ## Tuesday (6/21- 6/25)
 
 ### Timesheet

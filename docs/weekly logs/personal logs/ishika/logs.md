@@ -1,3 +1,4 @@
+
 ## Friday (6/26-6/27)
 
 ## Timesheet
@@ -27,7 +28,6 @@ This cycle was short so I didnt make a lot of progress. I did encounter some oth
   * I am going to finish the FAQ page.
   * I am going to discuss with the team on any other possible tasks needed to be completed for MVP. 
   * I am going to review code for the PRs that are ready to be merged.
-
 
 ## Wednesday (6/21-6/25)
 

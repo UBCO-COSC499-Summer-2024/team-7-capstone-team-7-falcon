@@ -1,51 +1,47 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter, FormEvent } from "next/navigation";
+import React, { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Label, TextInput, Radio } from "flowbite-react";
+import { SignUpFormData, Status } from "../../typings/backendDataTypes";
 
-export default function AccountSetup() {
+const AccountSetup: React.FC<SignUpFormData> = ({
+  first_name,
+  last_name,
+  email,
+  password,
+  confirm_password,
+  student_id,
+  employee_id,
+}) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-    student_id: null,
-    employee_id: null,
-    userRole: "student",
-  });
+  const [formUserInfo, setFormUserInfo] = useState<SignUpFormData>();
 
   const [userRole, setUserRole] = useState({
     role: "student",
   });
 
   async function onSetup(event: FormEvent<HTMLFormElement>) {
-    // send the data to set-up account if passwords match
-    // event.preventDefault()
-    // setIsLoading(true)
-    // setError(null) // Clear previous errors when a new request starts
-    // const jsonPayload = JSON.stringify(user);
-    // try {
-    //   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`, {
-    //     method: 'POST',
-    //     body: jsonPayload,
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //   })
-    //   if (!response.ok) {
-    //     throw new Error('Failed to submit the data. Please try again.')
-    //   }
-    //   // Handle response if necessary
-    //   // const data = await response.json()
-    //   // ...
-    // } catch (error) {
-    //   // Capture the error message to display to the user
-    //   setError(error.message)
-    //   console.error(error)
+    event.preventDefault();
+    const jsonPayload = JSON.stringify(user);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
+        {
+          method: "POST",
+          body: jsonPayload,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      // if (!response.ok) {
+      //   throw new Error('Failed to submit the data. Please try again.')
+      // }
+    } catch (error) {
+      // Capture the error message to display to the user
+      setError(error.message);
+      console.error(error);
+    }
     // } finally {
     //   setIsLoading(false)
     // }
@@ -100,8 +96,10 @@ export default function AccountSetup() {
             className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="student_id"
             type="number"
-            value={user.student_id}
-            onChange={(e) => setUser({ ...user, student_id: e.target.value })}
+            value={formUserInfo.student_id}
+            onChange={(e) =>
+              setFormUserInfo({ ...formUserInfo, student_id: e.target.value })
+            }
             disabled={userRole.role !== "student"}
             placeholder="12345678"
           />
@@ -118,8 +116,10 @@ export default function AccountSetup() {
             className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             id="employee_id"
             type="number"
-            value={user.employee_id}
-            onChange={(e) => setUser({ ...user, employee_id: e.target.value })}
+            value={formUserInfo.employee_id}
+            onChange={(e) =>
+              setFormUserInfo({ ...formUserInfo, employee_id: e.target.value })
+            }
             placeholder={
               userRole.role === "student" ? "(Optional) 1234567" : "1234567"
             }
@@ -137,4 +137,6 @@ export default function AccountSetup() {
       </form>
     </div>
   );
-}
+};
+
+export default AccountSetup;

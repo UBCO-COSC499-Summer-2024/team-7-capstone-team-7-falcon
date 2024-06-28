@@ -48,4 +48,15 @@ export enum Status {
   WrongCode = "WRONG CODE",
   Failure = "FAILURE",
   Pending = "PENDING",
+  PasswordsDoNotMatch = "PASSWORDS DO NOT MATCH",
+}
+
+export interface SignUpFormData {
+  first_name: string;
+  last_name: string | null;
+  email: string;
+  password: string;
+  confirm_password: string;
+  student_id: number | null;
+  employee_id: number | null;
 }

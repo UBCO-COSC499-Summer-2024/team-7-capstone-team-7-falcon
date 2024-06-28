@@ -14,7 +14,7 @@
 #2. Continue working on the FAQ page
 #3. Review PRs for other tasks.
 
-### Progress update since (21-06)
+### Progress update since (26-06)
 #1. I hooked other tables with the API endpoints that were done.
 #2. I tested tables by fetching data from the backend, and made some changes.
 #3. I started working on the FAQ page.

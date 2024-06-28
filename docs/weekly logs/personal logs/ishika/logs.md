@@ -1,3 +1,34 @@
+## Friday (6/26-6/27)
+
+## Timesheet
+
+<img width="1020" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/64b72037-72f2-4253-8a80-580939070b31">
+
+##Project Board
+
+<img width="1079" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/f87e7d25-5df9-4226-bef9-d4d53d5a5a55">
+
+### Current Tasks
+#1. Get Table/Component PR merged into development(resolve any conflicts or make changes if needed)
+#2. Continue working on the FAQ page
+#3. Review PRs for other tasks.
+
+### Progress update since (21-06)
+#1. I hooked other tables with the API endpoints that were done.
+#2. I tested tables by fetching data from the backend, and made some changes.
+#3. I started working on the FAQ page.
+
+
+### Cycle Goal Review 
+This cycle was short so I didnt make a lot of progress. I did encounter some other axios errors that I spent a decent chunk of time troubleshooting it. I finished making any relevant changes to the Component/Table branch. I also did start working on the FAQ page.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  *I am going to make any changes necessary for Component/Table branch to be merged in dev branch.
+  * I am going to finish the FAQ page.
+  * I am going to discuss with the team on any other possible tasks needed to be completed for MVP. 
+  * I am going to review code for the PRs that are ready to be merged.
+
+
 ## Wednesday (6/21-6/25)
 
 ## Timesheet

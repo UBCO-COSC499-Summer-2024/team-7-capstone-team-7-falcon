@@ -176,3 +176,55 @@ exports[`Exam Integration GET /exam/:cid/exam/:eid should return 200 if exam is 
   "updated_at": "1000000000",
 }
 `;
+
+exports[`Exam Integration GET /exam/upcoming should return 200 if exams are found for user 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "courseName": "Introduction to Computer Science",
+    "exams": [
+      {
+        "id": 1,
+        "name": "Exam 0",
+      },
+      {
+        "id": 2,
+        "name": "Exam 1",
+      },
+      {
+        "id": 3,
+        "name": "Exam 2",
+      },
+      {
+        "id": 4,
+        "name": "Exam 3",
+      },
+      {
+        "id": 5,
+        "name": "Exam 4",
+      },
+      {
+        "id": 6,
+        "name": "Exam 5",
+      },
+      {
+        "id": 7,
+        "name": "Exam 6",
+      },
+      {
+        "id": 8,
+        "name": "Exam 7",
+      },
+      {
+        "id": 9,
+        "name": "Exam 8",
+      },
+      {
+        "id": 10,
+        "name": "Exam 9",
+      },
+    ],
+  },
+]
+`;

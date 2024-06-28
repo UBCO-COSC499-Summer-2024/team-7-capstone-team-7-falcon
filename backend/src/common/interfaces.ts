@@ -37,3 +37,22 @@ export interface PageMetaDtoParameters {
   pageOptionsDto: PageOptionsDto;
   itemCount: number;
 }
+
+/**
+ * Individual exam interface for upcoming exams
+ */
+interface UpcomingExamsExamInterface {
+  id: number;
+  name: string;
+  examDate: number;
+}
+
+/**
+ * Upcoming exams interface
+ */
+export interface UpcomingExamsInterface {
+  courseId: number;
+  courseName: string;
+  courseCode: string;
+  exams: UpcomingExamsExamInterface[];
+}

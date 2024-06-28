@@ -13,6 +13,10 @@ import { pick } from 'lodash';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
+import { MoreThan } from 'typeorm';
+import { CourseUserModel } from '../course/entities/course-user.entity';
+import { UserModel } from '../user/entities/user.entity';
+import { UpcomingExamsInterface } from '../../common/interfaces';
 
 @Injectable()
 export class ExamService {
@@ -139,5 +143,44 @@ export class ExamService {
     ) as SubmissionModel[];
 
     return modifiedSubmissions;
+  }
+
+  /**
+   * Get upcoming exams by user
+   * @param user {UserModel} user
+   * @returns {Promise<UpcomingExamsInterface[]>} list of upcoming exams
+   */
+  async getUpcomingExamsByUser(
+    user: UserModel,
+  ): Promise<UpcomingExamsInterface[]> {
+    const userCourses = await CourseUserModel.find({
+      where: {
+        user,
+        course: {
+          is_archived: false,
+          exams: {
+            exam_date: MoreThan(parseInt(new Date().getTime().toString())),
+          },
+        },
+      },
+      relations: ['course', 'course.exams'],
+    });
+
+    const modifiedResponse: UpcomingExamsInterface[] = userCourses.map(
+      (userCourse) => ({
+        courseId: userCourse.course.id,
+        courseName: userCourse.course.course_name,
+        courseCode: userCourse.course.course_code,
+        exams: [
+          ...userCourse.course.exams.map((exam) => ({
+            id: exam.id,
+            name: exam.name,
+            examDate: exam.exam_date,
+          })),
+        ],
+      }),
+    );
+
+    return modifiedResponse;
   }
 }

@@ -1,5 +1,76 @@
 # Individual Logs
 
+## Wednesday (6/26 - 6/27)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_06262024-06282024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Implement backend endpoint to retrieve "Graded exams" for students
+
+### Progress Update (since 6/26/2024)
+
+![GitHub Board](./images/github_06262024-06282024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #182
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #223
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #219
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #169
+        </td>
+        <!-- Status -->
+        <td>Complete (Backend portion)
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #226
+        </td>
+        <!-- Status -->
+        <td>In progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The cycle was a bit shirt short, as usual. Hoewever, I was able to implement backend endpoint to retrieve exam information requested by the team member. I was also able to implement endpoint to retrieve upcoming exams endpoints. Unfortunately, my original assumeption from previous cycle was incorrect, and some of the endpoints require additional validation logic and queries to retrieve correct information. Thus, I was not able to achieve goals that I planned for this cycle. However, after discussion with my team, we released that at least one backend endpoint is not needed, therefore, it should reduce amount of time I need to spend for the next cycle
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Implement API endpoints to return PDF file and grade for the student view when they will look at their exams
+  * Finish implementation of retrieving graded exams from courses for the user
+  * Review Pull requests from other team members
+
 ## Wednesday (6/21 - 6/25)
 
 ### Timesheet

@@ -1,5 +1,61 @@
 # Individual Logs
 
+## Wednesday (6/21 - 6/25)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_06212024-06252024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Implement backend endpoint to retrieve "Graded exams" for students (upcoming)
+  * #2: Implement backend endpoint to retrieve "Exams Today" for students (upcoming)
+  * #3: Implement backend endpoint to retrieve "Upcoming Exams" for student (upcoming)
+
+### Progress Update (since 6/21/2024)
+
+![GitHub Board](./images/github_06212024-06252024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #205
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #182
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #169
+        </td>
+        <!-- Status -->
+        <td>In review (include both backend and frontend components, I have implemented backend)
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+Overall, I am happy with a progress I have made on implementing registration and authentication process for users that will not use Google OAuth. This took me about 2-3 days to implement as it required me to research SMTP service that will deliver emails to the users; and of course, make a logic compatible with any other mail delivery services. During this cycle, I was also able to implement important endpoints to retrieve all exams and individual submission for exam. This is an important milestone as we are very close on finishing work around backend API.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * As mentioned in the current tasks section, I will create and pick tasks to implement backend endpoints for the users to view exams in the student dashboard. I expect that a lot of the code will be reusable, which, hopefully, will allow me to complete these tasks before Friday's cycle
+  * I will possibly start looking at the API endpoints to return PDF file and grade for the student view when they will look at their exams
+
 ## Friday (6/19 - 6/20)
 
 ### Timesheet

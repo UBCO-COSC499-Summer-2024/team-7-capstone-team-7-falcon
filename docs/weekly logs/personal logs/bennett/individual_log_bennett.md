@@ -43,7 +43,7 @@ API calls between pages using contexes and layouts. I had trouble figuring out s
 team is communicating well what requirements/tasks/blockers exist.
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Complete the two pages I was working on once the endpoints are done. 
-  * Finish refactoring the API calls with contexes
+  * Finish refactoring the API calls with contexts
 
 ## Tuesday (6/21- 6/25)
 

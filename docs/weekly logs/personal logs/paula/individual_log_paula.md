@@ -1,5 +1,34 @@
 # Individual Logs for Paula
 
+## Friday (6/26- 6/27)
+
+### Timesheet
+
+Clockify report
+!["timesheet_06.26_06.27"](images/clockify_06.26_06.27.png)
+
+### Current Tasks
+
+!["current_tasks_06.26_06.27"](images/current_tasks_06.26_06.27.png)
+
+* #1: Authentication pages (frontend and backend)
+* #2: Chores such as fixing the page titles
+* #3: Instructor bubble sheet creation page
+* #4: OMR Model validation
+
+### Progress Update (since 6/26/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I started working on linking all of the authentication pages and integrating them with the backend. The obstacle I faced was the fact that some of the forms are multi-step forms and I was having trouble passing the data between the pages using contexts. Bennett and Fran suggested an alternative which Bennett had worked on, and I spent some time exploring that. I am still getting an error and will log off for the day, but will reach out to Bennett later so that I don't waste time trying to figure things out by myself.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Complete the authentication component (link pages, integrate with backend) once the backend endpoints will all have been merged.
+* Have a look at the OMR model validation while Fran works on other parts of the OMR system.
+
 ## Wednesday (6/21- 6/25)
 
 ### Timesheet

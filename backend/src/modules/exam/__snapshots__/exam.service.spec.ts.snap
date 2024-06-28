@@ -9,6 +9,18 @@ ExamModel {
 }
 `;
 
+exports[`ExamService getExamById should return an exam by id 1`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "updated_at": "1000000000",
+}
+`;
+
 exports[`ExamService getExamsByCourseId should return course exams from first page 1`] = `
 PageDto {
   "data": [

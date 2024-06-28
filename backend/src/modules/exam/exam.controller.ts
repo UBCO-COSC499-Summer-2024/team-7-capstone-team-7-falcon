@@ -16,7 +16,10 @@ import { AuthGuard } from '../../guards/auth.guard';
 import { CourseRoleGuard } from '../../guards/course-role.guard';
 import { ExamCreateDto } from './dto/exam-create.dto';
 import { ExamService } from './exam.service';
-import { ExamCreationException } from '../../common/errors';
+import {
+  ExamCreationException,
+  ExamNotFoundException,
+} from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
 import { UpcomingExamsInterface } from '../../common/interfaces';
@@ -29,6 +32,35 @@ export class ExamController {
    * @param examService {ExamService} instance of ExamService
    */
   constructor(private readonly examService: ExamService) {}
+
+  /**
+   * Get exam by id
+   * @param res {Response} response object
+   * @param eid {number} exam id
+   * @returns {Promise<Response>} response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR)
+  @Get('/:cid/exam/:eid')
+  async getExamById(
+    @Res() res: Response,
+    @Param('eid', new ValidationPipe()) eid: number,
+  ): Promise<Response> {
+    try {
+      const exam = await this.examService.getExamById(eid);
+      return res.status(HttpStatus.OK).send(exam);
+    } catch (e) {
+      if (e instanceof ExamNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
 
   /**
    * Create an exam for the course

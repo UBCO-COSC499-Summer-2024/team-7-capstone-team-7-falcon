@@ -1240,6 +1240,25 @@ files = [
 ]
 
 [[package]]
+name = "opencv-python"
+version = "4.10.0.84"
+description = "Wrapper package for OpenCV python bindings."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "opencv-python-4.10.0.84.tar.gz", hash = "sha256:72d234e4582e9658ffea8e9cae5b63d488ad06994ef12d81dc303b17472f3526"},
+    {file = "opencv_python-4.10.0.84-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:fc182f8f4cda51b45f01c64e4cbedfc2f00aff799debebc305d8d0210c43f251"},
+    {file = "opencv_python-4.10.0.84-cp37-abi3-macosx_12_0_x86_64.whl", hash = "sha256:71e575744f1d23f79741450254660442785f45a0797212852ee5199ef12eed98"},
+    {file = "opencv_python-4.10.0.84-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:09a332b50488e2dda866a6c5573ee192fe3583239fb26ff2f7f9ceb0bc119ea6"},
+    {file = "opencv_python-4.10.0.84-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9ace140fc6d647fbe1c692bcb2abce768973491222c067c131d80957c595b71f"},
+    {file = "opencv_python-4.10.0.84-cp37-abi3-win32.whl", hash = "sha256:2db02bb7e50b703f0a2d50c50ced72e95c574e1e5a0bb35a8a86d0b35c98c236"},
+    {file = "opencv_python-4.10.0.84-cp37-abi3-win_amd64.whl", hash = "sha256:32dbbd94c26f611dc5cc6979e6b7aa1f55a64d6b463cc1dcd3c95505a63e48fe"},
+]
+
+[package.dependencies]
+numpy = {version = ">=1.26.0", markers = "python_version >= \"3.12\""}
+
+[[package]]
 name = "packaging"
 version = "24.1"
 description = "Core utilities for Python packages"
@@ -1944,38 +1963,6 @@ url = "https://download.pytorch.org/whl/cu121"
 reference = "torch_CUDA12"
 
 [[package]]
-name = "torchvision"
-version = "0.18.1+cu121"
-description = "image and video datasets and models for torch deep learning"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "torchvision-0.18.1+cu121-cp310-cp310-linux_x86_64.whl", hash = "sha256:e95ba5a2c616939281e01babf11664d6d1725e81bba57ef81f81c3e57e4d4151"},
-    {file = "torchvision-0.18.1+cu121-cp310-cp310-win_amd64.whl", hash = "sha256:fc2daccb9d290118fd706f42c280f4dcb5e2eb1e7e37b614f490dd548defe5b5"},
-    {file = "torchvision-0.18.1+cu121-cp311-cp311-linux_x86_64.whl", hash = "sha256:2b2aec2c68e0ba17f9eed8921796fa2dbc7a493dea7a3b45d25c055ad4174868"},
-    {file = "torchvision-0.18.1+cu121-cp311-cp311-win_amd64.whl", hash = "sha256:d85e21c03ab40b3676caaca4ec951a1f3a74ddcac3e68521c81f1869eb53ebf9"},
-    {file = "torchvision-0.18.1+cu121-cp312-cp312-linux_x86_64.whl", hash = "sha256:ce8d5b992056f0640a39ef5734342e43ca4a801547de27fb8dbc3055d9345947"},
-    {file = "torchvision-0.18.1+cu121-cp312-cp312-win_amd64.whl", hash = "sha256:4ef51349a1be161a60a8ad7e6f575917b13628e8255353f79c6a2c4d1432040f"},
-    {file = "torchvision-0.18.1+cu121-cp38-cp38-linux_x86_64.whl", hash = "sha256:aee8961dcb8a418e92d06d4b3e9af52987293a48c14231c3c50c8eea3741e412"},
-    {file = "torchvision-0.18.1+cu121-cp38-cp38-win_amd64.whl", hash = "sha256:54b167a0f8c17b568c0d7191aec45f77f6af4d9b0b8549e1857b34babbc5d9a6"},
-    {file = "torchvision-0.18.1+cu121-cp39-cp39-linux_x86_64.whl", hash = "sha256:1ebf5dbbdf3af446c84e42baf2edbeb1bd6fb0cc9d3b4901af969c8391d14a5e"},
-    {file = "torchvision-0.18.1+cu121-cp39-cp39-win_amd64.whl", hash = "sha256:15c3684dd265add6614a42b734e1b5a346e5a03ffa2414d2869cc01f9204b465"},
-]
-
-[package.dependencies]
-numpy = "*"
-pillow = ">=5.3.0,<8.3.dev0 || >=8.4.dev0"
-torch = "2.3.1"
-
-[package.extras]
-scipy = ["scipy"]
-
-[package.source]
-type = "legacy"
-url = "https://download.pytorch.org/whl/cu121"
-reference = "torch_CUDA12"
-
-[[package]]
 name = "tornado"
 version = "6.4.1"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
@@ -2072,4 +2059,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "1344a2e70714a2eecfb007c99971e5dadf32e1f636b67fa5eb366711c2c6fdc8"
+content-hash = "9bf65d920e451f28e1ec99fb95fdc21d9b72696291770035f3f07e5b4fbcb561"

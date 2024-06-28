@@ -24,7 +24,7 @@
 This cycle was short so I didnt make a lot of progress. I did encounter some other axios errors that I spent a decent chunk of time troubleshooting it. I finished making any relevant changes to the Component/Table branch. I also did start working on the FAQ page.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
-  *I am going to make any changes necessary for Component/Table branch to be merged in dev branch.
+  * I am going to make any changes necessary for Component/Table branch to be merged in dev branch.
   * I am going to finish the FAQ page.
   * I am going to discuss with the team on any other possible tasks needed to be completed for MVP. 
   * I am going to review code for the PRs that are ready to be merged.

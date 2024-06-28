@@ -1,3 +1,33 @@
+## Wednesday (6/21-6/25)
+
+## Timesheet
+
+<img width="1019" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/ef4e8c57-d923-46fe-8850-9843f473f764">
+
+##Project Board
+
+<img width="739" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/6bf726db-d1eb-4690-85e0-16aff1e85e42">
+
+### Current Tasks
+#1. Create table instances for the current edited Table Component
+#2. Do styling fixes for the instances and make sure it matches the UI
+#3. Review PRs for other tasks.
+
+### Progress update since (21-06)
+#1. I implemented pagination, vertical scrolling feature to the standard table component
+#2. I had frequent discussion with Benett regarding fetching data for the table components.
+#3. I worked on adding custom styling to one standard table component.
+
+
+### Cycle Goal Review 
+I made a decent progress on the table component as we had to refactor the whole code so that we can implement pagination. Due to finals, I wasn't able to finish connecting 
+the endpoints to the table but I have much better idea on it. 
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * I am going to finish creating table instances with the new Table component.
+  * I am going to make styling changes and make sure the tables are ready for instructor and student dashboard. 
+  * I am going to review code for the PRs that are ready to be merged.
+
 
 ## Friday (6/19-6/20)
 

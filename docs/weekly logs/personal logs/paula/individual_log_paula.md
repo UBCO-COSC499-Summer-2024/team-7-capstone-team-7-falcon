@@ -1,5 +1,61 @@
 # Individual Logs for Paula
 
+## Friday (6/26- 6/27)
+
+### Timesheet
+
+Clockify report
+!["timesheet_06.26_06.27"](images/clockify_06.26_06.27.png)
+
+### Current Tasks
+
+!["current_tasks_06.26_06.27"](images/current_tasks_06.26_06.27.png)
+
+* #1: Authentication pages (frontend and backend)
+* #2: Chores such as fixing the page titles
+* #3: Instructor bubble sheet creation page
+* #4: OMR Model validation
+
+### Progress Update (since 6/26/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I started working on linking all of the authentication pages and integrating them with the backend. The obstacle I faced was the fact that some of the forms are multi-step forms and I was having trouble passing the data between the pages using contexts. Bennett and Fran suggested an alternative which Bennett had worked on, and I spent some time exploring that. I am still getting an error and will log off for the day, but will reach out to Bennett later so that I don't waste time trying to figure things out by myself.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Complete the authentication component (link pages, integrate with backend) once the backend endpoints will all have been merged.
+* Have a look at the OMR model validation while Fran works on other parts of the OMR system.
+
+## Wednesday (6/21- 6/25)
+
+### Timesheet
+
+Clockify report
+!["timesheet_06.21_06.25"](images/clockify_06.21_06.25.png)
+
+### Current Tasks
+
+!["current_tasks_06.21_06.25"](images/current_tasks_06.21_06.25.png)
+
+* #1: Authentication pages (frontend and backend)
+* #2: Chores such as fixing the page titles
+* #3: Instructor bubble sheet creation page
+
+### Progress Update (since 6/21/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I spent most of my time reviewing PRs as those were needed for my assigned tasks. It has gotten easier for me to understand the backend code so that is a plus point. I was not able to complete all the tasks I would have liked, but will do so in the next cycle. I will prioritise the authentication system.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Complete the authentication component (link pages, integrate with backend) once the backend endpoints will all have been merged.
+
 ## Friday (6/19- 6/20)
 
 ### Timesheet
@@ -11,11 +67,11 @@ Clockify report
 
 !["current_tasks_06.19_06.20"](images/current_tasks_06.19_06.20.png)
 
-  * #1: Authentication pages (frontend and backend)
-  * #2: Create student dashboard page
-  * #3: Chores such as fixing the page titles
-  * #4: Instructor bubble sheet creation page
-  * #5: Middleware Bug fix
+* #1: Authentication pages (frontend and backend)
+* #2: Create student dashboard page
+* #3: Chores such as fixing the page titles
+* #4: Instructor bubble sheet creation page
+* #5: Middleware Bug fix
 
 ### Progress Update (since 6/19/2024)
 
@@ -23,13 +79,13 @@ See the image in the previous section.
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-This cycle, I completed the tasks I promised but also had to spend some time fixing the error that the middleware was throwing. Dima pointed out that the issue is that expired tokens were not being deleted. I pushed a fix, but need to test it further. I feel good about the project overall, but wish the size of the PRs were smaller. It already takes me longer to read the code since the language is unfamiliar to me, and the large size of the PRs do not help =( 
+This cycle, I completed the tasks I promised but also had to spend some time fixing the error that the middleware was throwing. Dima pointed out that the issue is that expired tokens were not being deleted. I pushed a fix, but need to test it further. I feel good about the project overall, but wish the size of the PRs were smaller. It already takes me longer to read the code since the language is unfamiliar to me, and the large size of the PRs do not help =(
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 
-  * Brush up on typescript and react on the weekend
-  * Complete the authentication component (link pages, integrate with backend) once the backend endpoints will be available.
-  * Start working on the instructor bubble sheet creation page
+* Brush up on typescript and react on the weekend
+* Complete the authentication component (link pages, integrate with backend) once the backend endpoints will be available.
+* Start working on the instructor bubble sheet creation page
 
 ## Wednesday (6/14- 6/18)
 
@@ -42,10 +98,10 @@ Clockify report
 
 !["current_tasks_06.14_06.18"](images/current_tasks_06.14_06.18.png)
 
-  * #1: Setup role-based authentication
-  * #2: Create account setup page ("you are almost there") - some updates were added to the design
-  * #3: Created the change/reset password pages
-  * #4: Working on the student dashboard
+* #1: Setup role-based authentication
+* #2: Create account setup page ("you are almost there") - some updates were added to the design
+* #3: Created the change/reset password pages
+* #4: Working on the student dashboard
 
 ### Progress Update (since 6/14/2024)
 
@@ -57,9 +113,9 @@ This cycle, I was able to complete the set up for role-based authentication (RBA
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 
-  * Finish authentication pages and student dashboard
-  * Work on more UI
-  * Help Fran make training data for the OMR model
+* Finish authentication pages and student dashboard
+* Work on more UI
+* Help Fran make training data for the OMR model
 
 ## Friday (6/12- 6/13)
 
@@ -72,9 +128,9 @@ Clockify report
 
 !["current_tasks_06.12_06.13"](images/current_tasks_06.12_06.13.png)
 
-  * #1: Authentication system - link frontend and backend
-  * #2: Create account setup page ("you are almost there")
-  * #3: Work on user permissions using NextJS middleware with Fran.
+* #1: Authentication system - link frontend and backend
+* #2: Create account setup page ("you are almost there")
+* #3: Work on user permissions using NextJS middleware with Fran.
 
 ### Progress Update (since 6/12/2024)
 
@@ -86,9 +142,9 @@ While linking the frontend and backend of the authentication system only require
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 
-  * Work with Fran to set up user permissions for viewing pages.
-  * Complete the account setup page.
-  * Help more with the UI / work with Fran on the OMR backend (depending on what will be prioritised).
+* Work with Fran to set up user permissions for viewing pages.
+* Complete the account setup page.
+* Help more with the UI / work with Fran on the OMR backend (depending on what will be prioritised).
 
 ## Wednesday (6/7- 6/11)
 
@@ -101,8 +157,8 @@ Clockify report
 
 !["current_tasks_06.07_06.11"](images/current_tasks_06.07_06.11.png)
 
-  * #1: Authentication system - link frontend and backend
-  * #2: Work on user permissions using NextJS middleware with Fran.
+* #1: Authentication system - link frontend and backend
+* #2: Work on user permissions using NextJS middleware with Fran.
 
 ### Progress Update (since 6/7/2024)
 
@@ -116,6 +172,6 @@ Now that Ishika has finished the frontend and Dima the backend of the authentica
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 
-  * Complete the authentication system that Dima and Ishika have worked on.
-  * Work with Fran to set up user permissions for viewing pages.
-  * Prep for the mini-presentation on Friday.
+* Complete the authentication system that Dima and Ishika have worked on.
+* Work with Fran to set up user permissions for viewing pages.
+* Prep for the mini-presentation on Friday.

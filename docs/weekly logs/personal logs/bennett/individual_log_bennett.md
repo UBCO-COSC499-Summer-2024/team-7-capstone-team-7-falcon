@@ -39,7 +39,7 @@ Clockify report
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 This cycle I completed both tables to retrieve exam submissions and exams. I wrote the 
 frontend API endpoints for both of these tables. I also started refactoring some of the
-API calls between pages using contexes and layouts. I had trouble figuring out some errors in react but received help with it. Overall, the process is going well and the
+API calls between pages using contexts and layouts. I had trouble figuring out some errors in react but received help with it. Overall, the process is going well and the
 team is communicating well what requirements/tasks/blockers exist.
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Complete the two pages I was working on once the endpoints are done. 

@@ -9,6 +9,7 @@ import { SemesterModule } from './modules/semester/semester.module';
 import QueueModule from './modules/queue/queue.module';
 import { ExamModule } from './modules/exam/exam.module';
 import { TokenModule } from './modules/token/token.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TokenModule } from './modules/token/token.module';
     QueueModule,
     ExamModule,
     TokenModule,
+    MailModule,
   ],
 })
 export class AppModule {}

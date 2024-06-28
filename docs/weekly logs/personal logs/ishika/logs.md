@@ -21,7 +21,7 @@
 
 
 ### Cycle Goal Review 
-This cycle was short so I didnt make a lot of progress. I did encounter some other axios errors that I spent a decent chunk of time troubleshooting it. I finished making any relevant changes to the Component/Table branch. I also did start working on the FAQ page.
+This cycle was short so I didnt make a lot of progress. I did encounter some other axios errors that I spent a decent chunk of time troubleshooting. I finished making any relevant changes to the Component/Table branch. I also did start working on the FAQ page.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * I am going to make any changes necessary for Component/Table branch to be merged in dev branch.

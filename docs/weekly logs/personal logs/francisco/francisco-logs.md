@@ -24,7 +24,7 @@ Clockify report
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-Training 275 epochs still did not yield promisng results, I want a fresh par of eyes on the model training so I have asked Paula to take a look at things while I work on the rest of the necessary utilities. We did make good progress in using contexts to memoize fetched data so we aren't querying as often on the backend.
+Training 275 epochs still did not yield promising results, I want a fresh pair of eyes on the model training so I have asked Paula to take a look at things while I work on the rest of the necessary utilities. We did make good progress in using contexts to memoize fetched data so we aren't querying as often on the backend.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 

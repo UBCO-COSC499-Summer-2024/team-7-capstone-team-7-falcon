@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
-import { jest } from '@jest/globals';
 jest.mock('@nestjs-modules/mailer/dist/adapters/handlebars.adapter', () => {
   return {
     HandlebarsAdapter: jest.fn().mockImplementation(),
@@ -39,5 +38,4 @@ config();
   providers: [MailService],
   exports: [MailService],
 })
-
-export class MailModule { }
+export class MailModule {}

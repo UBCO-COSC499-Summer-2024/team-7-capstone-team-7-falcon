@@ -22,7 +22,10 @@ import {
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
-import { UpcomingExamsInterface } from '../../common/interfaces';
+import {
+  GradedExamsInterface,
+  UpcomingExamsInterface,
+} from '../../common/interfaces';
 import { ERROR_MESSAGES } from '../../common';
 
 @Controller('exam')
@@ -135,6 +138,36 @@ export class ExamController {
       if (exams.length === 0) {
         return res.status(HttpStatus.NOT_FOUND).send({
           message: ERROR_MESSAGES.examController.noUpcomingExamsFound,
+        });
+      }
+
+      return res.status(HttpStatus.OK).send(exams);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
+   * Get graded exams by user
+   * @param res {Response} - Response object
+   * @param user {UserModel} - User object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard)
+  @Get('/graded')
+  async getGradedExamsByUser(
+    @Res() res: Response,
+    @User() user: UserModel,
+  ): Promise<Response> {
+    try {
+      const exams: GradedExamsInterface[] =
+        await this.examService.getGradedExamsByUser(user);
+
+      if (exams.length === 0) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: ERROR_MESSAGES.examController.noGradedExamsFound,
         });
       }
 

@@ -56,3 +56,22 @@ export interface UpcomingExamsInterface {
   courseCode: string;
   exams: UpcomingExamsExamInterface[];
 }
+
+/**
+ * Graded exam interface
+ */
+interface GradedExamInterface {
+  examId: number;
+  examName: string;
+  examDate: number;
+  examReleasedAt: number;
+  examScore: number;
+  courseId: number;
+}
+
+/**
+ * Graded exams interface
+ */
+export interface GradedExamsInterface {
+  exams: GradedExamInterface[];
+}

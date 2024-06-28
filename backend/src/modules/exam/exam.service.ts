@@ -16,10 +16,16 @@ import { PageDto } from '../../dto/page.dto';
 import { MoreThan } from 'typeorm';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserModel } from '../user/entities/user.entity';
-import { UpcomingExamsInterface } from '../../common/interfaces';
+import {
+  GradedExamsInterface,
+  UpcomingExamsInterface,
+} from '../../common/interfaces';
+import { StudentUserModel } from '../user/entities/student-user.entity';
 
 @Injectable()
 export class ExamService {
+  private readonly THREE_MONTHS = 1000 * 60 * 60 * 24 * 30 * 3;
+
   /**
    * Constructor of ExamService
    * @param courseService {CourseService} instance of CourseService
@@ -147,7 +153,7 @@ export class ExamService {
 
   /**
    * Get upcoming exams by user
-   * @param user {UserModel} user
+   * @param user {UserModel} - User model
    * @returns {Promise<UpcomingExamsInterface[]>} list of upcoming exams
    */
   async getUpcomingExamsByUser(
@@ -182,5 +188,45 @@ export class ExamService {
     );
 
     return modifiedResponse;
+  }
+
+  /**
+   * Get graded exams by user
+   * @param user {UserModel} - User model
+   * @returns
+   */
+  async getGradedExamsByUser(user: UserModel): Promise<GradedExamsInterface[]> {
+    const studentUser = await StudentUserModel.find({
+      where: {
+        user,
+        submissions: {
+          score: MoreThan(-1),
+          exam: {
+            grades_released_at: MoreThan(
+              parseInt(new Date().getTime().toString()) - this.THREE_MONTHS,
+            ),
+            course: {
+              is_archived: false,
+            },
+          },
+        },
+      },
+      relations: ['submissions', 'submissions.exam', 'submissions.exam.course'],
+    });
+
+    const modifiedSubmission: GradedExamsInterface[] = studentUser.map(
+      (student) => ({
+        exams: student.submissions.map((submission) => ({
+          examId: submission.exam.id,
+          examName: submission.exam.name,
+          examDate: submission.exam.exam_date,
+          examReleasedAt: submission.exam.grades_released_at,
+          examScore: submission.score,
+          courseId: submission.exam.course.id,
+        })),
+      }),
+    );
+
+    return modifiedSubmission;
   }
 }

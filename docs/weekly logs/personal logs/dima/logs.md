@@ -64,7 +64,7 @@ Clockify report
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-The cycle was a bit shirt short, as usual. Hoewever, I was able to implement backend endpoint to retrieve exam information requested by the team member. I was also able to implement endpoint to retrieve upcoming exams endpoints. Unfortunately, my original assumeption from previous cycle was incorrect, and some of the endpoints require additional validation logic and queries to retrieve correct information. Thus, I was not able to achieve goals that I planned for this cycle. However, after discussion with my team, we released that at least one backend endpoint is not needed, therefore, it should reduce amount of time I need to spend for the next cycle
+The cycle was a bit short, as usual. Hoewever, I was able to implement the backend endpoint to retrieve exam information requested by a team member. I was also able to implement the endpoint to retrieve upcoming exams. Unfortunately, my original assumption from the previous cycle was incorrect, and some of the endpoints require additional validation logic and queries to retrieve correct information. Thus, I was not able to achieve the goals that I planned for this cycle. However, after discussion with my team, we realised that at least one backend endpoint is not needed, therefore, it should reduce the amount of time I need to spend for the next cycle
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Implement API endpoints to return PDF file and grade for the student view when they will look at their exams

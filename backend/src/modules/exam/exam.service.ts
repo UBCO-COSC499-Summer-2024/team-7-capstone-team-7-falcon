@@ -4,6 +4,7 @@ import {
   CourseNotFoundException,
   ExamCreationException,
   ExamNotFoundException,
+  SubmissionNotFoundException,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
 import { ExamModel } from './entities/exam.entity';
@@ -13,7 +14,7 @@ import { pick } from 'lodash';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
-import { MoreThan } from 'typeorm';
+import { MoreThan, Not } from 'typeorm';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import { UpcomingExamsInterface } from '../../common/interfaces';
@@ -182,5 +183,29 @@ export class ExamService {
     );
 
     return modifiedResponse;
+  }
+
+  /**
+   * Get graded submission file path by submission id
+   * @param submissionId {number} submission id
+   * @returns {Promise<string>} graded submission file path
+   */
+  async getGradedSubmissionFilePathBySubmissionId(
+    submissionId: number,
+  ): Promise<string> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: submissionId,
+        score: MoreThan(-1),
+        document_path: Not(''),
+      },
+      select: ['document_path'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    return submission.document_path;
   }
 }

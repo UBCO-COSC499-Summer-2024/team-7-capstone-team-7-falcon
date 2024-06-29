@@ -10,6 +10,7 @@ export const ERROR_MESSAGES = {
     passwordMustMatch: 'Password and confirmation password do not match',
     emailRequired: 'Email is required',
     emailInvalid: 'Email is invalid',
+    fileNotFound: 'File not found',
   },
   userController: {
     userNotFound: 'User not found',
@@ -84,5 +85,6 @@ export const ERROR_MESSAGES = {
     examDateError: 'Exam date must be in the future',
     noUpcomingExamsFound: 'No upcoming exams found',
     examNotFound: 'Exam not found',
+    submissionNotFound: 'Submission not found',
   },
 };

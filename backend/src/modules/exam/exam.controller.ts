@@ -6,6 +6,8 @@ import {
   Param,
   Post,
   Res,
+  StreamableFile,
+  UnauthorizedException,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,11 +21,17 @@ import { ExamService } from './exam.service';
 import {
   ExamCreationException,
   ExamNotFoundException,
+  FileNotFoundException,
+  SubmissionNotFoundException,
+  UserNotFoundException,
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
 import { UpcomingExamsInterface } from '../../common/interfaces';
 import { ERROR_MESSAGES } from '../../common';
+import { createReadStream, existsSync } from 'fs';
+import { join } from 'path';
+import { CourseService } from '../course/course.service';
 
 @Controller('exam')
 export class ExamController {
@@ -31,7 +39,10 @@ export class ExamController {
    * Constructor of ExamController
    * @param examService {ExamService} instance of ExamService
    */
-  constructor(private readonly examService: ExamService) {}
+  constructor(
+    private readonly examService: ExamService,
+    private readonly courseService: CourseService,
+  ) {}
 
   /**
    * Get exam by id
@@ -143,6 +154,92 @@ export class ExamController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: e.message,
       });
+    }
+  }
+
+  /**
+   * Get graded submission by user
+   * @param res {Response} - Response object
+   * @param sid {number} - Submission id
+   * @param uid {number} - User id
+   * @param cid {number} - Course id
+   * @param user {UserModel} - User object
+   * @returns {Promise<StreamableFile | void>} - StreamableFile or void object
+   */
+  @Get('/:cid/submission/:sid/user/:uid')
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
+  async getSubmissionByUser(
+    @Res({ passthrough: true }) res: Response,
+    @Param('sid', new ValidationPipe()) sid: number,
+    @Param('uid', new ValidationPipe()) uid: number,
+    @Param('cid', new ValidationPipe()) cid: number,
+    @User() user: UserModel,
+  ): Promise<StreamableFile | void> {
+    try {
+      // Handles the case when the requested user is not the current session user.
+      // This case handles the scenario when a professor or TA is trying to download a student's submission.
+      if (uid != user.id) {
+        // Check if requested user exists
+        const requestedCourseUser =
+          await this.courseService.getUserByCourseAndUserId(cid, uid);
+
+        if (!requestedCourseUser) {
+          throw new UserNotFoundException();
+        }
+
+        // Check if the current session user is a professor or TA
+        const currentUserCourseUser =
+          await this.courseService.getUserByCourseAndUserId(cid, user.id);
+
+        if (currentUserCourseUser.course_role === CourseRoleEnum.STUDENT) {
+          throw new UnauthorizedException();
+        }
+      }
+
+      const filePath = join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '..',
+        'uploads',
+        'exams',
+        'processed_submissions',
+        await this.examService.getGradedSubmissionFilePathBySubmissionId(sid),
+      );
+
+      // Check if file exists and is accessible
+      if (!existsSync(filePath)) {
+        throw new FileNotFoundException();
+      }
+
+      const file = createReadStream(filePath);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="submission_${uid}.pdf"`,
+      });
+
+      return new StreamableFile(file);
+    } catch (e) {
+      if (
+        e instanceof FileNotFoundException ||
+        e instanceof SubmissionNotFoundException ||
+        e instanceof UserNotFoundException
+      ) {
+        res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof UnauthorizedException) {
+        res.status(HttpStatus.UNAUTHORIZED).send({
+          message: e.message,
+        });
+      } else {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
     }
   }
 }

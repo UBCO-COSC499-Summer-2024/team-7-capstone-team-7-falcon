@@ -1,3 +1,9 @@
+jest.mock('@nestjs-modules/mailer/dist/adapters/handlebars.adapter', () => {
+  return {
+    HandlebarsAdapter: jest.fn().mockImplementation(),
+  };
+});
+
 import { INestApplication, Type } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';

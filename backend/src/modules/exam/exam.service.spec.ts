@@ -555,7 +555,7 @@ describe('ExamService', () => {
   });
 
   describe('getGradedSubmissionsByUser', () => {
-    it('should return graded exams by user', async () => {
+    it('should return graded submissions for a specific user', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -622,7 +622,7 @@ describe('ExamService', () => {
       expect(result).toMatchSnapshot();
     });
 
-    it('should return an empty array if no graded exams are found', async () => {
+    it('should return an empty array if no graded submissions are found', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -643,7 +643,7 @@ describe('ExamService', () => {
       expect(result).toEqual([]);
     });
 
-    it('should return an empty array if exams are not released', async () => {
+    it('should return an empty array if exams submissions grades are not released', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',

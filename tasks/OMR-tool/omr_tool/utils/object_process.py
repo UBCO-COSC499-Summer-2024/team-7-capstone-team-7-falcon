@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import sys
-
+from itertools import pairwise
 
 def edge_detect_img(image):
     """
@@ -31,6 +31,7 @@ def bubble_contours(image):
 
     """
     grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred_img = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
 
     # Threshold the image into binary with Otsu's method
     thresh = cv2.threshold(grayscale_img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
@@ -49,17 +50,30 @@ def bubble_contours(image):
     # all_contours = imutils.grab_contours((contours,))
     
     bubble_contours = []
+    prev_bounds = {'x': -1, 'y': -1, 'w': -1, 'h': -1}
 
-    for cnt in all_contours:
-        approx = cv2.approxPolyDP(cnt, .03 * cv2.arcLength(cnt, True), True)
-        
-        if cv2.isContourConvex(approx):
-            (x, y, w, h) = cv2.boundingRect(cnt)
-            aspect_ratio = w / float(h)
-            if aspect_ratio >= 0.9 and aspect_ratio <= 1.1:
+    for cnt, next_cnt in pairwise(all_contours):
+        approx = cv2.approxPolyDP(cnt, 0.03 * cv2.arcLength(cnt, True), True)
+        next_approx = cv2.approxPolyDP(next_cnt, 0.03 * cv2.arcLength(next_cnt, True), True)
 
-                bubble_contours.append(cnt)
-
+        if cv2.isContourConvex(approx) and cv2.isContourConvex(next_approx):
+            (x1, y1, w1, h1) = cv2.boundingRect(cnt)
+            aspect_ratio1 = w1 / float(h1)
+            if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2:
+                close_to_prev = prev_bounds['x'] != -1 and abs(prev_bounds['x'] - x1) < 2.5 * w1
+                inline_with_prev = prev_bounds['y'] != -1 and abs(prev_bounds['y'] - y1) < 2 * h1
+                if inline_with_prev and close_to_prev:
+                    bubble_contours.append(cnt)
+                    prev_bounds = {'x': x1, 'y': y1, 'w': w1, 'h': h1}
+                    continue
+                (x2, y2, w2, h2) = cv2.boundingRect(next_cnt)
+                aspect_ratio2 = w2 / float(h2)
+                if aspect_ratio2 >= 0.8 and aspect_ratio2 <= 1.2:
+                    close_to_next = abs(x1 - x2) < 2.5 * w1
+                    inline_with_next = abs(y1 - y2) < 2 * h1
+                    if inline_with_next and close_to_next:
+                        bubble_contours.append(cnt)
+                        prev_bounds = {'x': x1, 'y': y1, 'w': w1, 'h': h1}
 
     return bubble_contours
 
@@ -81,6 +95,7 @@ if __name__ == '__main__':
     image_with_contours = image.copy()
     cv2.drawContours(image_with_contours, question_contours, -1, (0, 255, 0), 2)
 
-    cv2.imshow("Prepared Image", prepared_image)
-    cv2.imshow("Contoured Image", image_with_contours)
+    cv2.imshow("Prepared Image", cv2.resize(prepared_image, (800, 800)))
+    cv2.imshow("Contoured Image", cv2.resize(image_with_contours, (900, 900)))
+    # cv2.imshow("Contoured Image", image_with_contours)
     cv2.waitKey(0)

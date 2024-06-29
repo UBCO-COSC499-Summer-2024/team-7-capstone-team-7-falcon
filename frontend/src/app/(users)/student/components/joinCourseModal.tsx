@@ -19,7 +19,7 @@ const JoinCourseModal: React.FC<{
 
   const enroll = () => {
     coursesAPI
-      .enrollCourse(1, inviteCode)
+      .enrollCourse(courseData.id as number, inviteCode)
       .then((response) => {
         if (!response || response?.status != 200) {
           setStatus(Status.WrongCode);

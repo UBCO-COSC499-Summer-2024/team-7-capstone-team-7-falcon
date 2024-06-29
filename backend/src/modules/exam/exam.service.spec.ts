@@ -768,4 +768,196 @@ describe('ExamService', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('getGradedExamsByCourseId', () => {
+    it('should return graded exams by course id', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: 1_000_000_000 + i,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+          course,
+          grades_released_at: parseInt(new Date().getTime().toString()),
+        }).save();
+
+        course.exams.push(exam);
+      }
+      await course.save();
+
+      const result = await examService.getGradedExamsByCourseId(course.id);
+
+      result.forEach((exam) => {
+        delete exam.grades_released_at;
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
+    });
+
+    it("it shouldn't return any graded exams if the course has no exams", async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      const result = await examService.getGradedExamsByCourseId(course.id);
+
+      expect(result).toEqual([]);
+    });
+
+    it("shouldn't return any graded exams if graded_release_at is in the past", async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: 1_000_000_000 + i,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+          course,
+          grades_released_at: 1_000,
+        }).save();
+
+        course.exams.push(exam);
+      }
+      await course.save();
+
+      const result = await examService.getGradedExamsByCourseId(course.id);
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getUpcomingExamsByCourseId', () => {
+    it('should return upcoming exams by course id', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: parseInt(new Date().getTime().toString()) + 1000 * (i + 1),
+          course,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+        }).save();
+
+        course.exams.push(exam);
+      }
+      await course.save();
+
+      const result = await examService.getUpcomingExamsByCourseId(course.id);
+
+      result.forEach((exam) => {
+        delete exam.exam_date;
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should return an empty array if no upcoming exams are found', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      const result = await examService.getUpcomingExamsByCourseId(course.id);
+
+      expect(result).toEqual([]);
+    });
+
+    it('should return an empty array if the exams are in the past', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: 1_000,
+          course,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+        }).save();
+
+        course.exams.push(exam);
+      }
+      await course.save();
+
+      const result = await examService.getUpcomingExamsByCourseId(course.id);
+
+      expect(result).toEqual([]);
+    });
+  });
 });

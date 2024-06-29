@@ -191,6 +191,46 @@ export class ExamService {
   }
 
   /**
+   * Get upcoming exams by course id
+   * @param courseId {number} - Course id
+   * @returns {Promise<ExamModel[]>} - List of upcoming exams
+   */
+  async getUpcomingExamsByCourseId(courseId: number): Promise<ExamModel[]> {
+    const course = await this.courseService.getCourseById(courseId);
+
+    const currentTime: number = parseInt(new Date().getTime().toString());
+
+    const exams = await ExamModel.find({
+      where: {
+        course,
+        exam_date: MoreThan(currentTime),
+      },
+    });
+
+    return exams;
+  }
+
+  /**
+   * Get graded exams by course id
+   * @param courseId {number} - Course id
+   * @returns {Promise<ExamModel[]>} - List of graded exams
+   */
+  async getGradedExamsByCourseId(courseId: number): Promise<ExamModel[]> {
+    const course = await this.courseService.getCourseById(courseId);
+
+    const currentTime: number = parseInt(new Date().getTime().toString());
+
+    const exams = await ExamModel.find({
+      where: {
+        course,
+        grades_released_at: MoreThan(currentTime - this.THREE_MONTHS),
+      },
+    });
+
+    return exams;
+  }
+
+  /**
    * Get graded exams by user
    * @param user {UserModel} - User model
    * @returns

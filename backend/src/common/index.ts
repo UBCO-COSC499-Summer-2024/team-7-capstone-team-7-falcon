@@ -85,5 +85,6 @@ export const ERROR_MESSAGES = {
     noUpcomingExamsFound: 'No upcoming exams found',
     noGradedExamsFound: 'No graded exams found',
     examNotFound: 'Exam not found',
+    examsNotFound: 'Exams not found',
   },
 };

@@ -141,6 +141,91 @@ PageDto {
 }
 `;
 
+exports[`ExamService getGradedExamsByCourseId should return graded exams by course id 1`] = `
+[
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000001",
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000002",
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000003",
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000004",
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000005",
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000006",
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000007",
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000008",
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000009",
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+]
+`;
+
 exports[`ExamService getGradedExamsByUser should return graded exams by user 1`] = `
 [
   {
@@ -380,6 +465,91 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
         "last_name": "Doe",
       },
     },
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by course id 1`] = `
+[
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
     "updated_at": "1000000000",
   },
 ]

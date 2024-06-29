@@ -554,7 +554,7 @@ describe('ExamService', () => {
     });
   });
 
-  describe('getGradedExamsByUser', () => {
+  describe('getGradedSubmissionsByUser', () => {
     it('should return graded exams by user', async () => {
       const user = await UserModel.create({
         first_name: 'John',
@@ -610,7 +610,7 @@ describe('ExamService', () => {
       }
       await studentUser.save();
 
-      const result = await examService.getGradedExamsByUser(user);
+      const result = await examService.getGradedSubmissionsByUser(user);
 
       result.forEach((student) => {
         student.exams.forEach((exam) => {
@@ -638,7 +638,7 @@ describe('ExamService', () => {
         student_id: 1,
       }).save();
 
-      const result = await examService.getGradedExamsByUser(user);
+      const result = await examService.getGradedSubmissionsByUser(user);
 
       expect(result).toEqual([]);
     });
@@ -702,7 +702,7 @@ describe('ExamService', () => {
       }
       await studentUser.save();
 
-      const result = await examService.getGradedExamsByUser(user);
+      const result = await examService.getGradedSubmissionsByUser(user);
 
       expect(result).toEqual([]);
     });
@@ -763,13 +763,19 @@ describe('ExamService', () => {
       }
       await studentUser.save();
 
-      const result = await examService.getGradedExamsByUser(user);
+      const result = await examService.getGradedSubmissionsByUser(user);
 
       expect(result).toEqual([]);
     });
   });
 
   describe('getGradedExamsByCourseId', () => {
+    it('should throw an error if the course is not found', async () => {
+      await expect(examService.getGradedExamsByCourseId(1)).rejects.toThrow(
+        'Course not found',
+      );
+    });
+
     it('should return graded exams by course id', async () => {
       let course = await CourseModel.create({
         course_code: 'CS101',
@@ -904,6 +910,12 @@ describe('ExamService', () => {
 
       expect(result).toBeDefined();
       expect(result).toMatchSnapshot();
+    });
+
+    it('should throw an error if the course is not found', async () => {
+      await expect(examService.getUpcomingExamsByCourseId(1)).rejects.toThrow(
+        'Course not found',
+      );
     });
 
     it('should return an empty array if no upcoming exams are found', async () => {

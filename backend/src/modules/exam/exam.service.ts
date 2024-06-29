@@ -17,7 +17,7 @@ import { MoreThan } from 'typeorm';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
-  GradedExamsInterface,
+  GradedSubmissionsInterface,
   UpcomingExamsInterface,
 } from '../../common/interfaces';
 import { StudentUserModel } from '../user/entities/student-user.entity';
@@ -198,6 +198,10 @@ export class ExamService {
   async getUpcomingExamsByCourseId(courseId: number): Promise<ExamModel[]> {
     const course = await this.courseService.getCourseById(courseId);
 
+    if (!course) {
+      throw new CourseNotFoundException();
+    }
+
     const currentTime: number = parseInt(new Date().getTime().toString());
 
     const exams = await ExamModel.find({
@@ -218,6 +222,10 @@ export class ExamService {
   async getGradedExamsByCourseId(courseId: number): Promise<ExamModel[]> {
     const course = await this.courseService.getCourseById(courseId);
 
+    if (!course) {
+      throw new CourseNotFoundException();
+    }
+
     const currentTime: number = parseInt(new Date().getTime().toString());
 
     const exams = await ExamModel.find({
@@ -231,11 +239,13 @@ export class ExamService {
   }
 
   /**
-   * Get graded exams by user
+   * Get graded submissions by user
    * @param user {UserModel} - User model
-   * @returns
+   * @returns {Promise<GradedSubmissionsInterface[]>} - List of graded submissions
    */
-  async getGradedExamsByUser(user: UserModel): Promise<GradedExamsInterface[]> {
+  async getGradedSubmissionsByUser(
+    user: UserModel,
+  ): Promise<GradedSubmissionsInterface[]> {
     const studentUser = await StudentUserModel.find({
       where: {
         user,
@@ -254,7 +264,7 @@ export class ExamService {
       relations: ['submissions', 'submissions.exam', 'submissions.exam.course'],
     });
 
-    const modifiedSubmission: GradedExamsInterface[] = studentUser.map(
+    const modifiedSubmission: GradedSubmissionsInterface[] = studentUser.map(
       (student) => ({
         exams: student.submissions.map((submission) => ({
           examId: submission.exam.id,

@@ -281,7 +281,7 @@ export class CourseController {
       const exams = await this.examService.getUpcomingExamsByCourseId(cid);
 
       if (exams.length === 0) {
-        return res.status(HttpStatus.NOT_FOUND).send({
+        return res.status(HttpStatus.NO_CONTENT).send({
           message: ERROR_MESSAGES.examController.examsNotFound,
         });
       }
@@ -311,7 +311,7 @@ export class CourseController {
       const exams = await this.examService.getGradedExamsByCourseId(cid);
 
       if (exams.length === 0) {
-        return res.status(HttpStatus.NOT_FOUND).send({
+        return res.status(HttpStatus.NO_CONTENT).send({
           message: ERROR_MESSAGES.examController.noGradedExamsFound,
         });
       }

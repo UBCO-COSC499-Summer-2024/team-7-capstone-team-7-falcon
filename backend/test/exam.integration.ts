@@ -537,7 +537,7 @@ describe('Exam Integration', () => {
       await supertest().get('/exam/upcoming').expect(401);
     });
 
-    it('should return 404 if no exams are found', async () => {
+    it('should return 204 if no exams are found', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -567,31 +567,8 @@ describe('Exam Integration', () => {
         .get('/exam/upcoming')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
-      expect(result.status).toBe(404);
-      expect(result.body).toStrictEqual({
-        message: 'No upcoming exams found',
-      });
-    });
-
-    it('should return 404 if user is not enrolled in any courses', async () => {
-      const user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        email_verified: true,
-      }).save();
-
-      const result = await supertest()
-        .get('/exam/upcoming')
-        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
-
-      expect(result.status).toBe(404);
-      expect(result.body).toStrictEqual({
-        message: 'No upcoming exams found',
-      });
+      expect(result.status).toBe(204);
+      expect(result.body).toStrictEqual({});
     });
 
     it('should return 200 if exams are found for user', async () => {
@@ -657,7 +634,7 @@ describe('Exam Integration', () => {
       await supertest().get('/exam/graded').expect(401);
     });
 
-    it('should return 404 if no exams are found', async () => {
+    it('should return 204 if no exams are found', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -672,14 +649,10 @@ describe('Exam Integration', () => {
         .get('/exam/graded')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
-      expect(result.status).toBe(404);
-
-      expect(result.body).toStrictEqual({
-        message: 'No graded exams found',
-      });
+      expect(result.status).toBe(204);
     });
 
-    it('should return 404 if no graded exams are found for user', async () => {
+    it('should return 204 if no graded exams are found for user', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -728,10 +701,7 @@ describe('Exam Integration', () => {
         .get('/exam/graded')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
-      expect(result.status).toBe(404);
-      expect(result.body).toStrictEqual({
-        message: 'No graded exams found',
-      });
+      expect(result.status).toBe(204);
     });
 
     it('should return 200 if graded exams are found for user', async () => {

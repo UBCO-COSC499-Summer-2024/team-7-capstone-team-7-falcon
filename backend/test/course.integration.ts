@@ -1215,7 +1215,7 @@ describe('Course Integration', () => {
         });
     });
 
-    it('should return 404 if no exams are upcoming', async () => {
+    it('should return 204 if no exams are upcoming', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -1244,10 +1244,7 @@ describe('Course Integration', () => {
         .get(`/course/${course.id}/exams/upcoming`)
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
-      expect(result.status).toBe(404);
-      expect(result.body).toStrictEqual({
-        message: 'Exams not found',
-      });
+      expect(result.status).toBe(204);
     });
 
     it('should return 200 and upcoming exams', async () => {
@@ -1375,7 +1372,7 @@ describe('Course Integration', () => {
         });
     });
 
-    it('should return 404 if no exams are graded', async () => {
+    it('should return 204 if no exams are graded', async () => {
       const course = await CourseModel.create({
         course_code: 'COSC 499',
         course_name: 'Capstone Project',
@@ -1404,11 +1401,7 @@ describe('Course Integration', () => {
         .get(`/course/${course.id}/exams/graded`)
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
-      expect(result.status).toBe(404);
-
-      expect(result.body).toStrictEqual({
-        message: 'No graded exams found',
-      });
+      expect(result.status).toBe(204);
     });
 
     it('should return 200 and graded exams', async () => {

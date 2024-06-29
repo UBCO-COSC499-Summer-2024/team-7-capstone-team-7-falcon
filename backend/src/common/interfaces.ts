@@ -60,7 +60,7 @@ export interface UpcomingExamsInterface {
 /**
  * Graded exam interface
  */
-interface GradedExamInterface {
+interface GradedSubmissionInterface {
   examId: number;
   examName: string;
   examDate: number;
@@ -72,6 +72,6 @@ interface GradedExamInterface {
 /**
  * Graded exams interface
  */
-export interface GradedExamsInterface {
-  exams: GradedExamInterface[];
+export interface GradedSubmissionsInterface {
+  exams: GradedSubmissionInterface[];
 }

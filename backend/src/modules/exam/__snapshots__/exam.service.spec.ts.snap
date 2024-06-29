@@ -226,7 +226,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
 ]
 `;
 
-exports[`ExamService getGradedSubmissionsByUser should return graded exams by user 1`] = `
+exports[`ExamService getGradedSubmissionsByUser should return graded submissions for a specific user 1`] = `
 [
   {
     "exams": [

@@ -745,7 +745,7 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
-      const course = await CourseModel.create({
+      let course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',
         created_at: 1_000_000_000,
@@ -764,10 +764,16 @@ describe('Exam Integration', () => {
         relations: ['submissions'],
       });
 
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
       for (let i = 0; i < 10; i++) {
         const exam = await ExamModel.create({
           name: `Exam ${i}`,
-          exam_date: parseInt(new Date().getTime().toString()) - 1000 * (i + 1),
+          exam_date: 1_000_000_000 + i,
+          grades_released_at: parseInt(new Date().getTime().toString()),
           course,
           created_at: 1_000_000_000,
           updated_at: 1_000_000_000,
@@ -784,18 +790,23 @@ describe('Exam Integration', () => {
           updated_at: 1_000_000_000,
         }).save();
 
+        course.exams.push(exam);
         studentUser.submissions.push(submission);
       }
-
+      await course.save();
       await studentUser.save();
 
       const result = await supertest()
         .get('/exam/graded')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
-      console.log(result.body);
       expect(result.status).toBe(200);
 
+      result.body.forEach((course) => {
+        course.exams.forEach((exam) => {
+          delete exam.examReleasedAt;
+        });
+      });
       expect(result.body).toMatchSnapshot();
     });
   });

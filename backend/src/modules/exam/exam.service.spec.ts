@@ -555,7 +555,7 @@ describe('ExamService', () => {
   });
 
   describe('getGradedExamsByUser', () => {
-    it('should return graded exams by user', async () => {
+    it('should return graded exams for a specific user', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',

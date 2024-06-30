@@ -6,6 +6,7 @@ import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import { SignUpFormData, Status } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
+import RedirectModal from "../components/redirectModal";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -69,6 +70,7 @@ export default function SignUpPage() {
     event.preventDefault();
 
     // update user info with student_id or employee_id
+
     setFormUserInfo((prevFormUserInfo) => ({
       ...prevFormUserInfo,
       student_id:
@@ -83,6 +85,7 @@ export default function SignUpPage() {
 
     // send data to the database
     const jsonPayload = JSON.stringify(formUserInfo);
+    console.log(jsonPayload);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
@@ -94,9 +97,9 @@ export default function SignUpPage() {
           },
         },
       );
-      if (!response.ok) {
-        throw new Error("Failed to submit the data. Please try again.");
-      }
+
+      // if response is ok, display message to validate email, and redirect to login page
+      setStatus(Status.Redirect);
     } catch (error) {
       console.error(error);
     }
@@ -109,6 +112,11 @@ export default function SignUpPage() {
           userID={userID}
           handleInputChange={handleInputChange}
           onSetup={onSetup}
+        />
+      )}
+      {status === Status.Redirect && (
+        <RedirectModal
+          message={"Success! Please check your email to validate your account."}
         />
       )}
       <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">

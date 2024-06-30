@@ -50,6 +50,7 @@ export enum Status {
   Pending = "PENDING",
   PasswordsDoNotMatch = "PASSWORDS DO NOT MATCH",
   WeakPassword = "WEAK PASSWORD",
+  Redirect = "REDIRECT",
 }
 
 export interface SignUpFormData {

@@ -33,7 +33,7 @@ export class SemesterController {
    */
   @UseGuards(AuthGuard)
   @Get('all')
-  async getAll(@Res() res: Response) {
+  async getAll(@Res() res: Response): Promise<Response> {
     const semesters = await this.semesterService.getAllSemesters();
 
     if (!semesters) {

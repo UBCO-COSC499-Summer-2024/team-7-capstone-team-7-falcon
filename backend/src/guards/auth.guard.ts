@@ -9,8 +9,9 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { getCookie } from '../common/helpers';
 import { UserService } from '../modules/user/user.service';
-import { AuthTypeEnum } from '../enums/user.enum';
+import { AuthTypeEnum, UserRoleEnum } from '../enums/user.enum';
 import { ERROR_MESSAGES } from '../common';
+import { StudentIdNotPresentException } from '../common/errors';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -38,6 +39,7 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException();
     }
+
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
@@ -48,6 +50,14 @@ export class AuthGuard implements CanActivate {
     }
 
     await this.validateEmailVerified(request);
+
+    try {
+      await this.validateStudentIdProvided(request);
+    } catch (e) {
+      if (e instanceof StudentIdNotPresentException) {
+        throw new ForbiddenException(e.message);
+      }
+    }
 
     return true;
   }
@@ -92,6 +102,20 @@ export class AuthGuard implements CanActivate {
       // Frontend should redirect to the email verification page based on the Forbidden status code
       throw new ForbiddenException(
         ERROR_MESSAGES.authController.emailNotVerified,
+      );
+    }
+  }
+
+  private async validateStudentIdProvided(request: Request): Promise<void> {
+    const user = await this.userService.getUserById(request['user'].id);
+    // Additional check to ensure that the user exists
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    if (user.role === UserRoleEnum.STUDENT && !user.student_user) {
+      throw new StudentIdNotPresentException(
+        ERROR_MESSAGES.authController.studentIdMissing,
       );
     }
   }

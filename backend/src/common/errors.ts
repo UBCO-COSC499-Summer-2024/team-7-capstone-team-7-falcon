@@ -199,3 +199,12 @@ export class ExamNotFoundException extends Error {
     super(ERROR_MESSAGES.examController.examNotFound);
   }
 }
+
+/**
+ * Exception thrown when student ID is missing
+ */
+export class StudentIdNotPresentException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}

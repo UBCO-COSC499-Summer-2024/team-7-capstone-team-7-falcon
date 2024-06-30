@@ -31,6 +31,7 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+        role: UserRoleEnum.ADMIN,
       }).save();
 
       await supertest()
@@ -61,6 +62,7 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+        role: UserRoleEnum.ADMIN,
       }).save();
 
       await supertest()
@@ -85,7 +87,7 @@ describe('Semester Integration', () => {
       await supertest().post('/semester/create').expect(401);
     });
 
-    it('should return 401 if the user is not an admin', async () => {
+    it('should return 403 if the user is not an admin', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -99,7 +101,7 @@ describe('Semester Integration', () => {
       await supertest()
         .post('/semester/create')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .expect(401);
+        .expect(403);
     });
 
     it('should return 400 if one of the required fields is missing', async () => {

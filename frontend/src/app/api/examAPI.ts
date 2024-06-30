@@ -47,5 +47,23 @@ export const examsAPI = {
     }
   },
 
-  getExamStats: async () => {},
+  getExam: async (exam_id: number, course_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/${course_id}/exam/${exam_id}`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exam info: ", error);
+      return error;
+    }
+  },
 };

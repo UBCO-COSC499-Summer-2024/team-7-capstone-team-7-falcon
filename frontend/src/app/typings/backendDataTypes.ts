@@ -42,7 +42,10 @@ export interface Exam {
 
 export interface Submission {
   student_id: string;
-  user: string;
+  user: {
+    avatar_url: string;
+    name: string;
+  };
   score: number;
   updated_at: number;
 }

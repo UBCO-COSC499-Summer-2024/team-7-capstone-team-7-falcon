@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "./type";
-import { examsAPI } from "../../../api/examAPI";
 import TableComponent from "./tableComponent";
 import { Submission } from "../../../typings/backendDataTypes";
+import { useSubmissionContext } from "../../../contexts/submissionContext";
 
 const exam_columns: Column[] = [
   { label: "Id", renderCell: (item) => item.student_id },
@@ -40,38 +40,31 @@ type ExamTableProps = {
   exam_id: number;
 };
 
-const SubmissionTable: React.FC<ExamTableProps> = ({ course_id, exam_id }) => {
-  const [data, setData] = useState<DataItem<Submission>[] | null>(null);
+const SubmissionTable: React.FC<ExamTableProps> = () => {
+  const [data, setData] = useState<DataItem<Submission>[]>([]);
+  const { submissions } = useSubmissionContext();
 
+  // only rerenders the table if the submission data changes
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await examsAPI.getSubmissions(course_id, exam_id);
-      console.log("submission raw: ", result);
-      const submissions: DataItem<Submission>[] = result.data.map(
-        (item: any) => ({
-          id: item.student.student_id,
-          name:
-            item.student.user.first_name + " " + item.student.user.last_name,
+    if (submissions) {
+      const submissionTableData: DataItem<Submission>[] = submissions.map(
+        (item: Submission) => ({
+          id: Number(item.student_id),
+          name: item.user.name,
           data: {
-            student_id: item.student.student_id,
+            student_id: item.student_id,
             user: {
-              avatar_url: item.student.user.avatar_url,
-              name:
-                item.student.user.first_name +
-                " " +
-                item.student.user.last_name,
+              avatar_url: item.user.avatar_url,
+              name: item.user.name,
             },
             score: item.score,
-            updated_at: new Date(Number(item.updated_at)).toLocaleString(),
+            updated_at: item.updated_at,
           },
         }),
       );
-      setData(submissions);
-      console.log("submission data: ", submissions);
-    };
-
-    fetchData();
-  }, []);
+      setData(submissionTableData);
+    }
+  }, [submissions]);
 
   if (!data) {
     return <p>Loading...</p>;

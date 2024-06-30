@@ -56,7 +56,6 @@ export default function SignUpPage() {
     }
 
     setStatus(Status.Success);
-    console.log(status); // TODO: FIX
   }
 
   // needed for account setup form
@@ -92,7 +91,6 @@ export default function SignUpPage() {
 
     // send data to the database
     const jsonPayload = JSON.stringify(formUserInfo);
-    console.log(jsonPayload);
 
     let response;
 
@@ -123,10 +121,6 @@ export default function SignUpPage() {
 
       if (response.status === 409) {
         errMessage = "This user already exists. Please try again.";
-      }
-
-      if (response.status === 400) {
-        errMessage = "The entered ID(s) already exist. Please try again.";
       }
 
       setRedirectInfo({

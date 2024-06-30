@@ -1,15 +1,17 @@
 "use client";
 import Link from "next/link";
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
 import { SignUpFormData, Status } from "../../typings/backendDataTypes";
-import AccountSetup from "../setup-account/page";
+import AccountSetupForm from "../components/accountSetupForm";
 
 export default function SignUpPage() {
   const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
 
+  // stores the data to be sent to the database
   const [formUserInfo, setFormUserInfo] = useState<SignUpFormData>({
     first_name: "",
     last_name: "",
@@ -20,29 +22,95 @@ export default function SignUpPage() {
     employee_id: null,
   });
 
-  const resetStatus = () => {
-    setStatus(Status.Pending);
-  };
-
+  // STEP 1: Verify that passwords match and that password is strong
   async function onSignUp(event: FormEvent<HTMLFormElement>) {
     // missing the student_id and employee_id fields (at least one required by backend)
     // so cannot send the data to the database yet
     event.preventDefault();
+    setStatus(Status.Pending);
 
     if (formUserInfo.password !== formUserInfo.confirm_password) {
       setStatus(Status.PasswordsDoNotMatch);
       return;
     }
 
-    // todo: validate password strength
+    const passwordRequirements = [
+      formUserInfo.password.length >= 8,
+      /[a-z]/.test(formUserInfo.password),
+      /[A-Z]/.test(formUserInfo.password),
+      /\d/.test(formUserInfo.password),
+      /[!@#$%^&*(),.?":{}|<>]/.test(formUserInfo.password),
+    ];
 
-    // console.log(formUserInfo);
+    if (!passwordRequirements.every(Boolean)) {
+      setStatus(Status.WeakPassword);
+      return;
+    }
+
     setStatus(Status.Success);
+    console.log(status); // TODO: FIX
+  }
+
+  // needed for account setup form
+  const [userID, setUserID] = useState({
+    student_id: "",
+    employee_id: "",
+  });
+
+  const handleInputChange = (fieldName: string, value: string) => {
+    setUserID({
+      ...userID,
+      [fieldName]: value,
+    });
+  };
+
+  // STEP 2: Send user details to database
+  async function onSetup(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    // update user info with student_id or employee_id
+    setFormUserInfo((prevFormUserInfo) => ({
+      ...prevFormUserInfo,
+      student_id:
+        userID.student_id !== ""
+          ? Number(userID.student_id)
+          : prevFormUserInfo.student_id,
+      employee_id:
+        userID.employee_id !== ""
+          ? Number(userID.employee_id)
+          : prevFormUserInfo.employee_id,
+    }));
+
+    // send data to the database
+    const jsonPayload = JSON.stringify(formUserInfo);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
+        {
+          method: "POST",
+          body: jsonPayload,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Failed to submit the data. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
     <>
-      {status === Status.Success}
+      {status === Status.Success && (
+        <AccountSetupForm
+          userID={userID}
+          handleInputChange={handleInputChange}
+          onSetup={onSetup}
+        />
+      )}
       <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
         <form
           onSubmit={onSignUp}
@@ -151,6 +219,25 @@ export default function SignUpPage() {
             />
           </div>
 
+          {status === Status.PasswordsDoNotMatch && (
+            <div className="mb-4">
+              <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">Passwords do not match!</span>
+              </Alert>
+            </div>
+          )}
+
+          {status === Status.WeakPassword && (
+            <div className="mb-4">
+              <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">Weak password! &nbsp;</span>
+                Passwords should be at least 8 characters long and contain at
+                least one lowercase letter, one uppercase letter, one number,
+                and one symbol.
+              </Alert>
+            </div>
+          )}
+
           <Button
             type="submit"
             color="purple"
@@ -168,8 +255,6 @@ export default function SignUpPage() {
           </Link>
         </form>
       </div>
-
-      {/* <AccountSetup {...formUserInfo} /> */}
     </>
   );
 }

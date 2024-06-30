@@ -836,7 +836,7 @@ describe('ExamService', () => {
       expect(result).toEqual([]);
     });
 
-    it("shouldn't return any graded exams if graded_release_at is in the past", async () => {
+    it("No graded exams should be returned if the grade release date is older than three months from the current date", async () => {
       let course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',

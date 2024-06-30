@@ -12,6 +12,13 @@ export default function SignUpPage() {
   const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
 
+  // stores data needed for the redirect modal
+  const [redirectInfo, setRedirectInfo] = useState({
+    message: "",
+    redirectPath: "",
+    buttonText: "",
+  });
+
   // stores the data to be sent to the database
   const [formUserInfo, setFormUserInfo] = useState<SignUpFormData>({
     first_name: "",
@@ -86,8 +93,11 @@ export default function SignUpPage() {
     // send data to the database
     const jsonPayload = JSON.stringify(formUserInfo);
     console.log(jsonPayload);
+
+    let response;
+
     try {
-      const response = await fetch(
+      response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
         {
           method: "POST",
@@ -99,9 +109,33 @@ export default function SignUpPage() {
       );
 
       // if response is ok, display message to validate email, and redirect to login page
-      setStatus(Status.Redirect);
+      if (response.ok) {
+        setRedirectInfo({
+          message: "Please check your email to validate your account.",
+          redirectPath: "/login",
+          buttonText: "Ok!",
+        });
+      } else {
+        throw new Error();
+      }
     } catch (error) {
-      console.error(error);
+      let errMessage = "Failed to submit the data. Please try again.";
+
+      if (response.status === 409) {
+        errMessage = "This user already exists. Please try again.";
+      }
+
+      if (response.status === 400) {
+        errMessage = "The entered ID(s) already exist. Please try again.";
+      }
+
+      setRedirectInfo({
+        message: errMessage,
+        redirectPath: "/signup",
+        buttonText: "Try again",
+      });
+    } finally {
+      setStatus(Status.Redirect);
     }
   }
 
@@ -116,7 +150,9 @@ export default function SignUpPage() {
       )}
       {status === Status.Redirect && (
         <RedirectModal
-          message={"Success! Please check your email to validate your account."}
+          message={redirectInfo.message}
+          redirectPath={redirectInfo.redirectPath}
+          buttonText={redirectInfo.buttonText}
         />
       )}
       <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">

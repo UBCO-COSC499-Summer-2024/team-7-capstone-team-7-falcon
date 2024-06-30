@@ -2,9 +2,15 @@
 import { Button, Modal } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { use } from "chai";
 
-const RedirectModal: React.FC<{ message: string }> = (message) => {
+interface RedirectModalProps {
+  message: string;
+  redirectPath: string;
+  buttonText: string;
+}
+
+const RedirectModal: React.FC<{ RedirectModalProps }> = (props) => {
+  const { message, redirectPath, buttonText } = props;
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [redirect, setRedirect] = useState(false);
@@ -16,20 +22,20 @@ const RedirectModal: React.FC<{ message: string }> = (message) => {
 
   useEffect(() => {
     if (redirect) {
-      router.push("/login");
+      router.push(redirectPath);
     }
-  }, [redirect, router]);
+  }, [redirect, redirectPath, router]);
 
   return (
     <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)} popup>
       <Modal.Header className="p-1" />
       <Modal.Body>
         <div className="flex justify-center">
-          <p className="p-5">{message.message}</p>
+          <p className="p-5">{message}</p>
         </div>
         <div className="flex justify-center">
           <Button color="purple" onClick={handleRedirect}>
-            {"Ok!"}
+            {buttonText}
           </Button>
         </div>
       </Modal.Body>

@@ -816,7 +816,7 @@ describe('ExamService', () => {
       expect(result).toMatchSnapshot();
     });
 
-    it("it shouldn't return any graded exams if the course has no exams", async () => {
+    it("No graded exams should be returned if the course has no exams", async () => {
       let course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',

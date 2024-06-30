@@ -15,6 +15,7 @@ const auth_pages = [
 
 const isAuthPages = (url: string) =>
   auth_pages.some((page) => page.startsWith(url));
+
 const userRoleMap = {
   student: "/student",
   professor: "/instructor",

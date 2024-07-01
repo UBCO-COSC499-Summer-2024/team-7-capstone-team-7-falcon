@@ -85,4 +85,10 @@ export const ERROR_MESSAGES = {
     noUpcomingExamsFound: 'No upcoming exams found',
     examNotFound: 'Exam not found',
   },
+  submissionController: {
+    submissionNotFound: 'Submission not found',
+    minGradeError: 'Minimum grade must be 0',
+    maxGradeError: 'Maximum grade must be 100',
+    invalidGradeError: 'Grade value is not valid',
+  },
 };

@@ -4,6 +4,7 @@ import {
   CourseNotFoundException,
   ExamCreationException,
   ExamNotFoundException,
+  SubmissionNotFoundException,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
 import { ExamModel } from './entities/exam.entity';
@@ -182,5 +183,34 @@ export class ExamService {
     );
 
     return modifiedResponse;
+  }
+
+  /**
+   * Update grade
+   * @param eid {number} - Exam id
+   * @param cid {number} - Course id
+   * @param sid {number} - Submission id
+   * @param grade {number} - Grade
+   */
+  async updateGrade(
+    eid: number,
+    cid: number,
+    sid: number,
+    grade: number,
+  ): Promise<void> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: sid,
+        exam: { id: eid, course: { id: cid, is_archived: false } },
+      },
+      relations: ['exam', 'exam.course'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    submission.score = grade;
+    await submission.save();
   }
 }

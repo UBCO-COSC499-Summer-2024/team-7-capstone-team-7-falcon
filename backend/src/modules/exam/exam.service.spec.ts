@@ -553,4 +553,215 @@ describe('ExamService', () => {
       );
     });
   });
+
+  describe('updateGrade', () => {
+    it('should update the grade for a submission', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user,
+        student_id: 1,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam,
+        student: studentUser,
+        answers: {},
+        score: 0,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      exam.submissions.push(submission);
+      await exam.save();
+
+      await examService.updateGrade(exam.id, course.id, submission.id, 100);
+
+      const updatedSubmission = await SubmissionModel.findOne({
+        where: { id: submission.id },
+      });
+
+      expect(updatedSubmission).toBeDefined();
+      expect(updatedSubmission.score).toEqual(100);
+    });
+
+    it('should update the grade for a submission with decimal score', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user,
+        student_id: 1,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam,
+        student: studentUser,
+        answers: {},
+        score: 0,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      exam.submissions.push(submission);
+      await exam.save();
+
+      await examService.updateGrade(exam.id, course.id, submission.id, 33.375);
+
+      const updatedSubmission = await SubmissionModel.findOne({
+        where: { id: submission.id },
+      });
+
+      expect(updatedSubmission).toBeDefined();
+      expect(updatedSubmission.score).toEqual(33.375);
+    });
+
+    it('should throw an error if the submission is not found', async () => {
+      await expect(examService.updateGrade(1, 1, 1, 100)).rejects.toThrow(
+        'Submission not found',
+      );
+    });
+
+    it('should throw an error if course is archived', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user,
+        student_id: 1,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam,
+        student: studentUser,
+        answers: {},
+        score: 0,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      exam.submissions.push(submission);
+      await exam.save();
+
+      await expect(
+        examService.updateGrade(exam.id, course.id, submission.id, 100),
+      ).rejects.toThrow('Submission not found');
+    });
+  });
 });

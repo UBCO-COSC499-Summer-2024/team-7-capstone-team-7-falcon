@@ -4,6 +4,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Res,
   UseGuards,
@@ -19,11 +20,13 @@ import { ExamService } from './exam.service';
 import {
   ExamCreationException,
   ExamNotFoundException,
+  SubmissionNotFoundException,
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
 import { UpcomingExamsInterface } from '../../common/interfaces';
 import { ERROR_MESSAGES } from '../../common';
+import { SubmissionGradeDto } from './dto/submission-grade.dto';
 
 @Controller('exam')
 export class ExamController {
@@ -113,6 +116,41 @@ export class ExamController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: e.message,
       });
+    }
+  }
+
+  /**
+   * Update grade for the submission
+   * @param res {Response} - Response object
+   * @param eid {number} - Exam id
+   * @param cid {number} - Course id
+   * @param sid {number} - Submission id
+   * @param body {SubmissionGradeDto} - Submission grade data
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Patch('/:eid/course/:cid/submission/:sid/grade')
+  async updateGrade(
+    @Res() res: Response,
+    @Param('eid', new ValidationPipe()) eid: number,
+    @Param('cid', new ValidationPipe()) cid: number,
+    @Param('sid', new ValidationPipe()) sid: number,
+    @Body(new ValidationPipe()) body: SubmissionGradeDto,
+  ): Promise<Response> {
+    try {
+      await this.examService.updateGrade(eid, cid, sid, body.grade);
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof SubmissionNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
     }
   }
 

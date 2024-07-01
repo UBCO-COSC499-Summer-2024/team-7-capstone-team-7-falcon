@@ -1,59 +1,54 @@
 "use client";
 import React, { useState, FormEvent } from "react";
+import { usersAPI } from "@/app/api/usersAPI";
+import { User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
-import AccountSetupForm from "../components/accountSetupForm";
 import { Status } from "../../typings/backendDataTypes";
+import AccountSetupForm from "../components/accountSetupForm";
+import RedirectModal from "../components/redirectModal";
 
 export default function AccountSetup() {
   const router = useRouter();
+  const [status, setStatus] = useState(Status.Pending);
 
-  const [userID, setUserID] = useState({
+  // stores data needed for the redirect modal
+  const [redirectInfo, setRedirectInfo] = useState({
+    message: "",
+    redirectPath: "",
+    buttonText: "",
+  });
+
+  // stores data to be sent to the database
+  const [userIDs, setUserIDs] = useState({
     student_id: "",
     employee_id: "",
   });
 
   const handleInputChange = (fieldName: string, value: string) => {
-    setUserID({
-      ...userID,
+    setUserIDs({
+      ...userIDs,
       [fieldName]: value,
     });
   };
 
   async function onSetup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log(userID);
-  }
 
-  // async function onSetup(event: FormEvent<HTMLFormElement>) {
-  //   event.preventDefault();
-  //   const jsonPayload = JSON.stringify(user);
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
-  //       {
-  //         method: "POST",
-  //         body: jsonPayload,
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       },
-  //     );
-  //     // if (!response.ok) {
-  //     //   throw new Error('Failed to submit the data. Please try again.')
-  //     // }
-  //   } catch (error) {
-  //     // Capture the error message to display to the user
-  //     setError(error.message);
-  //     console.error(error);
-  //   }
-  //   // } finally {
-  //   //   setIsLoading(false)
-  //   // }
-  // }
+    try {
+      const userDetails: User = await usersAPI.getUserDetails();
+      const userIdPk: string = userDetails.id; // primary key in user database
+
+      // update user details in database
+
+      // set any error messages
+    } catch (error) {
+      throw error;
+    }
+  }
 
   return (
     <AccountSetupForm
-      userID={userID}
+      userID={userIDs}
       handleInputChange={handleInputChange}
       onSetup={onSetup}
     />

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "./type";
 import TableComponent from "./tableComponent";
@@ -77,21 +76,9 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await coursesAPI.getAllExams(course_id);
-      const exams: DataItem<Exam>[] = result.data.data.map((item: any) => ({
-        name: item.name,
-        id: item.id,
-        data: {
-          name: item.name,
-          exam_date: new Date(Number(item.exam_date)).toLocaleString(),
-          grades_released_at: item.grades_released_at
-            ? new Date(Number(item.grades_released_at)).toLocaleString()
-            : null,
-          id: item.id,
-        },
-      }));
-      const result_upcoming = await coursesAPI.getAllExams(course_id);
-      const exams_upcoming: DataItem<Exam>[] = result_upcoming.data.data.map(
-        (item: any) => ({
+
+      if (result.status === 200) {
+        const exams: DataItem<Exam>[] = result.data.data.map((item: any) => ({
           name: item.name,
           id: item.id,
           data: {
@@ -102,18 +89,32 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
               : null,
             id: item.id,
           },
-        }),
-      );
-      setData(exams);
-      setDataUpcoming(exams_upcoming);
+        }));
+        setData(exams);
+      }
+
+      const result_upcoming = await coursesAPI.getAllExamsUpcoming(course_id);
+      if (result_upcoming.status === 200) {
+        const exams_upcoming: DataItem<Exam>[] = result_upcoming.data.map(
+          (item: any) => ({
+            name: item.name,
+            id: item.id,
+            data: {
+              name: item.name,
+              exam_date: new Date(Number(item.exam_date)).toLocaleString(),
+              grades_released_at: item.grades_released_at
+                ? new Date(Number(item.grades_released_at)).toLocaleString()
+                : null,
+              id: item.id,
+            },
+          }),
+        );
+        setDataUpcoming(exams_upcoming);
+      }
     };
 
     fetchData();
   }, []);
-
-  if (!data || !data_upcoming) {
-    return <p>Data not found</p>;
-  }
 
   return (
     <div className="flex flex-col items-left">
@@ -133,19 +134,30 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
       </div>
       <div className="p-0 mt-0">
         {active_header === "Graded" && (
-          <TableComponent<Exam>
-            data={data}
-            columns={exam_columns}
-            showSearch={false}
-          />
+          <>
+            {data ? (
+              <TableComponent<Exam>
+                data={data}
+                columns={exam_columns}
+                showSearch={false}
+              />
+            ) : (
+              <div className="pl-3 pt-4 p-2">No data available</div>
+            )}
+          </>
         )}
-
         {active_header === "Upcoming" && (
-          <TableComponent<Exam>
-            data={data_upcoming}
-            columns={exam_columns_upcoming}
-            showSearch={false}
-          />
+          <>
+            {data_upcoming ? (
+              <TableComponent<Exam>
+                data={data_upcoming}
+                columns={exam_columns_upcoming}
+                showSearch={false}
+              />
+            ) : (
+              <div className="pl-3 pt-4 p-2">No data available</div>
+            )}
+          </>
         )}
       </div>
     </div>

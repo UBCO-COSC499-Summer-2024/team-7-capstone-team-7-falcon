@@ -131,7 +131,7 @@ export default function LoginPage() {
         {status === Status.Failure && (
           <div className="mb-4">
             <Alert color="failure" icon={HiInformationCircle}>
-              <span className="font-medium">Error login in! &nbsp;</span>
+              <span className="font-medium">Error logging in! &nbsp;</span>
               Please check your email and password and try again. Make sure that
               your email is verified.
             </Alert>

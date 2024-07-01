@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CreateExamButton from "../../../components/createExamButton";
 import PeopleButton from "../../../components/peopleButton";
 import AnalyticsButton from "../../../components/analyticsButton";

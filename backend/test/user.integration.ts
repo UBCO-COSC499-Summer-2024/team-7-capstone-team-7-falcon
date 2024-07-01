@@ -31,6 +31,7 @@ describe('User Integration', () => {
     await CourseUserModel.delete({});
     await CourseModel.delete({});
     await UserModel.delete({});
+    await StudentUserModel.delete({});
 
     await CourseModel.query(
       'ALTER SEQUENCE course_model_id_seq RESTART WITH 1',
@@ -40,15 +41,18 @@ describe('User Integration', () => {
       'ALTER SEQUENCE course_user_model_id_seq RESTART WITH 1',
     );
     await TokenModel.query('ALTER SEQUENCE token_model_id_seq RESTART WITH 1');
+    await StudentUserModel.query(
+      'ALTER SEQUENCE student_user_model_id_seq RESTART WITH 1',
+    );
   });
 
   describe('GET /user', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest().get('/user').expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 200 and user object', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -57,6 +61,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const response = await supertest()
         .get('/user')
@@ -67,12 +84,12 @@ describe('User Integration', () => {
   });
 
   describe('GET /user/:uid', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest().get('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 401 when user is not an admin', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -82,6 +99,19 @@ describe('User Integration', () => {
         email_verified: true,
       }).save();
 
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
+
       return supertest()
         .get('/user/1')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -89,7 +119,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 400 when uid is not a number', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -99,6 +129,19 @@ describe('User Integration', () => {
         email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       return supertest()
         .get('/user/abc')
@@ -112,7 +155,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 200 and user object', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -122,6 +165,19 @@ describe('User Integration', () => {
         email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const response = await supertest()
         .get(`/user/${user.id}`)
@@ -132,7 +188,7 @@ describe('User Integration', () => {
     });
 
     it("should return status 404 when user id doesn't exist", async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -142,6 +198,19 @@ describe('User Integration', () => {
         email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       return supertest()
         .get('/user/100')
@@ -159,7 +228,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 400 when uid is not a number', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -168,6 +237,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       return supertest()
         .patch('/user/abc')
@@ -290,7 +372,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 404 when user id does not exist', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -300,6 +382,19 @@ describe('User Integration', () => {
         role: UserRoleEnum.ADMIN,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       return supertest()
         .patch('/user/100')
@@ -436,7 +531,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 404 when there are no courses', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -445,6 +540,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const response = await supertest()
         .get('/user/courses')
@@ -463,7 +571,7 @@ describe('User Integration', () => {
         invite_code: '123',
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -472,6 +580,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       await CourseUserModel.create({
         course_role: CourseRoleEnum.STUDENT,
@@ -498,7 +619,7 @@ describe('User Integration', () => {
         is_archived: true,
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -507,6 +628,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       await CourseUserModel.create({
         course_role: CourseRoleEnum.STUDENT,

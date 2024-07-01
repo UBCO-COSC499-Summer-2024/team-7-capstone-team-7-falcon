@@ -9,9 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { getCookie } from '../common/helpers';
 import { UserService } from '../modules/user/user.service';
-import { AuthTypeEnum, UserRoleEnum } from '../enums/user.enum';
+import { AuthTypeEnum } from '../enums/user.enum';
 import { ERROR_MESSAGES } from '../common';
-import { StudentIdNotPresentException } from '../common/errors';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -49,15 +48,10 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
+    // Validate if the email is verified
     await this.validateEmailVerified(request);
-
-    try {
-      await this.validateStudentIdProvided(request);
-    } catch (e) {
-      if (e instanceof StudentIdNotPresentException) {
-        throw new ForbiddenException(e.message);
-      }
-    }
+    // Validate if the student or employee id is present
+    await this.validateStudentEmployeeIdProvided(request);
 
     return true;
   }
@@ -100,23 +94,35 @@ export class AuthGuard implements CanActivate {
     // We should only raise an error if the user is trying to login with AuthType that requires email & password only
     if (!user.email_verified && user.auth_type === AuthTypeEnum.EMAIL) {
       // Frontend should redirect to the email verification page based on the Forbidden status code
-      throw new ForbiddenException(
-        ERROR_MESSAGES.authController.emailNotVerified,
-      );
+      throw new ForbiddenException({
+        message: ERROR_MESSAGES.authController.emailNotVerified,
+        errorCode: 'EMAIL_NOT_VERIFIED',
+      });
     }
   }
 
-  private async validateStudentIdProvided(request: Request): Promise<void> {
+  private async validateStudentEmployeeIdProvided(
+    request: Request,
+  ): Promise<void> {
     const user = await this.userService.getUserById(request['user'].id);
     // Additional check to ensure that the user exists
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    if (user.role === UserRoleEnum.STUDENT && !user.student_user) {
-      throw new StudentIdNotPresentException(
-        ERROR_MESSAGES.authController.studentIdMissing,
-      );
+    // Allow PATCH request to update user details. PATH must be /user/{id}
+    // Allow GET request to logout user if the path is /auth/logout
+    if (
+      (request.method === 'PATCH' && request.path.match(/^\/user\/[1-9]$/)) ||
+      (request.method === 'GET' && request.path === '/auth/logout')
+    )
+      return;
+
+    if (!user.student_user && !user.employee_user) {
+      throw new ForbiddenException({
+        message: ERROR_MESSAGES.authController.studentOrEmployeeIdNotPresent,
+        errorCode: 'STUDENT_OR_EMPLOYEE_ID_NOT_PRESENT',
+      });
     }
   }
 }

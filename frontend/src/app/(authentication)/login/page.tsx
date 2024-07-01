@@ -2,18 +2,46 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
+import { Status } from "../../typings/backendDataTypes";
 import { HiMail } from "react-icons/hi";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [status, setStatus] = useState(Status.Pending);
   const [user, setUser] = useState({
     //define user state
     email: "",
     password: "",
   });
 
-  const onLogin = async () => {};
+  async function onLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const jsonPayload = JSON.stringify(user);
+    let response;
+
+    try {
+      response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login/`,
+        {
+          method: "POST",
+          body: jsonPayload,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.ok) {
+        router.push("/");
+      } else {
+        setStatus(Status.Failure);
+      }
+    } catch (error) {
+      console.log("Error logging in", error);
+    }
+  }
 
   const onGoogleSignup = async () => {
     //handle Google Signup
@@ -99,6 +127,16 @@ export default function LoginPage() {
             placeholder="********"
           />
         </div>
+
+        {status === Status.Failure && (
+          <div className="mb-4">
+            <Alert color="failure" icon={HiInformationCircle}>
+              <span className="font-medium">Error login in! &nbsp;</span>
+              Please check your email and password and try again. Make sure that
+              your email is verified.
+            </Alert>
+          </div>
+        )}
 
         <Button
           onClick={onLogin}

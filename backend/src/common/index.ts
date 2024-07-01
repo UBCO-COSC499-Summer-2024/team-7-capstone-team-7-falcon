@@ -84,5 +84,6 @@ export const ERROR_MESSAGES = {
     examDateError: 'Exam date must be in the future',
     noUpcomingExamsFound: 'No upcoming exams found',
     examNotFound: 'Exam not found',
+    userSubmissionNotFound: 'User submission not found',
   },
 };

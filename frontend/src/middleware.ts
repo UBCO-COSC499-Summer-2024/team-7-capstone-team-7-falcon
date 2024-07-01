@@ -5,13 +5,7 @@ import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
 import { jwtDecode } from "jwt-decode";
 
-const auth_pages = [
-  "/login",
-  "/signup",
-  "/reset-password",
-  "/change-password",
-  "/setup-account",
-];
+const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
 
 const isAuthPages = (url: string) =>
   auth_pages.some((page) => page.startsWith(url));
@@ -59,6 +53,25 @@ const getUserRole = async (): Promise<string> => {
   }
 };
 
+/**
+ * Verify that an authenticated user has at least one ID (employee or student) set.
+ *
+ * @async
+ * @function verifyIDpresence
+ * @returns {Promise<boolean>} - A promise that shows whether a user has at least one ID or not.
+ * @throws Will log an error message to the console if fetching the user details fails.
+ */
+const verifyIDpresence = async (): Promise<boolean> => {
+  try {
+    const userDetails: User = await usersAPI.getUserDetails();
+    return !(
+      userDetails.student_user === null && userDetails.employee_user === null
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
   const fetched_auth_token = await fetchAuthToken();
@@ -88,6 +101,13 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // if user is authenticated, verify that they have at least one ID set
+  const hasID = await verifyIDpresence();
+  if (!hasID) {
+    const response = NextResponse.redirect(new URL("/setup-account", url));
+    return response;
+  }
+
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
   const userRole = await getUserRole();
@@ -110,7 +130,8 @@ export const config = {
      * - favicon.ico (favicon file)
      * - scripts
      * - styles
+     * - setup-account (setup account page)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|scripts|styles).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|scripts|styles|setup-account).*)",
   ],
 };

@@ -5,6 +5,7 @@ import {
   CourseData,
   Exam,
   SelectedButton,
+  Submission,
 } from "../../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -21,6 +22,7 @@ import CourseHeader from "../../../../components/courseHeader";
 import { examsAPI } from "../../../../../../api/examAPI";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import SubmissionProvider from "../../../../../../contexts/submissionContext";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const ViewExam = async ({
   params,
@@ -29,13 +31,26 @@ const ViewExam = async ({
 }) => {
   const cid = Number(params.course_id);
   const exam_id = Number(params.exam_id);
+
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };
+
   const exam_response = await examsAPI.getExam(exam_id, cid);
   const exam: Exam = exam_response.data;
-  console.log("response", exam);
 
+  const res = await examsAPI.getSubmissions(cid, exam_id);
+  const submissionData: Submission[] = res.data.map((item: any) => ({
+    student_id: item.student.id,
+    user: {
+      avatar_url: item.student.user.avatar_url,
+      name: `${item.student.user.first_name} ${item.student.user.last_name}`,
+    },
+    score: item.score,
+    updated_at: new Date(Number(item.updated_at)).toLocaleString(),
+  }));
+
+  // need to handle more checks here
   if (!course || !response) {
     return redirect(`../../`);
   }
@@ -53,7 +68,7 @@ const ViewExam = async ({
   };
 
   return (
-    <SubmissionProvider course_id={1} exam_id={1}>
+    <SubmissionProvider submissions={submissionData}>
       <div className="p-0">
         <div className="grid grid-cols-2">
           <div className="col-span-1">

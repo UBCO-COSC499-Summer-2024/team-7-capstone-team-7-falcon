@@ -46,7 +46,6 @@ const calculateStats = (submissions?: Submission[]) => {
 
 const ExamPerformance: React.FC = () => {
   const { submissions } = useSubmissionContext();
-  console.log(submissions);
   const { average, max, min } = calculateStats(submissions);
 
   return (

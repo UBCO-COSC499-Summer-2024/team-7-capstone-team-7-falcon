@@ -26,9 +26,9 @@ const Navigation: React.FC<NavigationProps> = ({ links }) => {
    */
   const currentPath = (href: string) => {
     if (pathName === href) {
-      return "bg-[#8F3DDE] text-[#fff] hover:bg-[#8F3DDE] hover:text-[#fff]";
+      return "bg-purple-700 text-white hover:bg-purple-700 hover:text-white";
     } else {
-      return "text-[#A8A9A9]";
+      return "text-gray-400";
     }
   };
 

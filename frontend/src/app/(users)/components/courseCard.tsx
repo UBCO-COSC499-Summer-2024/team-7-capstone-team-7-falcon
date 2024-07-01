@@ -1,10 +1,13 @@
 import React from "react";
 import { Card, Button } from "flowbite-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface CourseCardProps {
   courseCode: String;
   courseName: String;
   courseRole: String;
+  courseId: number;
   className?: string;
 }
 
@@ -23,6 +26,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   courseCode,
   courseName,
   courseRole,
+  courseId,
   className = "max-w-sm",
 }) => {
   /**
@@ -42,13 +46,11 @@ const CourseCard: React.FC<CourseCardProps> = ({
       <div>
         <h1 className="font-bold text-2xl">{courseCode}</h1>
         <h2 className="text-md mt-2 text-wrap text-[#858585]">{courseName}</h2>
-        <Button
-          color="purple"
-          className="mt-4 w-full"
-          onClick={() => openCourse()}
-        >
-          Open course
-        </Button>
+        <Link href={`${usePathname()}/course/${courseId}/exam`}>
+          <Button color="purple" className="mt-4 w-full">
+            Open course
+          </Button>
+        </Link>
       </div>
     </Card>
   );

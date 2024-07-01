@@ -31,42 +31,19 @@ const exam_columns: Column[] = [
   },
 ];
 
-const exam_columns_upcoming: Column[] = [
-  { label: "Name", renderCell: (item) => item.name },
-  { label: "Exam Published", renderCell: (item) => item.exam_date },
-  {
-    label: "Grade Released",
-    renderCell: (item) => (
-      <div className="py-3 p-1">
-        {item.grades_released_at === null ? "N/A" : item.grades_released_at}
-      </div>
-    ),
-  },
-  {
-    label: "Actions",
-    renderCell: (item) => (
-      <Link href={`./exam/${item.id}`}>
-        <button type="button" className="btn-primary flex p-1 px-4">
-          <UserEdit />
-          Edit
-        </button>
-      </Link>
-    ),
-  },
-];
-
 type ExamTableProps = {
   course_id: number;
 };
 
-type TableFilter = "Graded" | "Upcoming";
+type TableFilter = "All" | "Graded" | "Upcoming";
 
 const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
-  const [data, setData] = useState<DataItem<Exam>[] | null>(null);
+  const [data_all, setDataAll] = useState<DataItem<Exam>[] | null>(null);
+  const [data_graded, setDataGraded] = useState<DataItem<Exam>[] | null>(null);
   const [data_upcoming, setDataUpcoming] = useState<DataItem<Exam>[] | null>(
     null,
   );
-  const [active_header, setActiveHeader] = useState("Graded");
+  const [active_header, setActiveHeader] = useState("All");
 
   const handleClick = (header: TableFilter) => {
     setActiveHeader(header);
@@ -75,10 +52,30 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
   // gets the data once on mount
   useEffect(() => {
     const fetchData = async () => {
-      const result = await coursesAPI.getAllExams(course_id);
+      const result_all = await coursesAPI.getAllExams(course_id);
 
-      if (result.status === 200) {
-        const exams: DataItem<Exam>[] = result.data.data.map((item: any) => ({
+      if (result_all.status === 200) {
+        const exams: DataItem<Exam>[] = result_all.data.data.map(
+          (item: any) => ({
+            name: item.name,
+            id: item.id,
+            data: {
+              name: item.name,
+              exam_date: new Date(Number(item.exam_date)).toLocaleString(),
+              grades_released_at: item.grades_released_at
+                ? new Date(Number(item.grades_released_at)).toLocaleString()
+                : null,
+              id: item.id,
+            },
+          }),
+        );
+        setDataAll(exams);
+      }
+
+      const result_graded = await coursesAPI.getAllExamsGraded(course_id);
+      console.log("result graded is ", result_graded);
+      if (result_graded.status === 200) {
+        const exams: DataItem<Exam>[] = result_graded.data.map((item: any) => ({
           name: item.name,
           id: item.id,
           data: {
@@ -90,7 +87,7 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
             id: item.id,
           },
         }));
-        setData(exams);
+        setDataGraded(exams);
       }
 
       const result_upcoming = await coursesAPI.getAllExamsUpcoming(course_id);
@@ -120,6 +117,12 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
     <div className="flex flex-col items-left">
       <div className="flex space-x-8 pt-4 pl-3">
         <h2
+          className={`cursor-pointer ${active_header === "All" ? "text-purple-500" : "text-gray-500"}`}
+          onClick={() => handleClick("All")}
+        >
+          All Exams
+        </h2>
+        <h2
           className={`cursor-pointer ${active_header === "Graded" ? "text-purple-500" : "text-gray-500"}`}
           onClick={() => handleClick("Graded")}
         >
@@ -133,11 +136,24 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
         </h2>
       </div>
       <div className="p-0 mt-0">
+        {active_header === "All" && (
+          <>
+            {data_all ? (
+              <TableComponent<Exam>
+                data={data_all}
+                columns={exam_columns}
+                showSearch={false}
+              />
+            ) : (
+              <div className="pl-3 pt-4 p-2">No data available</div>
+            )}
+          </>
+        )}
         {active_header === "Graded" && (
           <>
-            {data ? (
+            {data_graded ? (
               <TableComponent<Exam>
-                data={data}
+                data={data_graded}
                 columns={exam_columns}
                 showSearch={false}
               />
@@ -151,7 +167,7 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
             {data_upcoming ? (
               <TableComponent<Exam>
                 data={data_upcoming}
-                columns={exam_columns_upcoming}
+                columns={exam_columns}
                 showSearch={false}
               />
             ) : (

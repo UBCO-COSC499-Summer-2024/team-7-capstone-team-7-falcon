@@ -5,6 +5,7 @@ import { Column, DataItem } from "./type";
 import TableComponent from "./tableComponent";
 import { Submission } from "../../../typings/backendDataTypes";
 import { useSubmissionContext } from "../../../contexts/submissionContext";
+import Image from "next/image";
 
 const exam_columns: Column[] = [
   { label: "Id", renderCell: (item) => item.student_id },
@@ -12,10 +13,12 @@ const exam_columns: Column[] = [
     label: "Name",
     renderCell: (item) => (
       <div className="flex space-x-4">
-        <img
+        <Image
           src={item.user.avatar_url}
           alt="Avatar"
-          style={{ width: 35, height: 35, borderRadius: "50%" }}
+          style={{ borderRadius: "50%" }}
+          width={35}
+          height={35}
         />
         <span className="mt-1">{item.user.name}</span>
       </div>

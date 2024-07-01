@@ -14,7 +14,7 @@ const CreateExam = async ({ params }: { params: { course_id: string } }) => {
   const courseData: CourseData = { ...course };
 
   if (!course || !response) {
-    return redirect(`../../`);
+    redirect(`../../`);
   }
 
   return (

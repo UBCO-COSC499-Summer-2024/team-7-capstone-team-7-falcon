@@ -1,0 +1,8 @@
+answer
+firstname-section
+lastname-section
+name-chars
+orientation-mark
+sn-digits
+student-num-section
+top-page-num

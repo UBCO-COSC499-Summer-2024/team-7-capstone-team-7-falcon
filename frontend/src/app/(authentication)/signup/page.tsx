@@ -37,6 +37,14 @@ export default function SignUpPage() {
     event.preventDefault();
     setStatus(Status.Pending);
 
+    if (
+      formUserInfo.first_name.length < 2 ||
+      formUserInfo.first_name.length > 15
+    ) {
+      setStatus(Status.FirstNameLengthOutOfBounds);
+      return;
+    }
+
     if (formUserInfo.password !== formUserInfo.confirm_password) {
       setStatus(Status.PasswordsDoNotMatch);
       return;
@@ -95,6 +103,7 @@ export default function SignUpPage() {
     let response;
 
     try {
+      console.log(jsonPayload);
       response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
         {
@@ -175,6 +184,7 @@ export default function SignUpPage() {
                 setFormUserInfo({ ...formUserInfo, first_name: e.target.value })
               }
               placeholder="John"
+              required
             />
           </div>
 
@@ -213,6 +223,7 @@ export default function SignUpPage() {
                 setFormUserInfo({ ...formUserInfo, email: e.target.value })
               }
               placeholder="john123@gmail.com"
+              required
             />
           </div>
 
@@ -232,6 +243,7 @@ export default function SignUpPage() {
                 setFormUserInfo({ ...formUserInfo, password: e.target.value })
               }
               placeholder="********"
+              required
             />
           </div>
 
@@ -254,8 +266,21 @@ export default function SignUpPage() {
                 })
               }
               placeholder="********"
+              required
             />
           </div>
+
+          {status === Status.FirstNameLengthOutOfBounds && (
+            <div className="mb-4">
+              <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">
+                  First name length out of bounds! &nbsp;
+                </span>
+                The length of the first name should be between 2 and 15
+                characters.
+              </Alert>
+            </div>
+          )}
 
           {status === Status.PasswordsDoNotMatch && (
             <div className="mb-4">

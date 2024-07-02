@@ -50,6 +50,7 @@ export enum Status {
   Pending = "PENDING",
   PasswordsDoNotMatch = "PASSWORDS DO NOT MATCH",
   WeakPassword = "WEAK PASSWORD",
+  FirstNameLengthOutOfBounds = "FIRST NAME LENGTH OUT OF BOUNDS",
   Redirect = "REDIRECT",
 }
 

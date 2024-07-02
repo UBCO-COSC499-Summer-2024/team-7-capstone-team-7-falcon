@@ -17,7 +17,7 @@ const PeopleButton: React.FC<PeopleButtonProps> = ({
       text={"People"}
       link={`/instructor/course/${course_id}/people`}
       className={className}
-    ></ButtonTemplate>
+    />
   );
 };
 

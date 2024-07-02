@@ -17,7 +17,7 @@ const CreateExamButton: React.FC<CreateExamButtonProps> = ({
       text={"Create Exam"}
       link={`/instructor/course/${course_id}/create-exam`}
       className={className}
-    ></ButtonTemplate>
+    />
   );
 };
 

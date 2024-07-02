@@ -17,7 +17,7 @@ const AnalyticsButton: React.FC<AnalyticsButtonProps> = ({
       text={"Analytics"}
       link={`/instructor/course/${course_id}/analytics`}
       className={className}
-    ></ButtonTemplate>
+    />
   );
 };
 

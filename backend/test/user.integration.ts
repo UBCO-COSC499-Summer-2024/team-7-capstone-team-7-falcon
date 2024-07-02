@@ -2,16 +2,32 @@ import { HttpStatus } from '@nestjs/common';
 import { UserModel } from '../src/modules/user/entities/user.entity';
 import { UserModule } from '../src/modules/user/user.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
-import { CourseRoleEnum, UserRoleEnum } from '../src/enums/user.enum';
+import {
+  AuthTypeEnum,
+  CourseRoleEnum,
+  UserRoleEnum,
+} from '../src/enums/user.enum';
 import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
 import { StudentUserModel } from '../src/modules/user/entities/student-user.entity';
 import { CourseModel } from '../src/modules/course/entities/course.entity';
 import { CourseUserModel } from '../src/modules/course/entities/course-user.entity';
+import { TokenModel } from '../src/modules/token/entities/token.entity';
+import { TokenTypeEnum } from '../src/enums/token-type.enum';
+import * as bcrypt from 'bcrypt';
+import { TestingModuleBuilder } from '@nestjs/testing';
+import { MailService } from '../src/modules/mail/mail.service';
 
 describe('User Integration', () => {
-  const supertest = setUpIntegrationTests(UserModule);
+  const supertest = setUpIntegrationTests(
+    UserModule,
+    (t: TestingModuleBuilder) =>
+      t.overrideProvider(MailService).useValue({
+        sendPasswordReset: jest.fn().mockResolvedValue(Promise.resolve()),
+      }),
+  );
 
   beforeEach(async () => {
+    await TokenModel.delete({});
     await CourseUserModel.delete({});
     await CourseModel.delete({});
     await UserModel.delete({});
@@ -23,9 +39,10 @@ describe('User Integration', () => {
     await CourseUserModel.query(
       'ALTER SEQUENCE course_user_model_id_seq RESTART WITH 1',
     );
+    await TokenModel.query('ALTER SEQUENCE token_model_id_seq RESTART WITH 1');
   });
 
-  describe('GET /', () => {
+  describe('GET /user', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/user').expect(HttpStatus.UNAUTHORIZED);
     });
@@ -38,6 +55,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -48,7 +66,7 @@ describe('User Integration', () => {
     });
   });
 
-  describe('GET /:uid', () => {
+  describe('GET /user/:uid', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
@@ -61,6 +79,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -77,6 +96,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -99,6 +119,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -118,6 +139,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -131,7 +153,7 @@ describe('User Integration', () => {
     });
   });
 
-  describe('PATCH /:uid', () => {
+  describe('PATCH /user/:uid', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().patch('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
@@ -144,6 +166,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -165,6 +188,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -191,6 +215,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const userTwo = await UserModel.create({
@@ -200,6 +225,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -220,6 +246,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -238,6 +265,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
 
@@ -248,6 +276,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -269,6 +298,7 @@ describe('User Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -289,6 +319,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const userTwo = await UserModel.create({
@@ -298,6 +329,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const employeeIdRecord = await EmployeeUserModel.create({
@@ -326,6 +358,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const userTwo = await UserModel.create({
@@ -335,6 +368,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const studentIdRecord = await StudentUserModel.create({
@@ -363,6 +397,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       return supertest()
@@ -383,6 +418,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       // Relies on the fact that previous test case creates a student_id record
@@ -394,7 +430,7 @@ describe('User Integration', () => {
     });
   });
 
-  describe('GET /courses', () => {
+  describe('GET /user/courses', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/user/courses').expect(HttpStatus.UNAUTHORIZED);
     });
@@ -407,6 +443,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       const response = await supertest()
@@ -433,6 +470,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({
@@ -467,6 +505,7 @@ describe('User Integration', () => {
         password: 'password',
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
+        email_verified: true,
       }).save();
 
       await CourseUserModel.create({
@@ -480,6 +519,197 @@ describe('User Integration', () => {
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
       expect(response.status).toBe(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('POST /user/password/request_reset', () => {
+    it('should return status 400 when email is not provided', async () => {
+      return supertest()
+        .post('/user/password/request_reset')
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          message: ['Email is required', 'Email is invalid'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+    });
+
+    it('should return status 404 when user not found', async () => {
+      return supertest()
+        .post('/user/password/request_reset')
+        .send({ email: 'invalid_email@mail.com' })
+        .expect(HttpStatus.NOT_FOUND)
+        .expect({
+          message: 'User not found',
+        });
+    });
+
+    it('should return status 403 when email not verified', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      return supertest()
+        .post('/user/password/request_reset')
+        .send({ email: user.email })
+        .expect(HttpStatus.FORBIDDEN)
+        .expect({
+          message: 'Email not verified',
+        });
+    });
+
+    it('should return status 403 when invalid auth method', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        auth_type: AuthTypeEnum.GOOGLE_OAUTH,
+      }).save();
+
+      return supertest()
+        .post('/user/password/request_reset')
+        .send({ email: user.email })
+        .expect(HttpStatus.FORBIDDEN)
+        .expect({
+          message: 'User account has unsupported authentication type',
+        });
+    });
+
+    it('should return status 200 when email sent', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      return supertest()
+        .post('/user/password/request_reset')
+        .send({ email: user.email })
+        .expect(HttpStatus.OK)
+        .expect({
+          message: 'ok',
+        });
+    });
+  });
+
+  describe('POST /user/password/reset', () => {
+    it('should return status 400 request body is invalid', async () => {
+      return supertest()
+        .post('/user/password/reset')
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          message: [
+            'Token is required',
+            'Token must be a string',
+            'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one symbol',
+            'Password is required',
+            'Password must be a string',
+            'Confirmation password is required',
+            'Confirmation password must be a string',
+          ],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+    });
+
+    it('should return status 400 when token not found', async () => {
+      return supertest()
+        .post('/user/password/reset')
+        .send({
+          token: 'invalid_token',
+          password: 'p@ssworD2',
+          confirm_password: 'p@ssworD2',
+        })
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          message: 'Invalid token',
+        });
+    });
+
+    it('should return status 403 when token is expired', async () => {
+      const token = await TokenModel.create({
+        type: TokenTypeEnum.PASSWORD_RESET,
+        created_at: 1_000_000_000,
+        expires_at: 1_000_000_000,
+      }).save();
+
+      await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        tokens: [token],
+      }).save();
+
+      return supertest()
+        .post('/user/password/reset')
+        .send({
+          token: token.token,
+          password: 'p@ssworD2',
+          confirm_password: 'p@ssworD2',
+        })
+        .expect(HttpStatus.FORBIDDEN)
+        .expect({
+          message: 'Token has expired',
+        });
+    });
+
+    it('should return status 200 when password reset', async () => {
+      const token = await TokenModel.create({
+        type: TokenTypeEnum.PASSWORD_RESET,
+        created_at: 1_000_000_000,
+        expires_at: parseInt(new Date().getTime().toString()) + 1_000_000,
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        tokens: [token],
+      }).save();
+
+      const newPassword = 'p@ssworD2';
+
+      supertest()
+        .post('/user/password/reset')
+        .send({
+          token: token.token,
+          password: newPassword,
+          confirm_password: newPassword,
+        })
+        .expect(HttpStatus.OK)
+        .expect({
+          message: 'ok',
+        });
+
+      bcrypt.compare(newPassword, user.password, (err, result) => {
+        if (result) {
+          expect(result).toBe(true);
+        }
+
+        if (err) {
+          expect(err).toBe(null);
+        }
+      });
     });
   });
 });

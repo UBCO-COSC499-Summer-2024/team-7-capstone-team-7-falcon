@@ -5,7 +5,11 @@ import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from './modules/datasource/typeorm.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CourseModule } from './modules/course/course.module';
-import { SemesterModule } from './modules/semesters/semester.module';
+import { SemesterModule } from './modules/semester/semester.module';
+import QueueModule from './modules/queue/queue.module';
+import { ExamModule } from './modules/exam/exam.module';
+import { TokenModule } from './modules/token/token.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +23,10 @@ import { SemesterModule } from './modules/semesters/semester.module';
     UserModule,
     CourseModule,
     SemesterModule,
+    QueueModule,
+    ExamModule,
+    TokenModule,
+    MailModule,
   ],
 })
 export class AppModule {}

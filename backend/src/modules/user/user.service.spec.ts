@@ -12,18 +12,37 @@ import { OAuthGoogleUserPayload } from '../../common/interfaces';
 import { faker } from '@faker-js/faker';
 import { CourseModel } from '../course/entities/course.entity';
 import { CourseUserModel } from '../course/entities/course-user.entity';
+import { UserCreateDto } from '../auth/dto/user-create.dto';
+import { TokenService } from '../token/token.service';
+import * as bcrypt from 'bcrypt';
+import { MailService } from '../mail/mail.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 describe('UserService', () => {
   let userService: UserService;
+  let tokenService: TokenService;
   let moduleRef: TestingModule;
 
   beforeEach(async () => {
+    const mockMailerService = {
+      sendMail: jest.fn().mockResolvedValue(Promise.resolve()),
+    };
+
     moduleRef = await Test.createTestingModule({
-      providers: [UserService],
+      providers: [
+        MailService,
+        {
+          provide: MailerService,
+          useValue: mockMailerService,
+        },
+        TokenService,
+        UserService,
+      ],
       imports: [TestTypeOrmModule, TestConfigModule],
     }).compile();
 
     userService = moduleRef.get<UserService>(UserService);
+    tokenService = moduleRef.get<TokenService>(TokenService);
   });
 
   afterEach(async () => {
@@ -103,17 +122,197 @@ describe('UserService', () => {
       ).rejects.toThrow('User already exists');
     });
 
-    it('should throw an error when auth type is not supported', async () => {
-      const userPayload: OAuthGoogleUserPayload = {
-        email: 'john.doe@test.com',
-        given_name: 'John',
-        family_name: 'Doe',
-        picture: 'picture',
+    it('should throw an error when user already exists with the same email', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
       };
 
       await expect(
         userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
-      ).rejects.toThrow('Invalid auth method');
+      ).rejects.toThrow('User already exists');
+    });
+
+    it('should throw an error when user does not have student or employee field for EMAIL AccountType', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+      };
+
+      await expect(
+        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+      ).rejects.toThrow('Student or employee ID fields are missing');
+    });
+
+    it('should throw an error when employee id already exists for EMAIL AccountType', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@email.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 1,
+        user: user,
+      }).save();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        employee_id: 1,
+      };
+
+      await expect(
+        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+      ).rejects.toThrow('Employee ID already exists');
+    });
+
+    it('should throw an error when student id already exists for EMAIL AccountType', async () => {
+      const password = faker.internet.password();
+      const email = faker.internet.email();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@email.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 1,
+        user: user,
+      }).save();
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        student_id: 1,
+      };
+
+      await expect(
+        userService.findOrCreateUser(userPayload, AuthTypeEnum.EMAIL),
+      ).rejects.toThrow('Student ID already exists');
+    });
+
+    it('should create user with email auth type and student id', async () => {
+      const password = 'password';
+      const email = 'email@email.com';
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        student_id: 1,
+      };
+
+      const user = await userService.findOrCreateUser(
+        userPayload,
+        AuthTypeEnum.EMAIL,
+      );
+
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.password;
+      delete user.tokens[0].created_at;
+      delete user.tokens[0].expires_at;
+      delete user.tokens[0].token;
+      delete user.student_user.user;
+
+      expect(user).toMatchSnapshot();
+    });
+
+    it('should create user with email auth type and employee id', async () => {
+      const password = 'password';
+      const email = 'email@email.com';
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        employee_id: 1,
+      };
+
+      const user = await userService.findOrCreateUser(
+        userPayload,
+        AuthTypeEnum.EMAIL,
+      );
+
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.password;
+      delete user.tokens[0].created_at;
+      delete user.tokens[0].expires_at;
+      delete user.tokens[0].token;
+      delete user.employee_user.user;
+
+      expect(user).toMatchSnapshot();
+    });
+
+    it('should create user with email auth type and student id and employee id', async () => {
+      const password = 'password';
+      const email = 'email@email.com';
+
+      const userPayload: UserCreateDto = {
+        first_name: 'John',
+        last_name: 'Doe',
+        email: email,
+        password: password,
+        confirm_password: password,
+        employee_id: 1,
+        student_id: 1,
+      };
+
+      const user = await userService.findOrCreateUser(
+        userPayload,
+        AuthTypeEnum.EMAIL,
+      );
+
+      delete user.created_at;
+      delete user.updated_at;
+      delete user.password;
+      delete user.tokens[0].created_at;
+      delete user.tokens[0].expires_at;
+      delete user.tokens[0].token;
+      delete user.employee_user.user;
+      delete user.student_user.user;
+
+      expect(user).toMatchSnapshot();
     });
   });
 
@@ -415,6 +614,146 @@ describe('UserService', () => {
 
       const result = await userService.findUserCoursesById(user.id);
       expect(result).toHaveLength(2);
+    });
+  });
+
+  describe('verifyEmail', () => {
+    it('should verify email', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await userService.verifyEmail(user);
+
+      const updatedUser = await UserModel.findOne({ where: { id: user.id } });
+
+      expect(updatedUser.email_verified).toBe(true);
+    });
+  });
+
+  describe('sendResetPasswordEmail', () => {
+    it('should throw an error when user is not found', async () => {
+      await expect(
+        userService.sendResetPasswordEmail('email@notfound.com'),
+      ).rejects.toThrow('User not found');
+    });
+
+    it('should throw an error when user auth type is not email', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        auth_type: AuthTypeEnum.GOOGLE_OAUTH,
+      }).save();
+
+      await expect(
+        userService.sendResetPasswordEmail(user.email),
+      ).rejects.toThrow('User account has unsupported authentication type');
+    });
+
+    it('should throw an error when user email is not verified', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        userService.sendResetPasswordEmail(user.email),
+      ).rejects.toThrow('Email not verified');
+    });
+
+    it('should send reset password email', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await userService.sendResetPasswordEmail(user.email);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['tokens'],
+      });
+
+      expect(updatedUser.tokens).toHaveLength(1);
+
+      const token = updatedUser.tokens[0];
+      expect(token.type).toBe('PASSWORD_RESET');
+
+      const tokenRecord = await tokenService.findTokenAndUser(token.token);
+
+      expect(tokenRecord.type).toBe('PASSWORD_RESET');
+    });
+
+    it('should handle case when user already has tokens', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await userService.sendResetPasswordEmail(user.email);
+      await userService.sendResetPasswordEmail(user.email);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['tokens'],
+      });
+
+      expect(updatedUser.tokens).toHaveLength(2);
+
+      updatedUser.tokens.forEach((token) => {
+        expect(token.type).toBe('PASSWORD_RESET');
+      });
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should reset password', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const newPassword = faker.internet.password();
+
+      await userService.resetPassword(user, newPassword);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+      });
+
+      bcrypt.compare(newPassword, updatedUser.password, (_err, result) => {
+        if (result) {
+          expect(result).toBeTruthy();
+        }
+      });
     });
   });
 });

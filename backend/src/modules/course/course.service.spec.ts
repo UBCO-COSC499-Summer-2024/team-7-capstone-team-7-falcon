@@ -9,8 +9,9 @@ import { UserModel } from '../user/entities/user.entity';
 import { CourseUserModel } from './entities/course-user.entity';
 import { CourseRoleEnum } from '../../enums/user.enum';
 import { CourseCreateDto } from './dto/course-create.dto';
-import { SemesterModel } from '../semesters/entities/semester.entity';
+import { SemesterModel } from '../semester/entities/semester.entity';
 import { validate } from 'class-validator';
+import { PageOptionsDto } from '../../dto/page-options.dto';
 
 describe('CourseService', () => {
   let courseService: CourseService;
@@ -278,6 +279,160 @@ describe('CourseService', () => {
       const errors = await validate(courseDto);
 
       expect(errors.length > 0);
+    });
+  });
+
+  describe('removeMemberFromCourse', () => {
+    it('should remove member from course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const courseUser = await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      expect(courseUser).toBeDefined();
+
+      await courseService.removeMemberFromCourse(course.id, user.id);
+
+      const actual = await CourseUserModel.count();
+      expect(actual).toBe(0);
+    });
+
+    it('should throw CourseNotFoundException if user is not enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        courseService.removeMemberFromCourse(1, user.id),
+      ).rejects.toThrow('User is not enrolled in the course');
+    });
+  });
+
+  describe('getCourseMembers', () => {
+    it('should return course members from first page', async () => {
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: `Doe-${Math.abs(i - 1)}`,
+          email: `john.doe-${i}@test.com`,
+          password: 'password',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        await CourseUserModel.create({
+          user: user,
+          course,
+        }).save();
+      }
+
+      const pageOptionsDto = new PageOptionsDto();
+      pageOptionsDto.page = 1;
+      pageOptionsDto.take = 5;
+
+      const result = await courseService.getCourseMembers(
+        course.id,
+        pageOptionsDto,
+      );
+
+      expect(result).toBeDefined();
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should return course members from second page', async () => {
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: `Doe-${Math.abs(i - 1)}`,
+          email: `john.doe-${i}@test.com`,
+          password: 'password',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        await CourseUserModel.create({
+          user: user,
+          course,
+        }).save();
+      }
+
+      const pageOptionsDto = new PageOptionsDto();
+
+      pageOptionsDto.page = 2;
+      pageOptionsDto.take = 5;
+
+      const result = await courseService.getCourseMembers(
+        course.id,
+        pageOptionsDto,
+      );
+
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should return empty array if course has no members', async () => {
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const pageOptionsDto = new PageOptionsDto();
+      pageOptionsDto.page = 1;
+      pageOptionsDto.take = 5;
+
+      const result = await courseService.getCourseMembers(
+        course.id,
+        pageOptionsDto,
+      );
+
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
     });
   });
 });

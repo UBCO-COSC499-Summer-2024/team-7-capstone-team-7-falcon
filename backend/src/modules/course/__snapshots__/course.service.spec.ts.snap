@@ -19,6 +19,7 @@ CourseUserModel {
     "avatar_url": null,
     "created_at": "1000000000",
     "email": "john.doe@test.com",
+    "email_verified": false,
     "first_name": "John",
     "id": 1,
     "last_name": "Doe",
@@ -42,6 +43,160 @@ CourseModel {
 }
 `;
 
+exports[`CourseService getCourseMembers should return course members from first page 1`] = `
+PageDto {
+  "data": [
+    CourseUserModel {
+      "course_role": "student",
+      "id": 2,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-1@test.com",
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe-0",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 1,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-0@test.com",
+        "first_name": "John",
+        "id": 1,
+        "last_name": "Doe-1",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 3,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-2@test.com",
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe-1",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 4,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-3@test.com",
+        "first_name": "John",
+        "id": 4,
+        "last_name": "Doe-2",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 5,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-4@test.com",
+        "first_name": "John",
+        "id": 5,
+        "last_name": "Doe-3",
+      },
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": 1,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`CourseService getCourseMembers should return course members from second page 1`] = `
+PageDto {
+  "data": [
+    CourseUserModel {
+      "course_role": "student",
+      "id": 6,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-5@test.com",
+        "first_name": "John",
+        "id": 6,
+        "last_name": "Doe-4",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 7,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-6@test.com",
+        "first_name": "John",
+        "id": 7,
+        "last_name": "Doe-5",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 8,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-7@test.com",
+        "first_name": "John",
+        "id": 8,
+        "last_name": "Doe-6",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 9,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-8@test.com",
+        "first_name": "John",
+        "id": 9,
+        "last_name": "Doe-7",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 10,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-9@test.com",
+        "first_name": "John",
+        "id": 10,
+        "last_name": "Doe-8",
+      },
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": true,
+    "itemCount": 10,
+    "page": 2,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`CourseService getCourseMembers should return empty array if course has no members 1`] = `
+PageDto {
+  "data": [],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "itemCount": 0,
+    "page": 1,
+    "pageCount": 0,
+    "take": 5,
+  },
+}
+`;
+
 exports[`CourseService getUserByCourseAndUserId should return course user if user is enrolled in course 1`] = `
 CourseUserModel {
   "course": CourseModel {
@@ -61,6 +216,7 @@ CourseUserModel {
     "avatar_url": null,
     "created_at": "1000000000",
     "email": "john.doe@test.com",
+    "email_verified": false,
     "first_name": "John",
     "id": 1,
     "last_name": "Doe",

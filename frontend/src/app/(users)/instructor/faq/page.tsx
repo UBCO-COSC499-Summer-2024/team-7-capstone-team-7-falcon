@@ -1,4 +1,22 @@
+"use client";
+
 import React from "react";
+import FAQComponent from "../../components/Accordian";
+
+const faqItems = [
+  {
+    question: "How to join a course",
+    answer: "Using the course invite link",
+  },
+  {
+    question: "How to join a course",
+    answer: "Using the course invite link",
+  },
+  {
+    question: "How to join a course",
+    answer: "Using the course invite link",
+  },
+];
 
 /**
  * InstructorFAQ component.
@@ -9,7 +27,7 @@ import React from "react";
 const InstructorFAQ: React.FC = () => {
   return (
     <div>
-      <h1>Instructor FAQ</h1>
+      <h1><FAQComponent items = {faqItems} /></h1>
     </div>
   );
 };

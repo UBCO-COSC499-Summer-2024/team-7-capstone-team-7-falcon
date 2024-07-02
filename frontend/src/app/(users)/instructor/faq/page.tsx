@@ -1,7 +1,6 @@
-"use client";
 
 import React from "react";
-import FAQComponent from "../../components/Accordian";
+import FAQComponent from "../../components/Accordion";
 
 const faqItems = [
   {

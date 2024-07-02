@@ -48,10 +48,15 @@ export enum Status {
   WrongCode = "WRONG CODE",
   Failure = "FAILURE",
   Pending = "PENDING",
+  Redirect = "REDIRECT",
+}
+
+export enum FormValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
   PasswordsDoNotMatch = "PASSWORDS DO NOT MATCH",
   WeakPassword = "WEAK PASSWORD",
   FirstNameLengthOutOfBounds = "FIRST NAME LENGTH OUT OF BOUNDS",
-  Redirect = "REDIRECT",
 }
 
 export interface SignUpFormData {

@@ -4,7 +4,11 @@ import React, { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
-import { SignUpFormData, Status } from "../../typings/backendDataTypes";
+import {
+  SignUpFormData,
+  Status,
+  FormValid,
+} from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
 import RedirectModal from "../components/redirectModal";
 import { use } from "chai";
@@ -12,6 +16,7 @@ import { use } from "chai";
 export default function SignUpPage() {
   const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
+  const [formValid, setFormValid] = useState(FormValid.Invalid);
 
   // stores data needed for the redirect modal
   const [redirectInfo, setRedirectInfo] = useState({
@@ -42,12 +47,12 @@ export default function SignUpPage() {
       formUserInfo.first_name.length < 2 ||
       formUserInfo.first_name.length > 15
     ) {
-      setStatus(Status.FirstNameLengthOutOfBounds);
+      setFormValid(FormValid.FirstNameLengthOutOfBounds);
       return;
     }
 
     if (formUserInfo.password !== formUserInfo.confirm_password) {
-      setStatus(Status.PasswordsDoNotMatch);
+      setFormValid(FormValid.PasswordsDoNotMatch);
       return;
     }
 
@@ -60,11 +65,15 @@ export default function SignUpPage() {
     ];
 
     if (!passwordRequirements.every(Boolean)) {
-      setStatus(Status.WeakPassword);
+      setFormValid(FormValid.WeakPassword);
       return;
     }
 
-    setStatus(Status.Success);
+    setFormValid(FormValid.Valid);
+
+    if (formValid === FormValid.Valid) {
+      setStatus(Status.Success);
+    }
   }
 
   // needed for account setup form
@@ -111,7 +120,6 @@ export default function SignUpPage() {
     let response;
 
     try {
-      console.log(jsonPayload);
       response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
         {
@@ -278,7 +286,7 @@ export default function SignUpPage() {
             />
           </div>
 
-          {status === Status.FirstNameLengthOutOfBounds && (
+          {formValid === FormValid.FirstNameLengthOutOfBounds && (
             <div className="mb-4">
               <Alert color="failure" icon={HiInformationCircle}>
                 <span className="font-medium">
@@ -290,7 +298,7 @@ export default function SignUpPage() {
             </div>
           )}
 
-          {status === Status.PasswordsDoNotMatch && (
+          {formValid === FormValid.PasswordsDoNotMatch && (
             <div className="mb-4">
               <Alert color="failure" icon={HiInformationCircle}>
                 <span className="font-medium">Passwords do not match!</span>
@@ -298,7 +306,7 @@ export default function SignUpPage() {
             </div>
           )}
 
-          {status === Status.WeakPassword && (
+          {formValid === FormValid.WeakPassword && (
             <div className="mb-4">
               <Alert color="failure" icon={HiInformationCircle}>
                 <span className="font-medium">Weak password! &nbsp;</span>

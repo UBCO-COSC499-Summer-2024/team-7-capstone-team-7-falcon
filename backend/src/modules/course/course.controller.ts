@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   Res,
@@ -32,6 +33,9 @@ import { CourseCreateDto } from './dto/course-create.dto';
 import { SystemRoleGuard } from '../../guards/system-role.guard';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { ExamService } from '../exam/exam.service';
+import { EditCourseGuard } from '../../guards/edit-course.guard';
+import { CourseEditDto } from './dto/course-edit.dto';
+import { CourseArchiveDto } from './dto/course-archive.dto';
 
 @Controller('course')
 export class CourseController {
@@ -257,6 +261,64 @@ export class CourseController {
       );
 
       return res.status(HttpStatus.OK).send(exams);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
+   * Edit course
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param courseData }CourseEditDto} - Course data
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, EditCourseGuard)
+  @Roles(CourseRoleEnum.PROFESSOR)
+  @Patch('/:cid')
+  async editCourse(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Body(new ValidationPipe()) courseData: CourseEditDto,
+  ): Promise<Response> {
+    try {
+      await this.courseService.editCourse(cid, courseData);
+
+      return res.status(HttpStatus.NO_CONTENT).send();
+    } catch (e) {
+      if (e instanceof SemesterNotFoundException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Archive course
+   * @param res {Response} - Response object
+   * @param cid Param {number} - Course id
+   * @param body {CourseArchiveDto} - Archive body
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, EditCourseGuard)
+  @Roles(CourseRoleEnum.PROFESSOR)
+  @Patch('/:cid/archive')
+  async archiveCourse(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Body(new ValidationPipe()) body: CourseArchiveDto,
+  ): Promise<Response> {
+    try {
+      await this.courseService.archiveCourse(cid, body.archive);
+
+      return res.status(HttpStatus.NO_CONTENT).send();
     } catch (e) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: e.message,

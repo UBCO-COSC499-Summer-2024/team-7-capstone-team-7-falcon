@@ -19,6 +19,18 @@ export interface User {
   avatar_url: string;
 }
 
+export interface UpdatedUser {
+  first_name: string;
+  last_name?: string;
+  role?: string;
+  email?: string;
+  password?: string | null;
+  avatar_url?: string;
+  employee_id?: number | null;
+  student_id?: number | null;
+  email_verified?: boolean;
+}
+
 export interface Course {
   id: number;
   course_code: string;

@@ -37,8 +37,22 @@ export default function AccountSetup() {
     try {
       const userDetails: User = await usersAPI.getUserDetails();
       const userIdPk: string = userDetails.id; // primary key in user database
+      const userFirstName: string = userDetails.first_name; // required argument by the backend
 
+      const newUserDetails = {
+        first_name: userFirstName,
+        student_id:
+          userIDs.student_id !== "" ? Number(userIDs.student_id) : null,
+        employee_id:
+          userIDs.employee_id !== "" ? Number(userIDs.employee_id) : null,
+      };
+
+      console.log(newUserDetails);
       // update user details in database
+      await usersAPI.updateUserDetails(userIdPk, newUserDetails);
+
+      // if no errors, redirect to the dashboard
+      router.push("/");
 
       // set any error messages
     } catch (error) {

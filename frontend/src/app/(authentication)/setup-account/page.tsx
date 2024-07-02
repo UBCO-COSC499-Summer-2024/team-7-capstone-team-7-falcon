@@ -47,7 +47,6 @@ export default function AccountSetup() {
           userIDs.employee_id !== "" ? Number(userIDs.employee_id) : null,
       };
 
-      console.log(newUserDetails);
       // update user details in database
       await usersAPI.updateUserDetails(userIdPk, newUserDetails);
 

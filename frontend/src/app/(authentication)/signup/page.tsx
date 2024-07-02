@@ -7,6 +7,7 @@ import { HiInformationCircle } from "react-icons/hi";
 import { SignUpFormData, Status } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
 import RedirectModal from "../components/redirectModal";
+import { use } from "chai";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -79,23 +80,30 @@ export default function SignUpPage() {
     });
   };
 
+  // update user info with student_id or employee_id
+  // needs to be defined outside of onSetup for the hook to work.
+  useEffect(() => {
+    const updateInfo = async () => {
+      setFormUserInfo((prevFormUserInfo) => ({
+        ...prevFormUserInfo,
+        student_id:
+          userID.student_id !== ""
+            ? Number(userID.student_id)
+            : prevFormUserInfo.student_id,
+        employee_id:
+          userID.employee_id !== ""
+            ? Number(userID.employee_id)
+            : prevFormUserInfo.employee_id,
+      }));
+    };
+
+    updateInfo();
+  }, [userID]);
+
   // STEP 2: Send user details to database
+
   async function onSetup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    // update user info with student_id or employee_id
-
-    setFormUserInfo((prevFormUserInfo) => ({
-      ...prevFormUserInfo,
-      student_id:
-        userID.student_id !== ""
-          ? Number(userID.student_id)
-          : prevFormUserInfo.student_id,
-      employee_id:
-        userID.employee_id !== ""
-          ? Number(userID.employee_id)
-          : prevFormUserInfo.employee_id,
-    }));
 
     // send data to the database
     const jsonPayload = JSON.stringify(formUserInfo);

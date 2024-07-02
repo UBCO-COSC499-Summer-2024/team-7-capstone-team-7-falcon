@@ -29,13 +29,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
   courseId,
   className = "max-w-sm",
 }) => {
-  /**
-   * Opens the course.
-   */
-  const openCourse = () => {
-    // Add your logic to open the course here
-  };
-
   return (
     <Card className={className}>
       <div className="flex justify-end">

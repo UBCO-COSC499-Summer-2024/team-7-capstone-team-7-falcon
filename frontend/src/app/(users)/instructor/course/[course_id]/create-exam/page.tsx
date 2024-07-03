@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import CreateExamButton from "../../../../components/createExamButton";
-import PeopleButton from "../../../../components/peopleButton";
-import AnalyticsButton from "../../../../components/analyticsButton";
+import React from "react";
 import InputExam from "../../../components/createExam";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {

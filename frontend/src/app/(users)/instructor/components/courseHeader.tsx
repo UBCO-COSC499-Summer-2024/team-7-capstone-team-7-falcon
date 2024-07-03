@@ -1,7 +1,7 @@
 import { SelectedButton } from "../../../typings/backendDataTypes";
-import CreateExamButton from "../../components/createExamButton";
-import PeopleButton from "../../components/peopleButton";
 import AnalyticsButton from "./analyticsButton";
+import CreateExamButton from "./createExamButton";
+import PeopleButton from "./peopleButton";
 
 interface CourseHeaderProps {
   course_code: string;

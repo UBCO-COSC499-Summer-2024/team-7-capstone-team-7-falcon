@@ -4,20 +4,17 @@ import { Accordion } from "flowbite-react";
 
 //passing title and content as props to this component
 
-
 interface AccordionProps {
-    items: {
-      question: string;
-      answer: string;
-    }[];
-  }
-
+  items: {
+    question: string;
+    answer: string;
+  }[];
+}
 
 const FAQComponent: React.FC<AccordionProps> = ({ items }) => {
- 
   return (
     <Accordion collapseAll>
-   {items.map((item, index) => (
+      {items.map((item, index) => (
         <Accordion.Panel key={index}>
           <Accordion.Title>{item.question}</Accordion.Title>
           <Accordion.Content>
@@ -30,4 +27,4 @@ const FAQComponent: React.FC<AccordionProps> = ({ items }) => {
     </Accordion>
   );
 };
-export default FAQComponent
+export default FAQComponent;

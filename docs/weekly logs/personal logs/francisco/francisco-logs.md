@@ -1,10 +1,11 @@
 # Personal Logs
 
-## Wednesday (6/28-7/02)
+## Friday (6/26-6/27)
 
 ### Timesheet
 
 Clockify report
+
 ![clockify](06.28-07.02/clockify.png)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
@@ -29,6 +30,40 @@ This cycle was a little bit slower, I handed off the model training to Paula so 
 
   1. Finish the PR for the other processing tasks
   2. Either fix the OMR model or go back to the drawing board. If no solution is attainable, We will be shifting approaches from YOLOv4 to a different model with better support and documentation for Roboflow datasets. (I am currently eyeing Microsoft's Florence-2 model on Huggingface)
+
+---
+---
+---
+
+## Wednesday (6/28-7/02)
+
+### Timesheet
+Clockify report
+![clockify](06.26-06.27/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Handoff to Paula for model validation
+  2. Working on Thresholding tasks and splitting masks
+
+### Progress Update (since 6/26/2024)
+
+![ProjectBoard](06.26-06.27/board.png)
+
+  1. Trained 275 Epochs of the OMR model
+  2. Prepared training submodule for handoff to Paula
+  3. Troubleshooted Context issues with Bennett and Paula
+
+  The tasks are all still marked as in Progress as I think they still need time
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+Training 275 epochs still did not yield promising results, I want a fresh pair of eyes on the model training so I have asked Paula to take a look at things while I work on the rest of the necessary utilities. We did make good progress in using contexts to memoize fetched data so we aren't querying as often on the backend.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have the remaining utilities completed (Now on a separate branch so Paula can work unimpeded while she takes over the model validation)
+  2. Have some sort of model training solution working in collaboration with Paula
 
 ---
 ---

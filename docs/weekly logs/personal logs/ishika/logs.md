@@ -1,4 +1,35 @@
 
+## Wednesday (6/28-7/02)
+
+## Timesheet
+
+<img width="1016" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/d3a1fb64-e3e2-42c5-a59b-8c3148f14ae7">
+
+## Project Board
+
+<img width="754" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/c20b5854-5f7c-401c-a557-f342d05a2488">
+
+## Current Tasks
+
+1. Make changes to the User Table Component.
+2. Implement the Arcordion component into both instructor and student FAQs and add some Tailwind classes
+3. Start working on Course Settings Page.
+
+## Progress update since (28-06)
+
+1. I created the Arcordion component for FAQ pages for both instructor and students.
+2. I added some mock data to the FAQ pages which further needs some styling,
+3. I made some changes to the UserTable page.
+4. I reviewed some of the backend code to work on hooking up some frontend pages with backend endpoints.
+
+### Cycle Goal Review
+
+I am happy that my PR got merged for the FAQ pages, which was pretty much creating a component and implementing it on different pages. However, I still need to address some concerns in the User Table page. I was expecting to get a little more done, but encountered some errors that took a lot of time.
+
+### Next Goal Cycle
+
+I am hoping to make a decent progress in the Course Settings Page. I want to make sure that both the FAQ pages, and User Table page is ready for the demo. 
+   
 ## Friday (6/26-6/27)
 
 ## Timesheet

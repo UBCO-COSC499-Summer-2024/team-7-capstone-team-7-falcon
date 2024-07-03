@@ -22,3 +22,19 @@ export async function fetchAuthToken() {
     return "";
   }
 }
+
+/**
+ * Sets the 'auth_token' cookie.
+ *
+ * @async
+ * @function setAuthToken
+ * @throws Will log an error message to the console if setting the 'auth_token' fails.
+ */
+export async function setAuthToken(auth_token: string) {
+  try {
+    const cookieStore = cookies();
+    cookieStore.set("auth_token", auth_token);
+  } catch (error) {
+    console.error("Failed to set auth token", error);
+  }
+}

@@ -6,6 +6,7 @@ import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import { Status } from "../../typings/backendDataTypes";
 import { HiMail } from "react-icons/hi";
+import { setAuthToken } from "@/app/api/cookieAPI";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function LoginPage() {
 
   async function onLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setStatus(Status.Pending);
     const jsonPayload = JSON.stringify(user);
     let response;
 
@@ -32,8 +34,12 @@ export default function LoginPage() {
           },
         },
       );
-
       if (response.ok) {
+        const data = await response.json();
+        const accessToken = data.access_token;
+
+        await setAuthToken(accessToken);
+
         router.push("/");
       } else {
         setStatus(Status.Failure);

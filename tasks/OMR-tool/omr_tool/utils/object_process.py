@@ -19,6 +19,22 @@ def edge_detect_img(image):
     edged_img = cv2.Canny(blurred_img, 75, 200)
     return edged_img
 
+def threshold_img(image):
+    """
+    Function to threshold an image.
+
+    Args:
+        image (PIL.Image): The image to be thresholded.
+
+    Returns:
+        PIL.Image: The thresholded image.
+
+    """
+    grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred_img = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
+    thresh = cv2.threshold(blurred_img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    return thresh
+
 def generate_bubble_contours(image):
     """
     Function to detect contours for the bubbles in an image.
@@ -30,11 +46,9 @@ def generate_bubble_contours(image):
         list: A list of contours detected in the image.
 
     """
-    grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blurred_img = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
 
-    # Threshold the image into binary with Otsu's method
-    thresh = cv2.threshold(blurred_img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    # Threshold the image
+    thresh = threshold_img(image)
     
     # Find contours
     all_contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
@@ -86,39 +100,50 @@ def identify_object_contours(generated_contours):
     questionCnts = sort_contours(generated_contours)
     row_contours = []
     last_cnt_y = None
-    last_cnt_x = None
     for cnt in questionCnts:
         (x, y, w, h) = cv2.boundingRect(cnt)
 
         if last_cnt_y is None:
             row_contours.append(cnt)
             last_cnt_y = y
-            last_cnt_x = x
+            
             continue
 
-        if abs(y - last_cnt_y) < 2*h:
+        if abs(y - last_cnt_y) < h:
             row_contours.append(cnt)
             last_cnt_y = y
             continue
         
         else:
             sorted_row = sorted(row_contours, key=lambda cnt: cv2.boundingRect(cnt)[0]) # x values
+            separated_row = []
+            last_cnt_x = None
             for row_cnt in sorted_row:
                 x, y, w, h = cv2.boundingRect(row_cnt)
-                
-
-            row_length = len(row_contours)
-            if row_length <= 5:
-                objects.append({'type': "question", 'contours': row_contours})
-            elif row_length == 10:
-                objects.append({'type': "SN_digit", 'contours': row_contours})
-            elif row_length > 20:
-                objects.append({'type': "name_char", 'contours': row_contours})
-            else: 
-                objects.append({'type': "name_char", 'contours': row_contours})
+                if last_cnt_x is None:
+                    separated_row = [row_cnt]
+                    last_cnt_x = x
+                    continue
+                if abs(x - last_cnt_x) < w:
+                    separated_row.append(row_cnt)
+                    last_cnt_x = x
+                    continue
+                else:
+                    separated_row.append(row_cnt)
+                    row_length = len(separated_row)
+                    if row_length <= 5:
+                        objects.append({'type': "question", 'contours': separated_row})
+                    elif row_length == 10:
+                        objects.append({'type': "SN_digit", 'contours': separated_row})
+                    elif row_length > 20:
+                        objects.append({'type': "name_char", 'contours': separated_row})
+                    else: 
+                        objects.append({'type': "name_char", 'contours': separated_row})
+                    separated_row = [row_cnt]
+                last_cnt_x = x
             row_contours = [cnt]
-        last_cnt_y = y
-        last_cnt_x = x
+            last_cnt_y = y
+        
      # Add the last set of row_contours if needed
     if row_contours:
         row_length = len(row_contours)
@@ -132,9 +157,24 @@ def identify_object_contours(generated_contours):
             objects.append({'type': "name_char", 'contours': row_contours})
     return objects
 
+def identify_bubbled(img, cnts):
 
+    thresh = threshold_img(img)
+    bubbled = None
+    image_with_bubble = img.copy()
 
+    for cnt, i in enumerate(cnts):
+        mask = np.zeros(thresh.shape, dtype="uint8")
+        cv2.drawContours(mask, [i], -1, 255, -1)
 
+        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
+        total = cv2.countNonZero(mask)
+        print(total)
+
+        if bubbled is None or total > 400:
+            bubbled = (total, cnt)
+            cv2.drawContours(image_with_bubble, [cnts[bubbled[1]]], -1, (0, 255, 0), 2)
+    cv2.imshow("Bubbled Image", image_with_bubble)
 
 
 if __name__ == '__main__':
@@ -151,22 +191,24 @@ if __name__ == '__main__':
 
     image_with_contours = image.copy()
 
-    cv2.drawContours(image_with_contours, question_contours, -1, (0, 255, 0), 2)
+    cv2.drawContours(image_with_contours, question_contours, -1, (255, 255, 0), 2)
 
-    image_with_objects_identified = image.copy()
-    for obj in objects:
-        match obj['type']:
-            case "question":
-                cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (200, 0, 255), 2)
-            case "SN_digit":
-                cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 0), 2)
-            case "name_char":
-                cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 255), 2)
+    identify_bubbled(image, question_contours)
+
+    # image_with_objects_identified = image.copy()
+    # for obj in objects:
+    #     match obj['type']:
+    #         case "question":
+    #             cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (200, 0, 255), 2)
+    #         case "SN_digit":
+    #             cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 0), 2)
+    #         case "name_char":
+    #             cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 255), 2)
 
 
     cv2.imshow("Prepared Image", cv2.resize(prepared_image, (800, 800)))
     cv2.imshow("Contoured Image", cv2.resize(image_with_contours, (900, 900)))
-    cv2.imshow("Objects Image", cv2.resize(image_with_objects_identified, (900, 900)))
+    # cv2.imshow("Objects Image", cv2.resize(image_with_objects_identified, (900, 900)))
 
     
     # cv2.imshow("Contoured Image", image_with_contours)

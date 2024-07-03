@@ -1,6 +1,106 @@
 # Individual Logs
 
-## Wednesday (6/26 - 6/27)
+## Wednesday (6/28 - 7/2)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_06282024-07022024.png)
+
+### Current Tasks (Provide sufficient detail)
+
+I have completed all of the tasks that I mentioned in the previous report and have no outstanding work that will be moved to the next cycle (besides merging PRs). The outstanding Pull Requests that needs to be merged are:
+  * #1: Allow users to view graded exams (PDF file)
+  * #2: Enforce users to have employee or student id linked to their acccount (technically blocked by Paula's work). Once my other PRs are merged, I will also need to update integration tests
+  * #3: Allow users to view exam submission grade
+  * #4: Allow professors and TAs to change submission grade (TA role is not created in the system as we didn't promise it originally, but it will be easy to add it in future, I am just setting a ground work)
+  * #5: Allow admins and professors to change course details
+
+### Progress Update (since 6/28/2024)
+
+![GitHub Board](./images/github_06282024-07022024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #169
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #226
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #235
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #237
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #239
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #241
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #245
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #247
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The cycle was very productive for me. I have completed a lot of core endpoints that are related to the student and instructor views. Based on my rough estimates, the backend is 90% complete, and I expect that by the end of next week, it will be fully complete (if not earlier). There might be a bit of a challenge in the next two cycles to figure out some details about backend endpoints and data that they expect, so I will need to coordinate with the other team members to see what's needed for their work.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Work on MVP
+  * Implement backend endpoint to release grades for the exam
+
+## Friday (6/26 - 6/27)
 
 ### Timesheet
 Clockify report

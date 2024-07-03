@@ -1,3 +1,4 @@
+
 ## Wednesday (6/28-7/02)
 
 ## Timesheet
@@ -29,7 +30,6 @@ I am happy that my PR got merged for the FAQ pages, which was pretty much creati
 
 I am hoping to make a decent progress in the Course Settings Page. I want to make sure that both the FAQ pages, and User Table page is ready for the demo. 
    
-
 ## Friday (6/26-6/27)
 
 ## Timesheet

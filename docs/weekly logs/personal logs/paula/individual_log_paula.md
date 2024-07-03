@@ -1,5 +1,35 @@
 # Individual Logs for Paula
 
+## Wednesday (6/28- 7/02)
+
+### Timesheet
+
+Clockify report
+!["timesheet_06.28_07.02"](images/clockify_06.28_07.02.png)
+
+### Current Tasks
+
+!["current_tasks_06.28_07.02"](images/current_tasks_06.28_07.02.png)
+
+* #1: Authentication pages (frontend and backend)
+* #2: Help Fran with the OMR validation if needed
+
+Note: The Instructor bubble sheet creation page task which was previously assigned to me has been reassigned to
+Bennett in the interest of time.
+
+### Progress Update (since 6/26/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I spent a significant amount of time debugging the authentication system component (Bennett was of great help again with debugging). I was not able to complete it as anticipated, but now have the core functionalities done. There might still be some minor bugs I have to fix. The next step is to complete the password reset functionality. This task was not as straightforward as I expected. In retrospective, I think I should have broken it down into smaller pieces.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Test the authentication system for any bugs and implement the password reset functionality.
+* PR Reviews.
+
 ## Friday (6/26- 6/27)
 
 ### Timesheet

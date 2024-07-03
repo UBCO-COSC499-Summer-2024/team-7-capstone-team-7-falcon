@@ -1,35 +1,34 @@
 # Personal Logs
 
-## Friday (6/26-6/27)
+## Wednesday (6/28-7/02)
 
 ### Timesheet
 
 Clockify report
-![clockify](06.26-06.27/clockify.png)
+![clockify](06.28-07.02/clockify.png)
 
 ### Current Tasks (Provide sufficient detail and include t-shirt size)
 
-  1. Handoff to Paula for model validation
-  2. Working on Thresholding tasks and splitting masks
+  1. Try some fixes suggested by Paula for the OMR model training tasks
+  2. Finish implementing and writing additional tests for the other OMR utilities
 
-### Progress Update (since 6/26/2024)
+### Progress Update (since 6/28/2024)
 
-![ProjectBoard](06.26-06.27/board.png)
+![ProjectBoard](06.28-07.02/board.png)
 
-  1. Trained 275 Epochs of the OMR model
-  2. Prepared training submodule for handoff to Paula
-  3. Troubleshooted Context issues with Bennett and Paula
+  1. Had a few conversations with Paula regarding the issues with the YOLOv4 model
+  2. Implemented thresholding and detection of bubbles on the sheet for marking
 
-  The tasks are all still marked as in Progress as I think they still need time
+  The processing tasks should be ready for review by tonight
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-Training 275 epochs still did not yield promising results, I want a fresh pair of eyes on the model training so I have asked Paula to take a look at things while I work on the rest of the necessary utilities. We did make good progress in using contexts to memoize fetched data so we aren't querying as often on the backend.
+This cycle was a little bit slower, I handed off the model training to Paula so she can troubleshoot it as a fresh pair of eyes, and she suggested a few potential solutions that we will be trying out this week. The OpenCV utilities are working well, they just need the object detection to tie them together. I am still spending time helping teammates when I can.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 
-  1. Have the remaining utilities completed (Now on a separate branch so Paula can work unimpeded while she takes over the model validation)
-  2. Have some sort of model training solution working in collaboration with Paula
+  1. Finish the PR for the other processing tasks
+  2. Either fix the OMR model or go back to the drawing board. If no solution is attainable, We will be shifting approaches from YOLOv4 to a different model with better support and documentation for Roboflow datasets. (I am currently eyeing Microsoft's Florence-2 model on Huggingface)
 
 ---
 ---

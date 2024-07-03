@@ -172,7 +172,6 @@ def identify_bubbled(img, cnts):
 
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-        print(total)
 
         if bubbled is None or total > 400:
             bubbled = (total, cnt)
@@ -191,7 +190,7 @@ if __name__ == '__main__':
 
     prepared_image = edge_detect_img(image)
     question_contours = generate_bubble_contours(image)
-    objects = identify_object_contours(question_contours)
+    # objects = identify_object_contours(question_contours)
 
     image_with_contours = image.copy()
 
@@ -204,7 +203,7 @@ if __name__ == '__main__':
     filled_in = identify_bubbled(image, question_contours)
 
     cv2.drawContours(image_with_bubble, filled_in, -1, (0, 255, 0), 2)
-    cv2.imshow("Bubbled Image", image_with_bubble)
+    cv2.imshow("Bubbled Image", cv2.resize(image_with_bubble, (1080,900)))
 
     # image_with_objects_identified = image.copy()
     # for obj in objects:

@@ -88,6 +88,7 @@ def sort_contours(cnts):
 def identify_object_contours(generated_contours):
     """
     Function to identify objects in an image without using machine learning.
+    TODO: Actually get this working or implement a machine learning model.
 
     Args:
         contours (list): A list of contours to identify objects in.
@@ -158,9 +159,11 @@ def identify_object_contours(generated_contours):
     return objects
 
 def identify_bubbled(img, cnts):
+    
 
     thresh = threshold_img(img)
     bubbled = None
+    filled_in = []
     image_with_bubble = img.copy()
 
     for cnt, i in enumerate(cnts):
@@ -173,8 +176,9 @@ def identify_bubbled(img, cnts):
 
         if bubbled is None or total > 400:
             bubbled = (total, cnt)
-            cv2.drawContours(image_with_bubble, [cnts[bubbled[1]]], -1, (0, 255, 0), 2)
-    cv2.imshow("Bubbled Image", image_with_bubble)
+            filled_in.append(cnts[bubbled[1]])
+    return filled_in
+            
 
 
 if __name__ == '__main__':
@@ -191,9 +195,16 @@ if __name__ == '__main__':
 
     image_with_contours = image.copy()
 
+    image_with_bubble = image.copy()
+
+
+
     cv2.drawContours(image_with_contours, question_contours, -1, (255, 255, 0), 2)
 
-    identify_bubbled(image, question_contours)
+    filled_in = identify_bubbled(image, question_contours)
+
+    cv2.drawContours(image_with_bubble, filled_in, -1, (0, 255, 0), 2)
+    cv2.imshow("Bubbled Image", image_with_bubble)
 
     # image_with_objects_identified = image.copy()
     # for obj in objects:

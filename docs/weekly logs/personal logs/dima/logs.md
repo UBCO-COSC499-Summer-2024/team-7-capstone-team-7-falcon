@@ -94,7 +94,7 @@ I have completed all of the tasks that I mentioned in the previous report and ha
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-The cycle was very productive for me. I have completed a lot of core endpoints that are related to students' and professors' view. Based on my rough estimates backend is 90% complete, and I expect that by the end of next week it will be fully complete (if not earlier). There might be a bit of a challenge in next two cycles to figure out some details about backend endpoints and data that they expect, so I will need to coordinate with other team members to see what's needed for their work.
+The cycle was very productive for me. I have completed a lot of core endpoints that are related to the student and instructor views. Based on my rough estimates, the backend is 90% complete, and I expect that by the end of next week, it will be fully complete (if not earlier). There might be a bit of a challenge in the next two cycles to figure out some details about backend endpoints and data that they expect, so I will need to coordinate with the other team members to see what's needed for their work.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Work on MVP

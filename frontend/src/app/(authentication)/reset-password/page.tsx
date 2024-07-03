@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
     console.log(jsonPayload);
     try {
       response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//user/password/request_reset/`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/user/password/request_reset/`,
         {
           method: "POST",
           body: jsonPayload,

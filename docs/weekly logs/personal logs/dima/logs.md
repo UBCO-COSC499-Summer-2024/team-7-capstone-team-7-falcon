@@ -1,10 +1,10 @@
 # Individual Logs
 
-## Wednesday (6/29 - 7/2)
+## Wednesday (6/28 - 7/2)
 
 ### Timesheet
 Clockify report
-![Clockify report](./images/time_report_06292024-07022024.png)
+![Clockify report](./images/time_report_06282024-07022024.png)
 
 ### Current Tasks (Provide sufficient detail)
 
@@ -15,9 +15,9 @@ I have completed all of the tasks that I mentioned in the previous report and ha
   * #4: Allow professors and TAs to change submission grade (TA role is not created in the system as we didn't promise it originally, but it will be easy to add it in future, I am just setting a ground work)
   * #5: Allow admins and professors to change course details
 
-### Progress Update (since 6/29/2024)
+### Progress Update (since 6/28/2024)
 
-![GitHub Board](./images/github_06292024-07022024.png)
+![GitHub Board](./images/github_06282024-07022024.png)
 
 <table>
     <tr>

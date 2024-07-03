@@ -1,4 +1,4 @@
-## Tuesday (6/28- 7/02)
+## Wednesday (6/28- 7/02)
 
 ### Timesheet
 Clockify report

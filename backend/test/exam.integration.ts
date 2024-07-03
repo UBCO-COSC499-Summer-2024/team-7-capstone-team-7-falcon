@@ -1090,10 +1090,6 @@ describe('Exam Integration', () => {
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
       expect(result.status).toBe(200);
-
-      result.body.grades = result.body.grades.sort(
-        (a: number, b: number) => a - b,
-      );
       expect(result.body).toMatchSnapshot();
     });
   });

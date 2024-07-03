@@ -10,7 +10,7 @@ import { ERROR_MESSAGES } from '../../common';
 import { ExamModel } from './entities/exam.entity';
 import { CourseService } from '../course/course.service';
 import { SubmissionModel } from './entities/submission.entity';
-import { pick, shuffle } from 'lodash';
+import { pick } from 'lodash';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
@@ -303,6 +303,11 @@ export class ExamService {
         id: eid,
         grades_released_at: Not(-1),
       },
+      order: {
+        submissions: {
+          score: 'ASC',
+        },
+      },
       relations: [
         'course',
         'submissions',
@@ -338,10 +343,8 @@ export class ExamService {
         courseName: exam.course.course_name,
         courseCode: exam.course.course_code,
       },
-      grades: shuffle(
-        exam.submissions.map((submission: SubmissionModel) =>
-          Number(submission.score),
-        ),
+      grades: exam.submissions.map((submission: SubmissionModel) =>
+        Number(submission.score),
       ),
     };
 

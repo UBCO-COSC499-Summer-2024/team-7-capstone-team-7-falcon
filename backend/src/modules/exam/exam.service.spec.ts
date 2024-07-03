@@ -1190,9 +1190,6 @@ describe('ExamService', () => {
         course.id,
       );
 
-      // Reverting shuffle to sort for snapshot testing
-      result.grades.sort((a, b) => a - b);
-
       expect(result).toBeDefined();
       expect(result).toMatchSnapshot();
     });

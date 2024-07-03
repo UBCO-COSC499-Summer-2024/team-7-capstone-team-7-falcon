@@ -133,7 +133,7 @@ export class CourseController {
       return res.status(HttpStatus.OK).send(course);
     }
   }
-
+  
   /**
    * Get course by id and return limited course information for security purposes
    * @param res {Response} - Response object

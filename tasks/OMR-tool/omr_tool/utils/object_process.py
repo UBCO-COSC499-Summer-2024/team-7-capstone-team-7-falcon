@@ -34,7 +34,7 @@ def bubble_contours(image):
     blurred_img = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
 
     # Threshold the image into binary with Otsu's method
-    thresh = cv2.threshold(grayscale_img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    thresh = cv2.threshold(blurred_img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
     
     # Find contours
     contours_tuple = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -58,9 +58,7 @@ def bubble_contours(image):
         if cv2.isContourConvex(approx):
             (x1, y1, w1, h1) = cv2.boundingRect(cnt)
             aspect_ratio1 = w1 / float(h1)
-            if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2:
-                close_to_prev = prev_bounds['x'] != -1 and abs(prev_bounds['x'] - x1) < 2.5 * w1
-                inline_with_prev = prev_bounds['y'] != -1 and abs(prev_bounds['y'] - y1) < 2 * h1
+            if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2 and w1 > 20: # TODO: width checking is just a temporary measure, remove when object detection is implemented 
                 bubble_contours.append(cnt)
                 
 

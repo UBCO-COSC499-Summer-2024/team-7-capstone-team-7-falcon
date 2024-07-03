@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import RedirectModal from "../components/redirectModal";
-import { Status } from "../../typings/backendDataTypes";
+import { Status, redirectModalData } from "../../typings/backendDataTypes";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export default function ResetPasswordPage() {
   });
 
   // stores data needed for the redirect modal
-  const [redirectInfo, setRedirectInfo] = useState({
+  const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({
     message: "",
     redirectPath: "",
     buttonText: "",

@@ -8,6 +8,7 @@ import {
   SignUpFormData,
   Status,
   FormValid,
+  redirectModalData,
 } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
 import RedirectModal from "../components/redirectModal";
@@ -18,7 +19,7 @@ export default function SignUpPage() {
   const [formValid, setFormValid] = useState(FormValid.Invalid);
 
   // stores data needed for the redirect modal
-  const [redirectInfo, setRedirectInfo] = useState({
+  const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({
     message: "",
     redirectPath: "",
     buttonText: "",

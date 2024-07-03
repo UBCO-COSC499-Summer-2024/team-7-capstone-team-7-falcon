@@ -105,3 +105,10 @@ export interface SignUpFormData {
   student_id: number | null;
   employee_id: number | null;
 }
+
+// for authentication pages
+export interface redirectModalData {
+  message: string;
+  redirectPath: string;
+  buttonText: string;
+}

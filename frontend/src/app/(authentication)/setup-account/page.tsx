@@ -3,7 +3,7 @@ import React, { useState, FormEvent } from "react";
 import { usersAPI } from "@/app/api/usersAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
-import { Status } from "../../typings/backendDataTypes";
+import { Status, redirectModalData } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
 import RedirectModal from "../components/redirectModal";
 
@@ -12,7 +12,7 @@ export default function AccountSetup() {
   const [status, setStatus] = useState(Status.Pending);
 
   // stores data needed for the redirect modal
-  const [redirectInfo, setRedirectInfo] = useState({
+  const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({
     message: "",
     redirectPath: "",
     buttonText: "",

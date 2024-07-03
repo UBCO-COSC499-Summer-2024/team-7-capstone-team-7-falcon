@@ -54,6 +54,21 @@ def generate_bubble_contours(image):
 
     return bubble_contours
 
+def sort_contours(cnts):
+    """
+    Function to sort contours from top to bottom and left to right.
+
+    Args:
+        cnts (list): A list of contours to sort.
+
+    Returns:
+        list
+    """
+
+    # Sort the contours by y-value
+    sorted_by_y = sorted(cnts, key=lambda cnt: cv2.boundingRect(cnt)[1]) # y values
+
+    return sorted_by_y
 
 
 def identify_object_contours(generated_contours):
@@ -71,30 +86,50 @@ def identify_object_contours(generated_contours):
     questionCnts = sort_contours(generated_contours)
     row_contours = []
     last_cnt_y = None
+    last_cnt_x = None
     for cnt in questionCnts:
         (x, y, w, h) = cv2.boundingRect(cnt)
+
         if last_cnt_y is None:
             row_contours.append(cnt)
             last_cnt_y = y
-            print()
+            last_cnt_x = x
             continue
-        if y - last_cnt_y < 1 and y - last_cnt_y > -1:
-            print("y - last_cnt_y", y - last_cnt_y)
+
+        if abs(y - last_cnt_y) < 2*h:
             row_contours.append(cnt)
             last_cnt_y = y
+            continue
         
         else:
-            rowlength = len(row_contours)
-            if rowlength < 6:
+            sorted_row = sorted(row_contours, key=lambda cnt: cv2.boundingRect(cnt)[0]) # x values
+            for row_cnt in sorted_row:
+                x, y, w, h = cv2.boundingRect(row_cnt)
+                
+
+            row_length = len(row_contours)
+            if row_length <= 5:
                 objects.append({'type': "question", 'contours': row_contours})
-            elif rowlength == 10:
+            elif row_length == 10:
                 objects.append({'type': "SN_digit", 'contours': row_contours})
-            elif rowlength > 20:
+            elif row_length > 20:
                 objects.append({'type': "name_char", 'contours': row_contours})
             else: 
-                print("Unknown object type")
+                objects.append({'type': "name_char", 'contours': row_contours})
             row_contours = [cnt]
-            last_cnt_y = y
+        last_cnt_y = y
+        last_cnt_x = x
+     # Add the last set of row_contours if needed
+    if row_contours:
+        row_length = len(row_contours)
+        if row_length <= 5:
+            objects.append({'type': "question", 'contours': row_contours})
+        elif row_length == 10:
+            objects.append({'type': "SN_digit", 'contours': row_contours})
+        elif row_length > 20:
+            objects.append({'type': "name_char", 'contours': row_contours})
+        else:
+            objects.append({'type': "name_char", 'contours': row_contours})
     return objects
 
 
@@ -115,19 +150,24 @@ if __name__ == '__main__':
     objects = identify_object_contours(question_contours)
 
     image_with_contours = image.copy()
+
+    cv2.drawContours(image_with_contours, question_contours, -1, (0, 255, 0), 2)
+
+    image_with_objects_identified = image.copy()
     for obj in objects:
         match obj['type']:
             case "question":
-                cv2.drawContours(image_with_contours, obj['contours'], -1, (0, 0, 255), 2)
+                cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (200, 0, 255), 2)
             case "SN_digit":
-                cv2.drawContours(image_with_contours, obj['contours'], -1, (255, 0, 0), 2)
+                cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 0), 2)
             case "name_char":
-                cv2.drawContours(image_with_contours, obj['contours'], -1, (0, 255, 0), 2)
-            
-    # cv2.drawContours(image_with_contours, question_contours, -1, (0, 255, 0), 2)
+                cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 255), 2)
+
 
     cv2.imshow("Prepared Image", cv2.resize(prepared_image, (800, 800)))
     cv2.imshow("Contoured Image", cv2.resize(image_with_contours, (900, 900)))
+    cv2.imshow("Objects Image", cv2.resize(image_with_objects_identified, (900, 900)))
+
     
     # cv2.imshow("Contoured Image", image_with_contours)
     cv2.waitKey(0)

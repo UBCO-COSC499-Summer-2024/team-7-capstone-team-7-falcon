@@ -4,17 +4,24 @@ import { Book, Clipboard, QuestionCircle } from "flowbite-react-icons/solid";
 const instructorLinks = [
   {
     title: "Courses",
-    href: "/instructor",
+    href: {
+      base: "/instructor/course",
+      exact: "/instructor",
+    },
     icon: <Book />,
   },
   {
     title: "Exams",
-    href: "/instructor/exams",
+    href: {
+      base: "/instructor/exam",
+    },
     icon: <Clipboard />,
   },
   {
     title: "Help",
-    href: "/instructor/faq",
+    href: {
+      base: "/instructor/faq",
+    },
     icon: <QuestionCircle />,
   },
 ];

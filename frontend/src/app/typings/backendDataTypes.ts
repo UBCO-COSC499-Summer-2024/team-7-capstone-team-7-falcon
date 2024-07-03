@@ -55,11 +55,30 @@ export interface Semester {
   name: string;
 }
 
+export interface ExamData {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
+}
+
+// will be changed later once the form is actually made
+export interface BubblesheetPayload {
+  examName: string;
+  examDate: Date;
+  questions: ExamQuestion[];
+}
+
+export interface ExamQuestion {
+  question: string;
+  answer: string;
+}
+
 export enum Status {
   Success = "SUCCESS",
   WrongCode = "WRONG CODE",
   Failure = "FAILURE",
   Pending = "PENDING",
+  InvalidDate = "INVALID DATE",
   Redirect = "REDIRECT",
 }
 

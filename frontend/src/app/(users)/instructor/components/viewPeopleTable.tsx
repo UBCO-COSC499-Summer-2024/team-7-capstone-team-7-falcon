@@ -15,10 +15,10 @@ const user_columns: Column[] = [
 ];
 
 type PeopleTableProps = {
-  student_id: number;
+  course_id: number;
 };
 
-const PeopleTable: React.FC<PeopleTableProps> = ({ student_id }) => {
+const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
   const [data, setData] = useState<DataItem<User>[] | null>(null);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ student_id }) => {
         data: {
           id: item.student_id,
           name: item.name,
-          avatar_url: item.profile,
+          avatar_url: item.picture,
           role: item.role,
           email: item.email,
         },

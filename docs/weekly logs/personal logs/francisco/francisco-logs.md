@@ -1,6 +1,6 @@
 # Personal Logs
 
-## Friday (6/26-6/27)
+## Wednesday (6/28-7/02)
 
 ### Timesheet
 
@@ -35,7 +35,8 @@ This cycle was a little bit slower, I handed off the model training to Paula so 
 ---
 ---
 
-## Wednesday (6/28-7/02)
+
+## Friday (6/26-6/27)
 
 ### Timesheet
 Clockify report

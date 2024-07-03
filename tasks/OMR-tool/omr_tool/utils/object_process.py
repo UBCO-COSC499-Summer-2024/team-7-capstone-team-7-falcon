@@ -54,26 +54,15 @@ def bubble_contours(image):
 
     for cnt, next_cnt in pairwise(all_contours):
         approx = cv2.approxPolyDP(cnt, 0.03 * cv2.arcLength(cnt, True), True)
-        next_approx = cv2.approxPolyDP(next_cnt, 0.03 * cv2.arcLength(next_cnt, True), True)
 
-        if cv2.isContourConvex(approx) and cv2.isContourConvex(next_approx):
+        if cv2.isContourConvex(approx):
             (x1, y1, w1, h1) = cv2.boundingRect(cnt)
             aspect_ratio1 = w1 / float(h1)
             if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2:
                 close_to_prev = prev_bounds['x'] != -1 and abs(prev_bounds['x'] - x1) < 2.5 * w1
                 inline_with_prev = prev_bounds['y'] != -1 and abs(prev_bounds['y'] - y1) < 2 * h1
-                if inline_with_prev and close_to_prev:
-                    bubble_contours.append(cnt)
-                    prev_bounds = {'x': x1, 'y': y1, 'w': w1, 'h': h1}
-                    continue
-                (x2, y2, w2, h2) = cv2.boundingRect(next_cnt)
-                aspect_ratio2 = w2 / float(h2)
-                if aspect_ratio2 >= 0.8 and aspect_ratio2 <= 1.2:
-                    close_to_next = abs(x1 - x2) < 2.5 * w1
-                    inline_with_next = abs(y1 - y2) < 2 * h1
-                    if inline_with_next and close_to_next:
-                        bubble_contours.append(cnt)
-                        prev_bounds = {'x': x1, 'y': y1, 'w': w1, 'h': h1}
+                bubble_contours.append(cnt)
+                
 
     return bubble_contours
 

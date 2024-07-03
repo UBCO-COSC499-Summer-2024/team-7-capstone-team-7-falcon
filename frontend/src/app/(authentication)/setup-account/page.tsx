@@ -3,13 +3,12 @@ import React, { useState, FormEvent } from "react";
 import { usersAPI } from "@/app/api/usersAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
-import { Status, redirectModalData } from "../../typings/backendDataTypes";
+import { redirectModalData } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
 import RedirectModal from "../components/redirectModal";
 
 export default function AccountSetup() {
   const router = useRouter();
-  const [status, setStatus] = useState(Status.Pending);
 
   // stores data needed for the redirect modal
   const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({

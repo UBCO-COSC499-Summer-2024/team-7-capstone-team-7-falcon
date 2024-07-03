@@ -91,6 +91,17 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // verify if user is trying to reset their password
+  // if yes, redirect to the change password page which will handle that
+  if (nextUrl.pathname.startsWith("/auth/reset-password")) {
+    const token = nextUrl.searchParams.get("token");
+    const redirectURL = new URL("/change-password", url);
+    redirectURL.searchParams.set("reset_token", token);
+
+    const response = NextResponse.redirect(redirectURL);
+    return response;
+  }
+
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
     if (!hasVerifiedToken) {

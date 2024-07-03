@@ -71,6 +71,12 @@ export enum FormValid {
   FirstNameLengthOutOfBounds = "FIRST NAME LENGTH OUT OF BOUNDS",
 }
 
+export enum EmailValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  Pending = "PENDING",
+}
+
 export interface SignUpFormData {
   first_name: string;
   last_name: string | null;

@@ -80,6 +80,17 @@ export async function middleware(request: NextRequest) {
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const hasVerifiedToken = !isTokenExpired(auth_token);
 
+  // verify if user is trying to validate their email
+  // if yes, redirect to login page which will handle that
+  if (nextUrl.pathname.startsWith("/auth/confirm")) {
+    const token = nextUrl.searchParams.get("token");
+    const redirectURL = new URL("/login", url);
+    redirectURL.searchParams.set("confirm_token", token);
+
+    const response = NextResponse.redirect(redirectURL);
+    return response;
+  }
+
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
     if (!hasVerifiedToken) {

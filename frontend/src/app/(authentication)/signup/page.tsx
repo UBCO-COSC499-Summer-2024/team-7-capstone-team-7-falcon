@@ -11,7 +11,6 @@ import {
 } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
 import RedirectModal from "../components/redirectModal";
-import { use } from "chai";
 
 export default function SignUpPage() {
   const router = useRouter();

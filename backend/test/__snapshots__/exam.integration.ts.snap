@@ -207,6 +207,85 @@ exports[`Exam Integration GET /exam/:eid/:cid/user/:uid/grade should return 200 
 }
 `;
 
+exports[`Exam Integration GET /exam/graded should return 200 if graded exams are found for user 1`] = `
+[
+  {
+    "exams": [
+      {
+        "courseId": 1,
+        "examDate": "1000000000",
+        "examId": 1,
+        "examName": "Exam 0",
+        "examScore": 0,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000001",
+        "examId": 2,
+        "examName": "Exam 1",
+        "examScore": 1,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000002",
+        "examId": 3,
+        "examName": "Exam 2",
+        "examScore": 2,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000003",
+        "examId": 4,
+        "examName": "Exam 3",
+        "examScore": 3,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000004",
+        "examId": 5,
+        "examName": "Exam 4",
+        "examScore": 4,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000005",
+        "examId": 6,
+        "examName": "Exam 5",
+        "examScore": 5,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000006",
+        "examId": 7,
+        "examName": "Exam 6",
+        "examScore": 6,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000007",
+        "examId": 8,
+        "examName": "Exam 7",
+        "examScore": 7,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000008",
+        "examId": 9,
+        "examName": "Exam 8",
+        "examScore": 8,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000009",
+        "examId": 10,
+        "examName": "Exam 9",
+        "examScore": 9,
+      },
+    ],
+  },
+]
+`;
+
 exports[`Exam Integration GET /exam/upcoming should return 200 if exams are found for user 1`] = `
 [
   {

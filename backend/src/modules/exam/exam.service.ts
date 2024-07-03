@@ -18,12 +18,16 @@ import { MoreThan, Not } from 'typeorm';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
+  GradedSubmissionsInterface,
   UpcomingExamsInterface,
   UserSubmissionExamInterface,
 } from '../../common/interfaces';
+import { StudentUserModel } from '../user/entities/student-user.entity';
 
 @Injectable()
 export class ExamService {
+  private readonly THREE_MONTHS = 1000 * 60 * 60 * 24 * 30 * 3;
+
   /**
    * Constructor of ExamService
    * @param courseService {CourseService} instance of CourseService
@@ -151,7 +155,7 @@ export class ExamService {
 
   /**
    * Get upcoming exams by user
-   * @param user {UserModel} user
+   * @param user {UserModel} - User model
    * @returns {Promise<UpcomingExamsInterface[]>} list of upcoming exams
    */
   async getUpcomingExamsByUser(
@@ -186,6 +190,96 @@ export class ExamService {
     );
 
     return modifiedResponse;
+  }
+
+  /**
+   * Get upcoming exams by course id
+   * @param courseId {number} - Course id
+   * @returns {Promise<ExamModel[]>} - List of upcoming exams
+   */
+  async getUpcomingExamsByCourseId(courseId: number): Promise<ExamModel[]> {
+    const course = await this.courseService.getCourseById(courseId);
+
+    if (!course) {
+      throw new CourseNotFoundException();
+    }
+
+    const currentTime: number = parseInt(new Date().getTime().toString());
+
+    const exams = await ExamModel.find({
+      where: {
+        course,
+        exam_date: MoreThan(currentTime),
+      },
+    });
+
+    return exams;
+  }
+
+  /**
+   * Get graded exams by course id
+   * @param courseId {number} - Course id
+   * @returns {Promise<ExamModel[]>} - List of graded exams
+   */
+  async getGradedExamsByCourseId(courseId: number): Promise<ExamModel[]> {
+    const course = await this.courseService.getCourseById(courseId);
+
+    if (!course) {
+      throw new CourseNotFoundException();
+    }
+
+    const currentTime: number = parseInt(new Date().getTime().toString());
+
+    const exams = await ExamModel.find({
+      where: {
+        course,
+        grades_released_at: MoreThan(currentTime - this.THREE_MONTHS),
+      },
+    });
+
+    return exams;
+  }
+
+  /**
+   * Get graded submissions by user
+   * @param user {UserModel} - User model
+   * @returns {Promise<GradedSubmissionsInterface[]>} - List of graded submissions
+   */
+  async getGradedSubmissionsByUser(
+    user: UserModel,
+  ): Promise<GradedSubmissionsInterface[]> {
+    const studentUser = await StudentUserModel.find({
+      where: {
+        user,
+        submissions: {
+          score: MoreThan(-1),
+          exam: {
+            grades_released_at: MoreThan(
+              parseInt(new Date().getTime().toString()) - this.THREE_MONTHS,
+            ),
+            course: {
+              is_archived: false,
+            },
+          },
+        },
+      },
+      relations: ['submissions', 'submissions.exam', 'submissions.exam.course'],
+    });
+
+    const modifiedSubmission: GradedSubmissionsInterface[] = studentUser.map(
+      (student) => ({
+        exams: student.submissions.map((submission) => ({
+          examId: submission.exam.id,
+          examName: submission.exam.name,
+          examDate: submission.exam.exam_date,
+          examReleasedAt: submission.exam.grades_released_at,
+          examScore: submission.score,
+          courseId: submission.exam.course.id,
+        })),
+      }),
+    );
+
+    return modifiedSubmission;
   }
 
   /**

@@ -398,4 +398,257 @@ describe('Exam Integration', () => {
       expect(result.body).toEqual([]);
     });
   });
+
+  describe('GET /exam/:cid/exam/:eid', () => {
+    it('should return 401 if not authenticated', async () => {
+      await supertest().get('/exam/1/exam/1').expect(401);
+    });
+
+    it('should return 401 if user not enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await supertest()
+        .get('/exam/1/exam/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 401 if user not professor or ta', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.STUDENT,
+      }).save();
+
+      await supertest()
+        .get(`/exam/${course.id}/exam/1`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 404 if exam not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await supertest()
+        .get(`/exam/${course.id}/exam/1`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(404);
+      expect(result.body).toEqual({
+        message: 'Exam not found',
+      });
+    });
+
+    it('should return 200 if exam is found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      const result = await supertest()
+        .get(`/exam/${course.id}/exam/${exam.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(200);
+      expect(result.body).toMatchSnapshot();
+    });
+  });
+
+  describe('GET /exam/upcoming', () => {
+    it('should return 401 if not authenticated', async () => {
+      await supertest().get('/exam/upcoming').expect(401);
+    });
+
+    it('should return 404 if no exams are found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.STUDENT,
+      }).save();
+
+      const result = await supertest()
+        .get('/exam/upcoming')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(404);
+      expect(result.body).toStrictEqual({
+        message: 'No upcoming exams found',
+      });
+    });
+
+    it('should return 404 if user is not enrolled in any courses', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const result = await supertest()
+        .get('/exam/upcoming')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(404);
+      expect(result.body).toStrictEqual({
+        message: 'No upcoming exams found',
+      });
+    });
+
+    it('should return 200 if exams are found for user', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: parseInt(new Date().getTime().toString()) + 1000 * (i + 1),
+          course,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+        }).save();
+
+        course.exams.push(exam);
+      }
+      await course.save();
+
+      const result = await supertest()
+        .get('/exam/upcoming')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      result.body.forEach((course) => {
+        course.exams.forEach((exam) => {
+          delete exam.examDate;
+        });
+      });
+      expect(result.status).toBe(200);
+      expect(result.body).toMatchSnapshot();
+    });
+  });
 });

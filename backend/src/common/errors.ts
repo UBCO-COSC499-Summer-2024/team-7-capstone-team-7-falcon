@@ -190,3 +190,12 @@ export class InvalidPasswordException extends Error {
     super(ERROR_MESSAGES.authController.invalidPassword);
   }
 }
+
+/**
+ * Exception thrown when exam is not found
+ */
+export class ExamNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.examController.examNotFound);
+  }
+}

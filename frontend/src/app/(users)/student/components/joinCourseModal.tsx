@@ -21,7 +21,7 @@ const JoinCourseModal: React.FC<{
     coursesAPI
       .enrollCourse(courseData.id as number, inviteCode)
       .then((response) => {
-        if (!response || response?.status != 200) {
+        if (!response || response.status != 200) {
           setStatus(Status.WrongCode);
         } else {
           setStatus(Status.Success);

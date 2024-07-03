@@ -141,6 +141,170 @@ PageDto {
 }
 `;
 
+exports[`ExamService getGradedExamsByCourseId should return graded exams by course id 1`] = `
+[
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000001",
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000002",
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000003",
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000004",
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000005",
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000006",
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000007",
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000008",
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000009",
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`ExamService getGradedSubmissionsByUser should return graded submissions for a specific user 1`] = `
+[
+  {
+    "exams": [
+      {
+        "courseId": 1,
+        "examDate": "1000000000",
+        "examId": 1,
+        "examName": "Exam 0",
+        "examScore": 0,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000001",
+        "examId": 2,
+        "examName": "Exam 1",
+        "examScore": 1,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000002",
+        "examId": 3,
+        "examName": "Exam 2",
+        "examScore": 2,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000003",
+        "examId": 4,
+        "examName": "Exam 3",
+        "examScore": 3,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000004",
+        "examId": 5,
+        "examName": "Exam 4",
+        "examScore": 4,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000005",
+        "examId": 6,
+        "examName": "Exam 5",
+        "examScore": 5,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000006",
+        "examId": 7,
+        "examName": "Exam 6",
+        "examScore": 6,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000007",
+        "examId": 8,
+        "examName": "Exam 7",
+        "examScore": 7,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000008",
+        "examId": 9,
+        "examName": "Exam 8",
+        "examScore": 8,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000009",
+        "examId": 10,
+        "examName": "Exam 9",
+        "examScore": 9,
+      },
+    ],
+  },
+]
+`;
+
 exports[`ExamService getSubmissionsByExamId should return submissions by exam id 1`] = `
 [
   {
@@ -301,6 +465,91 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
         "last_name": "Doe",
       },
     },
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by course id 1`] = `
+[
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
     "updated_at": "1000000000",
   },
 ]

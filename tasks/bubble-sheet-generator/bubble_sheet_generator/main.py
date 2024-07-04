@@ -21,9 +21,7 @@ CANVAS_OFFSET = 200
 FONT_SIZE_HEADER = 12
 FONT_SIZE_TEXT = 8
 REQUEST_DELAY = 3  # 3 seconds
-UPLOAD_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "backend", "uploads", "bubble_sheets"
-)
+UPLOAD_PATH = Path(__file__).resolve().parents[3] / 'backend' / 'uploads' / 'bubble_sheets'
 
 
 def draw_bubble(canvas, x, y, radius=6, fill=0):

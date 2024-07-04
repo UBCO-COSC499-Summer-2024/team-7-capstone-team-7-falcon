@@ -21,6 +21,36 @@ ExamModel {
 }
 `;
 
+exports[`ExamService getExamGradedSubmissionByUser should return graded submission for user 1`] = `
+{
+  "course": {
+    "courseCode": "CS101",
+    "courseName": "Introduction to Computer Science",
+    "id": 1,
+  },
+  "exam": {
+    "examDate": "1000000000",
+    "id": 1,
+    "name": "Exam",
+  },
+  "grades": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    10,
+  ],
+  "studentSubmission": {
+    "id": 1,
+    "score": 10,
+  },
+}
+`;
+
 exports[`ExamService getExamsByCourseId should return course exams from first page 1`] = `
 PageDto {
   "data": [

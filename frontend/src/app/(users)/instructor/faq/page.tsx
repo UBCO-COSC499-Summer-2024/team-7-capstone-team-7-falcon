@@ -1,4 +1,6 @@
+
 import React, { useState } from "react";
+        
 import FAQComponent from "../../components/Accordion";
 
 const generalfaqItems = [
@@ -23,6 +25,7 @@ const coursefaqItems = [
     question: "How to view courses I am enrolled in?",
     answer:
       "Instructors will need to sign in with their credentials to view the list of courses on the Course Dashboard page.",
+    
   },
   {
     question: "How to edit the course information?",
@@ -101,6 +104,9 @@ const InstructorFAQ: React.FC = () => {
           <FAQComponent items={selectedFAQItems} />
         </div>
       </div>
+    <div>
+      <h1>Frequently Asked Questions</h1>
+      <FAQComponent items={faqItems} />
     </div>
   );
 };

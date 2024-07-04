@@ -1,6 +1,6 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { ExamData } from "../typings/backendDataTypes";
+import { BubbleSheetPayload, ExamData } from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -63,6 +63,26 @@ export const examsAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to retrieve exam info: ", error);
+      return error;
+    }
+  },
+
+  postBubbleSheet: async (payload: BubbleSheetPayload) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/queue/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.post(`1/add`, payload);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to post bubble sheet data: ", error);
       return error;
     }
   },

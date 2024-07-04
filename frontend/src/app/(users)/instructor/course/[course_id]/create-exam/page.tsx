@@ -1,5 +1,4 @@
 import React from "react";
-import InputExam from "../../../components/createExam";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
@@ -8,6 +7,7 @@ import {
 } from "../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
 import CourseHeader from "../../../components/courseHeader";
+import CreateExamForm from "../../../components/createExamForm";
 
 const CreateExam = async ({ params }: { params: { course_id: string } }) => {
   const cid = Number(params.course_id);
@@ -28,7 +28,7 @@ const CreateExam = async ({ params }: { params: { course_id: string } }) => {
         selected={SelectedButton.Create_Exam}
       />
       <h1 className="text-xl font-bold">Create Exam:</h1>
-      <InputExam course_id={cid} />
+      <CreateExamForm course_id={cid} />
     </div>
   );
 };

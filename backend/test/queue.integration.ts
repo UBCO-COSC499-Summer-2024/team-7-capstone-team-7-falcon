@@ -53,6 +53,7 @@ describe('Queue Integration', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
@@ -155,6 +156,7 @@ describe('Queue Integration', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
@@ -226,6 +228,7 @@ describe('Queue Integration', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
@@ -297,6 +300,7 @@ describe('Queue Integration', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 

@@ -68,3 +68,20 @@ export enum Status {
   Pending = "PENDING",
   InvalidDate = "INVALID DATE",
 }
+
+export interface CourseUser {
+  id: number;
+  user: {
+    avatar_url: string;
+    name: string;
+  };
+  course_role: string;
+  email: string;
+}
+
+export enum SelectedButton {
+  Create_Exam = "CREATE EXAM",
+  People = "PEOPLE",
+  Analytics = "ANALYTICS",
+  None = "NONE",
+}

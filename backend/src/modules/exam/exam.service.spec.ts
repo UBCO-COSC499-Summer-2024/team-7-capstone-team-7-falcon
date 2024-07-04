@@ -816,7 +816,7 @@ describe('ExamService', () => {
       expect(result).toMatchSnapshot();
     });
 
-    it("No graded exams should be returned if the course has no exams", async () => {
+    it('No graded exams should be returned if the course has no exams', async () => {
       let course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',
@@ -836,7 +836,7 @@ describe('ExamService', () => {
       expect(result).toEqual([]);
     });
 
-    it("No graded exams should be returned if the grade release date is older than three months from the current date", async () => {
+    it('No graded exams should be returned if the grade release date is older than three months from the current date', async () => {
       let course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',

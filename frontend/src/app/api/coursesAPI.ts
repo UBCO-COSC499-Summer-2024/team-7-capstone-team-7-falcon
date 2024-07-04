@@ -94,4 +94,53 @@ export const coursesAPI = {
       console.error("Error, failed to create course", error);
     }
   },
+
+  /**
+   * Edits an existing course using the provided course data.
+   *
+   * @async
+   * @function editCourse
+   * @param {number} courseId - The ID of the course to be edited.
+   * @param {CourseEditDto} courseData - The updated data for the course.
+   * @returns {Promise<axios.AxiosResponse<any>>} - The response from the backend API.
+   * @throws Will log an error message to the console and rethrow the error if editing the course fails.
+   */
+  editCourse: async (courseId: number, courseData: CourseData) => {
+    try {
+      const auth_token = await fetchAuthToken();
+
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+      });
+
+      const response = await instance
+        .patch(`/${courseId}`, courseData)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            console.error(error.response.data);
+            console.error(error.response.status);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.error(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error", error.message);
+          }
+          throw error; // Rethrow the error to be caught by the outer try-catch
+        });
+
+      return response;
+    } catch (error) {
+      console.error("Error, failed to edit course", error);
+      throw error; // Rethrow the error to propagate it to the caller
+    }
+  },
 };

@@ -201,6 +201,15 @@ export class ExamNotFoundException extends Error {
 }
 
 /**
+ * Exception thrown when user submission is not found
+ */
+export class UserSubmissionNotFound extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.examController.userSubmissionNotFound);
+  }
+}
+
+/**
  * Exception thrown when submission is not found
  */
 export class SubmissionNotFoundException extends Error {

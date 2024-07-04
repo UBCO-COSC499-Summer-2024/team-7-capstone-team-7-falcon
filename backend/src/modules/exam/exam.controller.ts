@@ -21,9 +21,10 @@ import { ExamService } from './exam.service';
 import {
   ExamCreationException,
   ExamNotFoundException,
+  UserNotFoundException,
+  UserSubmissionNotFound,
   FileNotFoundException,
   SubmissionNotFoundException,
-  UserNotFoundException,
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
@@ -34,12 +35,14 @@ import {
   GradedSubmissionsInterface,
   UpcomingExamsInterface,
 } from '../../common/interfaces';
+import { CourseUserModel } from '../course/entities/course-user.entity';
 
 @Controller('exam')
 export class ExamController {
   /**
    * Constructor of ExamController
    * @param examService {ExamService} instance of ExamService
+   * @param courseService {CourseService} instance of CourseService
    */
   constructor(
     private readonly examService: ExamService,
@@ -182,6 +185,76 @@ export class ExamController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: e.message,
       });
+    }
+  }
+
+  /**
+   * Get submission grade by user
+   * @param res {Response} - Response object
+   * @param uid {number} - User id
+   * @param eid {number} - Exam id
+   * @param cid {number} - Course id
+   * @param user {UserModel} - User object
+   * @returns {Promise<Response>} - Response object
+   */
+  @Get('/:eid/:cid/user/:uid/grade')
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
+  async getSubmissionGradeByUser(
+    @Res() res: Response,
+    @Param('uid', new ValidationPipe()) uid: number,
+    @Param('eid', new ValidationPipe()) eid: number,
+    @Param('cid', new ValidationPipe()) cid: number,
+    @User() user: UserModel,
+  ): Promise<Response> {
+    try {
+      let requestedCourseUser: CourseUserModel;
+
+      if (uid != user.id) {
+        // Check if requested user exists
+        requestedCourseUser = await this.courseService.getUserByCourseAndUserId(
+          cid,
+          uid,
+        );
+
+        if (!requestedCourseUser) {
+          throw new UserNotFoundException();
+        }
+
+        // Check if the current session user is a professor or TA
+        const currentUserCourseUser =
+          await this.courseService.getUserByCourseAndUserId(cid, user.id);
+
+        if (currentUserCourseUser.course_role === CourseRoleEnum.STUDENT) {
+          throw new UnauthorizedException();
+        }
+      }
+
+      const submission = await this.examService.getExamGradedSubmissionByUser(
+        eid,
+        uid != user.id ? requestedCourseUser.user : user,
+        cid,
+      );
+
+      return res.status(HttpStatus.OK).send(submission);
+    } catch (e) {
+      if (
+        e instanceof UserNotFoundException ||
+        e instanceof ExamNotFoundException ||
+        e instanceof UserSubmissionNotFound
+      ) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof UnauthorizedException) {
+        return res.status(HttpStatus.UNAUTHORIZED).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
     }
   }
 

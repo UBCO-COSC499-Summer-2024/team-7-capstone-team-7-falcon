@@ -88,5 +88,6 @@ export const ERROR_MESSAGES = {
     examNotFound: 'Exam not found',
     examsNotFound: 'Exams not found',
     submissionNotFound: 'Submission not found',
+    userSubmissionNotFound: 'User submission not found',
   },
 };

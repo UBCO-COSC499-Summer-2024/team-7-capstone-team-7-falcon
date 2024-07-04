@@ -28,6 +28,7 @@ const Avatar: React.FC<AvatarProps> = ({
           src={avatarUrl}
           width={96}
           height={96}
+          priority
           alt={`Profile image of ${firstName} ${lastName ?? ""}`}
         />
       )}

@@ -133,7 +133,7 @@ export class CourseController {
       return res.status(HttpStatus.OK).send(course);
     }
   }
-  
+
   /**
    * Get course by id and return limited course information for security purposes
    * @param res {Response} - Response object
@@ -255,6 +255,66 @@ export class CourseController {
         cid,
         pageOptionsDto,
       );
+
+      return res.status(HttpStatus.OK).send(exams);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
+   * Get upcoming exams by course id
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
+  @Get('/:cid/exams/upcoming')
+  async getUpcomingExamsByCourseId(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+  ): Promise<Response> {
+    try {
+      const exams = await this.examService.getUpcomingExamsByCourseId(cid);
+
+      if (exams.length === 0) {
+        return res.status(HttpStatus.NO_CONTENT).send({
+          message: ERROR_MESSAGES.examController.examsNotFound,
+        });
+      }
+
+      return res.status(HttpStatus.OK).send(exams);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
+   * Get graded exams by course id
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
+  @Get('/:cid/exams/graded')
+  async getGradedExamsByCourseId(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+  ): Promise<Response> {
+    try {
+      const exams = await this.examService.getGradedExamsByCourseId(cid);
+
+      if (exams.length === 0) {
+        return res.status(HttpStatus.NO_CONTENT).send({
+          message: ERROR_MESSAGES.examController.noGradedExamsFound,
+        });
+      }
 
       return res.status(HttpStatus.OK).send(exams);
     } catch (e) {

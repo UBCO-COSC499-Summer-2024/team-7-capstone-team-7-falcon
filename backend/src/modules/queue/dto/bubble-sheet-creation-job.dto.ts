@@ -1,5 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { IBubbleSheetPayload } from '../../../common/interfaces';
 import 'reflect-metadata';
 
@@ -18,6 +25,10 @@ class BubbleSheetPayloadDto implements IBubbleSheetPayload {
 
   @IsString()
   instructions!: string;
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  answers!: number[];
 }
 
 /**

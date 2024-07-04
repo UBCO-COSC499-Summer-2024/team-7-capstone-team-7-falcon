@@ -972,4 +972,226 @@ describe('ExamService', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('getExamGradedSubmissionByUser', () => {
+    it('should throw an error if the exam is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await expect(
+        examService.getExamGradedSubmissionByUser(1, user, course.id),
+      ).rejects.toThrow('Exam not found');
+    });
+
+    it('should throw an error if the course is archived for exam', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      await StudentUserModel.create({
+        user,
+        student_id: 1,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        course,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        grades_released_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course.exams.push(exam);
+      await course.save();
+
+      await expect(
+        examService.getExamGradedSubmissionByUser(exam.id, user, course.id),
+      ).rejects.toThrow('Exam not found');
+    });
+
+    it('should throw an error if the user submission is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await StudentUserModel.create({
+        user,
+        student_id: 1,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        course,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        grades_released_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course.exams.push(exam);
+      await course.save();
+
+      await expect(
+        examService.getExamGradedSubmissionByUser(exam.id, user, course.id),
+      ).rejects.toThrow('User submission not found');
+    });
+
+    it('should return graded submission for user', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const userModel = await StudentUserModel.create({
+        user,
+        student_id: 1,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        course,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        grades_released_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      const currentUserSubmission = await SubmissionModel.create({
+        exam,
+        student: userModel,
+        answers: {},
+        score: 10,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      exam.submissions.push(currentUserSubmission);
+      await exam.save();
+
+      for (let i = 3; i <= 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john.doe+${i}@test.com`,
+          password: 'password',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          email_verified: true,
+        }).save();
+
+        const studentUser = await StudentUserModel.create({
+          user,
+          student_id: i,
+        }).save();
+
+        const submission = await SubmissionModel.create({
+          exam,
+          student: studentUser,
+          answers: {},
+          score: i,
+          document_path: 'path',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        exam.submissions.push(submission);
+      }
+      await exam.save();
+
+      const result = await examService.getExamGradedSubmissionByUser(
+        exam.id,
+        user,
+        course.id,
+      );
+
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
+    });
+  });
 });

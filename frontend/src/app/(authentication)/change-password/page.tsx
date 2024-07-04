@@ -44,6 +44,16 @@ export default function ChangePasswordPage() {
     }
   }, [reset_token]);
 
+  // update reset token
+  // needs to be defined outside of onPasswordUpdate for the hook to work.
+  useEffect(() => {
+    const updateInfo = async () => {
+      setResetPassword({ ...resetPassword, token: reset_token });
+    };
+
+    updateInfo();
+  }, [reset_token]);
+
   const onPasswordUpdate = async () => {
     event.preventDefault();
     setStatus(Status.Pending);
@@ -54,10 +64,10 @@ export default function ChangePasswordPage() {
     }
 
     setFormValid(FormValid.Valid);
-    setResetPassword({ ...resetPassword, token: reset_token });
 
     // send data to the database
     const jsonPayload = JSON.stringify(resetPassword);
+
     let response;
 
     try {
@@ -74,6 +84,7 @@ export default function ChangePasswordPage() {
 
       // if response is ok, display confirmation message, and redirect to login page
       if (response.ok) {
+        console.log("ok");
         setRedirectInfo({
           message: "Password successfully updated!",
           redirectPath: "/login",

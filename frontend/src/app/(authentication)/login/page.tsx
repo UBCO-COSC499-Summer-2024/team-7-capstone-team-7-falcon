@@ -24,7 +24,9 @@ export default function LoginPage() {
     password: "",
   });
 
-  validateEmail();
+  useEffect(() => {
+    validateEmail();
+  }, []);
 
   // verify if user is trying to validate their email
   async function validateEmail() {
@@ -46,6 +48,7 @@ export default function LoginPage() {
             return response;
           })
           .catch((error) => {
+            setEmailValid(EmailValid.Invalid);
             if (error.response) {
               // The request was made and the server responded with a status code
               console.error(error.response.data);
@@ -57,9 +60,6 @@ export default function LoginPage() {
               // Something happened in setting up the request that triggered an Error
               console.error("Error", error.message);
             }
-          })
-          .finally(() => {
-            setEmailValid(EmailValid.Invalid);
           });
       } catch (error) {
         console.error("Error, failed to validate email", error);

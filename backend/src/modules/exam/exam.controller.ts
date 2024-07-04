@@ -4,6 +4,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Res,
   UnauthorizedException,
@@ -43,6 +44,35 @@ export class ExamController {
     private readonly examService: ExamService,
     private readonly courseService: CourseService,
   ) {}
+
+  /**
+   * Release grades for the exam
+   * @param res {Response} - Response object
+   * @param eid {number} - Exam id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Patch('/:eid/:cid/release_grades')
+  async releaseGrades(
+    @Res() res: Response,
+    @Param('eid', new ValidationPipe()) eid: number,
+  ): Promise<Response> {
+    try {
+      await this.examService.releaseGrades(eid);
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof ExamNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
 
   /**
    * Get exam by id

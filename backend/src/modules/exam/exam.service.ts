@@ -350,4 +350,31 @@ export class ExamService {
 
     return modifiedResponse;
   }
+
+  /**
+   * Release grades for an exam
+   * @param examId {number} - Exam id
+   */
+  async releaseGrades(examId: number): Promise<void> {
+    const exam = await ExamModel.findOne({
+      where: {
+        id: examId,
+        course: {
+          is_archived: false,
+        },
+      },
+      relations: ['course'],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    await ExamModel.update(
+      { id: examId },
+      {
+        grades_released_at: parseInt(new Date().getTime().toString()),
+      },
+    );
+  }
 }

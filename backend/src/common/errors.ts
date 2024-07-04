@@ -199,3 +199,12 @@ export class ExamNotFoundException extends Error {
     super(ERROR_MESSAGES.examController.examNotFound);
   }
 }
+
+/**
+ * Exception thrown when user submission is not found
+ */
+export class UserSubmissionNotFound extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.examController.userSubmissionNotFound);
+  }
+}

@@ -4,6 +4,7 @@ import {
   CourseNotFoundException,
   ExamCreationException,
   ExamNotFoundException,
+  UserSubmissionNotFound,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
 import { ExamModel } from './entities/exam.entity';
@@ -13,12 +14,13 @@ import { pick } from 'lodash';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
-import { MoreThan } from 'typeorm';
+import { MoreThan, Not } from 'typeorm';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
   GradedSubmissionsInterface,
   UpcomingExamsInterface,
+  UserSubmissionExamInterface,
 } from '../../common/interfaces';
 import { StudentUserModel } from '../user/entities/student-user.entity';
 
@@ -278,5 +280,74 @@ export class ExamService {
     );
 
     return modifiedSubmission;
+  }
+
+  /**
+   * Get exam graded submission by user
+   * @param eid {number} - exam id
+   * @param user {UserModel} - user object
+   * @param cid {number} - course id
+   * @returns {Promise<UserSubmissionExamInterface>} - user submission exam interface
+   */
+  async getExamGradedSubmissionByUser(
+    eid: number,
+    user: UserModel,
+    cid: number,
+  ): Promise<UserSubmissionExamInterface> {
+    const exam = await ExamModel.findOne({
+      where: {
+        course: {
+          id: cid,
+          is_archived: false,
+        },
+        id: eid,
+        grades_released_at: Not(-1),
+      },
+      order: {
+        submissions: {
+          score: 'ASC',
+        },
+      },
+      relations: [
+        'course',
+        'submissions',
+        'submissions.student',
+        'submissions.student.user',
+      ],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    const currentStudentSubmission = exam.submissions.filter((submission) => {
+      return submission.student.user.id === user.id;
+    });
+
+    if (currentStudentSubmission.length === 0) {
+      throw new UserSubmissionNotFound();
+    }
+
+    const modifiedResponse: UserSubmissionExamInterface = {
+      exam: {
+        id: exam.id,
+        name: exam.name,
+        examDate: exam.exam_date,
+      },
+      studentSubmission: {
+        id: currentStudentSubmission[0].id,
+        score: currentStudentSubmission[0].score,
+      },
+      course: {
+        id: exam.course.id,
+        courseName: exam.course.course_name,
+        courseCode: exam.course.course_code,
+      },
+      grades: exam.submissions.map((submission: SubmissionModel) =>
+        Number(submission.score),
+      ),
+    };
+
+    return modifiedResponse;
   }
 }

@@ -7,3 +7,6 @@
 [submodule "tasks/OMR-tool/model_training/pytorch-YOLOv4"]
 	path = tasks/OMR-tool/model_training/pytorch-YOLOv4
 	url = https://github.com/roboflow-ai/pytorch-YOLOv4.git
+[submodule "tasks/OMR-tool/model_training/OMR-model-inference"]
+	path = tasks/OMR-tool/model_training/OMR-model-inference
+	url = https://github.com/fperellaholfeld/OMR-model-inference.git

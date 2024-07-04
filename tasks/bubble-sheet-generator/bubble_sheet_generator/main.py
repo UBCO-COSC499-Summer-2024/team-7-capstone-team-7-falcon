@@ -2,6 +2,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 import requests
 import time
@@ -21,7 +22,9 @@ CANVAS_OFFSET = 200
 FONT_SIZE_HEADER = 12
 FONT_SIZE_TEXT = 8
 REQUEST_DELAY = 3  # 3 seconds
-UPLOAD_PATH = Path(__file__).resolve().parents[3] / 'backend' / 'uploads' / 'bubble_sheets'
+UPLOAD_PATH = (
+    Path(__file__).resolve().parents[3] / "backend" / "uploads" / "bubble_sheets"
+)
 
 
 def draw_bubble(canvas, x, y, radius=6, fill=0):
@@ -306,14 +309,14 @@ if __name__ == "__main__":
                 continue
 
             unique_id = uuid.uuid4()
-
+            # Generates a bubble sheet with the answer key
             generate_bubble_sheet(
                 os.path.join(f"{UPLOAD_PATH}/{unique_id}", f"answer.pdf"),
                 num_questions=int(payload.get("numberOfQuestions")),
                 choices_per_question=payload.get("numberOfAnswers"),
                 answers=payload.get("answers"),
             )
-
+            # Generates a blank bubble sheet that students will fill out
             generate_bubble_sheet(
                 os.path.join(f"{UPLOAD_PATH}/{unique_id}", f"sheet.pdf"),
                 num_questions=int(payload.get("numberOfQuestions")),

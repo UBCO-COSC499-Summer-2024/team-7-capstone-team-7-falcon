@@ -1,9 +1,10 @@
 "use client";
 
-import { Label, Modal, Textarea } from "flowbite-react";
+import { Alert, Label, Modal, Textarea } from "flowbite-react";
 import { useRef, useState } from "react";
 import { BubbleSheetPayload } from "../../../typings/backendDataTypes";
 import { examsAPI } from "../../../api/examAPI";
+import { HiInformationCircle } from "react-icons/hi";
 
 interface BubbleSheetModalProps {
   onClose?(): void;
@@ -15,6 +16,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: number;
   }>({});
+  const [validationError, setValidationError] = useState(false);
   // const instructions = useRef<HTMLTextAreaElement>(null);
 
   const handleClose = () => {
@@ -41,21 +43,28 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   const downloadBubbleSheet = async () => {
     const keys = Object.keys(selectedOptions);
 
+    // verifies that all boxes are filled in
+    console.log("keys, question count", keys.length, Number(questionCount));
     if (keys.length != Number(questionCount)) {
+      setValidationError(true);
       return;
+    } else {
+      setValidationError(false);
     }
 
-    const answerIndexes: number[] = keys.map((key) => Number(key));
+    const answerIndexes: number[] = keys.map((key) => selectedOptions[key]);
     const payload: BubbleSheetPayload = {
-      numberOfQuestions: Number(questionCount),
-      defaultPointsPerQuestion: 1,
-      numberOfAnswers: 5,
-      instructions: "x",
-      answers: answerIndexes,
+      payload: {
+        numberOfQuestions: Number(questionCount),
+        defaultPointsPerQuestion: 1,
+        numberOfAnswers: 5,
+        instructions: "x",
+        answers: answerIndexes,
+      },
     };
-
     const response = await examsAPI.postBubbleSheet(payload);
-    console.log(response);
+    // make a request to download the bubble sheet once endpoint is done
+    //const response2 = await examsAPI.downloadBubbleSheet(response.job_id);
   };
 
   const options = ["A", "B", "C", "D", "E"];
@@ -122,13 +131,26 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
           ))}
         </div>
       </Modal.Body>
-      <Modal.Footer>
-        <button
-          className="btn-primary flex justify-end"
-          onClick={downloadBubbleSheet}
-        >
-          Submit
-        </button>
+      <Modal.Footer className="grid grid-cols-4">
+        <div className="col-span-4 pb-4">
+          {validationError && (
+            // <p className="text-red-700 text-bold pl-2"></p>
+            <Alert color="failure" icon={HiInformationCircle} className="p-3">
+              <span className="font-medium"></span>All answers are not filled
+            </Alert>
+          )}
+        </div>
+        <div className="col-span-1 flex justify-start">
+          <button className="btn-primary" onClick={downloadBubbleSheet}>
+            Download
+          </button>
+        </div>
+        <div className="col-span-2 flex justify-center"></div>
+        <div className="col-span-1 flex justify-end ">
+          <button className="btn-secondary px-8" onClick={handleClose}>
+            Close
+          </button>
+        </div>
       </Modal.Footer>
     </Modal>
   );

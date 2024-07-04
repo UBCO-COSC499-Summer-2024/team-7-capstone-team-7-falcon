@@ -71,14 +71,36 @@ export const examsAPI = {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/queue/`,
+        baseURL: `${BACKEND_URL}/api/v1/queue`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
         withCredentials: true,
       });
-      const response = await instance.post(`1/add`, payload);
+      console.log("making request", instance);
+      const response = await instance.post(`/1/add`, payload);
+      console.log(response);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to post bubble sheet data: ", error);
+      return error;
+    }
+  },
+
+  downloadBubbleSheet: async (job_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/queue`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.post(`/bubble-sheet-creation/${job_id}`);
       return response;
     } catch (error: any) {
       //always axios error

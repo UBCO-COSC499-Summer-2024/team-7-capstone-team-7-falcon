@@ -1,12 +1,12 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=15118758&assignment_repo_type=AssignmentRepo)
 
-# Optical Marking Management System 
+# Optical Marking Management System
 ### Team 7 Falcon
 
 ## Project Description
 * Project goal: To create a responsive web application that supports the marking and management of optically marked exams.  The application will allow for the rapid construction, marking, analysis and return of optically marked exams.
 * Target users:
-    * Instructors: Require the ability to create classes, exams (events and bubble sheets, exam events, load exams (upload a pdf scan of bubble sheets, parse scan sheets, mark and review sheets.   
+    * Instructors: Require the ability to create classes, exams (events and bubble sheets, exam events, load exams (upload a pdf scan of bubble sheets, parse scan sheets, mark and review sheets.
         * They be able to run statistics on exams and allow students to view their marked exams. Visualizations will make it easy to determine current performance and appropriate benchmarks or comparators could be used to motivate performance.    Instructors will be able to look at year over year analysis for course.
         * They need to be able to download results for given exams.
     * Students: must be able to view the results of instances on an exam for a course. They will be only available to review their exam(s) during the time interval for the course.
@@ -18,7 +18,7 @@
    * How will the database be designed to support new exams or formats of bubble sheets? It is anticipated that the system will need to be able to handle a number of different ways of marking and analyzing questions.
    * The system will not have a high number of instructors but potentially a large number of students and data. How to optimize for ease of use and maintainability? What about data security?
    * What can be done to make this system easy to use especially for first time users?
-   * Ideally instructors have limited interaction with the system except for some exam creation, data entry and reporting. What can be done to streamline the onboarding process and recall when using the system. 
+   * Ideally instructors have limited interaction with the system except for some exam creation, data entry and reporting. What can be done to streamline the onboarding process and recall when using the system.
    * There is a variety of data that could be available on an exam. What other data would be useful to understand exam performance?
    * It is expected that the web app will be almost entirely used on desktop computers from the instructors and administrators view. Student view should support both desktop and mobile.
    * What needs to be done to adhere to relevant privacy regulations and guidelines to ensure student data protection.
@@ -28,6 +28,12 @@
 Please use the provided folder structure for your docs (project plan, design documenation, communications log, weekly logs and final documentation), source code, tesing, etc.    You are free to organize any additional internal folder structure as required by the project.  The team **MUST** use a branching workflow and once an item is ready, do remember to issue a PR, review and merge in into the master brach.
 ```
 .
+|-- backend                 # Backend infrastructure
+|   |-- migrations          # Database migration files
+|   |-- src                 # Relavant source code to backend
+|   |-- test                # Integration tests for backend endpoints
+|   |-- uploads             # Files uploaded to backend that can be used by frontend application
+│   └── ...
 ├── docs                    # Documentation files (alternatively `doc`)
 │   ├── TOC.md              # Table of contents
 │   ├── plan                # Scope and Charter
@@ -35,15 +41,13 @@ Please use the provided folder structure for your docs (project plan, design doc
 │   ├── final               # Getting started guide
 │   ├── logs                # Team Logs
 │   └── ...
-├── build                   # Compiled files (alternatively `dist`))    
-├── app                     # Source files (alternatively `lib` or `src`)
-├── test                    # Automated tests (alternatively `spec` or `tests`)
-├── tools                   # Tools and utilities
-├── LICENSE                 # The license for this project 
+|--- frontend               # Frontend infrastructure
+...
+├── LICENSE                 # The license for this project
 └── README.md
 ```
-You can find additional information on folder structure convetions [here](https://github.com/kriasoft/Folder-Structure-Conventions). 
+You can find additional information on folder structure convetions [here](https://github.com/kriasoft/Folder-Structure-Conventions).
 
-Also, update your README.md file with the team and client/project information. 
+Also, update your README.md file with the team and client/project information.
 
-You can find details on writing GitHub Markdown [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) as well as a [handy cheatsheet](https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf).   
+You can find details on writing GitHub Markdown [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) as well as a [handy cheatsheet](https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf).

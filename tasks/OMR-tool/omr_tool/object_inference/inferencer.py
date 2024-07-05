@@ -71,12 +71,16 @@ class Inferencer:
         image_data = np.expand_dims(image_data, 0)
         return image_data
 
-    def infer(self, image_data):
-        predictions = 
-        return predictions
-
     def postprocess_results(self, results):
-        predictions = results[0]
+
+        predictions = np.squeeze(results[0]).T[np.max(predictions[:, 4:], axis=1) > self.conf_threshold, :]
+        scores = scores[scores > self.conf_threshold]
+
+        if len(scores) == 0:
+            return [], [], []
+
+        class_ids = np.argmax(predictions[:, 4:], axis=1)
+
         pass
 
     def run_inference(self, image_path):

@@ -6,8 +6,8 @@ import { ExamData } from "../../../typings/backendDataTypes";
 import { useState } from "react";
 import { examsAPI } from "../../../api/examAPI";
 import { Status } from "../../../typings/backendDataTypes";
-import ModalMessage from "../../student/components/modalMessage";
 import { redirect } from "next/navigation";
+import ModalMessage from "../../components/modalMessage";
 
 interface InputExamProps {
   course_id: number;

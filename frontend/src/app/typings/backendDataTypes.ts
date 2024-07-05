@@ -30,7 +30,6 @@ export interface Course {
   is_archived: boolean;
   invite_code: string;
 }
-
 export interface Exam {
   id: number;
   name: string;
@@ -57,18 +56,18 @@ export interface CourseRole {
   course: Course;
 }
 
+export interface StudentExamResult {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
+}
+
 export interface Semester {
   id: number;
   name: string;
 }
 
 export interface ExamData {
-  exam_name: string;
-  exam_date: number;
-  payload?: JSON;
-}
-
-export interface StudentExamResult {
   exam_name: string;
   exam_date: number;
   payload?: JSON;
@@ -96,6 +95,17 @@ export enum Status {
   Failure = "FAILURE",
   Pending = "PENDING",
   InvalidDate = "INVALID DATE",
+}
+
+export interface CourseUser {
+  id: number;
+  user: {
+    avatar_url: string;
+    name: string;
+    id: number;
+  };
+  course_role: string;
+  email: string;
 }
 
 export enum SelectedButton {

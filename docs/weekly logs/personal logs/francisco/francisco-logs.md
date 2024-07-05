@@ -1,9 +1,44 @@
 # Personal Logs
 
-## Friday (6/26-6/27)
+## Wednesday (6/28-7/02)
 
 ### Timesheet
 
+Clockify report
+
+![clockify](06.28-07.02/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Try some fixes suggested by Paula for the OMR model training tasks
+  2. Finish implementing and writing additional tests for the other OMR utilities
+
+### Progress Update (since 6/28/2024)
+
+![ProjectBoard](06.28-07.02/board.png)
+
+  1. Had a few conversations with Paula regarding the issues with the YOLOv4 model
+  2. Implemented thresholding and detection of bubbles on the sheet for marking
+
+  The processing tasks should be ready for review by tonight
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle was a little bit slower, I handed off the model training to Paula so she can troubleshoot it as a fresh pair of eyes, and she suggested a few potential solutions that we will be trying out this week. The OpenCV utilities are working well, they just need the object detection to tie them together. I am still spending time helping teammates when I can.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Finish the PR for the other processing tasks
+  2. Either fix the OMR model or go back to the drawing board. If no solution is attainable, We will be shifting approaches from YOLOv4 to a different model with better support and documentation for Roboflow datasets. (I am currently eyeing Microsoft's Florence-2 model on Huggingface)
+
+---
+---
+---
+
+
+## Friday (6/26-6/27)
+
+### Timesheet
 Clockify report
 ![clockify](06.26-06.27/clockify.png)
 

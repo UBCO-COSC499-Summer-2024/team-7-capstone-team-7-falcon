@@ -4,7 +4,7 @@ import { CourseData } from "../../../typings/backendDataTypes";
 import { Modal } from "flowbite-react";
 import { Status } from "../../../typings/backendDataTypes";
 import { coursesAPI } from "../../../api/coursesAPI";
-import ModalMessage from "./modalMessage";
+import ModalMessage from "../../components/modalMessage";
 
 const JoinCourseModal: React.FC<{
   courseData: CourseData;

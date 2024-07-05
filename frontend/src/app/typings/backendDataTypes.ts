@@ -43,6 +43,25 @@ export interface Course {
   invite_code: string;
 }
 
+export interface Exam {
+  id: number;
+  name: string;
+  created_at: number;
+  updated_at: number;
+  exam_date: number;
+  grades_released_at: number;
+}
+
+export interface Submission {
+  student_id: string;
+  user: {
+    avatar_url: string;
+    name: string;
+  };
+  score: number;
+  updated_at: number;
+}
+
 export interface CourseRole {
   id: number;
   course_role: string;
@@ -56,6 +75,12 @@ export interface Semester {
 }
 
 export interface ExamData {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
+}
+
+export interface StudentExamResult {
   exam_name: string;
   exam_date: number;
   payload?: JSON;
@@ -111,4 +136,11 @@ export interface redirectModalData {
   message: string;
   redirectPath: string;
   buttonText: string;
+}
+
+export enum SelectedButton {
+  Create_Exam = "CREATE EXAM",
+  People = "PEOPLE",
+  Analytics = "ANALYTICS",
+  None = "NONE",
 }

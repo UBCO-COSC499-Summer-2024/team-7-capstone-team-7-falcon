@@ -73,10 +73,14 @@ export interface ExamData {
 }
 
 // will be changed later once the form is actually made
-export interface BubblesheetPayload {
-  examName: string;
-  examDate: Date;
-  questions: ExamQuestion[];
+export interface BubbleSheetPayload {
+  payload: {
+    numberOfQuestions: number;
+    defaultPointsPerQuestion: number;
+    numberOfAnswers: number;
+    instructions: string;
+    answers: number[];
+  };
 }
 
 export interface ExamQuestion {

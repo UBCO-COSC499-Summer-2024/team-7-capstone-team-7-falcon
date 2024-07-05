@@ -43,7 +43,8 @@ export interface Submission {
   student_id: string;
   user: {
     avatar_url: string;
-    name: string;
+    first_name: string;
+    last_name: string;
   };
   score: number;
   updated_at: number;
@@ -101,11 +102,12 @@ export interface CourseUser {
   id: number;
   user: {
     avatar_url: string;
-    name: string;
+    first_name: string;
+    last_name?: string;
     id: number;
+    email: string;
   };
   course_role: string;
-  email: string;
 }
 
 export enum SelectedButton {

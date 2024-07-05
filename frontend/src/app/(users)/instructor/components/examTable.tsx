@@ -22,9 +22,12 @@ const exam_columns: Column[] = [
     label: "Actions",
     renderCell: (item) => (
       <Link href={`./exam/${item.id}`}>
-        <button type="button" className="btn-primary flex p-1 px-4">
+        <button
+          type="button"
+          className="btn-primary flex p-1 px-4 items-center space-x-1"
+        >
           <UserEdit />
-          Edit
+          <span>Edit</span>
         </button>
       </Link>
     ),

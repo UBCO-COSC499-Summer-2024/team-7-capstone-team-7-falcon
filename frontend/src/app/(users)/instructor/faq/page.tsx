@@ -1,6 +1,7 @@
+"use client";
 
 import React, { useState } from "react";
-        
+
 import FAQComponent from "../../components/Accordion";
 
 const generalfaqItems = [
@@ -25,7 +26,6 @@ const coursefaqItems = [
     question: "How to view courses I am enrolled in?",
     answer:
       "Instructors will need to sign in with their credentials to view the list of courses on the Course Dashboard page.",
-    
   },
   {
     question: "How to edit the course information?",
@@ -62,51 +62,54 @@ const InstructorFAQ: React.FC = () => {
     setActiveSection(sectionName);
   };
   return (
-    <div className="container mx-auto">
-      {/* Header Section */}
+    <div>
+      <div className="container mx-auto">
+        {/* Header Section */}
 
-      <h1 className="text-2xl font-bold">Frequently Asked Questions</h1>
-      <hr className="border-t-1 border-black mt-2" />
+        <h1 className="text-2xl font-bold">Frequently Asked Questions</h1>
+        <hr className="border-t-1 border-black mt-2" />
 
-      {/* Main Content Section */}
-      <div className="flex justify-between h-screen">
-        {/* Left List Section */}
-        <div className="w-1/3 p-4">
-          <ul className="list-none list-inside">
-            <button
-              className={` ${activeSection === "General" ? "text-purple-800 underline" : "text-gray-500 hover:underline"}`}
-              onClick={() => handleSectionClick(generalfaqItems, "General")}
-            >
-              General
-            </button>
-
-            <li>
+        {/* Main Content Section */}
+        <div className="flex justify-between h-screen">
+          {/* Left List Section */}
+          <div className="w-1/3 p-4">
+            <ul className="list-none list-inside">
               <button
-                className={` ${activeSection === "Courses" ? "text-purple-800 underline" : "text-gray-500 hover:underline"}`}
-                onClick={() => handleSectionClick(coursefaqItems, "Courses")}
+                className={` ${activeSection === "General" ? "text-purple-800 underline" : "text-gray-500 hover:underline"}`}
+                onClick={() => handleSectionClick(generalfaqItems, "General")}
               >
-                Courses
+                General
               </button>
-            </li>
-            <li>
-              <button
-                className={` ${activeSection === "Exams" ? "text-purple-800 underline" : "text-gray-500 hover:underline"}`}
-                onClick={() => handleSectionClick(examfaqItems, "Exams")}
-              >
-                Exams
-              </button>
-            </li>
-          </ul>
-        </div>
 
-        {/* FAQ Component Section */}
-        <div className="w-2/3 p-4 flex items-start justify-start border-b">
-          <FAQComponent items={selectedFAQItems} />
+              <li>
+                <button
+                  className={` ${activeSection === "Courses" ? "text-purple-800 underline" : "text-gray-500 hover:underline"}`}
+                  onClick={() => handleSectionClick(coursefaqItems, "Courses")}
+                >
+                  Courses
+                </button>
+              </li>
+              <li>
+                <button
+                  className={` ${activeSection === "Exams" ? "text-purple-800 underline" : "text-gray-500 hover:underline"}`}
+                  onClick={() => handleSectionClick(examfaqItems, "Exams")}
+                >
+                  Exams
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* FAQ Component Section */}
+          <div className="w-2/3 p-4 flex items-start justify-start border-b">
+            <FAQComponent items={selectedFAQItems} />
+          </div>
         </div>
       </div>
-    <div>
-      <h1>Frequently Asked Questions</h1>
-      <FAQComponent items={faqItems} />
+      <div>
+        <h1>Frequently Asked Questions</h1>
+        <FAQComponent items={generalfaqItems} />
+      </div>
     </div>
   );
 };

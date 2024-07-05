@@ -58,7 +58,7 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
       {isBubbleSheetOpen && (
         <BubbleSheetModal onClose={resetBubbleSheetModal} />
       )}
-      {status === Status.Success && redirect(`../${course_id}`)}
+      {status === Status.Success && redirect(`../${course_id}/exam`)}
       {status === Status.Failure && (
         <ModalMessage message={"Error creating exam"} onClose={resetStatus} />
       )}
@@ -97,8 +97,8 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
           </div>
           <button
             type="submit"
-            className="text-white bg-purple-700 hover:bg-purple-800 
-                focus:ring-4 focus:outline-none focus:ring-purple-300 
+            className="text-white bg-purple-700 hover:bg-purple-800
+                focus:ring-4 focus:outline-none focus:ring-purple-300
                 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-1/4"
           >
             Publish

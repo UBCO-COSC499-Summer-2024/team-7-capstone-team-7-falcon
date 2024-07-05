@@ -23,8 +23,9 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
    * @returns {Promise<void>}
    */
   const fetchSemesters = async (): Promise<void> => {
-    const fetchedSemesters = await semestersAPI.getAllSemesters();
-    console.log("fetc", fetchedSemesters);
+    const fetchedSemesters = await semestersAPI.getAllSemesters().catch((e) => {
+      return undefined;
+    });
     setCourseSemesters(fetchedSemesters);
     setIsLoaded(true);
   };

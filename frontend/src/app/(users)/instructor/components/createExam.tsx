@@ -48,7 +48,7 @@ const InputExam: React.FC<InputExamProps> = ({ course_id }) => {
 
   return (
     <>
-      {status === Status.Success && redirect(`../${course_id}`)}
+      {status === Status.Success && redirect(`../${course_id}/exam`)}
       {status === Status.Failure && (
         <ModalMessage message={"Error creating exam"} onClose={resetStatus} />
       )}

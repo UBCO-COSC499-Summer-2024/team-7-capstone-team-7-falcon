@@ -52,6 +52,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
       const users: DataItem<CourseUser>[] = result.data.data.map(
         (item: any) => ({
           id: item.id,
+          name: `${item.user.first_name} ${item.user.last_name}`,
           data: {
             id: item.id,
             user: {

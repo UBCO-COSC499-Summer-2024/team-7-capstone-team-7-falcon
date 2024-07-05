@@ -88,7 +88,7 @@ Clockify report
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-During this cycle, I was mainly merging PRs that from the previous cycle. In addition, I worked on some late PRs that were needed to be done before MVP, so that we can demo it during MVP. Overall, the cycle was not too bad as I have completed all tasks that I mentioned before and also had time to add extra features
+During this cycle, I mainly merged PRs from the previous cycle. In addition, I worked on some late PRs that were needed to be done for the MVP so that we can demo it tomorrow. Overall, the cycle was not too bad as I have completed all tasks that I mentioned before and also had time to add extra features
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Work on queue system implementation for OMR processing

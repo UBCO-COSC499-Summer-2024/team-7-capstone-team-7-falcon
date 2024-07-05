@@ -141,4 +141,11 @@ if __name__ == "__main__":
 
     boxes, scores, classes = inferencer(image)
 
+    for box in boxes:
+        x1, y1, x2, y2 = box
+        print(x1, y1, x2, y2)
+        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    cv2.imshow("Inference", image)
+    cv2.waitKey(0)
     print(boxes, scores, classes)

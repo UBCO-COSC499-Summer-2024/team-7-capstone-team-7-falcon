@@ -37,7 +37,6 @@ const TableComponent = <T,>({
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
-    
   return (
     <div className="container flex flex-col items-center">
       {showSearch && (

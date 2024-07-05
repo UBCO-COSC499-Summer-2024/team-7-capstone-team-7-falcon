@@ -55,6 +55,7 @@ export interface CourseRole {
   user: User;
   course: Course;
 }
+
 export interface StudentExamResult {
   exam_name: string;
   exam_date: number;

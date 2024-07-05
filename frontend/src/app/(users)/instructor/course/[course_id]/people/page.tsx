@@ -1,30 +1,23 @@
-import React from "react";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
   CourseData,
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
-import { redirect } from "next/navigation";
 import CourseHeader from "../../../components/courseHeader";
-import CreateExamForm from "../../../components/createExamForm";
-import InputExam from "../../../components/createExam";
+import AddStudentButton from "../../../components/AddStudentButton";
+import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
-import { Edit } from "flowbite-react-icons/solid";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 
-const CreateExam = async ({ params }: { params: { course_id: string } }) => {
+const PeoplePage = async ({ params }: { params: { course_id: string } }) => {
   const cid = Number(params.course_id);
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };
 
-  if (!course || !response) {
-    return redirect(`../../`);
-  }
-
   return (
-    <div className="space-y-5 p-0 m-0">
+    <div>
       <div className="grid grid-cols-2">
         <div className="col-span-1">
           <CourseHeader
@@ -35,25 +28,25 @@ const CreateExam = async ({ params }: { params: { course_id: string } }) => {
           />
         </div>
         <div className="justify-self-end space-y-4">
-          <button type="button" className="btn-primary">
-            <Link href={""} className="space-x-4 flex items-center">
-              <Edit />
-              Course Settings
+          <div className="col-span-1 justify-self-end space-y-4">
+            <AddStudentButton />
+          </div>
+          <button type="button" className="btn-primary block">
+            <Link
+              href={`../${course.id}/exam`}
+              className="space-x-4 flex items-center"
+            >
+              <ArrowLeft />
+              Back
             </Link>
           </button>
-          <Link
-            href={`../${course.id}/exam`}
-            className="space-x-4 flex items-center btn-primary"
-          >
-            <ArrowLeft />
-            Back
-          </Link>
+        </div>
+        <div className="mt-4 col-span-2">
+          <PeopleTable course_id={Number(params.course_id)} />
         </div>
       </div>
-      <h1 className="text-xl font-bold">Create Exam:</h1>
-      <CreateExamForm course_id={course.id} />
     </div>
   );
 };
 
-export default CreateExam;
+export default PeoplePage;

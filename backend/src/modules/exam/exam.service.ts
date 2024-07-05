@@ -4,6 +4,7 @@ import {
   CourseNotFoundException,
   ExamCreationException,
   ExamNotFoundException,
+  SubmissionNotFoundException,
   UserSubmissionNotFound,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
@@ -349,5 +350,29 @@ export class ExamService {
     };
 
     return modifiedResponse;
+  }
+
+  /**
+   * Get graded submission file path by submission id
+   * @param submissionId {number} submission id
+   * @returns {Promise<string>} graded submission file path
+   */
+  async getGradedSubmissionFilePathBySubmissionId(
+    submissionId: number,
+  ): Promise<string> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: submissionId,
+        score: MoreThan(-1),
+        document_path: Not(''),
+      },
+      select: ['document_path'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    return submission.document_path;
   }
 }

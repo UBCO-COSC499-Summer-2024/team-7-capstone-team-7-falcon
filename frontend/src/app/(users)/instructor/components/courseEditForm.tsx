@@ -3,17 +3,11 @@ import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
 import { coursesAPI } from "@/app/api/coursesAPI";
 import SemesterSelect from "./courseCreateForm/semesterSelect";
 import toast from "react-hot-toast";
+import { CourseData } from "../../../typings/backendDataTypes";
+import { Status } from "../../../typings/backendDataTypes";
 
-interface CourseEditorProps {
-  courseId: number;
-  courseData: {
-    course_code: string;
-    course_name: string;
-    section_name: string;
-    semester_id: number;
-    invite_code: string;
-  };
-  onSubmission: () => void; // Function to call when the course is edited
+interface CourseEditFormProps {
+  course_id: number;
 }
 
 /**
@@ -22,17 +16,14 @@ interface CourseEditorProps {
  * @param {CourseEditorProps} props - The component props
  * @returns {React.JSX.Element} - Course editor component
  */
-const CourseEditor: React.FC<CourseEditorProps> = ({
-  courseId,
-  courseData,
-  onSubmission,
-}) => {
-  const [formData, setFormData] = useState(courseData);
-
-  useEffect(() => {
-    setFormData(courseData);
-  }, [courseData]);
-
+const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
+  const [status, setStatus] = useState(Status.Pending);
+  const [formData, setFormData] = useState<CourseData>({
+    course_name: "",
+    course_code: "",
+    section_name: "",
+    semester_id: -1,
+  });
   /**
    * Handles the form submission to edit an existing course.
    * @async
@@ -40,19 +31,24 @@ const CourseEditor: React.FC<CourseEditorProps> = ({
    * @param {FormEvent<HTMLFormElement>} event - The form submission event
    * @returns {Promise<void>}
    */
-  const editCourse = async (
-    event: FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
-    event.preventDefault();
 
-    try {
-      await coursesAPI.editCourse(courseId, formData);
-      toast.success("Course edited successfully");
-    } catch (error) {
-      toast.error("Failed to edit course");
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.id]: event.target.value });
+  };
+
+  const resetStatus = () => {
+    setStatus(Status.Pending);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const result = await coursesAPI.editCourse(course_id, formData);
+    if (result.status == 200) {
+      setStatus(Status.Success);
+    } else {
+      setStatus(Status.Failure);
     }
-
-    onSubmission();
   };
 
   const handleChange = (
@@ -66,7 +62,7 @@ const CourseEditor: React.FC<CourseEditorProps> = ({
   };
 
   return (
-    <form onSubmit={editCourse}>
+    <form onSubmit={handleSubmit}>
       <Label htmlFor="courseCode">
         <h2>Course Code</h2>
       </Label>
@@ -111,12 +107,10 @@ const CourseEditor: React.FC<CourseEditorProps> = ({
         <Button type="submit" color="purple">
           Save changes
         </Button>
-        <Button color="red" onClick={() => onSubmission()}>
-          Cancel
-        </Button>
+        <Button color="red">Cancel</Button>
       </div>
     </form>
   );
 };
 
-export default CourseEditor;
+export default CourseEditForm;

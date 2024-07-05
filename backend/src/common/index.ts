@@ -86,5 +86,6 @@ export const ERROR_MESSAGES = {
     noGradedExamsFound: 'No graded exams found',
     examNotFound: 'Exam not found',
     examsNotFound: 'Exams not found',
+    userSubmissionNotFound: 'User submission not found',
   },
 };

@@ -10,3 +10,6 @@
 [submodule "tasks/OMR-tool/model_training/OMR-model-inference"]
 	path = tasks/OMR-tool/model_training/OMR-model-inference
 	url = https://github.com/fperellaholfeld/OMR-model-inference.git
+[submodule "tasks/OMR-tool/model_training/OMR-model-training"]
+	path = tasks/OMR-tool/model_training/OMR-model-training
+	url = https://github.com/fperellaholfeld/OMR-model-inference.git

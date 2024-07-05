@@ -15,6 +15,7 @@ import { PageOptionsDto } from '../../dto/page-options.dto';
 import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
 import { ERROR_MESSAGES } from '../../common';
+import { CourseEditDto } from './dto/course-edit.dto';
 
 @Injectable()
 export class CourseService {
@@ -73,6 +74,36 @@ export class CourseService {
     }).save();
 
     return true;
+  }
+
+  /**
+   * Edit course
+   * @param courseId {number} - Course id
+   * @param courseData {CourseEditDto} - Course data
+   * @returns {Promise<void>} - Promise object
+   */
+  public async editCourse(
+    courseId: number,
+    courseData: CourseEditDto,
+  ): Promise<void> {
+    const semester = await SemesterModel.findOne({
+      where: { id: courseData.semesterId },
+    });
+
+    if (!semester) {
+      throw new SemesterNotFoundException();
+    }
+
+    await CourseModel.update(
+      { id: courseId },
+      {
+        course_code: courseData.courseCode,
+        course_name: courseData.courseName,
+        semester,
+        invite_code: courseData.inviteCode,
+        updated_at: parseInt(new Date().getTime().toString()),
+      },
+    );
   }
 
   /**
@@ -187,5 +218,15 @@ export class CourseService {
     });
 
     return new PageDto(entities, pageMetaDto);
+  }
+
+  /**
+   * Get exams by course id
+   * @param cid {number} - Course id
+   * @param archive {boolean} - Archive flag
+   * @returns {Promise<void>} - Promise object
+   */
+  async archiveCourse(cid: number, archive: boolean): Promise<void> {
+    await CourseModel.update({ id: cid }, { is_archived: archive });
   }
 }

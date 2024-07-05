@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import CourseHeader from "../../../components/courseHeader";
 import CreateExamForm from "../../../components/createExamForm";
 
+
 const CreateExam = async ({ params }: { params: { course_id: string } }) => {
   const cid = Number(params.course_id);
   const response = await coursesAPI.getCourse(cid);
@@ -28,7 +29,7 @@ const CreateExam = async ({ params }: { params: { course_id: string } }) => {
         selected={SelectedButton.Create_Exam}
       />
       <h1 className="text-xl font-bold">Create Exam:</h1>
-      <CreateExamForm course_id={cid} />
+      <InputExam course_id={cid} />
     </div>
   );
 };

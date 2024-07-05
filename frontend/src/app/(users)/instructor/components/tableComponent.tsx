@@ -37,15 +37,6 @@ const TableComponent = <T,>({
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
-  const onPaginationChange = () => {};
-  // const pagination = usePagination(data, {
-  //   state: {
-  //     page: 0,
-  //     size: 2,
-  //   },
-  //   onChange: onPaginationChange,
-  // });
-
   return (
     <div className="container flex flex-col items-center">
       {showSearch && (

@@ -54,7 +54,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
           id: item.id,
           name: `${item.user.first_name} ${item.user.last_name}`,
           data: {
-            id: item.id,
+            id: item.user.id,
             user: {
               avatar_url: item.user.avatar_url,
               name: `${item.user.first_name} ${item.user.last_name}`,

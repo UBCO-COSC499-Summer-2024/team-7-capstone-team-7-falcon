@@ -102,6 +102,7 @@ export interface CourseUser {
   user: {
     avatar_url: string;
     name: string;
+    id: number;
   };
   course_role: string;
   email: string;

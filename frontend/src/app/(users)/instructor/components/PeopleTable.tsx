@@ -49,16 +49,14 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await coursesAPI.getCourseMembers(course_id);
-      console.log("user data: ", result);
       const users: DataItem<CourseUser>[] = result.data.data.map(
         (item: any) => ({
           id: item.id,
-          name: item.name,
           data: {
             id: item.id,
             user: {
               avatar_url: item.user.avatar_url,
-              name: item.user.name,
+              name: `${item.user.first_name} ${item.user.last_name}`,
             },
             role: item.course_role,
             email: item.email,
@@ -66,7 +64,6 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
         }),
       );
       setData(users);
-      console.log("user data: ", users);
     };
 
     fetchData();

@@ -31,7 +31,7 @@ export const coursesAPI = {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
-        baseURL: `${BACKEND_URL_CLIENT}/api/v1/course/public`,
+        baseURL: `${BACKEND_URL_CLIENT}/api/v1/course/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,

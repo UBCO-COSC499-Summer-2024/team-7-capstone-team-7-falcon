@@ -14,7 +14,7 @@ Clockify report
   2. Integrate object recognition into the overall OMR pipeline
   3. Create a short demo for MVP presentation
 
-### Progress Update (since 6/28/2024)
+### Progress Update (since 7/03/2024)
 
 ![ProjectBoard](07.03-07.04/board.png)
 

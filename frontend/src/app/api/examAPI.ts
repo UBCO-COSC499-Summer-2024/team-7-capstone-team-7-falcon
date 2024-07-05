@@ -78,9 +78,10 @@ export const examsAPI = {
         },
         withCredentials: true,
       });
-      console.log("making request", instance);
-      const response = await instance.post(`/1/add`, payload);
-      console.log(response);
+      const response = await instance.post(
+        `/bubble-sheet-creation/add`,
+        payload,
+      );
       return response;
     } catch (error: any) {
       //always axios error
@@ -89,7 +90,7 @@ export const examsAPI = {
     }
   },
 
-  downloadBubbleSheet: async (job_id: number) => {
+  getJobReadyStatus: async (job_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({

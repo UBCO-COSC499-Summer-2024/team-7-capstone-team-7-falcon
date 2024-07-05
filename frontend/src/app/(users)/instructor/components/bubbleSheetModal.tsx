@@ -17,7 +17,6 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
     [key: string]: number;
   }>({});
   const [validationError, setValidationError] = useState(false);
-  // const instructions = useRef<HTMLTextAreaElement>(null);
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -44,7 +43,6 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
     const keys = Object.keys(selectedOptions);
 
     // verifies that all boxes are filled in
-    console.log("keys, question count", keys.length, Number(questionCount));
     if (keys.length != Number(questionCount)) {
       setValidationError(true);
       return;
@@ -62,9 +60,20 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
         answers: answerIndexes,
       },
     };
+
+    // make a request to create the job
     const response = await examsAPI.postBubbleSheet(payload);
-    // make a request to download the bubble sheet once endpoint is done
-    //const response2 = await examsAPI.downloadBubbleSheet(response.job_id);
+
+    if (response.ok) {
+      while (true) {
+        const jobCompleteResponse = await examsAPI.getJobReadyStatus(
+          response.job_id,
+        );
+        if (jobCompleteResponse && jobCompleteResponse.data) {
+          // download the bubble sheet from the API endpoint
+        }
+      }
+    }
   };
 
   const options = ["A", "B", "C", "D", "E"];
@@ -93,13 +102,6 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
               />
             </div>
           </div>
-          {/* <div className="max-w-md flex col-span-2">
-                <Textarea 
-                id="comment" 
-                placeholder="Enter instructions here..." 
-                required rows={4} 
-                ref={instructions}/>
-              </div> */}
         </div>
         <div className="flex flex-col mt-4">
           {[...Array(Number(questionCount))].map((_, rowIndex) => (
@@ -134,7 +136,6 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
       <Modal.Footer className="grid grid-cols-4">
         <div className="col-span-4 pb-4">
           {validationError && (
-            // <p className="text-red-700 text-bold pl-2"></p>
             <Alert color="failure" icon={HiInformationCircle} className="p-3">
               <span className="font-medium"></span>All answers are not filled
             </Alert>

@@ -1,3 +1,39 @@
+## (7/03- 7/04)
+
+### Timesheet
+Clockify report
+![time for 07.03_- 07.04](07.03_07.04.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Finish the Bubble sheet creation page [S]
+
+### Progress Update (since 7/03/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Finish the Bubble sheet creation page #267
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I finished the bubble sheet creation page as much as I could (the only part I didn't implement is downloading bubble sheets
+because it is not implemented on back end yet). But everything else is finished. Overall work progress is going well but some of the PRs
+are taking a long time to get merged leading to resolving merge conflicts last minute as everything gets merged at once. We should
+try to review and merge PRs more consistently so that we don't run into this in the future.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Work on the student submission page
+  * Add download functionality to bubble sheet creation page
+
 ## Wednesday (6/28- 7/02)
 
 ### Timesheet

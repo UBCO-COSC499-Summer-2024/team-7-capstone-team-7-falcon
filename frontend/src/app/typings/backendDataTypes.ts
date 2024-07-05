@@ -30,12 +30,35 @@ export interface Course {
   is_archived: boolean;
   invite_code: string;
 }
+export interface Exam {
+  id: number;
+  name: string;
+  created_at: number;
+  updated_at: number;
+  exam_date: number;
+  grades_released_at: number;
+}
+
+export interface Submission {
+  student_id: string;
+  user: {
+    avatar_url: string;
+    name: string;
+  };
+  score: number;
+  updated_at: number;
+}
 
 export interface CourseRole {
   id: number;
   course_role: string;
   user: User;
   course: Course;
+}
+export interface StudentExamResult {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
 }
 
 export interface Semester {

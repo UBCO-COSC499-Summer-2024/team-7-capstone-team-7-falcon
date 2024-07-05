@@ -1,5 +1,102 @@
 # Individual Logs
 
+## Friday (7/3 - 7/4)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07032024-07042024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Prepare for MVP by setting up all services (backend, frontend, python scripts)
+
+### Progress Update (since 7/3/2024)
+
+![GitHub Board](./images/github_07032024-07042024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #241
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #247
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #259
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #262
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #237
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #239
+        </td>
+        <!-- Status -->
+        <td>In review (Blocked by Paula's PR)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #245
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #263
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle, I mainly merged PRs from the previous cycle. In addition, I worked on some late PRs that were needed to be done for the MVP so that we can demo it tomorrow. Overall, the cycle was not too bad as I have completed all tasks that I mentioned before and also had time to add extra features
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Work on queue system implementation for OMR processing
+  * Work on all endpoints related to the admin controls
+  * Work on endpoint to delete student from the course
+  * Work on endpoint to download bubble sheet exam and answer key version
+  * Work on retrieving course data for analytics
+
 ## Wednesday (6/28 - 7/2)
 
 ### Timesheet

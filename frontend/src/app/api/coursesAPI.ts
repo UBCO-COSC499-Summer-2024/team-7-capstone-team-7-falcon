@@ -111,6 +111,7 @@ export const coursesAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to retrieve users: ", error);
+
       return error;
     }
   },

@@ -1,5 +1,34 @@
 # Individual Logs for Paula
 
+## Friday (7/03 - 7/04)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.03_07.04"](images/clockify_07.03_07.04.png)
+
+### Current Tasks
+
+!["current_tasks_07.03_07.04"](images/current_tasks_07.03_07.04.png)
+
+* #1: Authentication pages (frontend and backend) - need to update frontend logic to enfore IDs
+* #2: Repo clean up and documentation updates
+* #3: Admin create new semester page
+
+### Progress Update (since 7/03/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I finally completed the authentication system component and was able to do a few PR reviews. I also spent time prepping for tomorrow's MVP. Overall, I think the team is collaborating well and am satisfied with the current progress. We should probably merge PRs faster though.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Repo clean up and documentation updates
+* Admin create new semester page
+* Take on any other frontend page if time permits
+
 ## Wednesday (6/28- 7/02)
 
 ### Timesheet

@@ -3,8 +3,12 @@ import { AuthModule } from '../src/modules/auth/auth.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { AuthService } from '../src/modules/auth/auth.service';
 import {
+  EmailNotVerifiedException,
+  InvalidAuthMethodException,
+  InvalidPasswordException,
   OAuthGoogleErrorException,
   UserAlreadyExistsException,
+  UserNotFoundException,
 } from '../src/common/errors';
 import { HttpStatus } from '@nestjs/common';
 import { UserModel } from '../src/modules/user/entities/user.entity';
@@ -12,6 +16,7 @@ import { faker } from '@faker-js/faker';
 import { TokenModel } from '../src/modules/token/entities/token.entity';
 import { StudentUserModel } from '../src/modules/user/entities/student-user.entity';
 import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
+import { MailService } from '../src/modules/mail/mail.service';
 
 const mockAuthService = {
   // We need to mock the signInWithGoogle method to avoid calling the Google API
@@ -27,13 +32,35 @@ const mockAuthService = {
         throw new Error();
     }
   },
+  signInWithCredentials: async (_email: any, password: any) => {
+    switch (password) {
+      case 'not_exist':
+        throw new UserNotFoundException();
+      case 'auth_method_invalid':
+        throw new InvalidAuthMethodException();
+      case 'email_not_verified':
+        throw new EmailNotVerifiedException();
+      case 'invalid_password':
+        throw new InvalidPasswordException();
+      default:
+        return { access_token: 'access' };
+    }
+  },
+};
+
+const mockMailService = {
+  sendUserConfirmation: jest.fn().mockResolvedValue(Promise.resolve()),
 };
 
 describe('Auth Integration', () => {
   const supertest = setUpIntegrationTests(
     AuthModule,
     (t: TestingModuleBuilder) =>
-      t.overrideProvider(AuthService).useValue(mockAuthService),
+      t
+        .overrideProvider(AuthService)
+        .useValue(mockAuthService)
+        .overrideProvider(MailService)
+        .useValue(mockMailService),
   );
 
   beforeEach(async () => {
@@ -52,7 +79,7 @@ describe('Auth Integration', () => {
     await TokenModel.query('ALTER SEQUENCE token_model_id_seq RESTART WITH 1');
   });
 
-  describe('POST register', () => {
+  describe('POST /auth/register', () => {
     it('should return status 400 when body is invalid', () => {
       return supertest().post('/auth/register').expect(HttpStatus.BAD_REQUEST);
     });
@@ -180,7 +207,58 @@ describe('Auth Integration', () => {
     });
   });
 
-  describe('GET oauth/:provider', () => {
+  describe('POST /auth/login', () => {
+    it('should return status 400 when body is invalid', () => {
+      return supertest().post('/auth/login').expect(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should return status 404 when user is not found', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'not_exist',
+      });
+
+      expect(request.status).toBe(HttpStatus.NOT_FOUND);
+    });
+
+    it('should return status 403 when auth method is invalid', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'auth_method_invalid',
+      });
+
+      expect(request.status).toBe(HttpStatus.FORBIDDEN);
+    });
+
+    it('should return status 401 when email is not verified', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'email_not_verified',
+      });
+
+      expect(request.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 401 when password is invalid', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'invalid_password',
+      });
+
+      expect(request.status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 200 when body is valid', async () => {
+      const request = await supertest().post('/auth/login').send({
+        email: 'email@email.com',
+        password: 'password',
+      });
+
+      expect(request.status).toBe(HttpStatus.OK);
+    });
+  });
+
+  describe('GET /auth/oauth/:provider', () => {
     it('should return status 400 when provider is not supported', () => {
       return supertest()
         .get('/auth/oauth/unknown')
@@ -195,7 +273,7 @@ describe('Auth Integration', () => {
     });
   });
 
-  describe('GET oauth/:provider/callback', () => {
+  describe('GET /auth/oauth/:provider/callback', () => {
     it('should return status 400 when provider is not supported', () => {
       return supertest()
         .get('/auth/oauth/unknown/callback')
@@ -240,7 +318,7 @@ describe('Auth Integration', () => {
     });
   });
 
-  describe('GET logout', () => {
+  describe('GET /auth/logout', () => {
     it('should return status 401 when no token is provided', () => {
       return supertest().get('/auth/logout').expect(HttpStatus.UNAUTHORIZED);
     });

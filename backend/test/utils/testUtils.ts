@@ -1,3 +1,9 @@
+jest.mock('@nestjs-modules/mailer/dist/adapters/handlebars.adapter', () => {
+  return {
+    HandlebarsAdapter: jest.fn().mockImplementation(),
+  };
+});
+
 import { INestApplication, Type } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
@@ -7,6 +13,7 @@ import { config } from 'dotenv';
 import * as path from 'path';
 import { AuthModule } from '../../src/modules/auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
+import { MailService } from '../../src/modules/mail/mail.service';
 
 config();
 
@@ -37,9 +44,17 @@ export function setUpIntegrationTests(
   let app: INestApplication;
 
   beforeAll(async () => {
+    const mockMailService = {
+      sendMail: jest.fn().mockResolvedValue(Promise.resolve()),
+    };
+
     let testModuleBuilder = Test.createTestingModule({
       imports: [module, TestTypeOrmModule, TestConfigModule, AuthModule],
     });
+
+    testModuleBuilder = testModuleBuilder
+      .overrideProvider(MailService)
+      .useValue(mockMailService);
 
     if (modifyModule) {
       testModuleBuilder = modifyModule(testModuleBuilder);

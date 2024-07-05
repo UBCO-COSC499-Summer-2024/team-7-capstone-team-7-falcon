@@ -13,8 +13,8 @@ export class UserAlreadyExistsException extends Error {
  * Exception to be thrown when an invalid auth method is provided
  */
 export class InvalidAuthMethodException extends Error {
-  constructor() {
-    super(ERROR_MESSAGES.authController.invalidAuthMethod);
+  constructor(message?: string) {
+    super(message ?? ERROR_MESSAGES.authController.invalidAuthMethod);
   }
 }
 
@@ -152,5 +152,59 @@ export class UserStudentEmployeeFieldException extends Error {
     super(
       ERROR_MESSAGES.userController.userStudentEmployeeIdFieldsMissingError,
     );
+  }
+}
+
+/**
+ * Exception thrown when token is invalid or not found
+ */
+export class TokenInvalidException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.tokenController.invalidToken);
+  }
+}
+
+/**
+ * Exception thrown when token is expired
+ */
+export class TokenExpiredException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.tokenController.tokenExpired);
+  }
+}
+
+/**
+ * Exception thrown when email is not verified
+ */
+export class EmailNotVerifiedException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.authController.emailNotVerified);
+  }
+}
+
+/**
+ * Exception thrown when password is invalid
+ */
+export class InvalidPasswordException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.authController.invalidPassword);
+  }
+}
+
+/**
+ * Exception thrown when exam is not found
+ */
+export class ExamNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.examController.examNotFound);
+  }
+}
+
+/**
+ * Exception thrown when user submission is not found
+ */
+export class UserSubmissionNotFound extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.examController.userSubmissionNotFound);
   }
 }

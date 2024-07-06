@@ -175,42 +175,30 @@ export const coursesAPI = {
       return error;
     }
   },
-  editCourse: async (courseId: number, courseData: CourseData) => {
+  editCourse: async (courseId: number) => {
     try {
       const auth_token = await fetchAuthToken();
 
       const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/course`,
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
+        withCredentials: true,
       });
 
-      const response = await instance
-        .patch(`/${courseId}`, courseData)
-        .then((response) => {
-          return response;
-        })
-        .catch((error) => {
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            console.error(error.response.data);
-            console.error(error.response.status);
-          } else if (error.request) {
-            // The request was made but no response was received
-            console.error(error.request);
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.error("Error", error.message);
-          }
-          throw error; // Rethrow the error to be caught by the outer try-catch
-        });
+      const endpoint = `/${courseId}`;
+      console.log(
+        `Making PATCH request to: ${instance.defaults.baseURL}${endpoint}`,
+      );
 
+      const response = await instance.get(`/${courseId}/`);
       return response;
-    } catch (error) {
-      console.error("Error, failed to edit course", error);
-      throw error; // Rethrow the error to propagate it to the caller
+    } catch (error: any) {
+      // Always axios error
+      console.error("Failed to edit course: ", error);
+      return error;
     }
   },
 };

@@ -3,11 +3,21 @@ import PeopleButton from "../../../components/peopleButton";
 import AnalyticsButton from "../../../components/analyticsButton";
 import CourseEditForm from "../../../components/courseEditForm";
 import { coursesAPI } from "../../../../../api/coursesAPI";
-import { Course, CourseData } from "../../../../../typings/backendDataTypes";
+import {
+  Course,
+  CourseData,
+  Status,
+  SelectedButton,
+} from "../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
-import CourseSettingsButton from "../../../components/courseSettingsButton";
+import EditCourseButton from "../../../components/editCourseButton";
+import { Label, TextInput, FileInput } from "flowbite-react";
+import CourseHeader from "../../../components/courseHeader";
+import Link from "next/link";
+import { Edit } from "flowbite-react-icons/solid";
+import { ArrowLeft } from "flowbite-react-icons/outline";
 
-const EditCourse = async ({ params }: { params: { course_id: string } }) => {
+const EditCourse = async ({ params }: { params: { course_id: number } }) => {
   const cid = Number(params.course_id);
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
@@ -18,19 +28,34 @@ const EditCourse = async ({ params }: { params: { course_id: string } }) => {
   }
 
   return (
-    <div className="space-y-5 ">
-      <h1 className="text-4xl">{courseData.course_name}</h1>
-      <h2 className="text-xl">{courseData.course_code}</h2>
-      <div className="flex space-x-6">
-        <CourseSettingsButton
-          course_id={cid}
-          className="bg-purple-700 ring-purple-800 text-white"
-        />
-        <PeopleButton course_id={cid} />
-        <AnalyticsButton course_id={cid} />
+    <div className="space-y-5 p-0 m-0">
+      <div className="grid grid-cols-2">
+        <div className="col-span-1">
+          <CourseHeader
+            course_code={courseData.course_code}
+            course_desc={courseData.course_name}
+            course_id={course.id}
+            selected={SelectedButton.None}
+          />
+        </div>
+        <div className="justify-self-end space-y-4">
+          <button type="button" className="btn-primary">
+            <Link href={""} className="space-x-4 flex items-center">
+              <Edit />
+              Course Settings
+            </Link>
+          </button>
+          <Link
+            href={`../${course.id}/`}
+            className="space-x-4 flex items-center btn-primary"
+          >
+            <ArrowLeft />
+            Back
+          </Link>
+        </div>
       </div>
-      <h1 className="text-xl font-bold">Edit Course Information</h1>
-      <CourseEditForm course_id={cid} />
+      <h1 className="text-xl font-bold">Edit Course Information:</h1>
+      <CourseEditForm course_id={course.id} />
     </div>
   );
 };

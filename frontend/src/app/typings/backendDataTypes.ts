@@ -4,6 +4,7 @@ export interface CourseData {
   course_name: string;
   section_name: string;
   semester_id: number;
+  invite_code: string;
 }
 
 export interface User {

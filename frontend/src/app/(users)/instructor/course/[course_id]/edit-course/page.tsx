@@ -38,13 +38,7 @@ const EditCourse = async ({ params }: { params: { course_id: number } }) => {
             selected={SelectedButton.None}
           />
         </div>
-        <div className="justify-self-end space-y-4">
-          <button type="button" className="btn-primary">
-            <Link href={""} className="space-x-4 flex items-center">
-              <Edit />
-              Course Settings
-            </Link>
-          </button>
+        <div className="justify-self-end">
           <Link
             href={`../${course.id}/`}
             className="space-x-4 flex items-center btn-primary"

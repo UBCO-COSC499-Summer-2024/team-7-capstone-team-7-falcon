@@ -67,7 +67,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="space-y-1 p-1 ring ring-gray-300 rounded-md flex flex-col">
+      <div className="space-y-4 p-4 ring ring-gray-300 rounded-md flex flex-col">
         <Label htmlFor="courseCode">
           <h2>Course Code</h2>
         </Label>
@@ -78,7 +78,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
           onChange={handleChange}
           placeholder="Enter course Code"
           required
-          className="mb-2"
+          className="mb-3"
         />
         <Label htmlFor="courseName">
           <h2 className="pt-2">Course Name</h2>
@@ -90,9 +90,9 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
           onChange={handleChange}
           placeholder="Enter course name"
           required
-          className="mb-2"
+          className="mb-3"
         />
-        <Label htmlFor="sectionName" className="mb-2">
+        <Label htmlFor="sectionName" className="mb-3">
           <h2 className="pt-2">Course Section</h2>
         </Label>
         <TextInput
@@ -102,14 +102,16 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
           onChange={handleChange}
           placeholder="Enter course Section"
           required
+          className="mb-3"
         />
         <SemesterSelect
           name={"semester_id"}
           required={true}
           labelText={"Semester"}
+          className="mb-3"
         />
-        <Label htmlFor="inviteCode" className="mb-2">
-          <h2 className="pt-1">Invite Code</h2>
+        <Label htmlFor="inviteCode" className="mb-3">
+          <h2 className="pt-2">Invite Code</h2>
         </Label>
         <div className="relative flex items-center mb-4">
           <div className="relative w-1/4">
@@ -156,8 +158,13 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
           </Button>
         </div>
       </div>
-      <div className="p-2 mt-2">
-        <DangerZone />
+      <div className="ring-1 rounded ring-red-700 pt-4 mt-4 flex flex-col p-4">
+        <p className="font-bold text-lg mb-2">Danger Zone</p>
+        <p className="font-bold mt-2">Delete Course</p>
+        <p>If you delete this course, you will not be able to undo it</p>
+        <button className="ring-1 rounded ring-red-700 p-1 m-3 items-center">
+          <p className="text-red-700 text-lg">Delete Course</p>
+        </button>
       </div>
     </form>
   );

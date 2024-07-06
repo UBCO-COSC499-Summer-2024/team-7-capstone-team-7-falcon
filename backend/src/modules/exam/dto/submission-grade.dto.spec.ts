@@ -44,4 +44,16 @@ describe('SubmissionGradeDto', () => {
     const errors = validate(dto);
     expect(errors).resolves.toHaveLength(1);
   });
+
+  it('should throw an error when grade has four decimal places', () => {
+    const payload = {
+      grade: 34.1234,
+    };
+
+    const dto = plainToInstance(SubmissionGradeDto, payload);
+    expect(dto).toBeDefined();
+
+    const errors = validate(dto);
+    expect(errors).resolves.toHaveLength(1);
+  });
 });

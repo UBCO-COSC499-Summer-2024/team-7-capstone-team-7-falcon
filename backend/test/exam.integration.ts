@@ -1370,6 +1370,45 @@ describe('Exam Integration', () => {
       });
     });
 
+    it('should return 400 if request body includes grade with more than three decimal places', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await supertest()
+        .patch('/exam/1/course/1/submission/1/grade')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({ grade: 100.1234 });
+
+      expect(result.status).toBe(400);
+      expect(result.body).toStrictEqual({
+        error: 'Bad Request',
+        message: ['Maximum grade must be 100', 'Grade value is not valid'],
+        statusCode: 400,
+      });
+    });
+
     it('should return 404 if submission not found', async () => {
       const user = await UserModel.create({
         first_name: 'John',
@@ -1477,7 +1516,7 @@ describe('Exam Integration', () => {
       expect(result.body).toStrictEqual({ message: 'ok' });
     });
 
-    it('should return 200 if grade has decimal value', async () => {
+    it('should return 200 if grade has three decimal value', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',

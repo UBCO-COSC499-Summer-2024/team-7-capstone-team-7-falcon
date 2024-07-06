@@ -30,7 +30,6 @@ export interface Course {
   is_archived: boolean;
   invite_code: string;
 }
-
 export interface Exam {
   id: number;
   name: string;
@@ -44,7 +43,8 @@ export interface Submission {
   student_id: string;
   user: {
     avatar_url: string;
-    name: string;
+    first_name: string;
+    last_name: string;
   };
   score: number;
   updated_at: number;
@@ -55,6 +55,12 @@ export interface CourseRole {
   course_role: string;
   user: User;
   course: Course;
+}
+
+export interface StudentExamResult {
+  exam_name: string;
+  exam_date: number;
+  payload?: JSON;
 }
 
 export interface Semester {
@@ -68,17 +74,15 @@ export interface ExamData {
   payload?: JSON;
 }
 
-export interface StudentExamResult {
-  exam_name: string;
-  exam_date: number;
-  payload?: JSON;
-}
-
 // will be changed later once the form is actually made
-export interface BubblesheetPayload {
-  examName: string;
-  examDate: Date;
-  questions: ExamQuestion[];
+export interface BubbleSheetPayload {
+  payload: {
+    numberOfQuestions: number;
+    defaultPointsPerQuestion: number;
+    numberOfAnswers: number;
+    instructions: string;
+    answers: number[];
+  };
 }
 
 export interface ExamQuestion {
@@ -92,6 +96,18 @@ export enum Status {
   Failure = "FAILURE",
   Pending = "PENDING",
   InvalidDate = "INVALID DATE",
+}
+
+export interface CourseUser {
+  id: number;
+  user: {
+    avatar_url: string;
+    first_name: string;
+    last_name?: string;
+    id: number;
+    email: string;
+  };
+  course_role: string;
 }
 
 export enum SelectedButton {

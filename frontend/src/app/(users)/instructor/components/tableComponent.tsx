@@ -37,23 +37,22 @@ const TableComponent = <T,>({
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
-    
+
   return (
-    <div className="container flex flex-col items-center">
+    <div className="container flex flex-col">
       {showSearch && (
-        <div className="w-full overflow-x-auto">
-          <label htmlFor="search">Search:</label>
+        <div className="w-full overflow-x-auto my-3">
           <input
             id="search"
             type="text"
             value={search}
             onChange={handleSearch}
-            className="border border-gray-300 pl-2"
-            placeholder="Search by Name"
+            className="border pl-2 w-1/2 border-purple-500 focus:border-purple-500"
+            placeholder="Search by name"
           />
         </div>
       )}
-      <div className="flex w-full max-w-4xl mt-4">
+      <div className="flex w-full mt-4">
         <Table columns={columns} data={{ nodes: filteredData }} theme={theme}>
           {() => (
             <>
@@ -71,7 +70,7 @@ const TableComponent = <T,>({
                 {filteredData.map((item) => (
                   <Row key={item.name} item={item} className="bg-white">
                     {columns.map((column) => (
-                      <Cell key={column.label} className="py-2">
+                      <Cell key={column.label} className="py-3 min-w-fit">
                         {column.renderCell(item.data)}
                       </Cell>
                     ))}

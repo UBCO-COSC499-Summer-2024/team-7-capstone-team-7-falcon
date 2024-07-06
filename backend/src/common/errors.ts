@@ -214,6 +214,15 @@ export class UserSubmissionNotFound extends Error {
  */
 export class SubmissionNotFoundException extends Error {
   constructor() {
-    super(ERROR_MESSAGES.submissionController.submissionNotFound);
+    super(ERROR_MESSAGES.examController.submissionNotFound);
+  }
+}
+
+/**
+ * Exception thrown when file is not found
+ */
+export class FileNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.common.fileNotFound);
   }
 }

@@ -42,8 +42,8 @@ export const UserInfoProvider: React.FC<UserInfoProviderProps> = ({
   children,
 }: UserInfoProviderProps): JSX.Element => {
   const [userInfo, setUserInfo] = useState<UserInfo>({
-    firstName: "John",
-    lastName: "Doe",
+    firstName: "",
+    lastName: "",
     email: null,
     role: Role.INSTRUCTOR,
     avatarUrl: null,

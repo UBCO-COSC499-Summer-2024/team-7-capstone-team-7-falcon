@@ -1254,6 +1254,81 @@ describe('ExamService', () => {
     });
   });
 
+  describe('releaseGrades', () => {
+    it('should release grades for an exam', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      await examService.releaseGrades(exam.id);
+
+      const updatedExam = await ExamModel.findOne({
+        where: { id: exam.id },
+      });
+
+      expect(updatedExam.grades_released_at).toBeDefined();
+    });
+
+    it('should throw exam not found error when course is archived', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      await expect(examService.releaseGrades(exam.id)).rejects.toThrow(
+        'Exam not found',
+      );
+    });
+
+    it('should throw an error when the exam is not found', async () => {
+      await expect(examService.releaseGrades(1)).rejects.toThrow(
+        'Exam not found',
+      );
+    });
+  });
+
   describe('updateGrade', () => {
     it('should update the grade for a submission', async () => {
       let course = await CourseModel.create({

@@ -14,6 +14,9 @@ import { validate } from 'class-validator';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { CourseEditDto } from './dto/course-edit.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { ExamModel } from '../exam/entities/exam.entity';
+import { StudentUserModel } from '../user/entities/student-user.entity';
+import { SubmissionModel } from '../exam/entities/submission.entity';
 
 describe('CourseService', () => {
   let courseService: CourseService;
@@ -284,55 +287,6 @@ describe('CourseService', () => {
     });
   });
 
-  describe('removeMemberFromCourse', () => {
-    it('should remove member from course', async () => {
-      const user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-      }).save();
-
-      const course = await CourseModel.create({
-        course_code: 'COSC 499',
-        course_name: 'Capstone Project',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        section_name: '001',
-        invite_code: '123',
-      }).save();
-
-      const courseUser = await CourseUserModel.create({
-        user,
-        course,
-      }).save();
-
-      expect(courseUser).toBeDefined();
-
-      await courseService.removeMemberFromCourse(course.id, user.id);
-
-      const actual = await CourseUserModel.count();
-      expect(actual).toBe(0);
-    });
-
-    it('should throw CourseNotFoundException if user is not enrolled in course', async () => {
-      const user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-      }).save();
-
-      await expect(
-        courseService.removeMemberFromCourse(1, user.id),
-      ).rejects.toThrow('User is not enrolled in the course');
-    });
-  });
-
   describe('getCourseMembers', () => {
     it('should return course members from first page', async () => {
       const course = await CourseModel.create({
@@ -514,6 +468,207 @@ describe('CourseService', () => {
       });
 
       expect(updatedCourse.is_archived).toBe(true);
+    });
+  });
+
+  describe('removeStudentFromCourse', () => {
+    it('should throw CourseNotFoundException if course is not found', async () => {
+      await expect(courseService.removeStudentFromCourse(1, 1)).rejects.toThrow(
+        'Course not found',
+      );
+    });
+
+    it('should throw CourseNotFoundException if course is archived', async () => {
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      await expect(
+        courseService.removeStudentFromCourse(course.id, 1),
+      ).rejects.toThrow('Course not found');
+    });
+
+    it('should throw UserNotFoundException if user is not found', async () => {
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await expect(
+        courseService.removeStudentFromCourse(course.id, 1),
+      ).rejects.toThrow('User not found');
+    });
+
+    it('should throw CourseRoleException if user is not a student', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      await expect(
+        courseService.removeStudentFromCourse(course.id, user.id),
+      ).rejects.toThrow(
+        'User cannot be deleted from course as their role is not student',
+      );
+    });
+
+    it('should throw UserNotFoundException if user is not enrolled in course', async () => {
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await expect(
+        courseService.removeStudentFromCourse(course.id, 1),
+      ).rejects.toThrow('User not found');
+    });
+
+    it('should remove student from course when course has no exams', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.STUDENT,
+      }).save();
+
+      await courseService.removeStudentFromCourse(course.id, user.id);
+
+      const actual = await CourseUserModel.count();
+      expect(actual).toBe(0);
+    });
+
+    it('should remove student from course when course has exam and student submitted submission', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user,
+        student_id: 12346,
+      }).save();
+
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user: studentUser,
+        course,
+        course_role: CourseRoleEnum.STUDENT,
+      }).save();
+
+      let exam = await ExamModel.create({
+        course,
+        exam_date: 1_000_000_000,
+        name: `Exam`,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      await SubmissionModel.create({
+        exam,
+        student: studentUser,
+        answers: {},
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        document_path: 'path',
+        score: -1,
+      }).save();
+
+      await courseService.removeStudentFromCourse(course.id, studentUser.id);
+
+      const actual = await CourseUserModel.count();
+      expect(actual).toBe(0);
+
+      const actualSubmissions = await SubmissionModel.count();
+      expect(actualSubmissions).toBe(0);
+
+      const studentUserModel = await StudentUserModel.findOne({
+        where: { id: studentUser.id },
+        relations: ['submissions'],
+      });
+
+      expect(studentUserModel.submissions).toHaveLength(0);
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['courses'],
+      });
+
+      expect(user.courses).toHaveLength(0);
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['users'],
+      });
+
+      expect(course.users).toHaveLength(0);
     });
   });
 });

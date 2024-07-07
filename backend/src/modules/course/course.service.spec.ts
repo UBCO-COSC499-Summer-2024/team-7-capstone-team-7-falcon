@@ -506,7 +506,7 @@ describe('CourseService', () => {
 
       await expect(
         courseService.removeStudentFromCourse(course.id, 1),
-      ).rejects.toThrow('User not found');
+      ).rejects.toThrow('User is not enrolled in the course');
     });
 
     it('should throw CourseRoleException if user is not a student', async () => {
@@ -553,7 +553,7 @@ describe('CourseService', () => {
 
       await expect(
         courseService.removeStudentFromCourse(course.id, 1),
-      ).rejects.toThrow('User not found');
+      ).rejects.toThrow('User is not enrolled in the course');
     });
 
     it('should remove student from course when course has no exams', async () => {

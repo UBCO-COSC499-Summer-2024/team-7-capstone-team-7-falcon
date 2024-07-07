@@ -376,9 +376,9 @@ export class ExamController {
   }
 
   /**
-   * Get bubble sheet by job id
+   * Get bubble sheet by file id
    * @param res {Response} - Response object
-   * @param jobId {string} - Job id
+   * @param fileId {string} - file id
    * @returns {Promise<StreamableFile | void>} - StreamableFile or void object
    */
   @Get('/custom_bubble_sheet/:fileId')

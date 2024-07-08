@@ -409,7 +409,7 @@ export class ExamController {
       const file = createReadStream(filePath);
 
       res.set({
-        'Content-Type': 'application/pdf',
+        'Content-Type': 'application/zip',
         'Content-Disposition': 'attachment; filename=bubble_sheet.zip',
       });
 

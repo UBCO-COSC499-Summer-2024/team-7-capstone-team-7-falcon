@@ -9,6 +9,15 @@ import cv2
 
 
 class Inferencer:
+    """
+    A class for performing object inference using a pre-trained model.
+
+    Args:
+        model_path (str): The path to the pre-trained model.
+        conf_threshold (float, optional): The confidence threshold for filtering out object predictions. Defaults to 0.4.
+        iou_threshold (float, optional): The intersection over union threshold for non-maximum suppression. Defaults to 0.9.
+    """
+
     def __init__(self, model_path, conf_threshold=0.4, iou_threshold=0.9):
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
@@ -17,6 +26,12 @@ class Inferencer:
         pass
 
     def init_session(self, model_path):
+        """
+        Initializes the inference session with the pre-trained model.
+
+        Args:
+            model_path (str): The path to the pre-trained model.
+        """
         self.session = ort.InferenceSession(
             model_path, providers=["CPUExecutionProvider"]
         )
@@ -31,6 +46,15 @@ class Inferencer:
         self.output_shapes = model_outputs[0].shape
 
     def __call__(self, image):
+        """
+        Performs object inference on the input image.
+
+        Args:
+            image: The input image.
+
+        Returns:
+            Tuple: A tuple containing the bounding boxes, scores, and class IDs of the detected objects.
+        """
         image_data = self.preprocess_image(image)
         results = self.session.run(
             None, {self.session.get_inputs()[0].name: image_data}
@@ -43,11 +67,10 @@ class Inferencer:
         Preprocesses the input image for object inference.
 
         Args:
-            image: The input image to be preprocessed.c
+            image: The input image to be preprocessed.
 
         Returns:
             The preprocessed image data.
-
         """
         self.img_height, self.img_width = image.shape[:2]
 
@@ -63,7 +86,15 @@ class Inferencer:
         return image_data
 
     def postprocess_results(self, results):
+        """
+        Postprocesses the inference results to obtain the bounding boxes, scores, and class IDs of the detected objects.
 
+        Args:
+            results: The raw inference results.
+
+        Returns:
+            Tuple: A tuple containing the filtered bounding boxes, scores, and class IDs of the detected objects.
+        """
         predictions = np.squeeze(results[0]).T
 
         # Filter out object confidence scores below threshold
@@ -84,6 +115,15 @@ class Inferencer:
         return boxes[indices], scores[indices], class_ids[indices]
 
     def get_bounding_boxes(self, predictions):
+        """
+        Converts the predicted bounding box coordinates to the original image space.
+
+        Args:
+            predictions: The predicted bounding box coordinates.
+
+        Returns:
+            numpy.ndarray: The converted bounding box coordinates.
+        """
         boxes = predictions[:, :4]
 
         original_shape = np.array(
@@ -98,7 +138,15 @@ class Inferencer:
         return boxes
 
     def convert_box_coords(self, x):
-        # convert bounding box (x, y, w, h) to (x1, y1, x2, y2)
+        """
+        Converts the bounding box coordinates from (x, y, w, h) format to (x1, y1, x2, y2) format.
+
+        Args:
+            x: The bounding box coordinates in (x, y, w, h) format.
+
+        Returns:
+            numpy.ndarray: The converted bounding box coordinates in (x1, y1, x2, y2) format.
+        """
         y = np.copy(x)
         y[..., 0] = x[..., 0] - x[..., 2] / 2
         y[..., 1] = x[..., 1] - x[..., 3] / 2

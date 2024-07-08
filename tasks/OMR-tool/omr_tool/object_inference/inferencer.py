@@ -9,7 +9,7 @@ import cv2
 
 
 class Inferencer:
-    def __init__(self, model_path, conf_threshold=0.4, iou_threshold=0.4):
+    def __init__(self, model_path, conf_threshold=0.4, iou_threshold=0.9):
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
 

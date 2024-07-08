@@ -158,23 +158,45 @@ describe('Queue Integration', () => {
   });
 
   describe('GET /queue/:queue/:jobId', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when no auth token is provided', () => {
       return supertest()
         .get('/queue/bubble-sheet-creation/1')
         .expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 404 when the job is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/bubble-sheet-creation/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.NOT_FOUND);
     });
 
     it('should return status 400 when the queue is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/invalid-queue/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.BAD_REQUEST);
     });
 
@@ -207,7 +229,7 @@ describe('Queue Integration', () => {
 
       await supertest()
         .get(`/queue/bubble-sheet-creation/${response.body.jobId}`)
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.OK)
         .expect((response) => {
           expect(response.body.id).toBeDefined();

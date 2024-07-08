@@ -89,7 +89,8 @@ export class QueueController {
    * @param jobId {string} Job ID
    * @returns {Promise<Response>} Response object
    */
-  @UseGuards(QueueAuthGuard)
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.PROFESSOR)
   @Get(':queue/:jobId')
   async getJobById(
     @Res() res: Response,

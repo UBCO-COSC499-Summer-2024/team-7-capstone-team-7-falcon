@@ -185,6 +185,7 @@ export const coursesAPI = {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
+        withCredentials: true,
       });
 
       const response = await instance.patch(

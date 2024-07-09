@@ -1,75 +1,57 @@
 "use client";
-import React, { useEffect, useState, FormEvent } from "react";
-import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
+import React, { useState } from "react";
+import { Button, TextInput, Label } from "flowbite-react";
 import { coursesAPI } from "@/app/api/coursesAPI";
 import SemesterSelect from "./courseCreateForm/semesterSelect";
 import toast from "react-hot-toast";
 import { CourseEditData } from "../../../typings/backendDataTypes";
-import { Status } from "../../../typings/backendDataTypes";
-import ModalMessage from "../../components/modalMessage";
-import DangerZone from "../../instructor/components/dangerZone";
 import { v4 as uuidv4 } from "uuid";
 
 interface CourseEditFormProps {
   course_id: number;
 }
 
-/**
- * Renders the course editor form component
- * @component
- * @param {CourseEditorProps} props - The component props
- * @returns {React.JSX.Element} - Course editor component
- */
 const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
-  const [formData, setFormData] = useState<CourseEditData>({
-    id: 1,
+  const [formData, setData] = useState<CourseEditData>({
+    id: -1,
     course_name: "",
     course_code: "",
     section_name: "",
     semester_id: -1,
     invite_code: "",
   });
-  /**
-   * Handles the form submission to edit an existing course.
-   * @async
-   * @function
-   * @param {FormEvent<HTMLFormElement>} event - The form submission event
-   * @returns {Promise<void>}
-   */
-
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [event.target.id]: event.target.value });
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const result = await coursesAPI.editCourse(course_id, formData);
-  };
+    try {
+      const result = await coursesAPI.editCourse(course_id, formData);
+      // Assuming result contains updated course data or status
+      console.log("Edit course result:", result);
 
+      // Reset form or perform any other action upon successful submission
+      toast.success("Course successfully updated");
+    } catch (error) {
+      console.error("Failed to edit course:", error);
+      toast.error("Failed to update course");
+    }
+  };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData({
+    setData({
       ...formData,
       [name]: name === "semester_id" ? Number(value) : value,
     });
   };
   const copyInviteLink = () => {
     const inviteLink = formData.invite_code; // Assuming the invite link is the invite code
-    navigator.clipboard
-      .writeText(inviteLink)
-      .then(() => {
-        alert("Invite link copied to clipboard!");
-      })
-      .catch((err) => {
-        console.error("Failed to copy the invite link: ", err);
-      });
+    navigator.clipboard.writeText(inviteLink);
   };
   const generateInviteCode = () => {
     const newInviteCode = uuidv4().substring(0, 8).toUpperCase(); // Generate an 8-character UUID
-    setFormData({ ...formData, invite_code: newInviteCode });
+    setData({ ...formData, invite_code: newInviteCode });
   };
 
   return (

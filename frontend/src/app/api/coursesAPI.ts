@@ -166,7 +166,7 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/${course_id}/members/`);
+      const response = await instance.get(`/${course_id}/members`);
       return response;
     } catch (error: any) {
       //always axios error

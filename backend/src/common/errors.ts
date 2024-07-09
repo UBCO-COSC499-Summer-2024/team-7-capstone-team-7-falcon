@@ -208,3 +208,21 @@ export class UserSubmissionNotFound extends Error {
     super(ERROR_MESSAGES.examController.userSubmissionNotFound);
   }
 }
+
+/**
+ * Exception thrown when submission is not found
+ */
+export class SubmissionNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.examController.submissionNotFound);
+  }
+}
+
+/**
+ * Exception thrown when file is not found
+ */
+export class FileNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.common.fileNotFound);
+  }
+}

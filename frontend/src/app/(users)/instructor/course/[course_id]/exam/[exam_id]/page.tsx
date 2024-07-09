@@ -44,7 +44,8 @@ const ViewExam = async ({
     student_id: item.student.id,
     user: {
       avatar_url: item.student.user.avatar_url,
-      name: `${item.student.user.first_name} ${item.student.user.last_name}`,
+      first_name: item.student.user.first_name,
+      last_name: item.student.user.last_name,
     },
     score: item.score,
     updated_at: new Date(Number(item.updated_at)).toLocaleString(),
@@ -108,7 +109,7 @@ const ViewExam = async ({
             >
               <Link href={""} className="space-x-4 flex items-center">
                 <Upload />
-                Upload Submissions
+                <span>Upload Submissions</span>
               </Link>
             </button>
             <button
@@ -117,7 +118,7 @@ const ViewExam = async ({
             >
               <Link href={""} className="space-x-4 flex items-center">
                 <Download />
-                Download Results CSV
+                <span>Download Results CSV</span>
               </Link>
             </button>
             <button
@@ -126,7 +127,7 @@ const ViewExam = async ({
             >
               <Link href={""} className="space-x-4 flex items-center">
                 <CheckPlusCircle />
-                Release Grades
+                <span>Release Grades</span>
               </Link>
             </button>
             <ExamPerformance />

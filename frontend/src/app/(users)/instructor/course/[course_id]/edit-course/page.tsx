@@ -1,27 +1,25 @@
 import React from "react";
-import PeopleButton from "../../../components/peopleButton";
-import AnalyticsButton from "../../../components/analyticsButton";
+
 import CourseEditForm from "../../../components/courseEditForm";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
+  CourseData,
   CourseEditData,
   Status,
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
 import EditCourseButton from "../../../components/editCourseButton";
-import { Label, TextInput, FileInput } from "flowbite-react";
 import CourseHeader from "../../../components/courseHeader";
 import Link from "next/link";
-import { Edit } from "flowbite-react-icons/solid";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 
 const EditCourse = async ({ params }: { params: { course_id: number } }) => {
   const cid = Number(params.course_id);
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
-  const courseData: CourseEditData = { ...course };
+  const courseData: CourseData = { ...course };
 
   if (!course || !response) {
     redirect(`../../`);

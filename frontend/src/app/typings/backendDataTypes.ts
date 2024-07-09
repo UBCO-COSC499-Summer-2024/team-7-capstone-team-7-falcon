@@ -6,12 +6,11 @@ export interface CourseData {
   semester_id: number;
 }
 export interface CourseEditData {
-  id?: number;
-  course_code: string;
-  course_name: string;
-  section_name: string;
-  semester_id: number;
-  invite_code: string;
+  id: number;
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
 }
 
 export interface User {

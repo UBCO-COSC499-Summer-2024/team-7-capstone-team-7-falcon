@@ -4,7 +4,7 @@ import { Button, TextInput, Label } from "flowbite-react";
 import { coursesAPI } from "@/app/api/coursesAPI";
 import SemesterSelect from "./courseCreateForm/semesterSelect";
 import toast from "react-hot-toast";
-import { CourseEditData } from "../../../typings/backendDataTypes";
+import { Course, CourseEditData } from "../../../typings/backendDataTypes";
 import { v4 as uuidv4 } from "uuid";
 
 interface CourseEditFormProps {
@@ -14,11 +14,10 @@ interface CourseEditFormProps {
 const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
   const [formData, setData] = useState<CourseEditData>({
     id: -1,
-    course_name: "",
-    course_code: "",
-    section_name: "",
-    semester_id: -1,
-    invite_code: "",
+    courseName: "",
+    courseCode: "",
+    semesterId: -1,
+    inviteCode: "",
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,12 +45,12 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
     });
   };
   const copyInviteLink = () => {
-    const inviteLink = formData.invite_code; // Assuming the invite link is the invite code
+    const inviteLink = formData.inviteCode; // Assuming the invite link is the invite code
     navigator.clipboard.writeText(inviteLink);
   };
   const generateInviteCode = () => {
     const newInviteCode = uuidv4().substring(0, 8).toUpperCase(); // Generate an 8-character UUID
-    setData({ ...formData, invite_code: newInviteCode });
+    setData({ ...formData, inviteCode: newInviteCode });
   };
 
   return (
@@ -62,8 +61,8 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
         </Label>
         <TextInput
           id="courseCode"
-          name="course_code"
-          value={formData.course_code}
+          name="courseCode"
+          value={formData.courseCode}
           onChange={handleChange}
           placeholder="Enter course Code"
           required
@@ -74,25 +73,14 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
         </Label>
         <TextInput
           id="courseName"
-          name="course_name"
-          value={formData.course_name}
+          name="courseName"
+          value={formData.courseName}
           onChange={handleChange}
           placeholder="Enter course name"
           required
           className="mb-3"
         />
-        <Label htmlFor="sectionName" className="mb-3">
-          <h2 className="pt-2">Course Section</h2>
-        </Label>
-        <TextInput
-          id="sectionName"
-          name="section_name"
-          value={formData.section_name}
-          onChange={handleChange}
-          placeholder="Enter course Section"
-          required
-          className="mb-3"
-        />
+
         <SemesterSelect
           name={"semester_id"}
           required={true}
@@ -106,8 +94,8 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
           <div className="relative w-1/4">
             <TextInput
               id="inviteCode"
-              name="invite_code"
-              value={formData.invite_code}
+              name="inviteCode"
+              value={formData.inviteCode}
               onChange={handleChange}
               placeholder="WZYHKSK"
               required

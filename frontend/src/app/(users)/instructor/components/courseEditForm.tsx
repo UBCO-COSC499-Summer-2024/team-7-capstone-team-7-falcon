@@ -113,10 +113,9 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
               required
               className="pr-12 w-full" // Adjust padding and width as needed
             />
-            <Button
+            <button
               type="button"
-              color="purple"
-              className="absolute top-1/2 right-3 transform -translate-y-1/2"
+              className="btn-primary absolute top-1/2 right-3 transform -translate-y-1/2"
               onClick={generateInviteCode}
             >
               <svg
@@ -136,21 +135,20 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
                   d="m16 10 3-3m0 0-3-3m3 3H5v3m3 4-3 3m0 0 3 3m-3-3h14v-3"
                 />
               </svg>
-            </Button>
+            </button>
           </div>
-          <Button
+          <button
             type="button"
-            color="purple"
-            className="ml-2"
+            className="btn-primary ml-2"
             onClick={copyInviteLink}
           >
             Copy Invite Link
-          </Button>
+          </button>
         </div>
         <div>
-          <Button type="submit" color="purple" className="w-full">
+          <button type="submit" className="btn-primary w-full">
             Save changes
-          </Button>
+          </button>
         </div>
       </div>
       <div className="ring-1 rounded ring-red-700 pt-4 mt-4 flex flex-col p-4">

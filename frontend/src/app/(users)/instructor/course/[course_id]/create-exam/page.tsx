@@ -8,7 +8,6 @@ import {
 import { redirect } from "next/navigation";
 import CourseHeader from "../../../components/courseHeader";
 import CreateExamForm from "../../../components/createExamForm";
-import InputExam from "../../../components/createExam";
 import Link from "next/link";
 import { Edit } from "flowbite-react-icons/solid";
 import { ArrowLeft } from "flowbite-react-icons/outline";

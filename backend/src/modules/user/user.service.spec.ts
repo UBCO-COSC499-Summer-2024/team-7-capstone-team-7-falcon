@@ -7,7 +7,11 @@ import {
 import { UserModel } from './entities/user.entity';
 import { EmployeeUserModel } from './entities/employee-user.entity';
 import { StudentUserModel } from './entities/student-user.entity';
-import { AuthTypeEnum, CourseRoleEnum } from '../../enums/user.enum';
+import {
+  AuthTypeEnum,
+  CourseRoleEnum,
+  UserRoleEnum,
+} from '../../enums/user.enum';
 import { OAuthGoogleUserPayload } from '../../common/interfaces';
 import { faker } from '@faker-js/faker';
 import { CourseModel } from '../course/entities/course.entity';
@@ -17,6 +21,7 @@ import { TokenService } from '../token/token.service';
 import * as bcrypt from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
+import { PageOptionsDto } from '../../dto/page-options.dto';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -754,6 +759,161 @@ describe('UserService', () => {
           expect(result).toBeTruthy();
         }
       });
+    });
+  });
+
+  describe('getAllUsers', () => {
+    it('should return all users in one page when take is 50', async () => {
+      for (let i = 0; i < 10; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john.doe+${i}@mail.com`,
+          auth_type: AuthTypeEnum.EMAIL,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      const pageOptionsDto = new PageOptionsDto();
+      pageOptionsDto.page = 1;
+      pageOptionsDto.take = 50;
+
+      const users = await userService.getAllUsers(pageOptionsDto);
+      expect(users).toMatchSnapshot();
+    });
+
+    it('should return all users from second page', async () => {
+      for (let i = 0; i < 10; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john.doe+${i}@mail.com`,
+          auth_type: AuthTypeEnum.EMAIL,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      const pageOptionsDto = new PageOptionsDto();
+      pageOptionsDto.page = 2;
+      pageOptionsDto.take = 5;
+
+      const users = await userService.getAllUsers(pageOptionsDto);
+      expect(users).toMatchSnapshot();
+    });
+
+    it('should return an empty array when no users found', async () => {
+      const pageOptionsDto = new PageOptionsDto();
+      pageOptionsDto.page = 1;
+      pageOptionsDto.take = 50;
+
+      const users = await userService.getAllUsers(pageOptionsDto);
+      expect(users.data).toHaveLength(0);
+    });
+  });
+
+  describe('updateUserRole', () => {
+    it('should update user role', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      expect(user.role).toBe(UserRoleEnum.STUDENT);
+
+      await userService.updateUserRole(user.id, UserRoleEnum.ADMIN);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+      });
+
+      expect(updatedUser.role).toBe(UserRoleEnum.ADMIN);
+    });
+
+    it('should throw an error when user is not found', async () => {
+      await expect(
+        userService.updateUserRole(100, UserRoleEnum.ADMIN),
+      ).rejects.toThrow('User not found');
+    });
+  });
+
+  describe('deleteProfilePicture', () => {
+    it('should delete profile picture', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        avatar_url: 'avatar_url',
+      }).save();
+
+      expect(user.avatar_url).not.toBeNull();
+
+      await userService.deleteProfilePicture(user.id);
+
+      const updatedUser = await UserModel.findOne({
+        where: { id: user.id },
+      });
+
+      expect(updatedUser.avatar_url).toBeNull();
+    });
+
+    it('should throw an error when user is not found', async () => {
+      await expect(userService.deleteProfilePicture(100)).rejects.toThrow(
+        'User not found',
+      );
+    });
+  });
+
+  describe('countAllUsersByRole', () => {
+    it('should count all users by role', async () => {
+      for (let i = 0; i < 5; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john@doe${i}.com`,
+          role: UserRoleEnum.STUDENT,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      for (let i = 10; i < 12; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john@doe${i}.com`,
+          role: UserRoleEnum.ADMIN,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      for (let i = 15; i < 17; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john@doe${i}.com`,
+          role: UserRoleEnum.PROFESSOR,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      const result = await userService.countAllUsersByRole();
+
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should return 0 for all roles when no users found', async () => {
+      const result = await userService.countAllUsersByRole();
+
+      expect(result).toHaveLength(0);
     });
   });
 });

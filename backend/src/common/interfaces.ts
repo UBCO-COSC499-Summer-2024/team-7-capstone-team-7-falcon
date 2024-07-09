@@ -119,3 +119,17 @@ export interface UserRoleCount {
   count: number;
   role: string;
 }
+
+/**
+ * Course details interface
+ */
+export interface CourseDetailsInterface {
+  courseId: number;
+  courseCode: string;
+  semesterName: string;
+  members: number;
+  creator: {
+    firstName: string;
+    lastName: string;
+  };
+}

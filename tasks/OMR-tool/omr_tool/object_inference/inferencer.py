@@ -72,15 +72,18 @@ class Inferencer:
         Returns:
             The preprocessed image data.
         """
+        # Get the original image dimensions
         self.img_height, self.img_width = image.shape[:2]
 
+        # Convert image to RGB
         input_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        # Resize input image
+        # Resize original image to size expected by the model
         input_img = cv2.resize(input_img, (self.input_width, self.input_height))
 
         # Scale input pixel values to 0 to 1
         input_img = input_img / 255.0
+        # Transpose image to (C, H, W) format (C = channels, H = height, W = width)
         input_img = input_img.transpose(2, 0, 1)
         image_data = input_img[np.newaxis, :, :, :].astype(np.float32)
         return image_data

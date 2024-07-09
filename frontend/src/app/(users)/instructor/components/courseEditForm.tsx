@@ -4,10 +4,11 @@ import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
 import { coursesAPI } from "@/app/api/coursesAPI";
 import SemesterSelect from "./courseCreateForm/semesterSelect";
 import toast from "react-hot-toast";
-import { CourseData } from "../../../typings/backendDataTypes";
+import { CourseEditData } from "../../../typings/backendDataTypes";
 import { Status } from "../../../typings/backendDataTypes";
 import ModalMessage from "../../components/modalMessage";
 import DangerZone from "../../instructor/components/dangerZone";
+import { v4 as uuidv4 } from "uuid";
 
 interface CourseEditFormProps {
   course_id: number;
@@ -20,8 +21,8 @@ interface CourseEditFormProps {
  * @returns {React.JSX.Element} - Course editor component
  */
 const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
-  const [status, setStatus] = useState(Status.Pending);
-  const [formData, setFormData] = useState<CourseData>({
+  const [formData, setFormData] = useState<CourseEditData>({
+    id: 1,
     course_name: "",
     course_code: "",
     section_name: "",
@@ -40,19 +41,10 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
     setFormData({ ...formData, [event.target.id]: event.target.value });
   };
 
-  const resetStatus = () => {
-    setStatus(Status.Pending);
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = await coursesAPI.editCourse(course_id, formData);
-    if (result.status == 200) {
-      setStatus(Status.Success);
-    } else {
-      setStatus(Status.Failure);
-    }
   };
 
   const handleChange = (
@@ -63,6 +55,21 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
       ...formData,
       [name]: name === "semester_id" ? Number(value) : value,
     });
+  };
+  const copyInviteLink = () => {
+    const inviteLink = formData.invite_code; // Assuming the invite link is the invite code
+    navigator.clipboard
+      .writeText(inviteLink)
+      .then(() => {
+        alert("Invite link copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy the invite link: ", err);
+      });
+  };
+  const generateInviteCode = () => {
+    const newInviteCode = uuidv4().substring(0, 8).toUpperCase(); // Generate an 8-character UUID
+    setFormData({ ...formData, invite_code: newInviteCode });
   };
 
   return (
@@ -128,6 +135,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
               type="button"
               color="purple"
               className="absolute top-1/2 right-3 transform -translate-y-1/2"
+              onClick={generateInviteCode}
             >
               <svg
                 className="w-5 h-5 text-white dark:text-white"
@@ -148,7 +156,12 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
               </svg>
             </Button>
           </div>
-          <Button type="button" color="purple" className="ml-2">
+          <Button
+            type="button"
+            color="purple"
+            className="ml-2"
+            onClick={copyInviteLink}
+          >
             Copy Invite Link
           </Button>
         </div>

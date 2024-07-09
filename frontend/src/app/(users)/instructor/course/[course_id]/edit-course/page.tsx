@@ -5,7 +5,7 @@ import CourseEditForm from "../../../components/courseEditForm";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
+  CourseEditData,
   Status,
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
@@ -21,7 +21,7 @@ const EditCourse = async ({ params }: { params: { course_id: number } }) => {
   const cid = Number(params.course_id);
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
-  const courseData: CourseData = { ...course };
+  const courseData: CourseEditData = { ...course };
 
   if (!course || !response) {
     redirect(`../../`);

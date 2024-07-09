@@ -175,7 +175,7 @@ export const coursesAPI = {
       return error;
     }
   },
-  editCourse: async (courseId: number) => {
+  editCourse: async (course_id: number, courseData: CourseData) => {
     try {
       const auth_token = await fetchAuthToken();
 
@@ -185,19 +185,17 @@ export const coursesAPI = {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
-        withCredentials: true,
       });
 
-      const endpoint = `/${courseId}`;
-      console.log(
-        `Making PATCH request to: ${instance.defaults.baseURL}${endpoint}`,
+      const response = await instance.patch(
+        `${BACKEND_URL}/api/v1/course/${course_id}`,
+        courseData,
       );
-
-      const response = await instance.get(`/${courseId}/`);
       return response;
     } catch (error: any) {
-      // Always axios error
-      console.error("Failed to edit course: ", error);
+      //always axios error
+      console.error("Failed to edit users: ", error);
+
       return error;
     }
   },

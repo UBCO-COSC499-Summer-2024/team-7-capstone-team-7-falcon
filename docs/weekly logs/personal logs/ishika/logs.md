@@ -1,3 +1,32 @@
+##Wednesday (7/05 - 7/09)
+
+##Timesheet
+
+<img width="811" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/fa82be9b-256c-46f2-bbe4-eb034e3540cb">
+
+##Project Board
+<img width="1130" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/cb374cd2-3146-45c8-a215-3a39c66c44ef">
+
+##Current Tasks
+
+1. Finish implementing the Admin dashboard
+2. Fix bugs on Course Settings Page
+3. PR Reviews
+
+##Progress update since (7/04)
+1. I worked on the course settings page - finished UI, added button functionalities and addressed other comments.
+2. I finished the navbar component for the admin dashboard page
+3. I worked on the other portion of the admin dashboard.
+4. I fixed some bugs on my code for the instructor settings page.
+
+##Cycle Goal Review
+
+Overall, I made a decent progress on the tasks I was assigned at. I am almost ready to take up more tasks after I get my Course Settings PR merged before the next cycle.
+
+##Next Cycle Goal
+
+I am hoping to get my admin dashboard PR and Course Settings PR merged into development.
+
 ##Friday (7/03 - 7/04)
 
 ##Timesheet

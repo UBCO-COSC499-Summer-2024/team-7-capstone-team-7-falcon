@@ -10,6 +10,7 @@ import ModalMessage from "../../components/modalMessage";
 import { redirect } from "next/navigation";
 import { Plus } from "flowbite-react-icons/outline";
 import BubbleSheetModal from "./bubbleSheetModal";
+import { Toaster } from "react-hot-toast";
 
 interface CreateExamFormProps {
   course_id: number;
@@ -66,6 +67,7 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
         <ModalMessage message={"Invalid date entered"} onClose={resetStatus} />
       )}
       <form onSubmit={handleSubmit}>
+        <Toaster />
         <div className="space-y-5 p-4 ring ring-gray-300 rounded-md flex flex-col">
           <Label className="block" htmlFor="exam_name" value="Exam Name" />
           <TextInput

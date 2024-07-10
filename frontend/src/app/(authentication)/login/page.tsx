@@ -25,45 +25,48 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    // verify if user is trying to validate their email
-    async function validateEmail() {
-      const confirm_token = searchParams.get("confirm_token");
+    validateEmail();
+  }, []);
 
-      if (confirm_token !== null) {
-        try {
-          const instance = axios.create({
-            baseURL: `${BACKEND_URL}/api/v1/token`,
-            headers: {
-              "Content-Type": "application/json",
-            },
+  // verify if user is trying to validate their email
+  async function validateEmail() {
+    // const confirm_token = searchParams.get("confirm_token");
+    const confirm_token = searchParams.get("confirm_token");
+
+    if (confirm_token !== null) {
+      try {
+        const instance = axios.create({
+          baseURL: `${BACKEND_URL}/api/v1/token`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        await instance
+          .patch(`${BACKEND_URL}/api/v1/token`, { token: confirm_token })
+          .then((response) => {
+            setEmailValid(EmailValid.Valid);
+            return response;
+          })
+          .catch((error) => {
+            setEmailValid(EmailValid.Invalid);
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              console.error(error.response.data);
+              console.error(error.response.status);
+            } else if (error.request) {
+              // The request was made but no response was received
+              console.error(error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.error("Error", error.message);
+            }
           });
-
-          await instance
-            .patch(`${BACKEND_URL}/api/v1/token`, { token: confirm_token })
-            .then((response) => {
-              setEmailValid(EmailValid.Valid);
-              return response;
-            })
-            .catch((error) => {
-              setEmailValid(EmailValid.Invalid);
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                console.error(error.response.data);
-                console.error(error.response.status);
-              } else if (error.request) {
-                // The request was made but no response was received
-                console.error(error.request);
-              } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error("Error", error.message);
-              }
-            });
-        } catch (error) {
-          console.error("Error, failed to validate email", error);
-        }
+      } catch (error) {
+        console.error("Error, failed to validate email", error);
       }
     }
-  }, []);
+  }
 
   async function onLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

@@ -42,11 +42,9 @@ export default function ChangePasswordPage() {
       });
       setStatus(Status.Redirect);
     }
-  }, [reset_token]);
 
-  // update reset token
-  // needs to be defined outside of onPasswordUpdate for the hook to work.
-  useEffect(() => {
+    // update reset token
+    // needs to be defined outside of onPasswordUpdate for the hook to work.
     const updateInfo = async () => {
       setResetPassword({ ...resetPassword, token: reset_token });
     };
@@ -84,14 +82,11 @@ export default function ChangePasswordPage() {
 
       // if response is ok, display confirmation message, and redirect to login page
       if (response.ok) {
-        console.log("ok");
         setRedirectInfo({
           message: "Password successfully updated!",
           redirectPath: "/login",
           buttonText: "Back to login",
         });
-      } else {
-        throw new Error();
       }
     } catch (error) {
       let errMessage = "Failed to update password. Please try again.";

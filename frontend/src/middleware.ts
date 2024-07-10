@@ -64,8 +64,8 @@ const getUserRole = async (): Promise<string> => {
 const verifyIDpresence = async (): Promise<boolean> => {
   try {
     const userDetails: User = await usersAPI.getUserDetails();
-    return !(
-      userDetails.student_user === null && userDetails.employee_user === null
+    return (
+      userDetails.student_user !== null || userDetails.employee_user !== null
     );
   } catch (error) {
     throw error;
@@ -126,8 +126,7 @@ export async function middleware(request: NextRequest) {
   // if user is authenticated, verify that they have at least one ID set
   const hasID = await verifyIDpresence();
   if (!hasID) {
-    const response = NextResponse.redirect(new URL("/setup-account", url));
-    return response;
+    return NextResponse.redirect(new URL("/setup-account", url));
   }
 
   // Users should not be able to access pages that are not meant for their role

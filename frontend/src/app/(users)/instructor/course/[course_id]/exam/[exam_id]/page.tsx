@@ -53,7 +53,7 @@ const ViewExam = async ({
 
   // need to handle more checks here
   if (!course || !response) {
-    return redirect(`../../`);
+    redirect(`../..`);
   }
 
   const uploadSubmissions = () => {

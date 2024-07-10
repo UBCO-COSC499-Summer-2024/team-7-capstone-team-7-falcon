@@ -71,10 +71,6 @@ export default function SignUpPage() {
     }
 
     setFormValid(FormValid.Valid);
-
-    // if (formValid === FormValid.Valid) {
-    //   setStatus(Status.Success);
-    // }
   }
 
   useEffect(() => {

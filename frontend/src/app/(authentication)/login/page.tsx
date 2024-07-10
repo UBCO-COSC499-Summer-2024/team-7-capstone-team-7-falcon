@@ -30,7 +30,6 @@ export default function LoginPage() {
 
   // verify if user is trying to validate their email
   async function validateEmail() {
-    // const confirm_token = searchParams.get("confirm_token");
     const confirm_token = searchParams.get("confirm_token");
 
     if (confirm_token !== null) {

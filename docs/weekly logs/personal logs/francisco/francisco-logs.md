@@ -14,7 +14,7 @@ Clockify report
   2. Integrating inference class into OMR grading pipeline
   3. Validating our in-house bubble sheets on the inference model
 
-### Progress Update (since 7/03/2024)
+### Progress Update (since 7/05/2024)
 
 ![ProjectBoard](07.05-07.09/board.png)
 

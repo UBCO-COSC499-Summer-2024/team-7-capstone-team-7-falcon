@@ -130,9 +130,31 @@ export const examsAPI = {
         },
         withCredentials: true,
       });
-      // needs to be changed to dynamically use user id
       const response = await instance.get(
         `/${exam_id}/${course_id}/user/6/grade`,
+      );
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exam info: ", error);
+      return error;
+    }
+  },
+
+  getStudentSubmissionPDF: async (course_id: number, submission_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `/${course_id}/submission/${submission_id}/user/6`,
+        { responseType: "arraybuffer" },
       );
       return response;
     } catch (error: any) {

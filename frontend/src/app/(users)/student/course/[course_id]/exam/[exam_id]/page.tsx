@@ -11,6 +11,7 @@ import { examsAPI } from "../../../../../../api/examAPI";
 import GradeDisplay from "../../../../../components/gradeDisplay";
 import { CSSProperties } from "react";
 import { mean, median, quantile } from "d3-array";
+import PdfViewer from "../../../../components/pdfViewer";
 
 const StudentExamPage = async ({
   params,
@@ -22,15 +23,12 @@ const StudentExamPage = async ({
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };
-
-  if (!course || !response) {
-    redirect(`../../`);
-  }
-
   const submissionResponse = await examsAPI.getStudentSubmission(eid, cid);
   const submission: StudentSubmission = submissionResponse.data;
-  console.log("this is submission data", submissionResponse);
-  console.log("this is submission,", submission);
+
+  if (!course || !response || !submissionResponse || !submission) {
+    redirect(`../../`);
+  }
 
   const calculateStats = (arr: number[]) => {
     if (!arr.length) return null;
@@ -45,10 +43,8 @@ const StudentExamPage = async ({
 
   const stats = calculateStats(submission.grades);
   if (!stats) {
-    redirect("../");
+    redirect(`../../`);
   }
-
-  //add error handling here
 
   return (
     <div className="p-2">
@@ -72,10 +68,11 @@ const StudentExamPage = async ({
       </div>
       <div className="grid grid-cols-5">
         <div className="col-span-4">
-          <p className="text-xl p-1 font-bold">{submission.exam.name}</p>
+          <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
+          <PdfViewer course_id={cid} submission_id={submission.exam.id} />
         </div>
         <div className="col-span-1 text-xl">
-          <p className="mt-2 mb-8 font-bold">Grade Overview</p>
+          <p className="mt-4 mb-8 font-bold">Grade Overview</p>
           <GradeDisplay
             progress={String(submission.studentSubmission.score)}
             text=""

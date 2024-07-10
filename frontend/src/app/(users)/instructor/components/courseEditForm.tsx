@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextInput, Label } from "flowbite-react";
 import { coursesAPI } from "@/app/api/coursesAPI";
+import { semestersAPI } from "@/app/api/semestersAPI";
 import SemesterSelect from "./courseCreateForm/semesterSelect";
 import toast from "react-hot-toast";
-import { Course, CourseEditData } from "../../../typings/backendDataTypes";
+import { CourseEditData } from "../../../typings/backendDataTypes";
 import { v4 as uuidv4 } from "uuid";
 
 interface CourseEditFormProps {
@@ -12,44 +13,69 @@ interface CourseEditFormProps {
 }
 
 const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
-  const [formData, setData] = useState<CourseEditData>({
+  const [formData, setFormData] = useState<CourseEditData>({
     courseName: "",
     courseCode: "",
-    semesterId: -1,
+    semesterId: -1, // Initialize with -1 or an appropriate default
     inviteCode: "",
   });
+  const [semesters, setSemesters] = useState<Semester[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const courseResponse = await coursesAPI.getCourse(course_id);
+        const { course_name, course_code, semester_id, invite_code } =
+          courseResponse.data;
+        setFormData({
+          courseName: course_name,
+          courseCode: course_code,
+          semesterId: semester_id, // Set the correct semesterId here
+          inviteCode: invite_code ?? "",
+        });
+
+        const semestersResponse = await semestersAPI.getAllSemesters();
+        setSemesters(semestersResponse);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        toast.error("Failed to load course or semester data");
+      }
+    };
+
+    fetchData();
+  }, [course_id]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const result = await coursesAPI.editCourse(course_id, formData);
-      // Assuming result contains updated course data or status
       console.log("Edit course result:", result);
-
-      // Reset form or perform any other action upon successful submission
       toast.success("Course successfully updated");
     } catch (error) {
       console.error("Failed to edit course:", error);
       toast.error("Failed to update course");
     }
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setData({
+    setFormData({
       ...formData,
       [name]: name === "semesterId" ? Number(value) : value,
     });
   };
+
   const copyInviteLink = () => {
-    const inviteLink = formData.inviteCode; // Assuming the invite link is the invite code
+    const inviteLink = formData.inviteCode;
     navigator.clipboard.writeText(inviteLink);
   };
+
   const generateInviteCode = () => {
-    const newInviteCode = uuidv4().substring(0, 8).toUpperCase(); // Generate an 8-character UUID
-    setData({ ...formData, inviteCode: newInviteCode });
+    const newInviteCode = uuidv4().substring(0, 8).toUpperCase();
+    setFormData({ ...formData, inviteCode: newInviteCode });
   };
 
   return (
@@ -81,9 +107,12 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
         />
 
         <SemesterSelect
-          name={"semester_id"}
+          name="semesterId"
           required={true}
-          labelText={"Semester"}
+          labelText="Semester"
+          value={formData.semesterId}
+          onChange={handleChange}
+          options={semesters}
           className="mb-3"
         />
         <Label htmlFor="inviteCode" className="mb-3">
@@ -98,7 +127,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
               onChange={handleChange}
               placeholder="WZYHKSK"
               required
-              className="pr-12 w-full" // Adjust padding and width as needed
+              className="pr-12 w-full"
             />
             <button
               type="button"

@@ -7,21 +7,20 @@ interface SemesterSelectProps {
   required: boolean;
   name: string;
   labelText: string;
+  value?: number; // Adding value prop
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void; // Adding onChange prop
 }
 
 const SemesterSelect: React.FC<SemesterSelectProps> = ({
   required,
   name,
   labelText,
+  value,
+  onChange,
 }) => {
   const [courseSemesters, setCourseSemesters] = useState<Semester[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  /**
-   * Fetches all semesters from the API and sets them in the state.
-   * @async
-   * @function
-   * @returns {Promise<void>}
-   */
+
   const fetchSemesters = async (): Promise<void> => {
     const fetchedSemesters = await semestersAPI.getAllSemesters().catch((e) => {
       return undefined;
@@ -30,11 +29,6 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
     setIsLoaded(true);
   };
 
-  /**
-   * Fetches semesters when the modal is opened and the semesters are not already loaded.
-   * @function
-   * @returns {void}
-   */
   useEffect(() => {
     if (courseSemesters.length === 0) fetchSemesters();
   }, []);
@@ -45,7 +39,15 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
         <h2 className="pt-2">{labelText}</h2>
       </Label>
       {courseSemesters !== undefined ? (
-        <Select id="semesterID" name={name} required={required}>
+        <Select
+          id="semesterID"
+          name={name}
+          required={required}
+          value={value}
+          onChange={onChange}
+        >
+          <option value="">Select a semester</option>{" "}
+          {/* Adding a default option */}
           {courseSemesters.map((semester: Semester) => (
             <option key={semester.id} value={semester.id}>
               {semester.name}
@@ -53,7 +55,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
           ))}
         </Select>
       ) : (
-        isLoaded && <Alert color="failure">Failed to fetch semesters</Alert> // Only show the alert if the semesters have been loaded from backend but are empty
+        isLoaded && <Alert color="failure">Failed to fetch semesters</Alert>
       )}
     </>
   );

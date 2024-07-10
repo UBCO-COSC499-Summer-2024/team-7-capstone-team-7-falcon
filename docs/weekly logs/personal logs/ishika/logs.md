@@ -14,7 +14,7 @@
 2. Fix bugs on Course Settings Page
 3. PR Reviews
 
-##Progress update since (7/04)
+##Progress update since (7/05)
 1. I worked on the course settings page - finished UI, added button functionalities and addressed other comments.
 2. I finished the navbar component for the admin dashboard page
 3. I worked on the other portion of the admin dashboard.

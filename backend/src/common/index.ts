@@ -61,6 +61,8 @@ export const ERROR_MESSAGES = {
     coursesNotFound: 'Courses could not be found',
     courseArchived: 'Course is archived. Cannot be accessed.',
     userNotEnrolledInCourse: 'User is not enrolled in the course',
+    deleteStudentFromCourseError:
+      'User cannot be deleted from course as their role is not student',
   },
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',

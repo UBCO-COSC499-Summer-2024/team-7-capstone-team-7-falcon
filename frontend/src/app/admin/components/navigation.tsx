@@ -1,16 +1,16 @@
 import Navigation from "../../(users)/components/navigation";
-import { Users, Book, Pie, CalendarPlus } from "flowbite-react-icons/solid";
+import { Users, Book, CalendarPlus } from "flowbite-react-icons/solid";
 
 const adminLinks = [
   {
     title: "Dashboard",
     href: {
-      base: "/admin",
+      base: "/admin/dashboard",
       exact: "/admin",
     },
     icon: (
       <svg
-        className="w-6 h-6 text-white dark:text-white"
+        className="w-6 h-6 text-grey dark:text-white"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="24"

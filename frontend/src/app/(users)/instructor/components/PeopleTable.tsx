@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "./type";
-import TableComponent from "./tableComponent";
+import TableComponent from "../../components/tableComponent";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { CourseUser } from "../../../typings/backendDataTypes";
 import Link from "next/link";

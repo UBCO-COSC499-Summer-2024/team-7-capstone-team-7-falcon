@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "./type";
-import TableComponent from "./tableComponent";
+import TableComponent from "../../components/tableComponent";
 import { Submission } from "../../../typings/backendDataTypes";
 import { useSubmissionContext } from "../../../contexts/submissionContext";
 import Avatar from "../../../components/avatar";

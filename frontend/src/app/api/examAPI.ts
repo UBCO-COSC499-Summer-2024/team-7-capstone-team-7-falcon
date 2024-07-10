@@ -1,6 +1,10 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { BubbleSheetPayload, ExamData } from "../typings/backendDataTypes";
+import {
+  BubbleSheetPayload,
+  ExamData,
+  StudentSubmission,
+} from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -16,7 +20,10 @@ export const examsAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.post(`/${courseId}/create`, examData);
+      const response = await instance.post<StudentSubmission>(
+        `/${courseId}/create`,
+        examData,
+      );
       return response;
     } catch (error: any) {
       //always axios error
@@ -106,6 +113,31 @@ export const examsAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to post bubble sheet data: ", error);
+      return error;
+    }
+  },
+
+  //'/:eid/:cid/user/:uid/grade'
+
+  getStudentSubmission: async (exam_id: number, course_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      // needs to be changed to dynamically use user id
+      const response = await instance.get(
+        `/${exam_id}/${course_id}/user/6/grade`,
+      );
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exam info: ", error);
       return error;
     }
   },

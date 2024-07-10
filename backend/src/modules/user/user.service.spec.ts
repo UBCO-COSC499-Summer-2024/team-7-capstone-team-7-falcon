@@ -763,7 +763,7 @@ describe('UserService', () => {
   });
 
   describe('getAllUsers', () => {
-    it('should return all users in one page when take is 50', async () => {
+    it('should return all users in one page when take is less or equal to 50', async () => {
       for (let i = 0; i < 10; i++) {
         await UserModel.create({
           first_name: 'John',

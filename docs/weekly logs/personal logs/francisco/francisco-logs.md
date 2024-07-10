@@ -36,7 +36,7 @@ I also need to test out our own generated sheets on the model so I now if I need
 ---
 ---
 
-## Friday (7/03-7/04)
+  ## Friday (7/03-7/04)
 
 ### Timesheet
 

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "flowbite-react";
 import Link from "next/link";
 import InstructorNavigation from "../(users)/instructor/components/navigation";
+import AdminNavigation from "../admin/components/navigation";
 import Avatar from "./avatar";
 import OwlLogo from "./owlLogo";
 
@@ -88,6 +89,7 @@ const PageSidebar: React.FC = () => {
           <Sidebar.Items className="mt-10 flex items-center flex-col">
             {userInfo.role === "student" && <StudentNavigation />}
             {userInfo.role === "instructor" && <InstructorNavigation />}
+            {userInfo.role === "admin" && <AdminNavigation />}
           </Sidebar.Items>
         </div>
 

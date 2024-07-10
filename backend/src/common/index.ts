@@ -92,4 +92,10 @@ export const ERROR_MESSAGES = {
     submissionNotFound: 'Submission not found',
     userSubmissionNotFound: 'User submission not found',
   },
+  submissionController: {
+    submissionNotFound: 'Submission not found',
+    minGradeError: 'Minimum grade must be 0',
+    maxGradeError: 'Maximum grade must be 100',
+    invalidGradeError: 'Grade value is not valid',
+  },
 };

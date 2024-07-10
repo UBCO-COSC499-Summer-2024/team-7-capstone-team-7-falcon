@@ -90,7 +90,7 @@ export const examsAPI = {
     }
   },
 
-  getJobReadyStatus: async (job_id: number) => {
+  getJobReadyStatus: async (job_id: string) => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -101,11 +101,33 @@ export const examsAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.post(`/bubble-sheet-creation/${job_id}`);
+      const response = await instance.get(`/bubble-sheet-creation/${job_id}`);
       return response;
     } catch (error: any) {
       //always axios error
-      console.error("Failed to post bubble sheet data: ", error);
+      console.error("Failed to get queue job data: ", error);
+      return error;
+    }
+  },
+
+  downloadBubbleSheet: async (fileId: string) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/custom_bubble_sheet/${fileId}`, {
+        responseType: "blob",
+      });
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to download bubble sheet: ", error);
       return error;
     }
   },

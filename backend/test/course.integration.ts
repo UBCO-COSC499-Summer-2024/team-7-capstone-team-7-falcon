@@ -1148,4 +1148,648 @@ describe('Course Integration', () => {
       expect(result.body).toMatchSnapshot();
     });
   });
+
+  describe('GET /course/:cid/exams/upcoming', () => {
+    it('should return 401 if not authenticated', async () => {
+      await supertest().get('/course/1/exams/upcoming').expect(401);
+    });
+
+    it('should return 401 if user is not enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+      }).save();
+
+      return await supertest()
+        .get(`/course/${course.id}/exams`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401)
+        .expect({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+    });
+
+    it('should return 401 if course is archived', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      return await supertest()
+        .get(`/course/${course.id}/exams`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401)
+        .expect({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+    });
+
+    it('should return 204 if no exams are upcoming', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      const result = await supertest()
+        .get(`/course/${course.id}/exams/upcoming`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(204);
+    });
+
+    it('should return 200 and upcoming exams', async () => {
+      let course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: {
+          id: course.id,
+        },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: parseInt(new Date().getTime().toString()) + 1_000,
+          course,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+        }).save();
+
+        course.exams.push(exam);
+      }
+
+      await course.save();
+
+      const result = await supertest()
+        .get(`/course/${course.id}/exams/upcoming`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      result.body.forEach((exam: ExamModel) => {
+        delete exam.exam_date;
+      });
+
+      expect(result.body).toMatchSnapshot();
+    });
+  });
+
+  describe('GET /course/:cid/exams/graded', () => {
+    it('should return 401 if not authenticated', async () => {
+      await supertest().get('/course/1/exams/graded').expect(401);
+    });
+
+    it('should return 401 if user is not enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+      }).save();
+
+      return await supertest()
+        .get(`/course/${course.id}/exams/graded`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401)
+        .expect({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+    });
+
+    it('should return 401 if course is archived', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      return await supertest()
+        .get(`/course/${course.id}/exams/graded`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401)
+        .expect({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+    });
+
+    it('should return 204 if no exams are graded', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      const result = await supertest()
+        .get(`/course/${course.id}/exams/graded`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(204);
+    });
+
+    it('should return 200 and graded exams', async () => {
+      let course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: {
+          id: course.id,
+        },
+        relations: ['exams'],
+      });
+
+      for (let i = 0; i < 10; i++) {
+        const exam = await ExamModel.create({
+          name: `Exam ${i}`,
+          exam_date: 1_000_000_000,
+          course,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          questions: {},
+          grades_released_at: parseInt(new Date().getTime().toString()),
+        }).save();
+
+        course.exams.push(exam);
+      }
+
+      await course.save();
+
+      const result = await supertest()
+        .get(`/course/${course.id}/exams/graded`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      result.body.forEach((exam: ExamModel) => {
+        delete exam.grades_released_at;
+      });
+      expect(result.status).toBe(200);
+      expect(result.body).toMatchSnapshot();
+    });
+  });
+
+  describe('PATCH /course/:cid', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().patch('/course/1').expect(401);
+    });
+
+    it('should return 401 if user is not course professor or system admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      return await supertest()
+        .patch(`/course/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 400 if course id is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      return await supertest()
+        .patch('/course/abc')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(400)
+        .expect({
+          message: 'Bad Request',
+          statusCode: 400,
+        });
+    });
+
+    it('should return 400 if request body is invalid', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      return await supertest()
+        .patch('/course/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({
+          course_code: 123,
+        })
+        .expect(400)
+        .expect({
+          message: [
+            'courseCode must be longer than or equal to 2 characters',
+            'courseCode must be a string',
+            'courseName must be a string',
+            'semesterId must be a number conforming to the specified constraints',
+            'inviteCode must be longer than or equal to 5 characters',
+            'inviteCode must be a string'
+          ],
+          error: 'Bad Request',
+          statusCode: 400
+        });
+    });
+
+    it('should return 204 if course is updated when user is a professor in a course', async () => {
+      const semester = await SemesterModel.create({
+        name: 'Semester 1',
+        starts_at: 1_000_000_000,
+        ends_at: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+        semester,
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return await supertest()
+        .patch(`/course/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({
+          courseCode: 'COSC 498',
+          courseName: 'Software Engineering',
+          semesterId: semester.id,
+          inviteCode: '12345',
+        })
+        .expect(204);
+    });
+
+    it('should return 204 if course is update when user is a system admin', async () => {
+      const semester = await SemesterModel.create({
+        name: 'Semester 1',
+        starts_at: 1_000_000_000,
+        ends_at: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+        semester,
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      return await supertest()
+        .patch(`/course/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({
+          courseCode: 'COSC 498',
+          courseName: 'Software Engineering',
+          semesterId: semester.id,
+          inviteCode: '12345',
+        })
+        .expect(204);
+    });
+  });
+
+  describe('PATCH /course/:cid/archive', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().patch('/course/1/archive').expect(401);
+    });
+
+    it('should return 401 if user is not course professor or system admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '1',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      return await supertest()
+        .patch(`/course/${course.id}/archive`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 400 if course id is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      return await supertest()
+        .patch('/course/abc/archive')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(400)
+        .expect({
+          message: 'Bad Request',
+          statusCode: 400,
+        });
+    });
+
+    it('should return 400 if request body is invalid', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      return await supertest()
+        .patch('/course/1/archive')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({})
+        .expect(400)
+        .expect({
+          message: ['archive must be a boolean value'],
+          error: 'Bad Request',
+          statusCode: 400
+        });
+    });
+
+    it('should return 204 if course is archived when user is a professor in a course', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return await supertest()
+        .patch(`/course/${course.id}/archive`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({
+          archive: true,
+        })
+        .expect(204);
+    });
+
+    it('should return 204 if course is archived when user is a system admin', async () => {
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        section_name: '001',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      return await supertest()
+        .patch(`/course/${course.id}/archive`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({
+          archive: true,
+        })
+        .expect(204);
+    });
+  });
 });

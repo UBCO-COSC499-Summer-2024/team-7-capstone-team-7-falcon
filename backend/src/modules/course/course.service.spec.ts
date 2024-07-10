@@ -12,6 +12,8 @@ import { CourseCreateDto } from './dto/course-create.dto';
 import { SemesterModel } from '../semester/entities/semester.entity';
 import { validate } from 'class-validator';
 import { PageOptionsDto } from '../../dto/page-options.dto';
+import { CourseEditDto } from './dto/course-edit.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('CourseService', () => {
   let courseService: CourseService;
@@ -433,6 +435,85 @@ describe('CourseService', () => {
 
       expect(result).toBeDefined();
       expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe('editCourse', () => {
+    it('should throw SemesterNotFound Exception', async () => {
+      const courseEditDto = new CourseEditDto();
+      courseEditDto.courseCode = 'CS101';
+      courseEditDto.courseName = 'Introduction to Computer Science';
+      courseEditDto.semesterId = 100;
+      courseEditDto.inviteCode = uuidv4();
+
+      await expect(courseService.editCourse(1, courseEditDto)).rejects.toThrow(
+        'Semester not found',
+      );
+    });
+
+    it('should edit course', async () => {
+      const semester = await SemesterModel.create({
+        name: 'Spring 2024',
+        starts_at: parseInt(new Date('2021-01-01').getTime().toString()),
+        ends_at:
+          parseInt(new Date('2021-01-01').getTime().toString()) +
+          1000 * 60 * 60 * 24 * 90,
+        created_at: parseInt(new Date('2021-01-01').getTime().toString()),
+        updated_at: parseInt(new Date('2021-01-01').getTime().toString()),
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        semester,
+      }).save();
+
+      const courseEditDto = new CourseEditDto();
+      courseEditDto.courseCode = 'COSC499';
+      courseEditDto.courseName = 'Capstone Project';
+      courseEditDto.semesterId = semester.id;
+      courseEditDto.inviteCode = uuidv4();
+
+      await courseService.editCourse(course.id, courseEditDto);
+
+      const updatedCourse = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['semester'],
+      });
+
+      expect(updatedCourse.invite_code).not.toBe('123');
+      expect(updatedCourse.updated_at).not.toBe(1_000_000_000);
+
+      delete updatedCourse.updated_at;
+      delete updatedCourse.invite_code;
+
+      expect(updatedCourse).toBeDefined();
+      expect(updatedCourse).toMatchSnapshot();
+    });
+  });
+
+  describe('archiveCourse', () => {
+    it('should archive course', async () => {
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await courseService.archiveCourse(course.id, true);
+
+      const updatedCourse = await CourseModel.findOne({
+        where: { id: course.id },
+      });
+
+      expect(updatedCourse.is_archived).toBe(true);
     });
   });
 });

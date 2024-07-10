@@ -14,12 +14,9 @@ import { validate } from 'class-validator';
 import { PageOptionsDto } from '../../dto/page-options.dto';
 import { CourseEditDto } from './dto/course-edit.dto';
 import { v4 as uuidv4 } from 'uuid';
-<<<<<<< HEAD
 import { ExamModel } from '../exam/entities/exam.entity';
 import { StudentUserModel } from '../user/entities/student-user.entity';
 import { SubmissionModel } from '../exam/entities/submission.entity';
-=======
->>>>>>> c4f52cfd8b954f16634f94c521f2870d0fc6f0d1
 
 describe('CourseService', () => {
   let courseService: CourseService;

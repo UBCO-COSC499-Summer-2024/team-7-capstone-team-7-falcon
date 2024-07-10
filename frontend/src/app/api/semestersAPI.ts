@@ -1,5 +1,6 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
+import { SemesterData } from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -29,6 +30,37 @@ export const semestersAPI = {
     } catch (error) {
       console.error("Failed to fetch semesters:", error);
       throw error;
+    }
+  },
+
+  /**
+   * Creates a new semester.
+   *
+   * @async
+   * @function createSemester
+   * @returns {Promise<axios.AxiosResponse<any>>} - The response from the backend API.
+   * @throws Will log an error message to the console if creating the semester fails.
+   */
+  createSemester: async (semesterData: SemesterData) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/semester/create`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.post(
+        `${BACKEND_URL}/api/v1/semester/create`,
+        semesterData,
+      );
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to create semester: ", error);
+      return error;
     }
   },
 };

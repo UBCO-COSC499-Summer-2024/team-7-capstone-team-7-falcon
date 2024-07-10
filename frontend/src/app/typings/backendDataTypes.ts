@@ -116,3 +116,16 @@ export enum SelectedButton {
   Analytics = "ANALYTICS",
   None = "NONE",
 }
+
+export interface SemesterData {
+  name: string;
+  starts_at: number;
+  ends_at: number;
+}
+
+export enum SemesterValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  DatesInThePast = "DATES IN THE PAST",
+  EndDateBeforeStartDate = "END DATE BEFORE START DATE",
+}

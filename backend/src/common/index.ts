@@ -10,6 +10,7 @@ export const ERROR_MESSAGES = {
     passwordMustMatch: 'Password and confirmation password do not match',
     emailRequired: 'Email is required',
     emailInvalid: 'Email is invalid',
+    fileNotFound: 'File not found',
   },
   userController: {
     userNotFound: 'User not found',
@@ -60,6 +61,8 @@ export const ERROR_MESSAGES = {
     coursesNotFound: 'Courses could not be found',
     courseArchived: 'Course is archived. Cannot be accessed.',
     userNotEnrolledInCourse: 'User is not enrolled in the course',
+    deleteStudentFromCourseError:
+      'User cannot be deleted from course as their role is not student',
   },
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
@@ -86,6 +89,7 @@ export const ERROR_MESSAGES = {
     noGradedExamsFound: 'No graded exams found',
     examNotFound: 'Exam not found',
     examsNotFound: 'Exams not found',
+    submissionNotFound: 'Submission not found',
     userSubmissionNotFound: 'User submission not found',
   },
 };

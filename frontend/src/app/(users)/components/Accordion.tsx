@@ -13,14 +13,14 @@ interface AccordionProps {
 
 const FAQComponent: React.FC<AccordionProps> = ({ items }) => {
   return (
-    <Accordion collapseAll>
+    <Accordion collapseAll className="w-full">
       {items.map((item, index) => (
-        <Accordion.Panel key={index}>
-          <Accordion.Title>{item.question}</Accordion.Title>
-          <Accordion.Content>
-            <p className="mb-2 text-gray-500 dark:text-gray-400">
-              {item.answer}
-            </p>
+        <Accordion.Panel key={index} className="mb-2 border-b">
+          <Accordion.Title className="p-4 text-gray-700">
+            {item.question}
+          </Accordion.Title>
+          <Accordion.Content className="p-4 bg-white-800">
+            <p className="mb-2 text-black dark:text-gray-400">{item.answer}</p>
           </Accordion.Content>
         </Accordion.Panel>
       ))}

@@ -197,10 +197,14 @@ if __name__ == "__main__":
 
     boxes, scores, classes = inferencer(image)
 
-    for box in boxes:
+    for i, box in enumerate(boxes):
         x1, y1, x2, y2 = map(int, box)
-        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        color = int((classes[i]*100)) # Using this to break the color and check to make sure classes are properly separated
+        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, color), 2)
     end = datetime.now()
     cv2.imshow("Inference",cv2.resize(image, (600, 800)))
     cv2.waitKey(0)
     print(f"Time taken: {end - start}")
+    print(boxes.__len__() )
+    print(scores.__len__())
+    print(classes.__len__() )

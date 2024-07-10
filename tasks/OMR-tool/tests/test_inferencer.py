@@ -16,14 +16,14 @@ def model_path():
 
 @pytest.fixture(scope="module")
 def inferencer(model_path):
-    return Inferencer(model_path=str(model_path))
+    return Inferencer(model_path=model_path)
 
 @pytest.fixture(scope="module")
 def image():
     image_path = (
         Path(__file__).resolve().parents[1] / "fixtures" / "submission_2-page_1.jpg"
     )
-    return cv2.imread(str(image_path))
+    return cv2.imread(image_path)
 
 def test_initialization(inferencer):
     assert isinstance(inferencer, Inferencer)
@@ -42,14 +42,20 @@ def test_postprocess_results(inferencer):
     dummy_results = np.random.rand(1, 100, 85).astype(np.float32)
     boxes, scores, classes = inferencer.postprocess_results(dummy_results)
     assert isinstance(boxes, np.ndarray)
+
     assert isinstance(scores, np.ndarray)
     assert isinstance(classes, np.ndarray)
 
 def test_inference(inferencer, image):
     boxes, scores, classes = inferencer(image)
     assert isinstance(boxes, np.ndarray)
+    assert boxes.shape[1] == 4
+    assert boxes.__len__() == 108
     assert isinstance(scores, np.ndarray)
+    assert scores.__len__() == 108
     assert isinstance(classes, np.ndarray)
+    assert classes.__len__() == 108
+
 
 if __name__ == "__main__":
     pytest.main()

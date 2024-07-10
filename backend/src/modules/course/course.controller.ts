@@ -23,8 +23,10 @@ import { User } from '../../decorators/user.decorator';
 import {
   CourseArchivedException,
   CourseNotFoundException,
+  CourseRoleException,
   InvalidInviteCodeException,
   SemesterNotFoundException,
+  UserNotFoundException,
 } from '../../common/errors';
 import { CourseRoleGuard } from '../../guards/course-role.guard';
 import { Roles } from '../../decorators/roles.decorator';
@@ -89,7 +91,7 @@ export class CourseController {
    * @returns {Promise<Response>} - Response object
    */
   @UseGuards(AuthGuard, CourseRoleGuard)
-  @Roles(CourseRoleEnum.PROFESSOR)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
   @Delete('/:cid/member/:uid')
   async removeStudentFromCourse(
     @Res() res: Response,
@@ -97,13 +99,20 @@ export class CourseController {
     @Param('uid', ParseIntPipe) uid: number,
   ): Promise<Response> {
     try {
-      await this.courseService.removeMemberFromCourse(cid, uid);
+      await this.courseService.removeStudentFromCourse(cid, uid);
       return res.status(HttpStatus.OK).send({
         message: 'ok',
       });
     } catch (e) {
-      if (e instanceof CourseNotFoundException) {
+      if (
+        e instanceof CourseNotFoundException ||
+        e instanceof UserNotFoundException
+      ) {
         return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof CourseRoleException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
           message: e.message,
         });
       } else {

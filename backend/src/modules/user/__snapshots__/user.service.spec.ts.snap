@@ -164,7 +164,7 @@ PageDto {
 }
 `;
 
-exports[`UserService getAllUsers should return all users in one page when take is 50 1`] = `
+exports[`UserService getAllUsers should return all users in one page when take is less or equal to 50 1`] = `
 PageDto {
   "data": [
     UserModel {

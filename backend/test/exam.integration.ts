@@ -4,11 +4,11 @@ import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { CourseModel } from '../src/modules/course/entities/course.entity';
 import { ExamModel } from '../src/modules/exam/entities/exam.entity';
 import { CourseUserModel } from '../src/modules/course/entities/course-user.entity';
-import { CourseRoleEnum } from '../src/enums/user.enum';
+import { CourseRoleEnum, UserRoleEnum } from '../src/enums/user.enum';
 import { SubmissionModel } from '../src/modules/exam/entities/submission.entity';
 import { StudentUserModel } from '../src/modules/user/entities/student-user.entity';
 import * as path from 'path';
-import * as fs from 'fs-extra';
+import * as fsExtra from 'fs-extra';
 
 describe('Exam Integration', () => {
   const supertest = setUpIntegrationTests(ExamModule);
@@ -1290,8 +1290,11 @@ describe('Exam Integration', () => {
         'processed_submissions',
         `submission.pdf`,
       );
-      await fs.ensureDir(path.dirname(tempFilePath));
-      await fs.writeFile(tempFilePath, 'Temporary file content for testing');
+      await fsExtra.ensureDir(path.dirname(tempFilePath));
+      await fsExtra.writeFile(
+        tempFilePath,
+        'Temporary file content for testing',
+      );
 
       const result = await supertest()
         .get(`/exam/${course.id}/submission/${submission.id}/user/${user.id}`)
@@ -1299,7 +1302,7 @@ describe('Exam Integration', () => {
 
       expect(result.status).toBe(200);
 
-      await fs.remove(tempFilePath);
+      await fsExtra.remove(tempFilePath);
     });
   });
 
@@ -1725,6 +1728,83 @@ describe('Exam Integration', () => {
 
       expect(result.status).toBe(200);
       expect(result.body).toStrictEqual({ message: 'ok' });
+    });
+  });
+
+  describe('GET /exam/custom_bubble_sheet/:fileId', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().get('/exam/custom_bubble_sheet/1').expect(401);
+    });
+
+    it('should return 401 if user has no professor or admin role in the system', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      return supertest()
+        .get('/exam/custom_bubble_sheet/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 404 if file is not found in the system', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      return supertest()
+        .get('/exam/custom_bubble_sheet/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(404);
+    });
+
+    it('should return 200 if file is found in the system', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      const tempFilePath = path.join(
+        __dirname,
+        '..',
+        '..',
+        'uploads',
+        'bubble_sheets',
+        '1',
+        `bubble_sheet.zip`,
+      );
+
+      await fsExtra.ensureDir(path.dirname(tempFilePath));
+      await fsExtra.writeFile(
+        tempFilePath,
+        'Temporary file content for testing',
+      );
+
+      const result = await supertest()
+        .get('/exam/custom_bubble_sheet/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(200);
+      await fsExtra.remove(tempFilePath);
     });
   });
 });

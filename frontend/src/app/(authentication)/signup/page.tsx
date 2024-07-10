@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState, FormEvent, useEffect } from "react";
+import React, { useRef, useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
@@ -19,7 +19,7 @@ export default function SignUpPage() {
   const [formValid, setFormValid] = useState(FormValid.Invalid);
 
   // stores data needed for the redirect modal
-  const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({
+  const redirectInfo = useRef<redirectModalData>({
     message: "",
     redirectPath: "",
     buttonText: "",
@@ -40,6 +40,7 @@ export default function SignUpPage() {
   async function onSignUp(event: FormEvent<HTMLFormElement>) {
     // missing the student_id and employee_id fields (at least one required by backend)
     // so cannot send the data to the database yet
+
     event.preventDefault();
     setStatus(Status.Pending);
 
@@ -71,10 +72,16 @@ export default function SignUpPage() {
 
     setFormValid(FormValid.Valid);
 
+    // if (formValid === FormValid.Valid) {
+    //   setStatus(Status.Success);
+    // }
+  }
+
+  useEffect(() => {
     if (formValid === FormValid.Valid) {
       setStatus(Status.Success);
     }
-  }
+  }, [formValid]);
 
   // needed for account setup form
   const [userID, setUserID] = useState({
@@ -133,11 +140,10 @@ export default function SignUpPage() {
 
       // if response is ok, display message to validate email, and redirect to login page
       if (response.ok) {
-        setRedirectInfo({
-          message: "Please check your email to validate your account.",
-          redirectPath: "/login",
-          buttonText: "Ok!",
-        });
+        redirectInfo.current.message =
+          "Please check your email to validate your account.";
+        redirectInfo.current.redirectPath = "/login";
+        redirectInfo.current.buttonText = "Ok!";
       } else {
         throw new Error();
       }
@@ -148,11 +154,9 @@ export default function SignUpPage() {
         errMessage = "This user already exists. Please try again.";
       }
 
-      setRedirectInfo({
-        message: errMessage,
-        redirectPath: "/signup",
-        buttonText: "Try again",
-      });
+      redirectInfo.current.message = errMessage;
+      redirectInfo.current.redirectPath = "/signup";
+      redirectInfo.current.buttonText = "Try again";
     } finally {
       setStatus(Status.Redirect);
     }
@@ -169,9 +173,9 @@ export default function SignUpPage() {
       )}
       {status === Status.Redirect && (
         <RedirectModal
-          message={redirectInfo.message}
-          redirectPath={redirectInfo.redirectPath}
-          buttonText={redirectInfo.buttonText}
+          message={redirectInfo.current.message}
+          redirectPath={redirectInfo.current.redirectPath}
+          buttonText={redirectInfo.current.buttonText}
         />
       )}
       <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">

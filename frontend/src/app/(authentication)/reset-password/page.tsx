@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import RedirectModal from "../components/redirectModal";
@@ -14,7 +14,7 @@ export default function ResetPasswordPage() {
   });
 
   // stores data needed for the redirect modal
-  const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({
+  const redirectInfo = useRef<redirectModalData>({
     message: "",
     redirectPath: "",
     buttonText: "",
@@ -40,11 +40,10 @@ export default function ResetPasswordPage() {
 
       // if response is ok, display message to check email, and redirect to login page
       if (response.ok) {
-        setRedirectInfo({
-          message: "Please check your email for the password reset link.",
-          redirectPath: "/login",
-          buttonText: "Ok!",
-        });
+        redirectInfo.current.message =
+          "Please check your email for the password reset link.";
+        redirectInfo.current.redirectPath = "/login";
+        redirectInfo.current.buttonText = "Ok!";
       } else {
         throw new Error();
       }
@@ -61,11 +60,9 @@ export default function ResetPasswordPage() {
           "We could not find the email you provided. Please try again.";
       }
 
-      setRedirectInfo({
-        message: errMessage,
-        redirectPath: "/reset-password",
-        buttonText: "Try again",
-      });
+      redirectInfo.current.message = errMessage;
+      redirectInfo.current.redirectPath = "/reset-password";
+      redirectInfo.current.buttonText = "Try again";
     } finally {
       setStatus(Status.Redirect);
     }
@@ -75,9 +72,9 @@ export default function ResetPasswordPage() {
     <>
       {status === Status.Redirect && (
         <RedirectModal
-          message={redirectInfo.message}
-          redirectPath={redirectInfo.redirectPath}
-          buttonText={redirectInfo.buttonText}
+          message={redirectInfo.current.message}
+          redirectPath={redirectInfo.current.redirectPath}
+          buttonText={redirectInfo.current.buttonText}
         />
       )}
       <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">

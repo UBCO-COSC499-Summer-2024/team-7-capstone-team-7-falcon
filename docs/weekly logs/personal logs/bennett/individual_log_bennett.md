@@ -1,3 +1,47 @@
+## (7/05- 7/09)
+
+### Timesheet
+Clockify report
+![time for 07.05_- 07.09](07.05_07.09.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Create student courses tables [S]
+  * #2: Create the student view exam page [S]
+
+### Progress Update (since 7/05/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create student courses tables #267
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create the student view exam page #172
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I finished the 4 tables for the student to list exams and submissions. I finished all of the student view exam page that is possible
+(endpoint is not ready yet to download pdf). I also did a little bit of code refactoring/cleanup since some of the components weren't flexible enough for the new pages. Overall I completed everything I set out to do this cycle and the process is going smoothly.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Add site wide error handling
+  * Code refactoring
+
 ## (7/03- 7/04)
 
 ### Timesheet

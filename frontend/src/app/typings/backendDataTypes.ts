@@ -6,7 +6,6 @@ export interface CourseData {
   semester_id: number;
 }
 export interface CourseEditData {
-  id: number;
   courseCode: string;
   courseName: string;
   semesterId: number;

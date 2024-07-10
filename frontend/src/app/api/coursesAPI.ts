@@ -1,6 +1,6 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { CourseData } from "../typings/backendDataTypes";
+import { CourseEditData } from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
@@ -175,7 +175,7 @@ export const coursesAPI = {
       return error;
     }
   },
-  editCourse: async (course_id: number, courseData: CourseData) => {
+  editCourse: async (course_id: number, courseData: CourseEditData) => {
     try {
       const auth_token = await fetchAuthToken();
 

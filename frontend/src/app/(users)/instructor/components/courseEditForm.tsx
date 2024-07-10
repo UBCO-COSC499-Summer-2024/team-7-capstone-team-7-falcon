@@ -13,7 +13,6 @@ interface CourseEditFormProps {
 
 const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
   const [formData, setData] = useState<CourseEditData>({
-    id: -1,
     courseName: "",
     courseCode: "",
     semesterId: -1,
@@ -41,7 +40,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
     const { name, value } = e.target;
     setData({
       ...formData,
-      [name]: name === "semester_id" ? Number(value) : value,
+      [name]: name === "semesterId" ? Number(value) : value,
     });
   };
   const copyInviteLink = () => {

@@ -1,3 +1,32 @@
+##Friday (7/03 - 7/04)
+
+##Timesheet
+
+<img width="997" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/b5d10f48-7c0e-48c9-a322-d845d6bfec75">
+
+##Project Board
+
+<img width="761" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/bc60e232-7ec5-4324-a019-301d9c75e951">
+
+## Current Tasks
+1. Finish implementing the Edit course component to the edit course page.
+2. Start working on Admin Dashboard
+3. Create Navbar component for Admin
+
+## Progress update since (03-07)
+1. I created the Accordion component for Student and Instructor FAQ pages
+2. I implemented the component and added styling changes and some extra functionalities for FAQ pages
+3. I created the edit course component that will be implemented in the Course Settings Page
+4. I used the Table Component to create User Table for instructor and hooked it to the endpoint.
+5. I reviewed some of the PRs that got merged for the demo (MVP)
+
+## Cycle Goal Review
+
+I did spend a lot of hours understanding the existing code to be able to work on Course Settings page. I also did my FAQ PRs merged into dev, and did manage to create a PR for Course Settings component. I also created the User Table from the existing table component code. Mainly, I had to spend time in understanding the API endpoints since I worked on hooking them with frontend. 
+
+### Next Goal Cycle
+
+I am hoping to get my Course Settings PR merged into development. I am also planning to finish Admin dashboard pages and review some of the other code for PR reviews.
 
 ## Wednesday (6/28-7/02)
 

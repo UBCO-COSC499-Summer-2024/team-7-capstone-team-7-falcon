@@ -1,5 +1,40 @@
 # Personal Logs
 
+## Friday (7/03-7/04)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.03-07.04/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Create inference utilities for the object recognition model
+  2. Integrate object recognition into the overall OMR pipeline
+  3. Create a short demo for MVP presentation
+
+### Progress Update (since 7/03/2024)
+
+![ProjectBoard](07.03-07.04/board.png)
+
+  1. Got a model that actually works by training on YOLOv8
+  2. tested and validated inference results
+  3. Exported model for use with ONNX
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+Using YOLOv8 solved every problem I had with training the model, I then exported it to ONNX so thatr we are not using the library itself in production. Inference worked in my testing in the submodule's notebook, I now need to integrate it into our app
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have inference tasks done
+  2. Finish inference implementation on OMR pipeline
+
+---
+---
+---
+
 ## Wednesday (6/28-7/02)
 
 ### Timesheet

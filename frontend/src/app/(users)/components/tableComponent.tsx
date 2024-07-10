@@ -13,8 +13,8 @@ import {
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { usePagination } from "@table-library/react-table-library/pagination";
-import { Column } from "./type";
-import { DataItem } from "./type";
+import { Column } from "../instructor/components/type";
+import { DataItem } from "../instructor/components/type";
 
 type TableComponentProps<T> = {
   data: DataItem<T>[];
@@ -34,8 +34,8 @@ const TableComponent = <T,>({
     setSearch(event.target.value);
   };
 
-  const filteredData = data.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase()),
+  const filteredData = data.filter(
+    (item) => item && item.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (

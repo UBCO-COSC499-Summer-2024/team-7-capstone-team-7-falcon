@@ -5,29 +5,32 @@ import { Column, DataItem } from "./type";
 import TableComponent from "./tableComponent";
 import { Submission } from "../../../typings/backendDataTypes";
 import { useSubmissionContext } from "../../../contexts/submissionContext";
-import Image from "next/image";
+import Avatar from "../../../components/avatar";
 
 const exam_columns: Column[] = [
   { label: "Id", renderCell: (item) => item.student_id },
   {
     label: "Name",
     renderCell: (item) => (
-      <div className="flex space-x-4">
-        <Image
-          src={item.user.avatar_url}
-          alt="Avatar"
-          style={{ borderRadius: "50%" }}
-          width={35}
-          height={35}
+      <div className="flex space-x-4 items-center">
+        <Avatar
+          avatarUrl={item.user.avatar_url}
+          firstName={item.user.first_name}
+          lastName={item.user.last_name}
+          imageTextHeight={`w-12`}
+          imageTextWidth={`w-12`}
+          textSize={1}
         />
-        <span className="mt-1">{item.user.name}</span>
+        <span className="mt-1">
+          {item.user.first_name} {item.user.last_name ?? ""}
+        </span>
       </div>
     ),
   },
   {
     label: "Score",
     renderCell: (item) => (
-      <div className="rounded text-purple-700 bg-gray-100 text-center mx-8 py-1 my-4 font-bold">
+      <div className="rounded text-purple-700 bg-gray-100 text-center mx-1 py-1 my-4 font-bold">
         {item.score === -1 ? "N/A" : item.score}
       </div>
     ),
@@ -53,12 +56,13 @@ const SubmissionTable: React.FC<ExamTableProps> = () => {
       const submissionTableData: DataItem<Submission>[] = submissions.map(
         (item: Submission) => ({
           id: Number(item.student_id),
-          name: item.user.name,
+          name: `${item.user.first_name} ${item.user.last_name}`,
           data: {
             student_id: item.student_id,
             user: {
               avatar_url: item.user.avatar_url,
-              name: item.user.name,
+              first_name: item.user.first_name,
+              last_name: item.user?.last_name,
             },
             score: item.score,
             updated_at: item.updated_at,

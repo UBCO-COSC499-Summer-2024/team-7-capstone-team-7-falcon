@@ -1194,4 +1194,138 @@ describe('ExamService', () => {
       expect(result).toMatchSnapshot();
     });
   });
+
+  describe('getGradedSubmissionFilePathBySubmissionId', () => {
+    it('should return the graded submission file path by submission id', async () => {
+      const submission = await SubmissionModel.create({
+        exam: null,
+        student: null,
+        answers: {},
+        score: 100,
+        document_path: 'path/to/file',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const filePath =
+        await examService.getGradedSubmissionFilePathBySubmissionId(
+          submission.id,
+        );
+
+      expect(filePath).toEqual(submission.document_path);
+    });
+
+    it('should throw error if the submission is not found', async () => {
+      await expect(
+        examService.getGradedSubmissionFilePathBySubmissionId(1),
+      ).rejects.toThrow('Submission not found');
+    });
+
+    it('should throw error if the submission has negative score (ungraded)', async () => {
+      const submission = await SubmissionModel.create({
+        exam: null,
+        student: null,
+        answers: {},
+        score: -1,
+        document_path: 'path/to/file',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        examService.getGradedSubmissionFilePathBySubmissionId(submission.id),
+      ).rejects.toThrow('Submission not found');
+    });
+
+    it('should throw error if the submission has no document path', async () => {
+      const submission = await SubmissionModel.create({
+        exam: null,
+        student: null,
+        answers: {},
+        score: 100,
+        document_path: '',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        examService.getGradedSubmissionFilePathBySubmissionId(submission.id),
+      ).rejects.toThrow('Submission not found');
+    });
+  });
+
+  describe('releaseGrades', () => {
+    it('should release grades for an exam', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      await examService.releaseGrades(exam.id);
+
+      const updatedExam = await ExamModel.findOne({
+        where: { id: exam.id },
+      });
+
+      expect(updatedExam.grades_released_at).toBeDefined();
+    });
+
+    it('should throw exam not found error when course is archived', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+        is_archived: true,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      await expect(examService.releaseGrades(exam.id)).rejects.toThrow(
+        'Exam not found',
+      );
+    });
+
+    it('should throw an error when the exam is not found', async () => {
+      await expect(examService.releaseGrades(1)).rejects.toThrow(
+        'Exam not found',
+      );
+    });
+  });
 });

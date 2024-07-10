@@ -8,6 +8,11 @@ export interface AvatarProps {
   avatarUrl: string | undefined;
   firstName: string;
   lastName: string | undefined;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageTextWidth?: string;
+  imageTextHeight?: string;
+  textSize?: number;
 }
 
 /**
@@ -19,6 +24,11 @@ const Avatar: React.FC<AvatarProps> = ({
   avatarUrl,
   firstName,
   lastName,
+  imageWidth = 96,
+  imageHeight = 96,
+  imageTextWidth = `w-24`,
+  imageTextHeight = `h-24`,
+  textSize = 2,
 }: AvatarProps) => {
   return (
     <div>
@@ -26,16 +36,18 @@ const Avatar: React.FC<AvatarProps> = ({
         <Image
           className="rounded-full"
           src={avatarUrl}
-          width={96}
-          height={96}
+          width={imageWidth}
+          height={imageHeight}
           priority
           alt={`Profile image of ${firstName} ${lastName ?? ""}`}
         />
       )}
 
       {!avatarUrl && (firstName || lastName) && (
-        <div className="bg-gray-200 w-24 h-24 rounded-full flex items-center justify-center">
-          <span className="text-gray-500 text-2xl">
+        <div
+          className={`bg-gray-200 ${imageTextWidth} ${imageTextHeight} rounded-full flex items-center justify-center`}
+        >
+          <span className={`text-gray-500 text-${textSize}xl`}>
             {firstName?.charAt(0)}
             {lastName?.charAt(0)}
           </span>

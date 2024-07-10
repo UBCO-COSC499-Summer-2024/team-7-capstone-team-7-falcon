@@ -22,6 +22,7 @@ import {
 } from './dto/bubble-sheet-creation-job.dto';
 import { Job } from 'bull';
 import { QueueAuthGuard } from '../../guards/queue-auth.guard';
+import { CouldNotCompleteJobException } from '../../common/errors';
 
 @Controller('queue')
 export class QueueController {
@@ -88,7 +89,8 @@ export class QueueController {
    * @param jobId {string} Job ID
    * @returns {Promise<Response>} Response object
    */
-  @UseGuards(QueueAuthGuard)
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.PROFESSOR)
   @Get(':queue/:jobId')
   async getJobById(
     @Res() res: Response,
@@ -122,15 +124,25 @@ export class QueueController {
     @Param('jobId') jobId: string,
     @Body(new ValidationPipe()) result: BubbleSheetCompletionJobDto,
   ): Promise<Response> {
-    switch (queueName) {
-      case 'bubble-sheet-creation':
-        await this.bubbleSheetCreationQueueService.markJobAsComplete(
-          jobId,
-          result,
-        );
-        break;
-      default:
+    try {
+      switch (queueName) {
+        case 'bubble-sheet-creation':
+          await this.bubbleSheetCreationQueueService.markJobAsComplete(
+            jobId,
+            result,
+          );
+          break;
+        default:
+      }
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof CouldNotCompleteJobException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({ message: e.message });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ message: e.message });
+      }
     }
-    return res.status(HttpStatus.OK).send({ message: 'ok' });
   }
 }

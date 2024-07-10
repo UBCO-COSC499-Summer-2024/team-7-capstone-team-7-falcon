@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { Roles } from '../../decorators/roles.decorator';
-import { CourseRoleEnum } from '../../enums/user.enum';
+import { CourseRoleEnum, UserRoleEnum } from '../../enums/user.enum';
 import { AuthGuard } from '../../guards/auth.guard';
 import { CourseRoleGuard } from '../../guards/course-role.guard';
 import { ExamCreateDto } from './dto/exam-create.dto';
@@ -37,6 +37,8 @@ import {
   UpcomingExamsInterface,
 } from '../../common/interfaces';
 import { CourseUserModel } from '../course/entities/course-user.entity';
+import { SystemRoleGuard } from '../../guards/system-role.guard';
+import { SubmissionGradeDto } from './dto/submission-grade.dto';
 
 @Controller('exam')
 export class ExamController {
@@ -364,6 +366,93 @@ export class ExamController {
         });
       } else if (e instanceof UnauthorizedException) {
         res.status(HttpStatus.UNAUTHORIZED).send({
+          message: e.message,
+        });
+      } else {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Update grade for the submission
+   * @param res {Response} - Response object
+   * @param eid {number} - Exam id
+   * @param cid {number} - Course id
+   * @param sid {number} - Submission id
+   * @param body {SubmissionGradeDto} - Submission grade data
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Patch('/:eid/course/:cid/submission/:sid/grade')
+  async updateGrade(
+    @Res() res: Response,
+    @Param('eid', new ValidationPipe()) eid: number,
+    @Param('cid', new ValidationPipe()) cid: number,
+    @Param('sid', new ValidationPipe()) sid: number,
+    @Body(new ValidationPipe()) body: SubmissionGradeDto,
+  ): Promise<Response> {
+    try {
+      await this.examService.updateGrade(eid, cid, sid, body.grade);
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof SubmissionNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Get bubble sheet by file id
+   * @param res {Response} - Response object
+   * @param fileId {string} - file id
+   * @returns {Promise<StreamableFile | void>} - StreamableFile or void object
+   */
+  @Get('/custom_bubble_sheet/:fileId')
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.PROFESSOR)
+  async getCustomBubbleSheet(
+    @Res({ passthrough: true }) res: Response,
+    @Param('fileId', new ValidationPipe()) fileId: string,
+  ): Promise<StreamableFile | void> {
+    try {
+      const filePath = join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '..',
+        'uploads',
+        'bubble_sheets',
+        `${fileId}`,
+        `bubble_sheet.zip`,
+      );
+
+      // Check if file exists and is accessible
+      if (!existsSync(filePath)) {
+        throw new FileNotFoundException();
+      }
+
+      const file = createReadStream(filePath);
+
+      res.set({
+        'Content-Type': 'application/zip',
+        'Content-Disposition': 'attachment; filename=bubble_sheet.zip',
+      });
+
+      return new StreamableFile(file);
+    } catch (e) {
+      if (e instanceof FileNotFoundException) {
+        res.status(HttpStatus.NOT_FOUND).send({
           message: e.message,
         });
       } else {

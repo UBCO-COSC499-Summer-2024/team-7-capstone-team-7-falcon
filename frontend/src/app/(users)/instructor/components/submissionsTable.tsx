@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "./type";
-import TableComponent from "./tableComponent";
+import TableComponent from "../../components/tableComponent";
 import { Submission } from "../../../typings/backendDataTypes";
 import { useSubmissionContext } from "../../../contexts/submissionContext";
 import Avatar from "../../../components/avatar";
@@ -17,6 +17,8 @@ const exam_columns: Column[] = [
           avatarUrl={item.user.avatar_url}
           firstName={item.user.first_name}
           lastName={item.user.last_name}
+          imageHeight={48}
+          imageWidth={48}
           imageTextHeight={`w-12`}
           imageTextWidth={`w-12`}
           textSize={1}

@@ -61,6 +61,8 @@ export const ERROR_MESSAGES = {
     coursesNotFound: 'Courses could not be found',
     courseArchived: 'Course is archived. Cannot be accessed.',
     userNotEnrolledInCourse: 'User is not enrolled in the course',
+    deleteStudentFromCourseError:
+      'User cannot be deleted from course as their role is not student',
   },
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
@@ -89,5 +91,11 @@ export const ERROR_MESSAGES = {
     examsNotFound: 'Exams not found',
     submissionNotFound: 'Submission not found',
     userSubmissionNotFound: 'User submission not found',
+  },
+  submissionController: {
+    submissionNotFound: 'Submission not found',
+    minGradeError: 'Minimum grade must be 0',
+    maxGradeError: 'Maximum grade must be 100',
+    invalidGradeError: 'Grade value is not valid',
   },
 };

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "./type";
-import TableComponent from "./tableComponent";
+import TableComponent from "../../components/tableComponent";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { CourseUser } from "../../../typings/backendDataTypes";
 import Link from "next/link";
@@ -12,7 +12,7 @@ const user_columns: Column[] = [
   {
     label: "Name",
     renderCell: (item) => (
-      <div className="flex space-x-4 items-center">
+      <div className="flex sm:space-x-0 md:space-x-4 items-center">
         <Avatar
           avatarUrl={item.user.avatar_url}
           firstName={item.user.first_name}
@@ -20,6 +20,8 @@ const user_columns: Column[] = [
           imageTextHeight={`w-12`}
           imageTextWidth={`w-12`}
           textSize={1}
+          imageHeight={48}
+          imageWidth={48}
         />
         <span className="mt-1">
           {item.user.first_name} {item.user?.last_name ?? ""}

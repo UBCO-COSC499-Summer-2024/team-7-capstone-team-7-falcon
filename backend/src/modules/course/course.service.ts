@@ -3,8 +3,10 @@ import { CourseModel } from './entities/course.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
   CourseNotFoundException,
+  CourseRoleException,
   InvalidInviteCodeException,
   SemesterNotFoundException,
+  UserNotFoundException,
 } from '../../common/errors';
 import { CourseUserModel } from './entities/course-user.entity';
 import { CourseCreateDto } from './dto/course-create.dto';
@@ -16,30 +18,10 @@ import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
 import { ERROR_MESSAGES } from '../../common';
 import { CourseEditDto } from './dto/course-edit.dto';
+import { SubmissionModel } from '../exam/entities/submission.entity';
 
 @Injectable()
 export class CourseService {
-  /**
-   * Remove member from course
-   * @param cid {number} - Course id
-   * @param uid {number} - User id
-   * @returns {Promise<void>} - Promise object
-   */
-  async removeMemberFromCourse(cid: number, uid: number): Promise<void> {
-    const userCourse = await this.getUserByCourseAndUserId(cid, uid);
-
-    if (!userCourse) {
-      throw new CourseNotFoundException(
-        ERROR_MESSAGES.courseController.userNotEnrolledInCourse,
-      );
-    }
-
-    await CourseUserModel.delete({
-      course: { id: cid },
-      user: userCourse.user,
-    });
-  }
-
   /**
    * Create a new course
    * @param course {CourseCreateDto} - user inputed fields required for course creation
@@ -228,5 +210,50 @@ export class CourseService {
    */
   async archiveCourse(cid: number, archive: boolean): Promise<void> {
     await CourseModel.update({ id: cid }, { is_archived: archive });
+  }
+
+  /**
+   * Delete student from course
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<void>} - Promise object
+   */
+  async removeStudentFromCourse(cid: number, uid: number): Promise<void> {
+    const course = await CourseModel.findOne({
+      where: {
+        id: cid,
+        is_archived: false,
+      },
+      relations: ['users', 'users.user', 'users.user.student_user', 'exams'],
+    });
+
+    if (!course) {
+      throw new CourseNotFoundException();
+    }
+
+    const courseUser = course.users.find(
+      (courseUser) => courseUser.user.id === uid,
+    );
+
+    if (!courseUser) {
+      throw new UserNotFoundException(
+        ERROR_MESSAGES.courseController.userNotEnrolledInCourse,
+      );
+    }
+
+    if (courseUser.course_role !== CourseRoleEnum.STUDENT) {
+      throw new CourseRoleException(
+        ERROR_MESSAGES.courseController.deleteStudentFromCourseError,
+      );
+    }
+
+    course.exams.forEach(async (exam) => {
+      await SubmissionModel.delete({
+        exam,
+        student: { id: courseUser.user.student_user.id },
+      });
+    });
+
+    await CourseUserModel.delete({ id: courseUser.id });
   }
 }

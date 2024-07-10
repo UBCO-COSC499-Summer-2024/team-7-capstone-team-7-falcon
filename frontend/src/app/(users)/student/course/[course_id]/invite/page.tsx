@@ -2,7 +2,7 @@ import React from "react";
 import { fetchAuthToken } from "../../../../../api/cookieAPI";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import { Course, CourseData } from "../../../../../typings/backendDataTypes";
-import ModalMessage from "../../../components/modalMessage";
+import ModalMessage from "../../../../components/modalMessage";
 import { redirect } from "next/navigation";
 import JoinCourseModal from "../../../components/joinCourseModal";
 

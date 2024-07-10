@@ -25,7 +25,7 @@ const PageSidebar: React.FC = () => {
         const userDetails = await usersAPI.getUserDetails();
 
         let userRole;
-        if (userDetails.role === "instructor") {
+        if (userDetails.role === "professor") {
           userRole = Role.INSTRUCTOR;
         } else if (userDetails.role === "admin") {
           userRole = Role.ADMIN;
@@ -52,7 +52,7 @@ const PageSidebar: React.FC = () => {
   return (
     <Sidebar
       id="sidebar"
-      className="hidden md:flex h-screen flex-col bg-[#F7F7F7] w-72 shadow-lg"
+      className="hidden md:flex h-screen flex-col bg-white w-72 shadow-lg"
     >
       <div className="flex flex-col justify-between h-full py-4 px-4">
         <div>

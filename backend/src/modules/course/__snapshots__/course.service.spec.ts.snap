@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`CourseService editCourse should edit course 1`] = `
+CourseModel {
+  "course_code": "COSC499",
+  "course_name": "Capstone Project",
+  "created_at": "1000000000",
+  "id": 1,
+  "is_archived": false,
+  "section_name": "001",
+  "semester": SemesterModel {
+    "created_at": "1609459200000",
+    "ends_at": "1617235200000",
+    "id": 1,
+    "name": "Spring 2024",
+    "starts_at": "1609459200000",
+    "updated_at": "1609459200000",
+  },
+}
+`;
+
 exports[`CourseService enroll should enroll user if user is not already enrolled 1`] = `
 CourseUserModel {
   "course": CourseModel {

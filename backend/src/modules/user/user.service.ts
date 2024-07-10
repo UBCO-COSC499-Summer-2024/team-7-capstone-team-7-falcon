@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { UserModel } from './entities/user.entity';
 import { OAuthGoogleUserPayload } from '../../common/interfaces';
 import {
+  EmailNotVerifiedException,
   EmployeeIdAlreadyExistsException,
+  InvalidAuthMethodException,
   StudentIdAlreadyExistsException,
   UserAlreadyExistsException,
   UserNotFoundException,
@@ -16,14 +18,24 @@ import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserCreateDto } from '../auth/dto/user-create.dto';
 import { TokenService } from '../token/token.service';
 import * as bcrypt from 'bcrypt';
+import { ERROR_MESSAGES } from '../../common';
+import { TokenTypeEnum } from '../../enums/token-type.enum';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
+  private readonly SALT_ROUNDS: number = 10;
+
   /**
    * Constructor
    * @param tokenService {TokenService} - The token service
+   * @param mailService {MailService} - The mail service
    */
-  constructor(private readonly tokenService: TokenService) {}
+  constructor(
+    @Inject(forwardRef(() => TokenService))
+    private readonly tokenService: TokenService,
+    private readonly mailService: MailService,
+  ) {}
 
   /**
    * Search for courses based on user id
@@ -74,7 +86,7 @@ export class UserService {
    */
   public async findOrCreateUser(
     userPayload: OAuthGoogleUserPayload | UserCreateDto,
-    method: AuthTypeEnum,
+    method: string,
   ): Promise<UserModel> {
     let user: UserModel = await UserModel.findOne({
       where: { email: userPayload.email },
@@ -136,16 +148,17 @@ export class UserService {
         }
       }
 
-      const salt = await bcrypt.genSalt(10);
+      const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
       const hashedPassword = await bcrypt.hash(userPayload.password, salt);
 
+      const token = await this.tokenService.createToken();
       user = await UserModel.create({
         email: userPayload.email,
         first_name: userPayload.first_name,
         last_name: userPayload.last_name,
         auth_type: AuthTypeEnum.EMAIL,
         password: hashedPassword,
-        tokens: [await this.tokenService.createToken()],
+        tokens: [token],
         created_at: currentTime,
         updated_at: currentTime,
       }).save();
@@ -173,6 +186,8 @@ export class UserService {
       }
 
       await user.save();
+
+      await this.mailService.sendUserConfirmation(user, token.token);
 
       return user;
     }
@@ -256,6 +271,73 @@ export class UserService {
     await user.save();
 
     return user;
+  }
+
+  /**
+   * Verifies user email
+   * @param user {UserModel} - User object
+   */
+  async verifyEmail(user: UserModel): Promise<void> {
+    user.email_verified = true;
+    await user.save();
+  }
+
+  /**
+   * Sends a reset password email
+   * @param email {string} - User email
+   */
+  async sendResetPasswordEmail(email: string): Promise<void> {
+    const user = await this.findUserByEmail(email, { relations: ['tokens'] });
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    if (user.auth_type !== AuthTypeEnum.EMAIL) {
+      throw new InvalidAuthMethodException(
+        ERROR_MESSAGES.authController.notSupportedAuthType,
+      );
+    }
+
+    if (!user.email_verified) {
+      throw new EmailNotVerifiedException();
+    }
+
+    const token = await this.tokenService.createToken(
+      TokenTypeEnum.PASSWORD_RESET,
+    );
+
+    user.tokens.push(token);
+
+    await user.save();
+
+    await this.mailService.sendPasswordReset(user, token.token);
+  }
+
+  /**
+   * Resets user password
+   * @param user {UserModel} - User object
+   * @param password {string} - New password
+   */
+  async resetPassword(user: UserModel, password: string): Promise<void> {
+    const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+  }
+
+  /**
+   * Finds a user by email
+   * @param email {string} - User email
+   * @param additionalProps {any} [optional] - Additional properties for the query
+   * @returns {Promise<UserModel>} - User object
+   */
+  async findUserByEmail(
+    email: string,
+    additionalProps?: any,
+  ): Promise<UserModel> {
+    return await UserModel.findOne({ where: { email }, ...additionalProps });
   }
 
   /**

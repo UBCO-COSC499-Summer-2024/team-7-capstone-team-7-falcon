@@ -1,4 +1,17 @@
 export const ERROR_MESSAGES = {
+  common: {
+    passwordString: 'Password must be a string',
+    passwordRequired: 'Password is required',
+    confirmPasswordRequired: 'Confirmation password is required',
+    confirmPasswordString: 'Confirmation password must be a string',
+    passwordStrong:
+      'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase ' +
+      'letter, one number, and one symbol',
+    passwordMustMatch: 'Password and confirmation password do not match',
+    emailRequired: 'Email is required',
+    emailInvalid: 'Email is invalid',
+    fileNotFound: 'File not found',
+  },
   userController: {
     userNotFound: 'User not found',
     editForbidden: 'You are not allowed to edit this user',
@@ -12,6 +25,14 @@ export const ERROR_MESSAGES = {
     invalidAuthMethod: 'Invalid auth method',
     googleAuthError: 'Error authenticating with Google',
     emailNotVerified: 'Email not verified',
+    notSupportedAuthType: 'User account has unsupported authentication type',
+    invalidPassword: 'Invalid password',
+  },
+  tokenController: {
+    invalidToken: 'Invalid token',
+    tokenExpired: 'Token has expired',
+    tokenRequired: 'Token is required',
+    tokenString: 'Token must be a string',
   },
   userEditDto: {
     firstNameString: 'First name must be a string',
@@ -40,6 +61,8 @@ export const ERROR_MESSAGES = {
     coursesNotFound: 'Courses could not be found',
     courseArchived: 'Course is archived. Cannot be accessed.',
     userNotEnrolledInCourse: 'User is not enrolled in the course',
+    deleteStudentFromCourseError:
+      'User cannot be deleted from course as their role is not student',
   },
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
@@ -62,5 +85,11 @@ export const ERROR_MESSAGES = {
   },
   examController: {
     examDateError: 'Exam date must be in the future',
+    noUpcomingExamsFound: 'No upcoming exams found',
+    noGradedExamsFound: 'No graded exams found',
+    examNotFound: 'Exam not found',
+    examsNotFound: 'Exams not found',
+    submissionNotFound: 'Submission not found',
+    userSubmissionNotFound: 'User submission not found',
   },
 };

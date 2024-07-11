@@ -7,10 +7,12 @@ import {
 } from '@nestjs/common';
 import {
   Body,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common/decorators';
@@ -36,6 +38,8 @@ import {
 import { UserEmailDto } from './dto/user-email.dto';
 import { UserPasswordResetDto } from './dto/user-password-reset.dto';
 import { TokenService } from '../token/token.service';
+import { PageOptionsDto } from '../../dto/page-options.dto';
+import { UserRoleDto } from './dto/user-role.dto';
 
 @Controller('user')
 export class UserController {
@@ -50,14 +54,14 @@ export class UserController {
   ) {}
 
   /**
-   * Get list of courses by student id
+   * Get list of courses by user id
    * @param res {Response} - Response object
    * @param user_id {number} - User id
    * @returns {Promise<Response>} - Response
    */
   @UseGuards(AuthGuard)
   @Get('/courses')
-  async findAllCoursesById(
+  async findAllCoursesByUserId(
     @Res() res: Response,
     @User() user: UserModel,
   ): Promise<Response> {
@@ -69,6 +73,108 @@ export class UserController {
       });
     } else {
       return res.status(HttpStatus.OK).send(courses);
+    }
+  }
+
+  /**
+   * Get all users in the system
+   * @param res {Response} - Response object
+   * @param pageOptionsDto {PageOptionsDto} - Page options object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Get('/all')
+  async getAllUsers(
+    @Res() res: Response,
+    @Query(new ValidationPipe()) pageOptionsDto: PageOptionsDto,
+  ): Promise<Response> {
+    try {
+      const users = await this.userService.getAllUsers(pageOptionsDto);
+      return res.status(HttpStatus.OK).send(users);
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({ error: e.message });
+    }
+  }
+
+  /**
+   * Get count of all users in the system by system role
+   * @param res {Response} - Response object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Get('/all/count')
+  async getAllUsersCount(@Res() res: Response): Promise<Response> {
+    try {
+      const count = await this.userService.countAllUsersByRole();
+      return res.status(HttpStatus.OK).send(count);
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({ error: e.message });
+    }
+  }
+
+  /**
+   * Change user role
+   * @param res {Response} - Response object
+   * @param uid {number} - User id
+   * @param body {object} - Object with role field
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Patch('/:uid/change_role')
+  async updateRole(
+    @Res() res: Response,
+    @Param('uid', ParseIntPipe) uid: number,
+    @Body(new ValidationPipe()) body: UserRoleDto,
+  ): Promise<Response> {
+    try {
+      await this.userService.updateUserRole(uid, body.userRole);
+      return res.status(HttpStatus.NO_CONTENT).send();
+    } catch (e) {
+      if (e instanceof UserNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: ERROR_MESSAGES.userController.userNotFound,
+        });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ error: e.message });
+      }
+    }
+  }
+
+  /**
+   * Delete user profile picture
+   * @param res {Response} - Response object
+   * @param uid {number} - User id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Delete('/:uid/delete_profile_picture')
+  async deleteProfilePicture(
+    @Res() res: Response,
+    @Param('uid', ParseIntPipe) uid: number,
+  ): Promise<Response> {
+    try {
+      await this.userService.deleteProfilePicture(uid);
+      return res.status(HttpStatus.NO_CONTENT).send();
+    } catch (e) {
+      if (e instanceof UserNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: ERROR_MESSAGES.userController.userNotFound,
+        });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ error: e.message });
+      }
     }
   }
 

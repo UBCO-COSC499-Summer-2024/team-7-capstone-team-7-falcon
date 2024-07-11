@@ -106,8 +106,30 @@ interface UserSubmissionExamDetailsInterface {
  * User submission exam interface
  */
 export interface UserSubmissionExamInterface {
-  exam: UserSubmissionExamDetailsInterface,
+  exam: UserSubmissionExamDetailsInterface;
   course: UserSubmissionExamCourseDetailsInterface;
   grades: number[];
   studentSubmission: UserSubmissionExamStudentSubmissionInterface;
+}
+
+/**
+ * User role count interface
+ */
+export interface UserRoleCount {
+  count: number;
+  role: string;
+}
+
+/**
+ * Course details interface
+ */
+export interface CourseDetailsInterface {
+  courseId: number;
+  courseCode: string;
+  semesterName: string;
+  members: number;
+  creator: {
+    firstName: string;
+    lastName: string;
+  };
 }

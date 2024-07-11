@@ -1,6 +1,6 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { CourseData } from "../typings/backendDataTypes";
+import { Course, CourseData } from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
@@ -18,12 +18,17 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/${courseId}/public`);
-      return response;
+
+      const response = await instance.get<Course>(`/${courseId}/public`);
+      if (!response.data) {
+        throw new Error("Course does not exist");
+      }
+
+      return response.data;
     } catch (error: any) {
       // always axios error
       console.error("Failed to find course:", error);
-      return error;
+      throw error;
     }
   },
 

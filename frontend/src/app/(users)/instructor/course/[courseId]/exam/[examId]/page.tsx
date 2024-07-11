@@ -2,12 +2,10 @@ import React from "react";
 import { coursesAPI } from "../../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
   Exam,
   SelectedButton,
   Submission,
 } from "../../../../../../typings/backendDataTypes";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   Upload,
@@ -22,24 +20,21 @@ import CourseHeader from "../../../../components/courseHeader";
 import { examsAPI } from "../../../../../../api/examAPI";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import SubmissionProvider from "../../../../../../contexts/submissionContext";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const ViewExam = async ({
   params,
 }: {
-  params: { course_id: string; exam_id: string };
+  params: { courseId: string; examId: string };
 }) => {
-  const cid = Number(params.course_id);
-  const exam_id = Number(params.exam_id);
+  const cid = Number(params.courseId);
+  const examId = Number(params.examId);
 
-  const response = await coursesAPI.getCourse(cid);
-  const course: Course = response?.data;
-  const courseData: CourseData = { ...course };
+  const course: Course = await coursesAPI.getCourse(cid);
 
-  const exam_response = await examsAPI.getExam(exam_id, cid);
+  const exam_response = await examsAPI.getExam(examId, cid);
   const exam: Exam = exam_response.data;
 
-  const res = await examsAPI.getSubmissions(cid, exam_id);
+  const res = await examsAPI.getSubmissions(cid, examId);
   const submissionData: Submission[] = res.data.map((item: any) => ({
     student_id: item.student.id,
     user: {
@@ -50,11 +45,6 @@ const ViewExam = async ({
     score: item.score,
     updated_at: new Date(Number(item.updated_at)).toLocaleString(),
   }));
-
-  // need to handle more checks here
-  if (!course || !response) {
-    redirect(`../..`);
-  }
 
   const uploadSubmissions = () => {
     return null;
@@ -74,8 +64,8 @@ const ViewExam = async ({
         <div className="grid grid-cols-2">
           <div className="col-span-1">
             <CourseHeader
-              course_code={courseData.course_code}
-              course_desc={courseData.course_name}
+              course_code={course.course_code}
+              course_desc={course.course_name}
               course_id={course.id}
               selected={SelectedButton.None}
             />
@@ -100,7 +90,7 @@ const ViewExam = async ({
         <div className="grid grid-cols-5 gap-24 mt-4 border-t-2 border-black">
           <div className="col-span-3 p-4">
             <p className="">{}</p>
-            <SubmissionTable course_id={cid} exam_id={exam_id} />
+            <SubmissionTable course_id={cid} exam_id={examId} />
           </div>
           <div className="space-y-4 col-span-2 pr-8 p-4">
             <button

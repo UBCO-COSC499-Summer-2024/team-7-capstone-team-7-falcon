@@ -1,9 +1,7 @@
 import React from "react";
-import { fetchAuthToken } from "../../../../../api/cookieAPI";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import { Course, CourseData } from "../../../../../typings/backendDataTypes";
 import ModalMessage from "../../../../components/modalMessage";
-import { redirect } from "next/navigation";
 import JoinCourseModal from "../../../components/joinCourseModal";
 
 const JoinCourse = async ({
@@ -13,21 +11,9 @@ const JoinCourse = async ({
   params: { course_id: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  const authToken = await fetchAuthToken();
-  if (authToken === "") {
-    redirect(`/login`);
-  }
-
-  const response = await coursesAPI.getCourse(Number(params.course_id));
-  const code = searchParams?.code;
-  const course: Course = response?.data;
+  const course: Course = await coursesAPI.getCourse(Number(params.course_id));
   const courseData: CourseData = { ...course };
-
-  if (!course || !response) {
-    return (
-      <ModalMessage message={"This course could not be found"}></ModalMessage>
-    );
-  }
+  const code = searchParams?.code;
 
   return <JoinCourseModal courseData={courseData} inviteCode={String(code)} />;
 };

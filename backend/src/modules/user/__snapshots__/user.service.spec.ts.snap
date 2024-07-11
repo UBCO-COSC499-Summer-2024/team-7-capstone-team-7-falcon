@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`UserService countAllUsersByRole should count all users by role 1`] = `
+[
+  {
+    "count": "5",
+    "role": "student",
+  },
+  {
+    "count": "2",
+    "role": "professor",
+  },
+  {
+    "count": "2",
+    "role": "admin",
+  },
+]
+`;
+
 exports[`UserService findOrCreateUser should create user 1`] = `
 UserModel {
   "auth_type": "google_oauth",
@@ -84,6 +101,171 @@ UserModel {
       "type": "EMAIL_VERIFICATION",
     },
   ],
+}
+`;
+
+exports[`UserService getAllUsers should return all users from second page 1`] = `
+PageDto {
+  "data": [
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+5@mail.com",
+      "first_name": "John",
+      "id": 6,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+6@mail.com",
+      "first_name": "John",
+      "id": 7,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+7@mail.com",
+      "first_name": "John",
+      "id": 8,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+8@mail.com",
+      "first_name": "John",
+      "id": 9,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+9@mail.com",
+      "first_name": "John",
+      "id": 10,
+      "last_name": "Doe",
+      "role": "student",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": true,
+    "itemCount": 10,
+    "page": 2,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`UserService getAllUsers should return all users in one page when take is less or equal to 50 1`] = `
+PageDto {
+  "data": [
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+0@mail.com",
+      "first_name": "John",
+      "id": 1,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+1@mail.com",
+      "first_name": "John",
+      "id": 2,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+2@mail.com",
+      "first_name": "John",
+      "id": 3,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+3@mail.com",
+      "first_name": "John",
+      "id": 4,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+4@mail.com",
+      "first_name": "John",
+      "id": 5,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+5@mail.com",
+      "first_name": "John",
+      "id": 6,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+6@mail.com",
+      "first_name": "John",
+      "id": 7,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+7@mail.com",
+      "first_name": "John",
+      "id": 8,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+8@mail.com",
+      "first_name": "John",
+      "id": 9,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+9@mail.com",
+      "first_name": "John",
+      "id": 10,
+      "last_name": "Doe",
+      "role": "student",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": 1,
+    "pageCount": 1,
+    "take": 50,
+  },
 }
 `;
 

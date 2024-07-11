@@ -25,7 +25,7 @@ export default function ResetPasswordPage() {
     setStatus(Status.Pending);
     const jsonPayload = JSON.stringify(userEmail);
     let response;
-    console.log(jsonPayload);
+
     try {
       response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/user/password/request_reset/`,

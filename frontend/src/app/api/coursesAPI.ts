@@ -268,4 +268,22 @@ export const coursesAPI = {
       return error;
     }
   },
+  getAllCoursesCount: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get("/all/count");
+      return response.data.count; // Assuming the response structure is { count: number }
+    } catch (error: any) {
+      console.error("Failed to get all courses count:", error);
+      throw error; // Rethrow the error for further handling if needed
+    }
+  },
 };

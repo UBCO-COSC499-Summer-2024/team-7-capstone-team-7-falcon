@@ -59,4 +59,22 @@ export const usersAPI = {
       throw error;
     }
   },
+  getAllUsersCount: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get("/all/count");
+      return response.data; // Assuming response.data contains { role: string, count: number }
+    } catch (error: any) {
+      console.error("Failed to get all users count:", error);
+      throw error;
+    }
+  },
 };

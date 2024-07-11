@@ -30,9 +30,7 @@ const ViewExam = async ({
   const examId = Number(params.examId);
 
   const course: Course = await coursesAPI.getCourse(cid);
-
-  const exam_response = await examsAPI.getExam(examId, cid);
-  const exam: Exam = exam_response.data;
+  const exam: Exam = await examsAPI.getExam(examId, cid);
 
   const res = await examsAPI.getSubmissions(cid, examId);
   const submissionData: Submission[] = res.data.map((item: any) => ({

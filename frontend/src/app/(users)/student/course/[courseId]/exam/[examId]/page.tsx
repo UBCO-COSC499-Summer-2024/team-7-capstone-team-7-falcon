@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { coursesAPI } from "../../../../../../api/coursesAPI";
 import {
   Course,
@@ -24,10 +23,6 @@ const StudentExamPage = async ({
   const eid = Number(params.examId);
   const course: Course = await coursesAPI.getCourse(cid);
   const user: User = await usersAPI.getUserDetails();
-
-  if (!course) {
-    throw new Error("Course does not exist");
-  }
 
   if (!user) {
     throw new Error("User does not exist");

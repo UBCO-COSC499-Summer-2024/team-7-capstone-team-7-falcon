@@ -71,7 +71,6 @@ type TableFilter = "Graded" | "Upcoming";
 const CourseSubmissionsTable: React.FC<{ course_id: number }> = ({
   course_id,
 }) => {
-  console.log("cid:", course_id);
   const [data_graded, setDataGraded] = useState<DataItem<StudentExam>[] | null>(
     null,
   );

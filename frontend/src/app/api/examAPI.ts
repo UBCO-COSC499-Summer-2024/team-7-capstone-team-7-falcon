@@ -2,6 +2,7 @@ import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import {
   BubbleSheetPayload,
+  Exam,
   ExamData,
   StudentSubmission,
 } from "../typings/backendDataTypes";
@@ -65,12 +66,13 @@ export const examsAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/${course_id}/exam/${exam_id}`);
-      return response;
+      const response = await instance.get<Exam>(
+        `/${course_id}/exam/${exam_id}`,
+      );
+      return response.data;
     } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exam info: ", error);
-      return error;
+      console.error("Failed to find exam:", error);
+      throw error;
     }
   },
 

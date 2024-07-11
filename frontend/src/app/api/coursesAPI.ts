@@ -20,13 +20,8 @@ export const coursesAPI = {
       });
 
       const response = await instance.get<Course>(`/${courseId}/public`);
-      if (!response.data) {
-        throw new Error("Course does not exist");
-      }
-
       return response.data;
     } catch (error: any) {
-      // always axios error
       console.error("Failed to find course:", error);
       throw error;
     }

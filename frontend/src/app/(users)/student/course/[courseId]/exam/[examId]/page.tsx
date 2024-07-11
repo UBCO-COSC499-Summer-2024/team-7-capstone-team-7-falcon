@@ -4,6 +4,7 @@ import {
   Course,
   CourseData,
   StudentSubmission,
+  User,
 } from "../../../../../../typings/backendDataTypes";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
@@ -12,21 +13,21 @@ import GradeDisplay from "../../../../../components/gradeDisplay";
 import { CSSProperties } from "react";
 import { mean, median, quantile } from "d3-array";
 import PdfViewer from "../../../../components/pdfViewer";
+import { usersAPI } from "../../../../../../api/usersAPI";
 
 const StudentExamPage = async ({
   params,
 }: {
-  params: { course_id: string; exam_id: string };
+  params: { courseId: string; examId: string };
 }) => {
-  const cid = Number(params.course_id);
-  const eid = Number(params.exam_id);
+  const cid = Number(params.courseId);
+  const eid = Number(params.examId);
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };
-  const submissionResponse = await examsAPI.getStudentSubmission(eid, cid);
-  const submission: StudentSubmission = submissionResponse.data;
+  const user: User = await usersAPI.getUserDetails();
 
-  if (!course || !response || !submissionResponse || !submission) {
+  if (!course || !response || !user) {
     redirect(`../../`);
   }
 
@@ -40,6 +41,17 @@ const StudentExamPage = async ({
     const min = arr[0];
     return { lowerQuartile, upperQuartile, meanValue, medianValue, min, max };
   };
+
+  const submissionResponse = await examsAPI.getStudentSubmission(
+    eid,
+    cid,
+    user.id,
+  );
+  const submission: StudentSubmission = submissionResponse.data;
+
+  if (!submissionResponse || !submission) {
+    redirect(`../../`);
+  }
 
   const stats = calculateStats(submission.grades);
   if (!stats) {
@@ -69,7 +81,11 @@ const StudentExamPage = async ({
       <div className="grid grid-cols-5">
         <div className="col-span-4">
           <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
-          <PdfViewer course_id={cid} submission_id={submission.exam.id} />
+          <PdfViewer
+            courseId={cid}
+            submissionId={submission.exam.id}
+            userId={user.id}
+          />
         </div>
         <div className="col-span-1 text-xl">
           <p className="mt-4 mb-8 font-bold">Grade Overview</p>

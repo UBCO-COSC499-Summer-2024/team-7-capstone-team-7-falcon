@@ -3,16 +3,18 @@ import React, { useEffect, useState } from "react";
 import { examsAPI } from "../../../api/examAPI";
 
 const PdfViewer: React.FC<{
-  course_id: number;
-  submission_id: number;
-}> = ({ course_id, submission_id }) => {
+  courseId: number;
+  submissionId: number;
+  userId: number;
+}> = ({ courseId, submissionId, userId }) => {
   const [pdfUrl, setPdfUrl] = useState<string>("");
   useEffect(() => {
     const fetchPdf = async () => {
       try {
         const response = await examsAPI.getStudentSubmissionPDF(
-          course_id,
-          submission_id,
+          courseId,
+          submissionId,
+          userId,
         );
         const blob = new Blob([response.data], { type: "application/pdf" });
         const pdfBlobUrl = URL.createObjectURL(blob);

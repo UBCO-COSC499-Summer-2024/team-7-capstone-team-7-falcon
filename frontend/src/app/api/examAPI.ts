@@ -117,9 +117,11 @@ export const examsAPI = {
     }
   },
 
-  //'/:eid/:cid/user/:uid/grade'
-
-  getStudentSubmission: async (exam_id: number, course_id: number) => {
+  getStudentSubmission: async (
+    examId: number,
+    courseId: number,
+    userId: number,
+  ) => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -131,8 +133,9 @@ export const examsAPI = {
         withCredentials: true,
       });
       const response = await instance.get(
-        `/${exam_id}/${course_id}/user/6/grade`,
+        `/${examId}/${courseId}/user/${userId}/grade`,
       );
+      console.log("exam response", response);
       return response;
     } catch (error: any) {
       //always axios error
@@ -141,7 +144,11 @@ export const examsAPI = {
     }
   },
 
-  getStudentSubmissionPDF: async (course_id: number, submission_id: number) => {
+  getStudentSubmissionPDF: async (
+    courseId: number,
+    submissionId: number,
+    userId: number,
+  ) => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -153,7 +160,7 @@ export const examsAPI = {
         withCredentials: true,
       });
       const response = await instance.get(
-        `/${course_id}/submission/${submission_id}/user/6`,
+        `/${courseId}/submission/${submissionId}/user/${userId}`,
         { responseType: "arraybuffer" },
       );
       return response;

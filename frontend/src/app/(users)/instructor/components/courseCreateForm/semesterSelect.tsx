@@ -22,9 +22,11 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
 
   const fetchSemesters = async (): Promise<void> => {
-    const fetchedSemesters = await semestersAPI.getAllSemesters().catch((e) => {
-      return undefined;
-    });
+    const fetchedSemesters = await semestersAPI
+      .getAllSemestersLimited()
+      .catch((_) => {
+        return undefined;
+      });
     setCourseSemesters(fetchedSemesters);
     setIsLoaded(true);
   };

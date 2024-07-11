@@ -49,6 +49,111 @@ CourseUserModel {
 }
 `;
 
+exports[`CourseService getAllCourses should return all courses 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 2,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 3,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 4,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 5,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 6,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 7,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 8,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 9,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 10,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+]
+`;
+
 exports[`CourseService getCourseById should return course if course is found 1`] = `
 CourseModel {
   "course_code": "COSC 499",

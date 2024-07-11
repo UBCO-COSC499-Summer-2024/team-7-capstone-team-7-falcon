@@ -1,8 +1,8 @@
 // MembersCountCard.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card } from "flowbite-react"; // Adjust according to your UI library
-import { usersAPI } from "../../api/usersAPI"; // Adjust the import path accordingly
+import { Card } from "flowbite-react";
+import { usersAPI } from "../../api/usersAPI";
 
 interface MembersCountCardProps {
   className?: string;

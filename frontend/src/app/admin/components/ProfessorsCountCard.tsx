@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card } from "flowbite-react"; // Adjust according to your UI library
+import { Card } from "flowbite-react";
 import { usersAPI } from "../../api/usersAPI";
 
 interface ProfessorsCountCardProps {
@@ -24,7 +24,6 @@ const ProfessorsCountCard: React.FC<ProfessorsCountCardProps> = ({
       );
       if (professors) {
         setProfessorsCount(professorsCount);
-        console.log("Professors count fetched:", professorsCount);
       }
     } catch (error) {
       console.error("Error fetching professors count:", error);

@@ -20,7 +20,6 @@ const CourseCountCard: React.FC<CourseCountCardProps> = ({
     try {
       console.log("Fetching course count...");
       const count = await coursesAPI.getAllCoursesCount();
-      console.log("Course count fetched:", count);
       setCourseCount(count);
     } catch (error) {
       console.error("Error fetching course count:", error);

@@ -280,10 +280,10 @@ export const coursesAPI = {
         withCredentials: true,
       });
       const response = await instance.get("/all/count");
-      return response.data.count; // Assuming the response structure is { count: number }
+      return response.data.count;
     } catch (error: any) {
       console.error("Failed to get all courses count:", error);
-      throw error; // Rethrow the error for further handling if needed
+      throw error;
     }
   },
 };

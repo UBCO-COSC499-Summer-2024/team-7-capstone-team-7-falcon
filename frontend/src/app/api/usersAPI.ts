@@ -71,7 +71,7 @@ export const usersAPI = {
         withCredentials: true,
       });
       const response = await instance.get("/all/count");
-      return response.data; // Assuming response.data contains { role: string, count: number }
+      return response.data;
     } catch (error: any) {
       console.error("Failed to get all users count:", error);
       throw error;

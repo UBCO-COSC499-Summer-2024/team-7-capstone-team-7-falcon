@@ -16,7 +16,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
   const [formData, setFormData] = useState<CourseEditData>({
     courseName: "",
     courseCode: "",
-    semesterId: -1, // Initialize with -1 or an appropriate default
+    semesterId: -1,
     inviteCode: "",
   });
   const [semesters, setSemesters] = useState<Semester[]>([]);
@@ -34,7 +34,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
       setFormData({
         courseName: course_name,
         courseCode: course_code,
-        semesterId: semester_id ?? -1, // Ensure semesterId is initialized properly
+        semesterId: semester_id ?? -1,
         inviteCode: invite_code ?? "",
       });
 
@@ -48,19 +48,18 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
 
   const handleSaveChanges = async () => {
     try {
-      setSavingChanges(true); // Set state to indicate saving is in progress
+      setSavingChanges(true);
 
       const updatedCourse = await coursesAPI.editCourse(course_id, formData);
-      setFormData(updatedCourse.data); // Update with the latest data received from the API
+      setFormData(updatedCourse);
       toast.success("Course successfully updated");
 
-      // Optionally, fetch fresh data after saving changes
       fetchData();
     } catch (error) {
       console.error("Failed to edit course:", error);
       toast.error("Failed to update course");
     } finally {
-      setSavingChanges(false); // Reset saving state regardless of success or failure
+      setSavingChanges(false);
     }
   };
 

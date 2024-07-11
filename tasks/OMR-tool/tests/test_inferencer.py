@@ -4,6 +4,7 @@ import cv2
 from pathlib import Path
 from omr_tool.object_inference.inferencer import Inferencer
 
+
 @pytest.fixture(scope="module")
 def model_path():
     return (
@@ -14,9 +15,11 @@ def model_path():
         / "best.onnx"
     )
 
+
 @pytest.fixture(scope="module")
 def inferencer(model_path):
     return Inferencer(model_path=model_path)
+
 
 @pytest.fixture(scope="module")
 def image():
@@ -25,18 +28,21 @@ def image():
     )
     return cv2.imread(image_path)
 
+
 def test_initialization(inferencer):
     assert isinstance(inferencer, Inferencer)
     assert inferencer.conf_threshold == 0.5
     assert inferencer.iou_threshold == 0.95
-    assert hasattr(inferencer, 'session')
-    assert hasattr(inferencer, 'input_name')
+    assert hasattr(inferencer, "session")
+    assert hasattr(inferencer, "input_name")
+
 
 def test_preprocess_image(inferencer, image):
     image_data = inferencer.preprocess_image(image)
     assert image_data.shape == (1, 3, inferencer.input_height, inferencer.input_width)
     assert image_data.dtype == np.float32
     assert np.all(image_data >= 0) and np.all(image_data <= 1)
+
 
 def test_postprocess_results(inferencer):
     dummy_results = np.random.rand(1, 100, 85).astype(np.float32)
@@ -45,6 +51,7 @@ def test_postprocess_results(inferencer):
 
     assert isinstance(scores, np.ndarray)
     assert isinstance(classes, np.ndarray)
+
 
 def test_inference(inferencer, image):
     boxes, scores, classes = inferencer(image)

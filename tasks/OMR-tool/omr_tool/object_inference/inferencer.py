@@ -9,7 +9,6 @@ Class for running inference on an image using our pre-trained object detection m
 """
 
 
-
 class Inferencer:
     """
     A class for performing object inference using a pre-trained model.
@@ -58,9 +57,7 @@ class Inferencer:
         """
         try:
             image_data = self.preprocess_image(image)
-            results = self.session.run(
-                None, {self.input_name: image_data}
-            )
+            results = self.session.run(None, {self.input_name: image_data})
             return self.postprocess_results(results)
         except Exception as e:
             print(f"Error performing inference: {e}")
@@ -146,7 +143,12 @@ class Inferencer:
             boxes = predictions[:, :4]
 
             original_shape = np.array(
-                [self.input_width, self.input_height, self.input_width, self.input_height]
+                [
+                    self.input_width,
+                    self.input_height,
+                    self.input_width,
+                    self.input_height,
+                ]
             )
             boxes = np.divide(boxes, original_shape)
             boxes *= np.array(
@@ -172,7 +174,7 @@ class Inferencer:
         try:
             x[..., 0] -= x[..., 2] / 2
             x[..., 1] -= x[..., 3] / 2
-            x[..., 2] += x[..., 0] 
+            x[..., 2] += x[..., 0]
             x[..., 3] += x[..., 1]
             return x
         except Exception as e:
@@ -199,12 +201,14 @@ if __name__ == "__main__":
 
     for i, box in enumerate(boxes):
         x1, y1, x2, y2 = map(int, box)
-        color = int((classes[i]*100)) # Using this to break the color and check to make sure classes are properly separated
+        color = int(
+            (classes[i] * 100)
+        )  # Using this to break the color and check to make sure classes are properly separated
         cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, color), 2)
     end = datetime.now()
-    cv2.imshow("Inference",cv2.resize(image, (600, 800)))
+    cv2.imshow("Inference", cv2.resize(image, (600, 800)))
     cv2.waitKey(0)
     print(f"Time taken: {end - start}")
-    print(boxes.__len__() )
+    print(boxes.__len__())
     print(scores.__len__())
-    print(classes.__len__() )
+    print(classes.__len__())

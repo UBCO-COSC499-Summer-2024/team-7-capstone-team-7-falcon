@@ -9,6 +9,8 @@ import { UserModel } from '../src/modules/user/entities/user.entity';
 import { UserRoleEnum } from '../src/enums/user.enum';
 import Redis from 'ioredis';
 import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
+import * as sinon from 'sinon';
+import { FileService } from '../src/modules/file/file.service';
 
 describe('Queue Integration', () => {
   const supertest = setUpIntegrationTests(QueueModule);
@@ -201,23 +203,45 @@ describe('Queue Integration', () => {
   });
 
   describe('GET /queue/:queue/:jobId', () => {
-    it('should return status 401 when user not authenticated', () => {
+    it('should return status 401 when no auth token is provided', () => {
       return supertest()
         .get('/queue/bubble-sheet-creation/1')
         .expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 404 when the job is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/bubble-sheet-creation/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.NOT_FOUND);
     });
 
     it('should return status 400 when the queue is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/invalid-queue/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.BAD_REQUEST);
     });
 
@@ -263,7 +287,7 @@ describe('Queue Integration', () => {
 
       await supertest()
         .get(`/queue/bubble-sheet-creation/${response.body.jobId}`)
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.OK)
         .expect((response) => {
           expect(response.body.id).toBeDefined();
@@ -333,6 +357,7 @@ describe('Queue Integration', () => {
 
       user.employee_user = employeeUser;
       await user.save();
+      sinon.stub(FileService.prototype, 'zipFiles').returns(Promise.resolve());
 
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
@@ -352,6 +377,58 @@ describe('Queue Integration', () => {
         .expect((response) => {
           expect(response.body).toStrictEqual({ message: 'ok' });
         });
+
+      sinon.restore();
+    });
+
+    it('should return status 400 when the job failed to complete due to missing bubble sheet files', async () => {
+      const payload: BubbleSheetCreationJobDto = {
+        payload: {
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
+        },
+      };
+
+      const completionPayload: BubbleSheetCompletionJobDto = {
+        payload: {
+          filePath: '/path/to/file',
+        },
+      };
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      const response = await supertest()
+        .post('/queue/bubble-sheet-creation/add')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send(payload);
+
+      await supertest()
+        .get('/queue/bubble-sheet-creation/pick')
+        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .expect(HttpStatus.OK);
+
+      await supertest()
+        .patch(`/queue/bubble-sheet-creation/${response.body.jobId}/complete`)
+        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .send(completionPayload)
+        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 });

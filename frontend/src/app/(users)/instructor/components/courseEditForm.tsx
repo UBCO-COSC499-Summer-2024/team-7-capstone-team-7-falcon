@@ -5,7 +5,7 @@ import { coursesAPI } from "@/app/api/coursesAPI";
 import { semestersAPI } from "@/app/api/semestersAPI";
 import SemesterSelect from "./courseCreateForm/semesterSelect";
 import toast from "react-hot-toast";
-import { CourseEditData } from "../../../typings/backendDataTypes";
+import { CourseEditData, Semester } from "../../../typings/backendDataTypes";
 import { v4 as uuidv4 } from "uuid";
 
 interface CourseEditFormProps {
@@ -20,41 +20,47 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
     inviteCode: "",
   });
   const [semesters, setSemesters] = useState<Semester[]>([]);
+  const [savingChanges, setSavingChanges] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const courseResponse = await coursesAPI.getCourse(course_id);
-        const { course_name, course_code, semester_id, invite_code } =
-          courseResponse.data;
-        setFormData({
-          courseName: course_name,
-          courseCode: course_code,
-          semesterId: semester_id, // Set the correct semesterId here
-          inviteCode: invite_code ?? "",
-        });
-
-        const semestersResponse = await semestersAPI.getAllSemesters();
-        setSemesters(semestersResponse);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-        toast.error("Failed to load course or semester data");
-      }
-    };
-
     fetchData();
   }, [course_id]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const fetchData = async () => {
     try {
-      const result = await coursesAPI.editCourse(course_id, formData);
-      console.log("Edit course result:", result);
+      const courseResponse = await coursesAPI.getCourse(course_id);
+      const { course_name, course_code, semester_id, invite_code } =
+        courseResponse.data;
+      setFormData({
+        courseName: course_name,
+        courseCode: course_code,
+        semesterId: semester_id ?? -1, // Ensure semesterId is initialized properly
+        inviteCode: invite_code ?? "",
+      });
+
+      const semestersResponse = await semestersAPI.getAllSemestersLimited();
+      setSemesters(semestersResponse);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+      toast.error("Failed to load course or semester data");
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      setSavingChanges(true); // Set state to indicate saving is in progress
+
+      const updatedCourse = await coursesAPI.editCourse(course_id, formData);
+      setFormData(updatedCourse.data); // Update with the latest data received from the API
       toast.success("Course successfully updated");
+
+      // Optionally, fetch fresh data after saving changes
+      fetchData();
     } catch (error) {
       console.error("Failed to edit course:", error);
       toast.error("Failed to update course");
+    } finally {
+      setSavingChanges(false); // Reset saving state regardless of success or failure
     }
   };
 
@@ -79,7 +85,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <div className="space-y-4 p-4 ring ring-gray-300 rounded-md flex flex-col">
         <Label htmlFor="courseCode">
           <h2>Course Code</h2>
@@ -162,8 +168,12 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
           </button>
         </div>
         <div>
-          <button type="submit" className="btn-primary w-full">
-            Save changes
+          <button
+            onClick={handleSaveChanges}
+            className="btn-primary w-full"
+            disabled={savingChanges}
+          >
+            {savingChanges ? "Saving Changes..." : "Save changes"}
           </button>
         </div>
       </div>

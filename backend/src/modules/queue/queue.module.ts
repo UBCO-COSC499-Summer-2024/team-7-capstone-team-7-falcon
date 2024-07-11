@@ -5,6 +5,7 @@ import { QueueController } from './queue.controller';
 import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
 import { MailService } from '../mail/mail.service';
+import { FileService } from '../file/file.service';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MailService } from '../mail/mail.service';
     UserService,
     TokenService,
     MailService,
+    FileService,
   ],
 })
 export default class QueueModule {}

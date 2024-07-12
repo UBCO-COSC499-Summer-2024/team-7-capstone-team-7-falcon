@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Semester Integration GET /semester/:sid should return 200 if the semester is found 1`] = `
+{
+  "created_at": "1000000",
+  "ends_at": "1000000",
+  "id": 1,
+  "name": "Test Semester",
+  "starts_at": "1000000",
+  "updated_at": "1000000",
+}
+`;
+
+exports[`Semester Integration GET /semester/all should return 200 if semesters are found 1`] = `
+[
+  {
+    "course_count": 10,
+    "created_at": "1000000000",
+    "ends_at": "1000000000",
+    "id": 1,
+    "name": "Test Semester",
+    "starts_at": "1000000000",
+    "updated_at": "1000000000",
+  },
+]
+`;

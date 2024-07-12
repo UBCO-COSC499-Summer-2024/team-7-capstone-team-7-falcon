@@ -132,7 +132,7 @@ const CourseSubmissionsTable: React.FC<{ course_id: number }> = ({
     };
 
     fetchData();
-  }, [course_id]);
+  }, []);
 
   return (
     <div className="flex flex-col items-left">

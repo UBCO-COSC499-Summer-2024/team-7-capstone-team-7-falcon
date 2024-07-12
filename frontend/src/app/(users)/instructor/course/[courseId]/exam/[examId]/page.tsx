@@ -85,7 +85,7 @@ const ViewExam = async ({
             <SubmissionTable course_id={cid} exam_id={examId} />
           </div>
           <div className="space-y-4 col-span-2 pr-8 p-4">
-            <ExamSettings courseId={cid} examId={exam_id} />
+            <ExamSettings courseId={cid} examId={examId} />
             <ExamPerformance />
             <DangerZone />
           </div>

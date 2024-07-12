@@ -121,6 +121,7 @@ export interface SemesterData {
   name: string;
   starts_at: number;
   ends_at: number;
+  number_of_courses?: number;
 }
 
 export enum SemesterValid {

@@ -7,7 +7,7 @@ import { Edit } from "flowbite-react-icons/solid";
 import SearchBar from "../components/searchBar";
 import CreateSemesterForm from "../components/createSemesterForm";
 import { Status } from "../../typings/backendDataTypes";
-import { Stats } from "fs";
+import SemesterTable from "../components/semesterTable";
 
 /**
  * Renders the admin semester management page.
@@ -47,7 +47,7 @@ const AdminSemesterManagement: React.FC = () => {
           </div>
         </div>
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-        <SearchBar placeholder="Search for courses" />
+        <SemesterTable />
       </div>
     </>
   );

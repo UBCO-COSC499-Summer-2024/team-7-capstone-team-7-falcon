@@ -18,10 +18,88 @@ import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
 import { ERROR_MESSAGES } from '../../common';
 import { CourseEditDto } from './dto/course-edit.dto';
+import { CourseDetailsInterface } from 'src/common/interfaces';
 import { SubmissionModel } from '../exam/entities/submission.entity';
 
 @Injectable()
 export class CourseService {
+  /**
+   * Remove member from course
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<void>} - Promise object
+   */
+  async removeMemberFromCourse(cid: number, uid: number): Promise<void> {
+    const userCourse = await this.getUserByCourseAndUserId(cid, uid);
+
+    if (!userCourse) {
+      throw new CourseNotFoundException(
+        ERROR_MESSAGES.courseController.userNotEnrolledInCourse,
+      );
+    }
+
+    await CourseUserModel.delete({
+      course: { id: cid },
+      user: userCourse.user,
+    });
+  }
+
+  /**
+   * Get number of courses in the system that are not archived
+   * @returns {Promise<number>} - Promise number
+   */
+  async getAllCoursesCount(): Promise<number> {
+    return await CourseModel.count({ where: { is_archived: false } });
+  }
+
+  /**
+   * Get all courses
+   * @returns {Promise<CourseDetailsInterface[]>} - Promise array of CourseDetailsInterface
+   */
+  async getAllCourses(): Promise<CourseDetailsInterface[]> {
+    const queryBuilder = CourseModel.createQueryBuilder('course');
+
+    queryBuilder
+      .select(['course.id', 'course.course_code', 'semester.name'])
+      .addSelect('COUNT(course_user.id)', 'members')
+      .leftJoin('course.semester', 'semester')
+      .leftJoin('course.users', 'course_user')
+      .where('course.is_archived = false')
+      .andWhere('course.semester.id = semester.id')
+      .groupBy('course.id')
+      .addGroupBy('semester.name')
+      .orderBy('course.id');
+
+    let courses = await queryBuilder.getRawMany();
+
+    courses = await Promise.all(
+      courses.map(async (courseDetails) => {
+        const courseCreator = await CourseUserModel.findOne({
+          where: {
+            course: { id: courseDetails.id },
+            course_role: CourseRoleEnum.PROFESSOR,
+          },
+          relations: ['user', 'course'],
+        });
+
+        courseDetails.creator = {
+          firstName: courseCreator.user.first_name,
+          lastName: courseCreator.user.last_name,
+        };
+
+        return {
+          courseId: courseDetails.course_id,
+          courseCode: courseDetails.course_course_code,
+          semesterName: courseDetails.semester_name,
+          members: courseDetails.members,
+          creator: courseDetails.creator,
+        };
+      }),
+    );
+
+    return courses as CourseDetailsInterface[];
+  }
+
   /**
    * Create a new course
    * @param course {CourseCreateDto} - user inputed fields required for course creation

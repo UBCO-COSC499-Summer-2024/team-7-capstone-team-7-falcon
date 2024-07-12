@@ -363,6 +363,7 @@ export class UserService {
         'user.avatar_url',
         'user.role',
       ])
+      .orderBy('user.id', 'ASC')
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 

@@ -24,7 +24,6 @@ const MembersCountCard: React.FC<MembersCountCardProps> = ({ className }) => {
         0,
       );
       setMembersCount(totalMembersCount);
-      console.log("Members count fetched:", totalMembersCount);
     } catch (error) {
       console.error("Error fetching members count:", error);
     }

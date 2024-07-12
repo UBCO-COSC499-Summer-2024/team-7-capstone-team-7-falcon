@@ -1,5 +1,62 @@
 # Individual Logs
 
+## Friday (7/10 - 7/11)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07102024-07112024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Backend endpoints for queue system for OMR processing script
+
+### Progress Update (since 7/10/2024)
+
+![GitHub Board](./images/github_07102024-07112024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #239
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #294
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #311
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+For this cycle I promised to implement course analytics backend endpoint and start looking at implementing backend endpoints for OMR processing script. To summarize my progress, I have finished course analytics endpoint and it's being reviewed by the team. As for the OMR processing endpoints, I have a solid understanding of how it should be implemented; I strongly believe that I will be able to finish this work by the end of Wednesday. I hope that all remaining backend endpoints will be done by next Wednesday, which would allow me to dedicate time to help my team with the frontend work.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Finish backend endpoints for OMR processing script
+  * Add backend endpoint to delete exam in the course and connect it to frontend
+  * Add backend endpoint to download all submission grades for the exam in CSV file, and connect it to frontend
+  * Connect exam release backend endpoint with frontend
+  * Create a scheduled worker that archives courses when semester has ended
+
 ## Wednesday (7/5 - 7/9)
 
 ### Timesheet

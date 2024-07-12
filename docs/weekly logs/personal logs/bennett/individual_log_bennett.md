@@ -42,7 +42,6 @@ This cycle I finished all of the student view exam page. I also added site wide 
   * Add instructor analytics page with graphs
   * Work on admin edit semester page? (during the meeting I mentioned I would take an admin page if I have time)
 
-
 ## (7/05- 7/09)
 
 ### Timesheet

@@ -11,7 +11,7 @@
 1. Connect frontend admin dashboard page to the backend endpoints
 2. Finish Course Settings page and test the implementation
 
-###Progress update since (7/09)
+### Progress update since (7/10)
 1. I connected the Admin dashboard layout page to the backend endpoints and got the functionality working.
 2. I finished the Course Settings implementation and fixed the test fail error.
 

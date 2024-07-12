@@ -6,11 +6,6 @@ import {
   ExamData,
   StudentSubmission,
 } from "../typings/backendDataTypes";
-import {
-  BubbleSheetPayload,
-  ExamData,
-  StudentSubmission,
-} from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 

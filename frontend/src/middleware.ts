@@ -57,11 +57,11 @@ const getUserRole = async (): Promise<string> => {
  * Verify that an authenticated user has at least one ID (employee or student) set.
  *
  * @async
- * @function verifyIDpresence
+ * @function verifyIdPresence
  * @returns {Promise<boolean>} - A promise that shows whether a user has at least one ID or not.
  * @throws Will log an error message to the console if fetching the user details fails.
  */
-const verifyIDpresence = async (): Promise<boolean> => {
+const verifyIdPresence = async (): Promise<boolean> => {
   try {
     const userDetails: User = await usersAPI.getUserDetails();
 
@@ -109,7 +109,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // if user is authenticated, verify that they have at least one ID set
-  const hasID = await verifyIDpresence();
+  const hasID = await verifyIdPresence();
   if (!hasID) {
     return NextResponse.redirect(new URL("/setup-account", url));
   }

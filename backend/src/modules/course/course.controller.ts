@@ -149,6 +149,44 @@ export class CourseController {
   }
 
   /**
+   * Get the number of courses in the system that are not archived
+   * @param res Parameter {Response} - Response object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Get('/all/count')
+  async getAllCoursesCount(@Res() res: Response): Promise<Response> {
+    try {
+      const count = await this.courseService.getAllCoursesCount();
+      return res.status(HttpStatus.OK).send({ count });
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
+   * Get all courses
+   * @param res {Response} - Response object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Get('/all')
+  async getAllCourses(@Res() res: Response): Promise<Response> {
+    try {
+      const courses = await this.courseService.getAllCourses();
+      return res.status(HttpStatus.OK).send(courses);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
    * Get course by id
    * @param res {Response} - Response object
    * @param cid {number} - Course id

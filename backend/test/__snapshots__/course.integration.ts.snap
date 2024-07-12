@@ -696,6 +696,117 @@ exports[`Course Integration GET /course/:cid/public should return course if cour
 }
 `;
 
+exports[`Course Integration GET /course/all should return 200 and all courses 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 2,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 3,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 4,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 5,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 6,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 7,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 8,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 9,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 10,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+]
+`;
+
+exports[`Course Integration GET /course/all/count should return 200 and count of all courses 1`] = `
+{
+  "count": 10,
+}
+`;
+
 exports[`Course Integration POST /course/:cid/enroll should return 200 if user is not already enrolled 1`] = `
 CourseUserModel {
   "course": CourseModel {

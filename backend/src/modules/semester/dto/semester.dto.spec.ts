@@ -1,20 +1,20 @@
 import { plainToInstance } from 'class-transformer';
-import { SemesterCreateDto } from './semester-create.dto';
+import { SemesterDto } from './semester.dto';
 import { validate } from 'class-validator';
 
-describe('SemesterCreateDto', () => {
+describe('SemesterDto', () => {
   it('should be defined', () => {
-    expect(new SemesterCreateDto()).toBeDefined();
+    expect(new SemesterDto()).toBeDefined();
   });
 
   it('should validate a valid payload', () => {
-    const payload: SemesterCreateDto = {
+    const payload: SemesterDto = {
       name: 'Test Semester',
       starts_at: 1_000_000,
       ends_at: 1_000_000,
     };
 
-    const dto = plainToInstance(SemesterCreateDto, payload);
+    const dto = plainToInstance(SemesterDto, payload);
     expect(dto).toBeDefined();
     expect(dto.name).toBe('Test Semester');
     expect(dto.starts_at).toBe(1_000_000);
@@ -29,7 +29,7 @@ describe('SemesterCreateDto', () => {
       invalidPayload: 'invalid',
     };
 
-    const dto = plainToInstance(SemesterCreateDto, payload);
+    const dto = plainToInstance(SemesterDto, payload);
     expect(dto).toBeDefined();
 
     const errors = validate(dto);

@@ -672,6 +672,169 @@ describe('CourseService', () => {
     });
   });
 
+  describe('getAllCoursesCount', () => {
+    it('should return 0 if there are no courses', async () => {
+      const coursesCount = await courseService.getAllCoursesCount();
+      expect(coursesCount).toBe(0);
+    });
+
+    it('should return number of courses', async () => {
+      for (let i = 0; i < 10; i++) {
+        await CourseModel.create({
+          course_code: 'CS101',
+          course_name: 'Introduction to Computer Science',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          section_name: '001',
+          invite_code: '123',
+        }).save();
+      }
+
+      const coursesCount = await courseService.getAllCoursesCount();
+      expect(coursesCount).toBe(10);
+    });
+
+    it('should only count courses that are not archived', async () => {
+      for (let i = 0; i < 10; i++) {
+        await CourseModel.create({
+          course_code: 'CS101',
+          course_name: 'Introduction to Computer Science',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          section_name: '001',
+          invite_code: '123',
+          is_archived: i % 2 === 0,
+        }).save();
+      }
+
+      const coursesCount = await courseService.getAllCoursesCount();
+      expect(coursesCount).toBe(5);
+    });
+  });
+
+  describe('getAllCourses', () => {
+    it('should return all courses', async () => {
+      const semester = await SemesterModel.create({
+        name: 'Spring 2024',
+        starts_at: parseInt(new Date('2021-01-01').getTime().toString()),
+        ends_at:
+          parseInt(new Date('2021-01-01').getTime().toString()) +
+          1000 * 60 * 60 * 24 * 90,
+        created_at: parseInt(new Date('2021-01-01').getTime().toString()),
+        updated_at: parseInt(new Date('2021-01-01').getTime().toString()),
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: `Doe`,
+          email: `john.doe${i}@mail.com`,
+          email_verified: true,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        const professor = await UserModel.create({
+          first_name: 'Jane',
+          last_name: `Doe`,
+          email: `professor.doe${i}@mail.com`,
+          email_verified: true,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        let course = await CourseModel.create({
+          course_code: 'CS101',
+          course_name: 'Introduction to Computer Science',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          section_name: '001',
+          invite_code: '123',
+          semester,
+        }).save();
+
+        const courseUser = await CourseUserModel.create({
+          user,
+          course,
+        }).save();
+
+        const courseUserProfessor = await CourseUserModel.create({
+          user: professor,
+          course,
+          course_role: CourseRoleEnum.PROFESSOR,
+        }).save();
+
+        course = await CourseModel.findOne({
+          where: { id: course.id },
+          relations: ['users'],
+        });
+
+        course.users.push(courseUser);
+        course.users.push(courseUserProfessor);
+        await course.save();
+      }
+
+      const result = await courseService.getAllCourses();
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should return an empty array if there are no courses', async () => {
+      const result = await courseService.getAllCourses();
+      expect(result).toBeDefined();
+      expect(result).toStrictEqual([]);
+    });
+  });
+
+  describe('removeMemberFromCourse', () => {
+    it('should remove member from course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      const courseUser = await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      expect(courseUser).toBeDefined();
+
+      await courseService.removeMemberFromCourse(course.id, user.id);
+
+      const actual = await CourseUserModel.count();
+      expect(actual).toBe(0);
+    });
+
+    it('should throw CourseNotFoundException if user is not enrolled in course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        courseService.removeMemberFromCourse(1, user.id),
+      ).rejects.toThrow('User is not enrolled in the course');
+    });
+  });
+
   describe('getCourseAnalytics', () => {
     it('should only return courseMembersSize if course has no exams or submissions', async () => {
       let course = await CourseModel.create({

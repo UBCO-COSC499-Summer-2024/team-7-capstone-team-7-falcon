@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Column, DataItem } from "./type";
+import { Column, DataItem } from "../../../components/type";
 import TableComponent from "../../components/tableComponent";
 import { Submission } from "../../../typings/backendDataTypes";
 import { useSubmissionContext } from "../../../contexts/submissionContext";

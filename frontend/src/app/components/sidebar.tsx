@@ -48,7 +48,7 @@ const PageSidebar: React.FC = () => {
     };
 
     fetchUserDetails();
-  });
+  }, []);
 
   return (
     <Sidebar

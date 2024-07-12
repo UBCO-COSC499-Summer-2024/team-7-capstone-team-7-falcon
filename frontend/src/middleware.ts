@@ -26,16 +26,15 @@ const userRoleMap = {
  * Verifies if a jwt token is expired.
  *
  * @function isTokenExpired
- * @param { string } token - The jwt token to verify.
  * @returns { boolean } - A boolean indicating if the token is expired.
  * @throws Will log an error message to the console if an error occurs when decoding the token.
  */
-const isTokenExpired = (token: string): boolean => {
+const isTokenExpired = (token) => {
   if (!token) return true;
   try {
     const decodedToken = jwtDecode(token);
     const currentTime = parseInt(new Date().getTime().toString()) / 1000;
-    return (decodedToken.exp as number) < currentTime;
+    return decodedToken.exp < currentTime;
   } catch (error) {
     console.error("Error decoding token:", error);
     return true;

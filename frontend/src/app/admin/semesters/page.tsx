@@ -26,29 +26,31 @@ const AdminSemesterManagement: React.FC = () => {
       {status === Status.Success && (
         <CreateSemesterForm onClose={resetStatus} />
       )}
-      <div className="space-y-5 p-0 m-0">
-        <div className="grid grid-cols-2">
-          <div className="col-span-1">
-            <div className="p-1 space-y-2">
-              <h1 className="text-4xl font-bold">Semesters</h1>
+      {status === Status.Pending && (
+        <div className="space-y-5 p-0 m-0">
+          <div className="grid grid-cols-2">
+            <div className="col-span-1">
+              <div className="p-1 space-y-2">
+                <h1 className="text-4xl font-bold">Semesters</h1>
+              </div>
+            </div>
+            <div className="justify-self-end space-y-4">
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => setStatus(Status.Success)}
+              >
+                <div className="space-x-4 flex items-center">
+                  <Edit />
+                  Add semester
+                </div>
+              </button>
             </div>
           </div>
-          <div className="justify-self-end space-y-4">
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => setStatus(Status.Success)}
-            >
-              <div className="space-x-4 flex items-center">
-                <Edit />
-                Add semester
-              </div>
-            </button>
-          </div>
+          <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+          <SemesterTable />
         </div>
-        <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-        <SemesterTable />
-      </div>
+      )}
     </>
   );
 };

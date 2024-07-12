@@ -29,4 +29,6 @@ export class SemesterModel extends BaseEntity {
 
   @OneToMany(() => CourseModel, (course) => course.semester)
   courses: CourseModel[];
+
+  course_count?: number;
 }

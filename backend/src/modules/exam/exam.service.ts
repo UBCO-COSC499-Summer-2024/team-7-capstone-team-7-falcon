@@ -4,6 +4,7 @@ import {
   CourseNotFoundException,
   ExamCreationException,
   ExamNotFoundException,
+  SubmissionNotFoundException,
   UserSubmissionNotFound,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
@@ -349,5 +350,85 @@ export class ExamService {
     };
 
     return modifiedResponse;
+  }
+
+  /**
+   * Get graded submission file path by submission id
+   * @param submissionId {number} submission id
+   * @returns {Promise<string>} graded submission file path
+   */
+  async getGradedSubmissionFilePathBySubmissionId(
+    submissionId: number,
+  ): Promise<string> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: submissionId,
+        score: MoreThan(-1),
+        document_path: Not(''),
+      },
+      select: ['document_path'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    return submission.document_path;
+  }
+
+  /**
+   * Release grades for an exam
+   * @param examId {number} - Exam id
+   */
+  async releaseGrades(examId: number): Promise<void> {
+    const exam = await ExamModel.findOne({
+      where: {
+        id: examId,
+        course: {
+          is_archived: false,
+        },
+      },
+      relations: ['course'],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    await ExamModel.update(
+      { id: examId },
+      {
+        grades_released_at: parseInt(new Date().getTime().toString()),
+      },
+    );
+  }
+
+  /**
+   * Update grade
+   * @param eid {number} - Exam id
+   * @param cid {number} - Course id
+   * @param sid {number} - Submission id
+   * @param grade {number} - Grade
+   */
+  async updateGrade(
+    eid: number,
+    cid: number,
+    sid: number,
+    grade: number,
+  ): Promise<void> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: sid,
+        exam: { id: eid, course: { id: cid, is_archived: false } },
+      },
+      relations: ['exam', 'exam.course'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    submission.score = grade;
+    await submission.save();
   }
 }

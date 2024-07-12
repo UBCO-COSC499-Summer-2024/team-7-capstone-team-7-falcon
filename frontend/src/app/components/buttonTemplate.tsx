@@ -16,15 +16,14 @@ const ButtonTemplate: React.FC<ButtonTemplateProps> = ({
   className,
 }) => {
   return (
-    <button
-      className={`p-1 pr-2.5 text-l items-center space-x-2 text-black hover:bg-purple-700 hover:text-white
-        focus:outline-none ring ring-gray-200 hover:ring-purple-800 rounded-lg ${className}`}
+    <Link
+      href={link}
+      className={`p-3 px-4 text-black items-center space-x-2 hover:bg-purple-700 hover:text-white
+      hover:ring-purple-800 focus:outline-none ring ring-gray-200 rounded-lg ${className} flex space-x-4`}
     >
-      <Link href={link} className="flex space-x-4">
-        <Icon width={25} height={25} />
-        {text}
-      </Link>
-    </button>
+      <Icon width={25} height={25} />
+      {text}
+    </Link>
   );
 };
 

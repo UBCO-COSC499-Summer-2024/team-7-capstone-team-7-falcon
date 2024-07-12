@@ -1,6 +1,6 @@
 # Individual Logs
 
-## Wednesday (7/10 - 7/11)
+## Friday (7/10 - 7/11)
 
 ### Timesheet
 Clockify report

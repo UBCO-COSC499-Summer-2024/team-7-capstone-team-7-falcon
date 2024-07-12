@@ -55,6 +55,12 @@ export const examsAPI = {
     }
   },
 
+  /**
+   * Returns all the information about a specific exam
+   * @param exam_id
+   * @param course_id
+   * @returns {Promise<Exam>}
+   */
   getExam: async (exam_id: number, course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();

@@ -76,7 +76,6 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
       }
 
       const result_graded = await coursesAPI.getAllExamsGraded(course_id);
-      console.log("result graded is ", result_graded);
       if (result_graded.status === 200) {
         const exams: DataItem<Exam>[] = result_graded.data.map((item: any) => ({
           name: item.name,

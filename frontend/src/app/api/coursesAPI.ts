@@ -7,7 +7,12 @@ const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
 const BACKEND_URL_SERVER = process.env.NEXT_PUBLIC_BACKEND_URL_SERVER;
 
 export const coursesAPI = {
-  getCourse: async (courseId: number) => {
+  /**
+   * Returns all the info about a course
+   * @param courseId
+   * @returns {Promise<Course>}
+   */
+  getCourse: async (courseId: number): Promise<Course> => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -27,6 +32,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets a subset of the course info used for users who are not enrolled
+   * @param courseId
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getCoursePublic: async (courseId: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -48,7 +58,7 @@ export const coursesAPI = {
   },
 
   /**
-   *
+   * Enrolls the user in a course
    * @param courseId
    * @param invite_code
    * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
@@ -122,6 +132,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets a list of all exams for a course
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExams: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -142,6 +157,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets a list of all exams that are graded
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsGraded: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -162,6 +182,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all upcoming exams
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsUpcoming: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -182,6 +207,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all members in a course by course id
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getCourseMembers: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -203,6 +233,10 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all graded exams for the logged in student
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsGradedStudent: async () => {
     try {
       const auth_token = await fetchAuthToken();
@@ -223,6 +257,10 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all upcoming exams for the logged in student
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsUpcomingStudent: async () => {
     try {
       const auth_token = await fetchAuthToken();
@@ -235,59 +273,6 @@ export const coursesAPI = {
         withCredentials: true,
       });
       const response = await instance.get(`/upcoming`);
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
-
-  ///:cid/submission/:sid/user/:uid
-  getAllExamsGradedStudentCourse: async (
-    course_id: number,
-    student_id: number,
-    user_id: number,
-  ) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(
-        `/${course_id}/submission/${student_id}/user/${user_id}`,
-      );
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
-
-  getAllExamsUpcomingStudentCourse: async (
-    course_id: number,
-    student_id: number,
-    user_id: number,
-  ) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(
-        `/${course_id}/submission/${student_id}/user/${user_id}`,
-      );
       return response;
     } catch (error: any) {
       //always axios error

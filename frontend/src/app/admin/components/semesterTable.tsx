@@ -42,8 +42,8 @@ const SemesterTable: React.FC<> = () => {
           data: {
             id: item.id,
             semester_name: item.name,
-            starts_at: item.starts_at,
-            ends_at: item.ends_at,
+            starts_at: new Date(Number(item.starts_at)).toLocaleString(),
+            ends_at: new Date(Number(item.ends_at)).toLocaleString(),
             course_count: item.course_count,
           },
         }),

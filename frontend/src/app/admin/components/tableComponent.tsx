@@ -12,7 +12,8 @@ import {
 } from "@table-library/react-table-library/table";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
-import { usePagination } from "@table-library/react-table-library/pagination";
+import { Pagination } from "flowbite-react";
+import { useState } from "react";
 import { Column } from "../instructor/components/type";
 import { DataItem } from "../instructor/components/type";
 import { MdOutlineSearch } from "react-icons/md";
@@ -31,6 +32,9 @@ const TableComponent = <T,>({
 }: TableComponentProps<T>) => {
   const theme = useTheme(getTheme());
   const [search, setSearch] = React.useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const onPageChange = (page: number) => setCurrentPage(page);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);

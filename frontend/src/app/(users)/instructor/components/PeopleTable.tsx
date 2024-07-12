@@ -73,7 +73,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
       setData(users);
     };
     fetchData();
-  }, []);
+  }, [course_id]);
 
   if (!data) {
     return <p>Data not found</p>;

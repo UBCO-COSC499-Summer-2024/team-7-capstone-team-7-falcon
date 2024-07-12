@@ -1,5 +1,35 @@
 # Individual Logs for Paula
 
+## Friday (7/10 - 7/11)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.10_07.11"](images/clockify_07.10_07.11.png)
+
+### Current Tasks
+
+!["current_tasks_07.10_07.11"](images/current_tasks_07.10_07.11.png)
+
+* #1: Authentication pages (frontend and backend) - Code refactoring
+* #2: Repo clean up and documentation updates
+* #3: Admin create new semester page
+
+### Progress Update (since 7/10/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I have been able to slowly catch up on the backlog of tasks I have to complete. The create semester page is pretty much done - I just need to look into adding the pagination feature that all tables on the frontend lack at the moment. As for the authentication system, it needs quite a bit of refactoring before merging so that is to be done during the next cycle.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Add pagination to admin create new semester page
+* Address PR suggestions for the authentication system (refactoring)
+* Probably work on another admin page
+* (If time permits) Repo clean up and documentation updates
+
 ## Wednesday (7/05 - 7/09)
 
 ### Timesheet

@@ -26,10 +26,11 @@ const PdfViewer: React.FC<{
 
     fetchPdf();
   }, []);
-
+  
   return (
     <div>
       {pdfUrl ? (
+        // TODO: Change height from pixels to relative units
         <iframe src={pdfUrl} width="90%" height="1000px" title="PDF Viewer" />
       ) : (
         <p>Loading PDF...</p>

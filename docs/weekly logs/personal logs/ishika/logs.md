@@ -1,12 +1,12 @@
-##Friday (7/10 - 7/11)
+## Friday (7/10 - 7/11)
 
 <img width="1067" alt="image" src="https://github.com/user-attachments/assets/fce52f89-a25a-4c3d-b76d-913f91ef5e9c">
 
-###Project Board
+### Project Board
 
 <img width="413" alt="image" src="https://github.com/user-attachments/assets/87c91228-1f12-4e68-9c68-bc603b87d965">
 
-##Current Tasks
+## Current Tasks
 
 1. Connect frontend admin dashboard page to the backend endpoints
 2. Finish Course Settings page and test the implementation
@@ -15,17 +15,17 @@
 1. I connected the Admin dashboard layout page to the backend endpoints and got the functionality working.
 2. I finished the Course Settings implementation and fixed the test fail error.
 
-##Cycle Goal Review
+## Cycle Goal Review
 
 Overall,I am quite satisfied that I managed to get both features working except minor fixes that I saw during the PR review. I am ready to start a new feature once I make small changes and my PRs are merged to development branch. 
 
-##Next Cycle Goal
+## Next Cycle Goal
 
 I am ready to start on Admin settings page. I haven't assigned myself a new task yet but I will most probably work on Admin settings page or analytics page.
 
-##Wednesday (7/05 - 7/09)
+## Wednesday (7/05 - 7/09)
 
-##Timesheet
+## Timesheet
 
 <img width="811" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/fa82be9b-256c-46f2-bbe4-eb034e3540cb">
 

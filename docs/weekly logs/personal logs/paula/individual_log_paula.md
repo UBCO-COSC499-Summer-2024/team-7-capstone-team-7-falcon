@@ -1,6 +1,6 @@
 # Individual Logs for Paula
 
-## Wednesday (7/10 - 7/11)
+## Friday (7/10 - 7/11)
 
 ### Timesheet
 

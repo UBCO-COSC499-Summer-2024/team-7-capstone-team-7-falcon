@@ -12,6 +12,10 @@ export const ERROR_MESSAGES = {
     emailInvalid: 'Email is invalid',
     fileNotFound: 'File not found',
   },
+  userRoleDto: {
+    userRoleInvalid: 'User role is invalid',
+    userRoleRequired: 'User role is required',
+  },
   userController: {
     userNotFound: 'User not found',
     editForbidden: 'You are not allowed to edit this user',
@@ -27,6 +31,7 @@ export const ERROR_MESSAGES = {
     emailNotVerified: 'Email not verified',
     notSupportedAuthType: 'User account has unsupported authentication type',
     invalidPassword: 'Invalid password',
+    studentOrEmployeeIdNotPresent: 'Student or Employee ID is missing',
   },
   tokenController: {
     invalidToken: 'Invalid token',

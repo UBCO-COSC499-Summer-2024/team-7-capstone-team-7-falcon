@@ -8,6 +8,9 @@ import {
 import { UserModel } from '../src/modules/user/entities/user.entity';
 import { UserRoleEnum } from '../src/enums/user.enum';
 import Redis from 'ioredis';
+import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
+import * as sinon from 'sinon';
+import { FileService } from '../src/modules/file/file.service';
 
 describe('Queue Integration', () => {
   const supertest = setUpIntegrationTests(QueueModule);
@@ -31,10 +34,15 @@ describe('Queue Integration', () => {
     await UserModel.delete({});
     // Reset user id sequence (also known as auto increment)
     await UserModel.query('ALTER SEQUENCE user_model_id_seq RESTART WITH 1');
+
+    await EmployeeUserModel.delete({});
+    await EmployeeUserModel.query(
+      'ALTER SEQUENCE employee_user_model_id_seq RESTART WITH 1',
+    );
   });
 
   describe('POST /queue/:queue/add', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest()
         .post('/queue/bubble-sheet-creation/add')
         .expect(HttpStatus.UNAUTHORIZED);
@@ -51,7 +59,7 @@ describe('Queue Integration', () => {
         },
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -61,6 +69,19 @@ describe('Queue Integration', () => {
         role: UserRoleEnum.PROFESSOR,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
@@ -76,7 +97,7 @@ describe('Queue Integration', () => {
         invalidPayload: 'invalid',
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -86,6 +107,19 @@ describe('Queue Integration', () => {
         role: UserRoleEnum.PROFESSOR,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
@@ -97,7 +131,7 @@ describe('Queue Integration', () => {
   });
 
   describe('GET /queue/:queue/pick', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest()
         .get('/queue/bubble-sheet-creation/pick')
         .expect(HttpStatus.UNAUTHORIZED);
@@ -128,7 +162,7 @@ describe('Queue Integration', () => {
         },
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -138,6 +172,19 @@ describe('Queue Integration', () => {
         role: UserRoleEnum.PROFESSOR,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .post('/queue/bubble-sheet-creation/add')
@@ -156,23 +203,45 @@ describe('Queue Integration', () => {
   });
 
   describe('GET /queue/:queue/:jobId', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when no auth token is provided', () => {
       return supertest()
         .get('/queue/bubble-sheet-creation/1')
         .expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 404 when the job is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/bubble-sheet-creation/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.NOT_FOUND);
     });
 
     it('should return status 400 when the queue is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/invalid-queue/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.BAD_REQUEST);
     });
 
@@ -187,7 +256,7 @@ describe('Queue Integration', () => {
         },
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -198,6 +267,19 @@ describe('Queue Integration', () => {
         email_verified: true,
       }).save();
 
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -205,7 +287,7 @@ describe('Queue Integration', () => {
 
       await supertest()
         .get(`/queue/bubble-sheet-creation/${response.body.jobId}`)
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.OK)
         .expect((response) => {
           expect(response.body.id).toBeDefined();
@@ -215,7 +297,7 @@ describe('Queue Integration', () => {
   });
 
   describe('POST /queue/:queue/:jobId/complete', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when not authenticated', () => {
       return supertest()
         .patch('/queue/bubble-sheet-creation/1/complete')
         .expect(HttpStatus.UNAUTHORIZED);
@@ -252,7 +334,7 @@ describe('Queue Integration', () => {
         },
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -262,6 +344,20 @@ describe('Queue Integration', () => {
         role: UserRoleEnum.PROFESSOR,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+      sinon.stub(FileService.prototype, 'zipFiles').returns(Promise.resolve());
 
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
@@ -281,6 +377,58 @@ describe('Queue Integration', () => {
         .expect((response) => {
           expect(response.body).toStrictEqual({ message: 'ok' });
         });
+
+      sinon.restore();
+    });
+
+    it('should return status 400 when the job failed to complete due to missing bubble sheet files', async () => {
+      const payload: BubbleSheetCreationJobDto = {
+        payload: {
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
+        },
+      };
+
+      const completionPayload: BubbleSheetCompletionJobDto = {
+        payload: {
+          filePath: '/path/to/file',
+        },
+      };
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      const response = await supertest()
+        .post('/queue/bubble-sheet-creation/add')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send(payload);
+
+      await supertest()
+        .get('/queue/bubble-sheet-creation/pick')
+        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .expect(HttpStatus.OK);
+
+      await supertest()
+        .patch(`/queue/bubble-sheet-creation/${response.body.jobId}/complete`)
+        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .send(completionPayload)
+        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 });

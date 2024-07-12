@@ -12,7 +12,7 @@ const user_columns: Column[] = [
   {
     label: "Name",
     renderCell: (item) => (
-      <div className="flex space-x-4 items-center">
+      <div className="flex sm:space-x-0 md:space-x-4 items-center">
         <Avatar
           avatarUrl={item.user.avatar_url}
           firstName={item.user.first_name}
@@ -20,6 +20,8 @@ const user_columns: Column[] = [
           imageTextHeight={`w-12`}
           imageTextWidth={`w-12`}
           textSize={1}
+          imageHeight={48}
+          imageWidth={48}
         />
         <span className="mt-1">
           {item.user.first_name} {item.user?.last_name ?? ""}
@@ -71,7 +73,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
       setData(users);
     };
     fetchData();
-  }, []);
+  }, [course_id]);
 
   if (!data) {
     return <p>Data not found</p>;

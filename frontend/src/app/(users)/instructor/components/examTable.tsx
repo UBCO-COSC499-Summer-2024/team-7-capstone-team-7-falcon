@@ -113,7 +113,7 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
     };
 
     fetchData();
-  }, [course_id]);
+  }, []);
 
   return (
     <div className="flex flex-col items-left">

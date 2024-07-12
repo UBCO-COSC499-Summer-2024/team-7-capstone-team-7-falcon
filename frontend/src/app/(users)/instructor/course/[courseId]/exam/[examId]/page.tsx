@@ -7,12 +7,7 @@ import {
   Submission,
 } from "../../../../../../typings/backendDataTypes";
 import Link from "next/link";
-import {
-  Upload,
-  Download,
-  CheckPlusCircle,
-  Edit,
-} from "flowbite-react-icons/solid";
+import { Edit } from "flowbite-react-icons/solid";
 import ExamPerformance from "../../../../components/examPerformance";
 import DangerZone from "../../../../components/dangerZone";
 import SubmissionTable from "../../../../components/submissionsTable";
@@ -20,6 +15,8 @@ import CourseHeader from "../../../../components/courseHeader";
 import { examsAPI } from "../../../../../../api/examAPI";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import SubmissionProvider from "../../../../../../contexts/submissionContext";
+import ExamSettings from "@/app/(users)/instructor/components/examSettings";
+import { Toaster } from "react-hot-toast";
 
 const ViewExam = async ({
   params,
@@ -52,12 +49,9 @@ const ViewExam = async ({
     return;
   };
 
-  const releaseGrades = () => {
-    return;
-  };
-
   return (
     <SubmissionProvider submissions={submissionData}>
+      <Toaster />
       <div className="p-0">
         <div className="grid grid-cols-2">
           <div className="col-span-1">
@@ -91,33 +85,7 @@ const ViewExam = async ({
             <SubmissionTable course_id={cid} exam_id={examId} />
           </div>
           <div className="space-y-4 col-span-2 pr-8 p-4">
-            <button
-              type="button"
-              className="btn-primary flex justify-center bg-purple w-full"
-            >
-              <Link href={""} className="space-x-4 flex items-center">
-                <Upload />
-                <span>Upload Submissions</span>
-              </Link>
-            </button>
-            <button
-              type="button"
-              className="btn-primary flex justify-center bg-purple w-full"
-            >
-              <Link href={""} className="space-x-4 flex items-center">
-                <Download />
-                <span>Download Results CSV</span>
-              </Link>
-            </button>
-            <button
-              type="button"
-              className="btn-primary flex justify-center bg-purple w-full"
-            >
-              <Link href={""} className="space-x-4 flex items-center">
-                <CheckPlusCircle />
-                <span>Release Grades</span>
-              </Link>
-            </button>
+            <ExamSettings courseId={cid} examId={exam_id} />
             <ExamPerformance />
             <DangerZone />
           </div>

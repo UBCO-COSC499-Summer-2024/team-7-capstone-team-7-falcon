@@ -3,6 +3,7 @@ import { SemesterModel } from '../src/modules/semester/entities/semester.entity'
 import { SemesterModule } from '../src/modules/semester/semester.module';
 import { setUpIntegrationTests, signJwtToken } from './utils/testUtils';
 import { UserRoleEnum } from '../src/enums/user.enum';
+import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
 import { CourseModel } from '../src/modules/course/entities/course.entity';
 
 describe('Semester Integration', () => {
@@ -11,6 +12,11 @@ describe('Semester Integration', () => {
   beforeEach(async () => {
     await UserModel.delete({});
     await UserModel.query('ALTER SEQUENCE user_model_id_seq RESTART WITH 1');
+
+    await EmployeeUserModel.delete({});
+    await EmployeeUserModel.query(
+      'ALTER SEQUENCE employee_user_model_id_seq RESTART WITH 1',
+    );
 
     await CourseModel.delete({});
     await CourseModel.query(
@@ -28,7 +34,7 @@ describe('Semester Integration', () => {
       await supertest().get('/semester/limited/all').expect(401);
     });
 
-    it('should return 404 if no semesters are found', async () => {
+    it('should return 403 if the user did not provide employee or student ID', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -42,10 +48,42 @@ describe('Semester Integration', () => {
       await supertest()
         .get('/semester/limited/all')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .expect(404)
+        .expect(403)
         .expect({
-          message: 'Semesters not found',
+          message: 'Student or Employee ID is missing',
+          errorCode: 'STUDENT_OR_EMPLOYEE_ID_NOT_PRESENT',
         });
+    });
+
+    it('should return 204 if no semesters are found', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
+      await supertest()
+        .get('/semester/all')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(204);
     });
 
     it('should return 200 if semesters are found', async () => {
@@ -59,7 +97,7 @@ describe('Semester Integration', () => {
         ends_at: currentDate,
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -67,7 +105,21 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+        role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .get('/semester/limited/all')
@@ -83,11 +135,11 @@ describe('Semester Integration', () => {
   });
 
   describe('POST /semester/create', () => {
-    it('should return status 401 if no token is provided', async () => {
+    it('should return status 401 if user not authenticated', async () => {
       await supertest().post('/semester/create').expect(401);
     });
 
-    it('should return 401 if the user is not an admin', async () => {
+    it('should return 403 if the user did not provide employee or student ID', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -101,11 +153,45 @@ describe('Semester Integration', () => {
       await supertest()
         .post('/semester/create')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(403)
+        .expect({
+          message: 'Student or Employee ID is missing',
+          errorCode: 'STUDENT_OR_EMPLOYEE_ID_NOT_PRESENT',
+        });
+    });
+
+    it('should return 403 if the user is not an admin', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
+      await supertest()
+        .post('/semester/create')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(401);
     });
 
     it('should return 400 if one of the required fields is missing', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -115,6 +201,19 @@ describe('Semester Integration', () => {
         role: UserRoleEnum.ADMIN,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .post('/semester/create')
@@ -135,7 +234,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 400 if the start date is after the end date', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -145,6 +244,19 @@ describe('Semester Integration', () => {
         role: UserRoleEnum.ADMIN,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .post('/semester/create')
@@ -161,7 +273,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 201 if the semester is created successfully', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -171,6 +283,19 @@ describe('Semester Integration', () => {
         role: UserRoleEnum.ADMIN,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .post('/semester/create')
@@ -193,7 +318,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 401 if the user is not an admin', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -201,6 +326,19 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .patch('/semester/1')
@@ -209,7 +347,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 400 if semester id is not a number', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -218,6 +356,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .patch('/semester/abc')
@@ -231,7 +382,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 400 if one of the required fields is missing', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -240,6 +391,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .patch('/semester/1')
@@ -260,7 +424,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 404 if the semester does not exist', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -269,6 +433,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .patch('/semester/1')
@@ -295,7 +472,7 @@ describe('Semester Integration', () => {
         ends_at: currentDate,
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -304,6 +481,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .patch('/semester/1')
@@ -330,7 +520,7 @@ describe('Semester Integration', () => {
         ends_at: currentDate,
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -339,6 +529,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .patch('/semester/1')
@@ -358,7 +561,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 401 if the user is not an admin', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -366,6 +569,19 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .get('/semester/1')
@@ -374,7 +590,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 400 if semester id is not a number', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -383,6 +599,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .get('/semester/abc')
@@ -396,7 +625,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 404 if the semester does not exist', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -405,6 +634,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .get('/semester/1')
@@ -416,7 +658,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 200 if the semester is found', async () => {
-      await SemesterModel.create({
+      const semester = await SemesterModel.create({
         name: 'Test Semester',
         created_at: 1_000_000,
         updated_at: 1_000_000,
@@ -424,7 +666,7 @@ describe('Semester Integration', () => {
         ends_at: 1_000_000,
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -434,8 +676,21 @@ describe('Semester Integration', () => {
         role: UserRoleEnum.ADMIN,
       }).save();
 
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
       const result = await supertest()
-        .get('/semester/1')
+        .get(`/semester/${semester.id}`)
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
 
       expect(result.status).toBe(200);
@@ -449,7 +704,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 401 if the user is not an admin', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -457,6 +712,19 @@ describe('Semester Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .get('/semester/all')
@@ -473,7 +741,7 @@ describe('Semester Integration', () => {
         ends_at: 1_000_000_000,
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -482,6 +750,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       semester = await SemesterModel.findOne({
         where: { id: semester.id },
@@ -513,7 +794,7 @@ describe('Semester Integration', () => {
     });
 
     it('should return 204 if no semesters are found', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@mail.com',
@@ -522,6 +803,19 @@ describe('Semester Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .get('/semester/all')

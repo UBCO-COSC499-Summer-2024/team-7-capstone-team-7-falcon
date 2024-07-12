@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card } from "flowbite-react";
-import { coursesAPI } from "../../api/coursesAPI"; // Adjust the import path accordingly
+import { coursesAPI } from "../../api/coursesAPI"; 
 
 interface CourseCountCardProps {
   className?: string;

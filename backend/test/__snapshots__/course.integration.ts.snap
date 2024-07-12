@@ -13,6 +13,312 @@ exports[`Course Integration GET /course/:cid should return course if course is f
 }
 `;
 
+exports[`Course Integration GET /course/:cid/exams should return 200 if user is enrolled with default query parameters 1`] = `
+{
+  "data": [
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000009",
+      "grades_released_at": null,
+      "id": 10,
+      "name": "Exam 9",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000008",
+      "grades_released_at": null,
+      "id": 9,
+      "name": "Exam 8",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000007",
+      "grades_released_at": null,
+      "id": 8,
+      "name": "Exam 7",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000006",
+      "grades_released_at": null,
+      "id": 7,
+      "name": "Exam 6",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000005",
+      "grades_released_at": null,
+      "id": 6,
+      "name": "Exam 5",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000004",
+      "grades_released_at": null,
+      "id": 5,
+      "name": "Exam 4",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000003",
+      "grades_released_at": null,
+      "id": 4,
+      "name": "Exam 3",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000002",
+      "grades_released_at": null,
+      "id": 3,
+      "name": "Exam 2",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000001",
+      "grades_released_at": null,
+      "id": 2,
+      "name": "Exam 1",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000000",
+      "grades_released_at": null,
+      "id": 1,
+      "name": "Exam 0",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": {
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "pageCount": null,
+  },
+}
+`;
+
+exports[`Course Integration GET /course/:cid/exams should return 200 when only two exams are requested 1`] = `
+{
+  "data": [
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000009",
+      "grades_released_at": null,
+      "id": 10,
+      "name": "Exam 9",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    {
+      "created_at": "1000000000",
+      "exam_date": "1000000008",
+      "grades_released_at": null,
+      "id": 9,
+      "name": "Exam 8",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": "1",
+    "pageCount": 5,
+    "take": "2",
+  },
+}
+`;
+
+exports[`Course Integration GET /course/:cid/exams/graded should return 200 and graded exams 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 and upcoming exams 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "grades_released_at": null,
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+]
+`;
+
 exports[`Course Integration GET /course/:cid/members should return 200 if user is professor with 2 members 1`] = `
 {
   "data": [
@@ -193,6 +499,117 @@ exports[`Course Integration GET /course/:cid/public should return course if cour
 }
 `;
 
+exports[`Course Integration GET /course/all should return 200 and all courses 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 2,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 3,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 4,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 5,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 6,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 7,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 8,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 9,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 10,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+]
+`;
+
+exports[`Course Integration GET /course/all/count should return 200 and count of all courses 1`] = `
+{
+  "count": 10,
+}
+`;
+
 exports[`Course Integration POST /course/:cid/enroll should return 200 if user is not already enrolled 1`] = `
 CourseUserModel {
   "course": CourseModel {
@@ -212,6 +629,7 @@ CourseUserModel {
     "avatar_url": null,
     "created_at": "1000000000",
     "email": "john.doe@test.com",
+    "email_verified": true,
     "first_name": "John",
     "id": 1,
     "last_name": "Doe",

@@ -1,0 +1,339 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if exam submissions are returned 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "id": 10,
+    "score": 9,
+    "student": {
+      "id": 11,
+      "student_id": "9",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 11,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 9,
+    "score": 8,
+    "student": {
+      "id": 10,
+      "student_id": "8",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 10,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 8,
+    "score": 7,
+    "student": {
+      "id": 9,
+      "student_id": "7",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 9,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 7,
+    "score": 6,
+    "student": {
+      "id": 8,
+      "student_id": "6",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 8,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 6,
+    "score": 5,
+    "student": {
+      "id": 7,
+      "student_id": "5",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 7,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 5,
+    "score": 4,
+    "student": {
+      "id": 6,
+      "student_id": "4",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 6,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 4,
+    "score": 3,
+    "student": {
+      "id": 5,
+      "student_id": "3",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 5,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 3,
+    "score": 2,
+    "student": {
+      "id": 4,
+      "student_id": "2",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 4,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 2,
+    "score": 1,
+    "student": {
+      "id": 3,
+      "student_id": "1",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 1,
+    "score": 0,
+    "student": {
+      "id": 2,
+      "student_id": "0",
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`Exam Integration GET /exam/:cid/exam/:eid should return 200 if exam is found 1`] = `
+{
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`Exam Integration GET /exam/:eid/:cid/user/:uid/grade should return 200 if exam submission is found for the user 1`] = `
+{
+  "course": {
+    "courseCode": "CS101",
+    "courseName": "Introduction to Computer Science",
+    "id": 1,
+  },
+  "exam": {
+    "examDate": "1000000000",
+    "id": 1,
+    "name": "Exam",
+  },
+  "grades": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    10,
+  ],
+  "studentSubmission": {
+    "id": 1,
+    "score": 10,
+  },
+}
+`;
+
+exports[`Exam Integration GET /exam/graded should return 200 if graded exams are found for user 1`] = `
+[
+  {
+    "exams": [
+      {
+        "courseId": 1,
+        "examDate": "1000000000",
+        "examId": 1,
+        "examName": "Exam 0",
+        "examScore": 0,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000001",
+        "examId": 2,
+        "examName": "Exam 1",
+        "examScore": 1,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000002",
+        "examId": 3,
+        "examName": "Exam 2",
+        "examScore": 2,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000003",
+        "examId": 4,
+        "examName": "Exam 3",
+        "examScore": 3,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000004",
+        "examId": 5,
+        "examName": "Exam 4",
+        "examScore": 4,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000005",
+        "examId": 6,
+        "examName": "Exam 5",
+        "examScore": 5,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000006",
+        "examId": 7,
+        "examName": "Exam 6",
+        "examScore": 6,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000007",
+        "examId": 8,
+        "examName": "Exam 7",
+        "examScore": 7,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000008",
+        "examId": 9,
+        "examName": "Exam 8",
+        "examScore": 8,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000009",
+        "examId": 10,
+        "examName": "Exam 9",
+        "examScore": 9,
+      },
+    ],
+  },
+]
+`;
+
+exports[`Exam Integration GET /exam/upcoming should return 200 if exams are found for user 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "courseName": "Introduction to Computer Science",
+    "exams": [
+      {
+        "id": 1,
+        "name": "Exam 0",
+      },
+      {
+        "id": 2,
+        "name": "Exam 1",
+      },
+      {
+        "id": 3,
+        "name": "Exam 2",
+      },
+      {
+        "id": 4,
+        "name": "Exam 3",
+      },
+      {
+        "id": 5,
+        "name": "Exam 4",
+      },
+      {
+        "id": 6,
+        "name": "Exam 5",
+      },
+      {
+        "id": 7,
+        "name": "Exam 6",
+      },
+      {
+        "id": 8,
+        "name": "Exam 7",
+      },
+      {
+        "id": 9,
+        "name": "Exam 8",
+      },
+      {
+        "id": 10,
+        "name": "Exam 9",
+      },
+    ],
+  },
+]
+`;

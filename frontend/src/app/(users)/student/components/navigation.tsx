@@ -4,19 +4,26 @@ import { Book, Clipboard, QuestionCircle } from "flowbite-react-icons/solid";
 const studentLinks = [
   {
     title: "Courses",
-    href: "/student",
+    href: {
+      base: "/student/course",
+      exact: "/student",
+    },
     icon: <Book />,
   },
   {
     title: "Exams",
-    href: "/student/exams",
+    href: {
+      base: "/student/exam",
+    },
     icon: <Clipboard />,
   },
   {
     title: "Help",
-    href: "/student/help",
+    href: {
+      base: "/student/faq",
+    },
     icon: <QuestionCircle />,
-  }
+  },
 ];
 
 /**
@@ -25,6 +32,6 @@ const studentLinks = [
  */
 const StudentNavigation: React.FC = () => {
   return <Navigation links={studentLinks} />;
-}
+};
 
 export default StudentNavigation;

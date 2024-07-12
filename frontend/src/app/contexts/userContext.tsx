@@ -2,9 +2,10 @@
 
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
-enum Role {
+export enum Role {
   STUDENT = "student",
   INSTRUCTOR = "instructor",
+  ADMIN = "admin",
 }
 
 // Define type for user information
@@ -41,8 +42,8 @@ export const UserInfoProvider: React.FC<UserInfoProviderProps> = ({
   children,
 }: UserInfoProviderProps): JSX.Element => {
   const [userInfo, setUserInfo] = useState<UserInfo>({
-    firstName: "John",
-    lastName: "Doe",
+    firstName: "",
+    lastName: "",
     email: null,
     role: Role.INSTRUCTOR,
     avatarUrl: null,

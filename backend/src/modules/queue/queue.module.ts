@@ -3,6 +3,9 @@ import { BubbleSheetCreationService } from './jobs/bubble-sheet-creation.service
 import { BullModule } from '@nestjs/bull';
 import { QueueController } from './queue.controller';
 import { UserService } from '../user/user.service';
+import { TokenService } from '../token/token.service';
+import { MailService } from '../mail/mail.service';
+import { FileService } from '../file/file.service';
 
 @Module({
   imports: [
@@ -17,6 +20,12 @@ import { UserService } from '../user/user.service';
     }),
   ],
   controllers: [QueueController],
-  providers: [BubbleSheetCreationService, UserService],
+  providers: [
+    BubbleSheetCreationService,
+    UserService,
+    TokenService,
+    MailService,
+    FileService,
+  ],
 })
 export default class QueueModule {}

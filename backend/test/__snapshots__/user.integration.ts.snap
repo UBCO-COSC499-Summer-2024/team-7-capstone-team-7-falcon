@@ -6,14 +6,176 @@ exports[`User Integration GET /user/:uid should return status 200 and user objec
   "avatar_url": null,
   "created_at": "1000000000",
   "email": "john.doe@test.com",
+  "email_verified": true,
   "employee_user": null,
   "first_name": "John",
   "id": 1,
   "last_name": "Doe",
   "role": "admin",
-  "student_user": null,
+  "student_user": {
+    "id": 1,
+    "student_id": "123",
+  },
   "updated_at": "1000000000",
 }
+`;
+
+exports[`User Integration GET /user/all should return 200 if user is admin and query is empty 1`] = `
+{
+  "data": [
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe@mail.com",
+      "first_name": "John",
+      "id": 1,
+      "last_name": "Doe",
+      "role": "admin",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+0@mail.com",
+      "first_name": "John",
+      "id": 2,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+1@mail.com",
+      "first_name": "John",
+      "id": 3,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+2@mail.com",
+      "first_name": "John",
+      "id": 4,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+3@mail.com",
+      "first_name": "John",
+      "id": 5,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+4@mail.com",
+      "first_name": "John",
+      "id": 6,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+5@mail.com",
+      "first_name": "John",
+      "id": 7,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+6@mail.com",
+      "first_name": "John",
+      "id": 8,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+7@mail.com",
+      "first_name": "John",
+      "id": 9,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+8@mail.com",
+      "first_name": "John",
+      "id": 10,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+9@mail.com",
+      "first_name": "John",
+      "id": 11,
+      "last_name": "Doe",
+      "role": "student",
+    },
+  ],
+  "meta": {
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "itemCount": 11,
+    "pageCount": null,
+  },
+}
+`;
+
+exports[`User Integration GET /user/all should return 200 if user is admin and query provided only takes two users 1`] = `
+{
+  "data": [
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe@mail.com",
+      "first_name": "John",
+      "id": 1,
+      "last_name": "Doe",
+      "role": "admin",
+    },
+    {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john+0@mail.com",
+      "first_name": "John",
+      "id": 2,
+      "last_name": "Doe",
+      "role": "student",
+    },
+  ],
+  "meta": {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 11,
+    "page": "1",
+    "pageCount": 6,
+    "take": "2",
+  },
+}
+`;
+
+exports[`User Integration GET /user/all/count should return 200 if user is admin 1`] = `
+[
+  {
+    "count": "10",
+    "role": "student",
+  },
+  {
+    "count": "1",
+    "role": "admin",
+  },
+]
 `;
 
 exports[`User Integration GET /user/courses should return status 200 and courses 1`] = `
@@ -36,6 +198,7 @@ exports[`User Integration GET /user/courses should return status 200 and courses
       "avatar_url": null,
       "created_at": "1000000000",
       "email": "john.doe@test.com",
+      "email_verified": true,
       "first_name": "John",
       "id": 1,
       "last_name": "Doe",

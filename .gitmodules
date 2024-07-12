@@ -1,9 +1,3 @@
-[submodule "tasks/OMR-tool/yolov5"]
-	path = tasks/OMR-tool/yolov5
-	url = https://github.com/ultralytics/yolov5
-[submodule "tasks/OMR-tool/model_training/yolov5"]
-	path = tasks/OMR-tool/model_training/yolov5
-	url = https://github.com/ultralytics/yolov5
-[submodule "tasks/OMR-tool/model_training/pytorch-YOLOv4"]
-	path = tasks/OMR-tool/model_training/pytorch-YOLOv4
-	url = https://github.com/roboflow-ai/pytorch-YOLOv4.git
+[submodule "tasks/OMR-tool/model_training/OMR-model-training"]
+	path = tasks/OMR-tool/model_training/OMR-model-training
+	url = https://github.com/fperellaholfeld/OMR-model-inference.git

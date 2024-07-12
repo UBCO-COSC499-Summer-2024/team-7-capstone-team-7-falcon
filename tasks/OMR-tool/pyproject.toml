@@ -11,24 +11,13 @@ requests = "^2.32.3"
 pdf2image = "^1.17.0"
 opencv-python = "^4.10.0.84"
 imutils = "^0.5.4"
+onnxruntime = "^1.18.1"
+torch = "^2.3.1"
+onnx = "^1.16.1"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
-
-
-[tool.poetry.group.train.dependencies]
-tensorboardx = "^2.6.2.2"
-numpy = "^2.0.0"
-ipykernel = "^6.29.4"
-scikit-image = "^0.24.0"
-matplotlib = "^3.9.0"
-tqdm = "^4.66.4"
-easydict = "^1.13"
-pillow = "^10.3.0"
-nvidia-cudnn-cu12 = "8.9.2.26"
-torch = {version = "^2.3.1+cu121", source = "torch_CUDA12"}
-
 
 
 [[tool.poetry.source]]

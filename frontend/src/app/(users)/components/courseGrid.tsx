@@ -47,6 +47,7 @@ const CourseGrid: React.FC = () => {
             courseCode={course.course.course_code}
             courseName={course.course.course_name}
             courseRole={course.course_role}
+            courseId={course.course.id}
           />
         ))}
       </div>

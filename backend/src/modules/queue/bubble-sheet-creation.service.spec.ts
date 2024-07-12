@@ -8,6 +8,8 @@ import {
 } from './dto/bubble-sheet-creation-job.dto';
 import { JobCreationException } from '../../common/errors';
 import Redis from 'ioredis';
+import { FileService } from '../file/file.service';
+import * as sinon from 'sinon';
 
 describe('BubbleSheetCreationService', () => {
   let service: BubbleSheetCreationService;
@@ -21,7 +23,7 @@ describe('BubbleSheetCreationService', () => {
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
-      providers: [BubbleSheetCreationService],
+      providers: [BubbleSheetCreationService, FileService],
       imports: [
         BullModule.forRoot({
           redis: {
@@ -59,6 +61,7 @@ describe('BubbleSheetCreationService', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
@@ -76,6 +79,7 @@ describe('BubbleSheetCreationService', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
@@ -95,6 +99,7 @@ describe('BubbleSheetCreationService', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
@@ -120,6 +125,7 @@ describe('BubbleSheetCreationService', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
@@ -145,11 +151,14 @@ describe('BubbleSheetCreationService', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 
       const jobId = await service.createJob(payload);
       await service.pickUpJob();
+
+      sinon.stub(FileService.prototype, 'zipFiles').returns(Promise.resolve());
 
       const result: BubbleSheetCompletionJobDto = {
         payload: {
@@ -162,6 +171,7 @@ describe('BubbleSheetCreationService', () => {
       const job = await service.getJobById(jobId);
 
       expect(job).toBeDefined();
+      sinon.restore();
     });
 
     it('should throw an error when the job is not active', async () => {
@@ -171,6 +181,7 @@ describe('BubbleSheetCreationService', () => {
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
           instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
         },
       };
 

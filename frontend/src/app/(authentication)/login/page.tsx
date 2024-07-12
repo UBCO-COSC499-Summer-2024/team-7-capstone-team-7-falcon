@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { Button, Label, TextInput } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
 
 export default function LoginPage() {

@@ -56,3 +56,80 @@ export interface UpcomingExamsInterface {
   courseCode: string;
   exams: UpcomingExamsExamInterface[];
 }
+
+/**
+ * Graded exam interface
+ */
+interface GradedSubmissionInterface {
+  examId: number;
+  examName: string;
+  examDate: number;
+  examReleasedAt: number;
+  examScore: number;
+  courseId: number;
+}
+
+/**
+ * Graded exams interface
+ */
+export interface GradedSubmissionsInterface {
+  exams: GradedSubmissionInterface[];
+}
+
+/**
+ * User submission exam course details interface
+ */
+interface UserSubmissionExamCourseDetailsInterface {
+  id: number;
+  courseName: string;
+  courseCode: string;
+}
+
+/**
+ * User submission exam student submission interface
+ */
+interface UserSubmissionExamStudentSubmissionInterface {
+  id: number;
+  score: number;
+}
+
+/**
+ * User submission exam details interface
+ */
+interface UserSubmissionExamDetailsInterface {
+  id: number;
+  name: string;
+  examDate: number;
+}
+
+/**
+ * User submission exam interface
+ */
+export interface UserSubmissionExamInterface {
+  exam: UserSubmissionExamDetailsInterface;
+  course: UserSubmissionExamCourseDetailsInterface;
+  grades: number[];
+  studentSubmission: UserSubmissionExamStudentSubmissionInterface;
+}
+
+/**
+ * User role count interface
+ */
+export interface UserRoleCount {
+  count: number;
+  role: string;
+}
+
+/**
+ * Course details interface
+ */
+export interface CourseDetailsInterface {
+  courseId: number;
+  courseCode: string;
+  semesterName: string;
+  members: number;
+  creator: {
+    firstName: string;
+    lastName: string;
+  };
+}

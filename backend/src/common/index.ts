@@ -10,6 +10,11 @@ export const ERROR_MESSAGES = {
     passwordMustMatch: 'Password and confirmation password do not match',
     emailRequired: 'Email is required',
     emailInvalid: 'Email is invalid',
+    fileNotFound: 'File not found',
+  },
+  userRoleDto: {
+    userRoleInvalid: 'User role is invalid',
+    userRoleRequired: 'User role is required',
   },
   userController: {
     userNotFound: 'User not found',
@@ -26,6 +31,7 @@ export const ERROR_MESSAGES = {
     emailNotVerified: 'Email not verified',
     notSupportedAuthType: 'User account has unsupported authentication type',
     invalidPassword: 'Invalid password',
+    studentOrEmployeeIdNotPresent: 'Student or Employee ID is missing',
   },
   tokenController: {
     invalidToken: 'Invalid token',
@@ -60,6 +66,8 @@ export const ERROR_MESSAGES = {
     coursesNotFound: 'Courses could not be found',
     courseArchived: 'Course is archived. Cannot be accessed.',
     userNotEnrolledInCourse: 'User is not enrolled in the course',
+    deleteStudentFromCourseError:
+      'User cannot be deleted from course as their role is not student',
   },
   courseEnrollDto: {
     inviteCodeRequired: 'Invite code is required',
@@ -83,6 +91,16 @@ export const ERROR_MESSAGES = {
   examController: {
     examDateError: 'Exam date must be in the future',
     noUpcomingExamsFound: 'No upcoming exams found',
+    noGradedExamsFound: 'No graded exams found',
     examNotFound: 'Exam not found',
+    examsNotFound: 'Exams not found',
+    submissionNotFound: 'Submission not found',
+    userSubmissionNotFound: 'User submission not found',
+  },
+  submissionController: {
+    submissionNotFound: 'Submission not found',
+    minGradeError: 'Minimum grade must be 0',
+    maxGradeError: 'Maximum grade must be 100',
+    invalidGradeError: 'Grade value is not valid',
   },
 };

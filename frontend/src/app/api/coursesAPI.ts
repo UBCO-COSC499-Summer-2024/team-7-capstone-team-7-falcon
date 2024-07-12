@@ -19,7 +19,7 @@ export const coursesAPI = {
         withCredentials: true,
       });
 
-      const response = await instance.get<Course>(`/${courseId}/public`);
+      const response = await instance.get<Course>(`/${courseId}`);
       return response.data;
     } catch (error: any) {
       console.error("Failed to find course:", error);
@@ -27,6 +27,32 @@ export const coursesAPI = {
     }
   },
 
+  getCoursePublic: async (courseId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.get<CourseData>(`/${courseId}/public`);
+      return response.data;
+    } catch (error: any) {
+      console.error("Failed to find course:", error);
+      throw error;
+    }
+  },
+
+  /**
+   *
+   * @param courseId
+   * @param invite_code
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   enrollCourse: async (courseId: number, invite_code: string) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -43,6 +69,7 @@ export const coursesAPI = {
         invite_code: invite_code,
       };
       const response = await instance.post(`/${courseId}/enroll`, enrollData);
+      console.log(response);
       return response;
     } catch (error: any) {
       //always axios error

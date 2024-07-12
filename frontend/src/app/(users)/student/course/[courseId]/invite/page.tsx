@@ -10,8 +10,9 @@ const JoinCourse = async ({
   params: { courseId: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  const course: Course = await coursesAPI.getCourse(Number(params.courseId));
-  const courseData: CourseData = { ...course };
+  const courseData: CourseData = await coursesAPI.getCoursePublic(
+    Number(params.courseId),
+  );
   const code = searchParams?.code;
 
   return <JoinCourseModal courseData={courseData} inviteCode={String(code)} />;

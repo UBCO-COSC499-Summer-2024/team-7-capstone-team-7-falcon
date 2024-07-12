@@ -51,10 +51,17 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
       setSavingChanges(true);
 
       const updatedCourse = await coursesAPI.editCourse(course_id, formData);
-      setFormData(updatedCourse);
-      toast.success("Course successfully updated");
 
-      fetchData();
+      // Update the form data based on the response
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        courseName: formData.courseName,
+        courseCode: formData.courseCode,
+        semesterId: formData.semesterId,
+        inviteCode: formData.inviteCode,
+      }));
+
+      toast.success("Course successfully updated");
     } catch (error) {
       console.error("Failed to edit course:", error);
       toast.error("Failed to update course");

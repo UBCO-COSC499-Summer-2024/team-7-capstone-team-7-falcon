@@ -1,5 +1,34 @@
 # Individual Logs for Paula
 
+## Wednesday (7/05 - 7/09)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.05_07.09"](images/clockify_07.05_07.09.png)
+
+### Current Tasks
+
+!["current_tasks_07.05_07.09"](images/current_tasks_07.05_07.09.png)
+
+* #1: Authentication pages (frontend and backend) - need to update frontend logic to enfore IDs
+* #2: Repo clean up and documentation updates
+* #3: Admin create new semester page
+
+### Progress Update (since 7/05/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+I was not able to complete all the tasks I set out to do this cycle due to some personal health issues but was able to build the create semester modal (with backend integration). I am hoping to complete these tasks in the next cycle.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Repo clean up and documentation updates
+* Admin create new semester page
+* Address PR suggestions for the authentication system
+
 ## Friday (7/03 - 7/04)
 
 ### Timesheet

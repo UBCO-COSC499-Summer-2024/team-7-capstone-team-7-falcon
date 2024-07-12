@@ -1,5 +1,41 @@
 # Personal Logs
 
+## Wednesday (7/05-7/09)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.05-07.09/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finish writing tests for inference class and add better documentation for its functions
+  2. Integrating inference class into OMR grading pipeline
+  3. Validating our in-house bubble sheets on the inference model
+
+### Progress Update (since 7/05/2024)
+
+![ProjectBoard](07.05-07.09/board.png)
+
+  1. Created an inference class that works on the CPU with ONNX with high reliability from limited testing
+  2. Created postprocessing steps for generating OpenCV bounding boxes from the results of the objects.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The ONNX Model now works within our inference class and the bounding boxes are clean and accurate from the tests I ran. I want to write a few more tests before pushing the changes but they look very promising. I'll then start integrating the inference tasks with the rest of our OMR pipeline.
+I also need to test out our own generated sheets on the model so I now if I need to train the model some more to account for them.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have inference integrated with the rest of the pipeline.
+  2. Ensure our own sheets work with the pipeline as well
+  3. start grading logic tasks.
+
+---
+---
+---
+
 ## Friday (7/03-7/04)
 
 ### Timesheet

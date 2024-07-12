@@ -164,7 +164,7 @@ def identify_bubbled(img, cnts):
     thresh = threshold_img(img)
     bubbled = None
     filled_in = []
-    image_with_bubble = img.copy()
+    # image_with_bubble = img.copy()
 
     for cnt, i in enumerate(cnts):
         mask = np.zeros(thresh.shape, dtype="uint8")
@@ -204,16 +204,6 @@ if __name__ == '__main__':
 
     cv2.drawContours(image_with_bubble, filled_in, -1, (0, 255, 0), 2)
     cv2.imshow("Bubbled Image", cv2.resize(image_with_bubble, (1080,900)))
-
-    # image_with_objects_identified = image.copy()
-    # for obj in objects:
-    #     match obj['type']:
-    #         case "question":
-    #             cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (200, 0, 255), 2)
-    #         case "SN_digit":
-    #             cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 0), 2)
-    #         case "name_char":
-    #             cv2.drawContours(image_with_objects_identified, obj['contours'], -1, (255, 0, 255), 2)
 
 
     cv2.imshow("Prepared Image", cv2.resize(prepared_image, (800, 800)))

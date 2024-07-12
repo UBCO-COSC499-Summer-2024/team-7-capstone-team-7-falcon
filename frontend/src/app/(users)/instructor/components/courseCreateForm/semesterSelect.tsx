@@ -20,12 +20,6 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
 }) => {
   const [courseSemesters, setCourseSemesters] = useState<Semester[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  /**
-   * Fetches all semesters from the API and sets them in the state.
-   * @async
-   * @function
-   * * @returns {Promise<void>}
-   */
 
   const fetchSemesters = async (): Promise<void> => {
     const fetchedSemesters = await semestersAPI
@@ -36,12 +30,6 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
     setCourseSemesters(fetchedSemesters);
     setIsLoaded(true);
   };
-
-  /**
-   * Fetches semesters when the modal is opened and the semesters are not already loaded.
-   * @function
-   * @returns {void}
-   */
 
   useEffect(() => {
     if (courseSemesters.length === 0) fetchSemesters();
@@ -69,7 +57,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
           ))}
         </Select>
       ) : (
-        isLoaded && <Alert color="failure">Failed to fetch semesters</Alert> // Only show the alert if the semesters have been loaded from backend but are empty
+        isLoaded && <Alert color="failure">Failed to fetch semesters</Alert>
       )}
     </>
   );

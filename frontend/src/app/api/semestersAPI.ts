@@ -6,7 +6,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const semestersAPI = {
   /**
-   * Fetches all semesters from the backend API.
+   * Fetches all semesters, with limited information, from the backend API.
    *
    * @async
    * @function getAllSemestersLimited
@@ -48,14 +48,16 @@ export const semestersAPI = {
       const auth_token = await fetchAuthToken();
 
       const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/semester/all`,
+        baseURL: `${BACKEND_URL}/api/v1/semester/limited/all`,
         headers: {
           Authorization: auth_token,
         },
         withCredentials: true,
       });
 
-      const response = await instance.get(`${BACKEND_URL}/api/v1/semester/all`);
+      const response = await instance.get(
+        `${BACKEND_URL}/api/v1/semester/limited/all`,
+      );
       return response.data;
     } catch (error) {
       console.error("Failed to fetch semesters:", error);

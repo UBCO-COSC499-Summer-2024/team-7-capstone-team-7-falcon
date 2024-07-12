@@ -12,7 +12,10 @@ exports[`User Integration GET /user/:uid should return status 200 and user objec
   "id": 1,
   "last_name": "Doe",
   "role": "admin",
-  "student_user": null,
+  "student_user": {
+    "id": 1,
+    "student_id": "123",
+  },
   "updated_at": "1000000000",
 }
 `;

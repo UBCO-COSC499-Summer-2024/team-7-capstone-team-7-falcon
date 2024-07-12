@@ -32,18 +32,18 @@ describe('Exam Integration', () => {
     await SubmissionModel.query(
       `ALTER SEQUENCE submission_model_id_seq RESTART WITH 1`,
     );
-    await SubmissionModel.query(
-      `ALTER SEQUENCE student_user_model_id_seq RESTART WITH 1`,
+    await StudentUserModel.query(
+      'ALTER SEQUENCE student_user_model_id_seq RESTART WITH 1',
     );
   });
 
   describe('POST /exam/:cid/create', () => {
-    it('should return 401 if not authenticated', async () => {
+    it('should return 401 if user not authenticated', async () => {
       await supertest().post('/exam/1/create').expect(401);
     });
 
     it('should return 401 if user not enrolled in course', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -52,6 +52,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -69,7 +82,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 401 if user not professor', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -78,6 +91,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -101,7 +127,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 400 if exam date is in past', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -110,6 +136,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -137,7 +176,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 200 if exam is created', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -146,6 +185,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -176,7 +228,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 400 if POST body is invalid', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -185,6 +237,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -220,12 +285,12 @@ describe('Exam Integration', () => {
   });
 
   describe('GET /exam/:cid/:eid/submissions', () => {
-    it('should return 401 if not authenticated', async () => {
+    it('should return 401 if user not authenticated', async () => {
       await supertest().get('/exam/1/1/submissions').expect(401);
     });
 
     it('should return 401 if user not assigned to the course', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -234,6 +299,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -251,7 +329,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 401 if user not professor or ta', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -260,6 +338,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -283,7 +374,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 200 if exam submissions are returned', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -292,6 +383,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -322,7 +426,7 @@ describe('Exam Integration', () => {
       });
 
       for (let i = 0; i < 10; i++) {
-        const user = await UserModel.create({
+        const newUser = await UserModel.create({
           first_name: 'John',
           last_name: 'Doe',
           email: `john.doe-${i}@test.com`,
@@ -332,7 +436,7 @@ describe('Exam Integration', () => {
         }).save();
 
         const studentUser = await StudentUserModel.create({
-          user,
+          user: newUser,
           student_id: i,
         }).save();
 
@@ -359,7 +463,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 200 and empty array if no submissions are found', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -368,6 +472,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -402,12 +519,12 @@ describe('Exam Integration', () => {
   });
 
   describe('GET /exam/:cid/exam/:eid', () => {
-    it('should return 401 if not authenticated', async () => {
+    it('should return 401 if user not authenticated', async () => {
       await supertest().get('/exam/1/exam/1').expect(401);
     });
 
     it('should return 401 if user not enrolled in course', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -416,6 +533,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       await supertest()
         .get('/exam/1/exam/1')
@@ -424,7 +554,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 401 if user not professor or ta', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -433,6 +563,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -456,7 +599,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 404 if exam not found', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -465,6 +608,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -492,7 +648,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 200 if exam is found', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -501,6 +657,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -535,12 +704,12 @@ describe('Exam Integration', () => {
   });
 
   describe('GET /exam/upcoming', () => {
-    it('should return 401 if not authenticated', async () => {
+    it('should return 401 if user not authenticated', async () => {
       await supertest().get('/exam/upcoming').expect(401);
     });
 
     it('should return 204 if no exams are found', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -549,6 +718,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'COSC 499',
@@ -573,8 +755,8 @@ describe('Exam Integration', () => {
       expect(result.body).toStrictEqual({});
     });
 
-    it('should return 200 if exams are found for user', async () => {
-      const user = await UserModel.create({
+    it('should return 204 if user is not enrolled in any courses', async () => {
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -583,6 +765,51 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
+
+      const result = await supertest()
+        .get('/exam/upcoming')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(204);
+      expect(result.body).toStrictEqual({});
+    });
+
+    it('should return 200 if exams are found for user', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       let course = await CourseModel.create({
         course_code: 'CS101',
@@ -637,7 +864,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 204 if no exams are found', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -646,6 +873,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const result = await supertest()
         .get('/exam/graded')
@@ -655,7 +895,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 204 if no graded exams are found for user', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -664,6 +904,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       let course = await CourseModel.create({
         course_code: 'CS101',
@@ -789,7 +1042,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 401 if user not enrolled in course', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -798,6 +1051,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       await supertest()
         .get('/exam/1/1/user/1/grade')
@@ -806,7 +1072,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 401 if user id in a request is not the same as the authenticated user id', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -815,6 +1081,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'CS101',
@@ -852,7 +1131,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 404 if user is a professor or TA, but user is not enrolled in the course', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -861,6 +1140,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const course = await CourseModel.create({
         course_code: 'CS101',
@@ -894,7 +1186,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 401 if course has been archived for requested exam', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -903,6 +1195,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       let course = await CourseModel.create({
         course_code: 'CS101',
@@ -943,7 +1248,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 404 if exam has no submissions for the user', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -952,6 +1257,19 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       let course = await CourseModel.create({
         course_code: 'CS101',
@@ -1112,6 +1430,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       await supertest()
         .get('/exam/1/submission/1/user/1')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -1127,6 +1450,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       const course = await CourseModel.create({
@@ -1175,6 +1503,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       const course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',
@@ -1205,6 +1538,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       let course = await CourseModel.create({
@@ -1252,6 +1590,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       let course = await CourseModel.create({
@@ -1322,6 +1665,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       return supertest()
         .patch('/exam/1/1/release_grades')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -1337,6 +1685,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       const course = await CourseModel.create({
@@ -1372,6 +1725,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       const course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',
@@ -1402,6 +1760,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       let course = await CourseModel.create({
@@ -1465,6 +1828,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       await supertest()
         .patch('/exam/1/course/1/submission/1/grade')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -1480,6 +1848,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       const course = await CourseModel.create({
@@ -1525,6 +1898,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       const course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',
@@ -1564,6 +1942,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       const course = await CourseModel.create({
         course_code: 'CS101',
         course_name: 'Introduction to Computer Science',
@@ -1599,6 +1982,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       let course = await CourseModel.create({
@@ -1669,6 +2057,11 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       let course = await CourseModel.create({
@@ -1747,6 +2140,11 @@ describe('Exam Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       return supertest()
         .get('/exam/custom_bubble_sheet/1')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -1765,6 +2163,11 @@ describe('Exam Integration', () => {
         role: UserRoleEnum.ADMIN,
       }).save();
 
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
       return supertest()
         .get('/exam/custom_bubble_sheet/1')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -1781,6 +2184,11 @@ describe('Exam Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
         role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
       }).save();
 
       const tempFilePath = path.join(

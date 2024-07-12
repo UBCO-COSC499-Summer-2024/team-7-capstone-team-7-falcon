@@ -1,3 +1,48 @@
+## (7/10- 7/11)
+
+### Timesheet
+Clockify report
+![time for 07.10_- 07.11](07.10_07.11.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Add site wide error handling [S]
+  * #2: Create the student view exam page [S]
+
+### Progress Update (since 7/10/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Add site wide error handling
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create the student view exam page #172
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I finished all of the student view exam page. I also added site wide error handling and refactored a lot of the code. I cleaned up a lot of the code by moving error handling that is happening in every page to the APIs instead. Overall I completed everything I set out to do this cycle and the process is going smoothly.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Add instructor exam tables
+  * Add instructor analytics page with graphs
+  * Work on admin edit semester page? (during the meeting I mentioned I would take an admin page if I have time)
+
+
 ## (7/05- 7/09)
 
 ### Timesheet

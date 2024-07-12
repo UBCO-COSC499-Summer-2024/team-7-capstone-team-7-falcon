@@ -31,6 +31,7 @@ export const ERROR_MESSAGES = {
     emailNotVerified: 'Email not verified',
     notSupportedAuthType: 'User account has unsupported authentication type',
     invalidPassword: 'Invalid password',
+    studentOrEmployeeIdNotPresent: 'Student or Employee ID is missing',
   },
   tokenController: {
     invalidToken: 'Invalid token',

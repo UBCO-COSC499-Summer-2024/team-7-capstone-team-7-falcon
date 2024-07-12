@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 import { ERROR_MESSAGES } from '../../../common';
 
-export class SemesterCreateDto {
+export class SemesterDto {
   @IsString()
   @IsNotEmpty({ message: ERROR_MESSAGES.semesterCreateDto.nameRequired })
   @Length(2, 15, { message: ERROR_MESSAGES.semesterCreateDto.nameLength })

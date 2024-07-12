@@ -48,7 +48,7 @@ Clockify report
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-For this cycle I promised to implement course analytics backend endpoint and start looking at implementing backend endpoints for OMR processing script. To summarize my progress, I have finished course analytics endpoint and it's being reviewed by the team. As for the OMR processing endpoints, I have a solid understanding how it should be implemented; I strongly believe that I will be able to finish this work by the end of Wednesday. I hope that all remaining backend endpoints will be done by next Wednesday, which would allow me to dedicate time to help my team with a frontend work.
+For this cycle I promised to implement course analytics backend endpoint and start looking at implementing backend endpoints for OMR processing script. To summarize my progress, I have finished course analytics endpoint and it's being reviewed by the team. As for the OMR processing endpoints, I have a solid understanding of how it should be implemented; I strongly believe that I will be able to finish this work by the end of Wednesday. I hope that all remaining backend endpoints will be done by next Wednesday, which would allow me to dedicate time to help my team with the frontend work.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Finish backend endpoints for OMR processing script

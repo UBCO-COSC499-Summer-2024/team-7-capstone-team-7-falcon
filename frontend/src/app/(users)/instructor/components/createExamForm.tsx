@@ -1,6 +1,6 @@
 "use client";
 
-import { Label, TextInput, FileInput } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 import { Datepicker } from "flowbite-react";
 import { ExamData } from "../../../typings/backendDataTypes";
 import { useState } from "react";

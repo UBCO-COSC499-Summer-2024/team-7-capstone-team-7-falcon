@@ -39,7 +39,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
    */
   useEffect(() => {
     if (courseSemesters.length === 0) fetchSemesters();
-  }, [courseSemesters.length]);
+  }, []);
 
   return (
     <>

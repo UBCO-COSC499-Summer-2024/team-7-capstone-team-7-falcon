@@ -1,6 +1,10 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { BubbleSheetPayload, ExamData } from "../typings/backendDataTypes";
+import {
+  BubbleSheetPayload,
+  ExamData,
+  StudentSubmission,
+} from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -16,7 +20,10 @@ export const examsAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.post(`/${courseId}/create`, examData);
+      const response = await instance.post<StudentSubmission>(
+        `/${courseId}/create`,
+        examData,
+      );
       return response;
     } catch (error: any) {
       //always axios error
@@ -128,6 +135,89 @@ export const examsAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to download bubble sheet: ", error);
+      return error;
+    }
+  },
+
+  getStudentSubmission: async (
+    examId: number,
+    courseId: number,
+    userId: number,
+  ) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `/${examId}/${courseId}/user/${userId}/grade`,
+      );
+      console.log("exam response", response);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exam info: ", error);
+      return error;
+    }
+  },
+
+  getStudentSubmissionPDF: async (
+    courseId: number,
+    submissionId: number,
+    userId: number,
+  ) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `/${courseId}/submission/${submissionId}/user/${userId}`,
+        { responseType: "arraybuffer" },
+      );
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exam info: ", error);
+      return error;
+    }
+  },
+
+  /**
+   * Release exam grades
+   * @param examId {number} exam id
+   * @param courseId {number} course id
+   * @returns {Promise<AxiosResponse<any> | Error>}
+   */
+  releaseExamGrades: async (
+    examId: number,
+    courseId: number,
+  ): Promise<any | Error> => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.patch(
+        `/${examId}/${courseId}/release_grades`,
+      );
+      return response;
+    } catch (error: any) {
       return error;
     }
   },

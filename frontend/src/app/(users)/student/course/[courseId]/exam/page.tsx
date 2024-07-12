@@ -6,9 +6,9 @@ import CourseSubmissionsTable from "../../../components/courseSubmissionsTable";
 const StudentExamPage = async ({
   params,
 }: {
-  params: { course_id: string };
+  params: { courseId: string };
 }) => {
-  const cid = Number(params.course_id);
+  const cid = Number(params.courseId);
   const response = await coursesAPI.getCourse(cid);
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };

@@ -16,6 +16,9 @@ MODEL_PATH = (
         / "best.onnx"
     )
 
+INFERENCE_CLASSES = ['answer', 'firstname-section', 'lastname-section', 'name-chars', 'orientation-mark', 'sn-digits', 'student-num-section', 'top-page-num']
+
+
 class Inferencer:
     """
     A class for performing object inference using a pre-trained model.
@@ -24,12 +27,13 @@ class Inferencer:
         model_path (str): The path to the pre-trained model.
         conf_threshold (float, optional): The confidence threshold for filtering out object predictions. Defaults to 0.4.
         iou_threshold (float, optional): The intersection over union threshold for non-maximum suppression. Defaults to 0.9.
+        inference_classes (list, optional): The list of classes that the model can detect. Defaults to ['answer', 'firstname-section', 'lastname-section', 'name-chars', 'orientation-mark', 'sn-digits', 'student-num-section', 'top-page-num'].
     """
 
-    def __init__(self, model_path=MODEL_PATH, conf_threshold=0.5, iou_threshold=0.95):
+    def __init__(self, model_path=MODEL_PATH, conf_threshold=0.5, iou_threshold=0.95, inference_classes=INFERENCE_CLASSES):
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
-
+        self.inference_classes = inference_classes
         self.init_session(model_path)
 
     def init_session(self, model_path):

@@ -14,7 +14,7 @@ const user_columns: Column[] = [
   },
   { label: "Start Date", renderCell: (item) => item.starts_at },
   { label: "End Date", renderCell: (item) => item.ends_at },
-  { label: "Courses", renderCell: (item) => "n" },
+  { label: "Courses", renderCell: (item) => item.course_count },
   {
     label: "Actions",
     renderCell: (item) => (
@@ -44,6 +44,7 @@ const SemesterTable: React.FC<> = () => {
             semester_name: item.name,
             starts_at: item.starts_at,
             ends_at: item.ends_at,
+            course_count: item.course_count,
           },
         }),
       );

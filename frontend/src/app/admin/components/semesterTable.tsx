@@ -18,7 +18,7 @@ const user_columns: Column[] = [
   {
     label: "Actions",
     renderCell: (item) => (
-      <Link href={"/semesters"}>
+      <Link href={`./semesters/${item.id}`}>
         <button type="button" className="btn-primary flex p-1 px-4">
           Edit
         </button>

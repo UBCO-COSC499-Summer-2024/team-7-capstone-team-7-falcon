@@ -1,10 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { redirect } from "next/navigation";
-import Link from "next/link";
 import { Edit } from "flowbite-react-icons/solid";
-import SearchBar from "../components/searchBar";
 import CreateSemesterForm from "../components/createSemesterForm";
 import { Status } from "../../typings/backendDataTypes";
 import SemesterTable from "../components/semesterTable";
@@ -31,7 +28,7 @@ const AdminSemesterManagement: React.FC = () => {
           <div className="grid grid-cols-2">
             <div className="col-span-1">
               <div className="p-1 space-y-2">
-                <h1 className="text-4xl font-bold">Semesters</h1>
+                <h1 className="text-3xl font-bold">Semesters</h1>
               </div>
             </div>
             <div className="justify-self-end space-y-4">

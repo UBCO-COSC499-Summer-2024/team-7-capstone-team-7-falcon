@@ -8,6 +8,13 @@ from datetime import datetime
 Class for running inference on an image using our pre-trained object detection model.
 """
 
+MODEL_PATH = (
+        Path(__file__).resolve().parents[2]
+        / "model_training"
+        / "trained_model_onnx"
+        / "weights"
+        / "best.onnx"
+    )
 
 class Inferencer:
     """
@@ -19,7 +26,7 @@ class Inferencer:
         iou_threshold (float, optional): The intersection over union threshold for non-maximum suppression. Defaults to 0.9.
     """
 
-    def __init__(self, model_path, conf_threshold=0.5, iou_threshold=0.95):
+    def __init__(self, model_path=MODEL_PATH, conf_threshold=0.5, iou_threshold=0.95):
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
 
@@ -45,7 +52,7 @@ class Inferencer:
         except Exception as e:
             print(f"Error initializing session: {e}")
 
-    def __call__(self, image):
+    def infer(self, image):
         """
         Performs object inference on the input image.
 
@@ -197,7 +204,7 @@ if __name__ == "__main__":
     start = datetime.now()
     inferencer = Inferencer(model_path)
 
-    boxes, scores, classes = inferencer(image)
+    boxes, scores, classes = inferencer.infer(image)
 
     for i, box in enumerate(boxes):
         x1, y1, x2, y2 = map(int, box)

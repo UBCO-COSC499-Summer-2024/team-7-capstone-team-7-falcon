@@ -1,14 +1,15 @@
 from pdf2image import convert_from_path
 import logging
+from cv2 import imread
 
 logger = logging.getLogger(__name__)
 
 
 def check_is_pdf(file_path: str) -> bool:
     """Check if the file is a PDF."""
-    if file_path.lower().endswith(".pdf"):
+    if file_path.suffix == ".pdf":
         return True
-    if file_path.lower().endswith((".png", ".jpg", ".jpeg")):
+    if file_path.suffix in (".png", ".jpg", ".jpeg"):
         return False
     raise ValueError(
         f'File Path "{file_path}" does not point to a PDF or allowed image type'
@@ -64,7 +65,7 @@ def convert_to_images(pdf_path: str) -> list:
     try:
         if not check_is_pdf(pdf_path):
             logger.warning(f"File is already an image: {pdf_path}")
-            return None  # Return Code 0 if already an image
+            return [imread(pdf_path)]  # Return Code 0 if already an image
         images = convert_from_path(pdf_path)
         logger.info(f"PDF converted to image successfully")
         return images

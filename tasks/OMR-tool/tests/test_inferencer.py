@@ -54,7 +54,7 @@ def test_postprocess_results(inferencer):
 
 
 def test_inference(inferencer, image):
-    boxes, scores, classes = inferencer(image)
+    boxes, scores, classes = inferencer.infer(image)
     assert isinstance(boxes, np.ndarray)
     assert boxes.shape[1] == 4
     assert boxes.__len__() == 108

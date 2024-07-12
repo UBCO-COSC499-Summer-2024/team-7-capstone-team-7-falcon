@@ -5,6 +5,21 @@ from pathlib import Path
 
 ALIGNMENT_TEMPLATE = cv2.imread(Path(__file__).resolve().parents[2] / "fixtures" / "template" / "alignment.png", cv2.COLOR_BGR2GRAY)
 
+def prepare_img(image):
+    """
+    Function to preprocess an image for processing.
+
+    Args:
+        image (PIL.Image): The image to be prepared.
+
+    Returns:
+        PIL.Image: The prepared image.
+
+    """
+    grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    portrait_img = align_img(grayscale_img)
+    return portrait_img
+
 def edge_detect_img(image):
     """
     Function to preprocess an image for processing.
@@ -32,27 +47,25 @@ def align_img(image):
         PIL.Image: The aligned image.
 
     """
-    ogH, ogW, _ = image.shape
-    image = cv2.resize(image, (900, 900))
-    newH, newW, _ = image.shape
+    ogH, ogW = image.shape[:2]
     
     if ogW > ogH:
         image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    grayscale_img = threshold_img(image, blur=False)
-    template = threshold_img(ALIGNMENT_TEMPLATE, blur=False)
-    mask = np.zeros(grayscale_img.shape[:2], dtype="uint8")
-    print(grayscale_img.shape[:2])
-    cv2.rectangle(mask, (newW, 0), (int(newW - np.ceil(newW*0.1)), int(0+np.ceil(newH*0.1))), 255, -1)
-    masked = cv2.bitwise_and(grayscale_img, grayscale_img, mask=mask)
-    cv2.imshow("Mask Applied to Image", masked)
-    cv2.waitKey(0)
-    result = cv2.matchTemplate(masked, template, cv2.TM_CCOEFF_NORMED)
-    w, h = template.shape[::-1]
-    threshold = 0.4
-    loc = np.where(result >= threshold)
-    for pt in zip(*loc[::-1]):
-        cv2.rectangle(image, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
-    image = cv2.resize(image, (ogH, ogW))
+    # grayscale_img = threshold_img(image, blur=False)
+    # template = threshold_img(ALIGNMENT_TEMPLATE, blur=False)
+    # mask = np.zeros(grayscale_img.shape[:2], dtype="uint8")
+    # print(grayscale_img.shape[:2])
+    # cv2.rectangle(mask, (newW, 0), (int(newW - np.ceil(newW*0.1)), int(0+np.ceil(newH*0.1))), 255, -1)
+    # masked = cv2.bitwise_and(grayscale_img, grayscale_img, mask=mask)
+    # cv2.imshow("Mask Applied to Image", masked)
+    # cv2.waitKey(0)
+    # result = cv2.matchTemplate(masked, template, cv2.TM_CCOEFF_NORMED)
+    # w, h = template.shape[::-1]
+    # threshold = 0.4
+    # loc = np.where(result >= threshold)
+    # for pt in zip(*loc[::-1]):
+    #     cv2.rectangle(image, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
+    # image = cv2.resize(image, (ogH, ogW))
     return image
 
 
@@ -238,26 +251,26 @@ if __name__ == "__main__":
 
     image_path = sys.argv[1]
     image = cv2.imread(image_path)
-    cv2.imshow("aligned", align_img(image))
-    cv2.waitKey(0)
+    # cv2.imshow("aligned", align_img(image))
+    # cv2.waitKey(0)
     prepared_image = edge_detect_img(image)
     question_contours = generate_bubble_contours(image)
-    # objects = identify_object_contours(question_contours)
+    objects = identify_object_contours(question_contours)
 
-    # image_with_contours = image.copy()
+    image_with_contours = image.copy()
 
-    # image_with_bubble = image.copy()
+    image_with_bubble = image.copy()
 
-    # cv2.drawContours(image_with_contours, question_contours, -1, (255, 255, 0), 2)
+    cv2.drawContours(image_with_contours, question_contours, -1, (255, 255, 0), 2)
 
-    # filled_in = identify_bubbled(image, question_contours)
+    filled_in = identify_bubbled(image, question_contours)
 
-    # cv2.drawContours(image_with_bubble, filled_in, -1, (0, 255, 0), 2)
-    # cv2.imshow("Bubbled Image", cv2.resize(image_with_bubble, (1080, 900)))
+    cv2.drawContours(image_with_bubble, filled_in, -1, (0, 255, 0), 2)
+    cv2.imshow("Bubbled Image", cv2.resize(image_with_bubble, (1080, 900)))
 
-    # cv2.imshow("Prepared Image", cv2.resize(prepared_image, (800, 800)))
-    # cv2.imshow("Contoured Image", cv2.resize(image_with_contours, (900, 900)))
-    # cv2.imshow("Objects Image", cv2.resize(image_with_objects_identified, (900, 900)))
+    cv2.imshow("Prepared Image", cv2.resize(prepared_image, (800, 800)))
+    cv2.imshow("Contoured Image", cv2.resize(image_with_contours, (900, 900)))
+    cv2.imshow("Objects Image", cv2.resize(image_with_objects_identified, (900, 900)))
 
-    # cv2.imshow("Contoured Image", image_with_contours)
+    cv2.imshow("Contoured Image", image_with_contours)
     cv2.waitKey(0)

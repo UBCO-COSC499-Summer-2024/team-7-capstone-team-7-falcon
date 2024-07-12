@@ -12,6 +12,7 @@ import {
 } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
 import RedirectModal from "../components/redirectModal";
+import { authAPI } from "@/app/api/authAPI";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -117,25 +118,14 @@ export default function SignUpPage() {
   async function onSetup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // send data to the database
-    const jsonPayload = JSON.stringify(formUserInfo);
-
     let response;
 
+    // send data to the database
     try {
-      response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
-        {
-          method: "POST",
-          body: jsonPayload,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      response = await authAPI.registerUser(formUserInfo);
 
       // if response is ok, display message to validate email, and redirect to login page
-      if (response.ok) {
+      if (response.status === 201) {
         redirectInfo.current.message =
           "Please check your email to validate your account.";
         redirectInfo.current.redirectPath = "/login";

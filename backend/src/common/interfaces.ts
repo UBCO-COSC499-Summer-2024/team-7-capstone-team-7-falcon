@@ -106,8 +106,42 @@ interface UserSubmissionExamDetailsInterface {
  * User submission exam interface
  */
 export interface UserSubmissionExamInterface {
-  exam: UserSubmissionExamDetailsInterface,
+  exam: UserSubmissionExamDetailsInterface;
   course: UserSubmissionExamCourseDetailsInterface;
   grades: number[];
   studentSubmission: UserSubmissionExamStudentSubmissionInterface;
+}
+
+/**
+ * Course analytics submission student interface
+ */
+interface CourseAnalyticsSubmissionStudentInterface {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
+}
+
+/**
+ * Course analytics submission interface
+ */
+interface CourseAnalyticsSubmissionInterface {
+  submissions: CourseAnalyticsSubmissionStudentInterface[];
+  exam: {
+    id: number;
+    title: string;
+  };
+}
+
+/**
+ * Course analytics response interface
+ */
+export interface CourseAnalyticsResponseInterface {
+  courseMembersSize: number;
+  courseExamsCount: number;
+  examSubmissionsCount: number;
+  examSubmissions: CourseAnalyticsSubmissionInterface[];
 }

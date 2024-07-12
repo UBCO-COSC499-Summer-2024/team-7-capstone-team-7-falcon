@@ -48,7 +48,7 @@ def save_images(images, output_path, num_pages_per_sheet):
         raise e
 
 
-def convert_to_image(pdf_path: str) -> list:
+def convert_to_images(pdf_path: str) -> list:
     """Converts a PDF file to a list of images, saving each page as a separate image.
 
     Args:
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         sys.exit(1)
     img_save = sys.argv[4].lower() == "true"
     print("Converting PDF to image...")
-    result = convert_to_image(pdf_path)
+    result = convert_to_images(pdf_path)
     if result != None and img_save:
         images_saved = save_images(result, output_path, num_pages_per_sheet)
         print(

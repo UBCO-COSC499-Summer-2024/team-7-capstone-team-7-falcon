@@ -1,6 +1,6 @@
 import os
 import pytest
-from omr_tool.utils.pdf_to_images import convert_to_image, check_is_pdf, save_images
+from omr_tool.utils.pdf_to_images import convert_to_images, check_is_pdf, save_images
 
 
 class TestConvertToImage:
@@ -31,13 +31,13 @@ class TestConvertToImage:
         """
         Test case to check if the function returns None when the input file is already an image.
         """
-        assert convert_to_image(self.IMG_PATH) == None
+        assert convert_to_images(self.IMG_PATH) == None
 
     def test_convert_to_image_successful(self, output_path):
         """
         Test case to check if the conversion to image is successful.
         """
-        images = convert_to_image(self.PDF_PATH)
+        images = convert_to_images(self.PDF_PATH)
         assert images is not None
         assert len(images) > 0
 
@@ -58,12 +58,12 @@ class TestConvertToImage:
         Test case to check if an exception is raised when an invalid PDF path is provided.
         """
         with pytest.raises(Exception):
-            convert_to_image(self.INVALID_PDF_PATH)
+            convert_to_images(self.INVALID_PDF_PATH)
 
     def test_save_images_failed(self):
         """
         Test case to check if an exception is raised when saving images to an invalid output path.
         """
-        images = convert_to_image(self.PDF_PATH)
+        images = convert_to_images(self.PDF_PATH)
         with pytest.raises(Exception):
             save_images(images, "/invalid/output/path", 2)

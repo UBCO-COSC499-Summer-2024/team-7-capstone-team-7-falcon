@@ -1,6 +1,5 @@
 # Personal Logs
 
-<<<<<<< HEAD
 ## Friday (7/10-7/11)
 
 ### Timesheet
@@ -36,8 +35,6 @@ The ONNX Model is now fully implemented with tests and documentation done. The n
 ---
 ---
 
-=======
->>>>>>> 2bc613752f30c4a006a3521daf2f2a1da25e126f
 ## Wednesday (7/05-7/09)
 
 ### Timesheet

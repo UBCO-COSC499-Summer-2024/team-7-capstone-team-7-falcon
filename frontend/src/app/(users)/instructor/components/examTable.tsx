@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Column, DataItem } from "./type";
-import TableComponent from "../../components/tableComponent";
+import { Column, DataItem } from "../../../components/type";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { Exam } from "../../../typings/backendDataTypes";
 import Link from "next/link";
 import { UserEdit } from "flowbite-react-icons/solid";
+import TableComponent from "../../../components/tableComponent";
 
 const exam_columns: Column[] = [
   { label: "Name", renderCell: (item) => item.name },
@@ -76,7 +76,6 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
       }
 
       const result_graded = await coursesAPI.getAllExamsGraded(course_id);
-      console.log("result graded is ", result_graded);
       if (result_graded.status === 200) {
         const exams: DataItem<Exam>[] = result_graded.data.map((item: any) => ({
           name: item.name,

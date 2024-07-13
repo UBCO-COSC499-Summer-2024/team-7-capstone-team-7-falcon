@@ -26,7 +26,7 @@ const PdfViewer: React.FC<{
 
     fetchPdf();
   }, []);
-  
+
   return (
     <div>
       {pdfUrl ? (

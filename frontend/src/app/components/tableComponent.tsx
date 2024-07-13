@@ -13,8 +13,7 @@ import {
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { usePagination } from "@table-library/react-table-library/pagination";
-import { Column } from "../instructor/components/type";
-import { DataItem } from "../instructor/components/type";
+import { Column, DataItem } from "./type";
 
 type TableComponentProps<T> = {
   data: DataItem<T>[];

@@ -10,7 +10,7 @@ const JoinCourse = async ({
   params,
   searchParams,
 }: {
-  params: { course_id: string };
+  params: { courseId: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const authToken = await fetchAuthToken();
@@ -18,7 +18,7 @@ const JoinCourse = async ({
     redirect(`/login`);
   }
 
-  const response = await coursesAPI.getCourse(Number(params.course_id));
+  const response = await coursesAPI.getCourse(Number(params.courseId));
   const code = searchParams?.code;
   const course: Course = response?.data;
   const courseData: CourseData = { ...course };

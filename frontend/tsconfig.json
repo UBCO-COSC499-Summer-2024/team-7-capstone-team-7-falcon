@@ -30,6 +30,5 @@
     "src/app/signup/page.tsx",
     "src/app/login/page.tsx",
   ],
-
   "exclude": ["node_modules"]
 }

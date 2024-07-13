@@ -1,13 +1,17 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { CourseData, CourseEditData } from "../typings/backendDataTypes";
+import {
+  Course,
+  CourseData,
+  CourseEditData,
+} from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
 const BACKEND_URL_SERVER = process.env.NEXT_PUBLIC_BACKEND_URL_SERVER;
 
 export const coursesAPI = {
-  getCourse: async (courseId: number) => {
+  getCourse: async (courseId: number): Promise<Course> => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -18,12 +22,12 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/${courseId}/public`);
-      return response;
+      const response = await instance.get<Course>(`/${courseId}`);
+      return response.data;
     } catch (error: any) {
       // always axios error
       console.error("Failed to find course:", error);
-      return error;
+      throw error;
     }
   },
 
@@ -268,7 +272,7 @@ export const coursesAPI = {
       return error;
     }
   },
-  editCourse: async (course_id: number, courseData: CourseEditData) => {
+  editCourse: async (courseId: number, courseData: CourseEditData) => {
     try {
       const auth_token = await fetchAuthToken();
 
@@ -282,7 +286,7 @@ export const coursesAPI = {
       });
 
       const response = await instance.patch(
-        `${BACKEND_URL}/api/v1/course/${course_id}`,
+        `${BACKEND_URL}/api/v1/course/${courseId}`,
         courseData,
       );
       return response;

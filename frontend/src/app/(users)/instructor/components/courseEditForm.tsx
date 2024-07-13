@@ -5,14 +5,18 @@ import { coursesAPI } from "@/app/api/coursesAPI";
 import { semestersAPI } from "@/app/api/semestersAPI";
 import SemesterSelect from "./courseCreateForm/semesterSelect";
 import toast from "react-hot-toast";
-import { CourseEditData, Semester } from "../../../typings/backendDataTypes";
+import {
+  Course,
+  CourseEditData,
+  Semester,
+} from "../../../typings/backendDataTypes";
 import { v4 as uuidv4 } from "uuid";
 
 interface CourseEditFormProps {
-  course_id: number;
+  courseId: number;
 }
 
-const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
+const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
   const [formData, setFormData] = useState<CourseEditData>({
     courseName: "",
     courseCode: "",
@@ -24,13 +28,12 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
 
   useEffect(() => {
     fetchData();
-  }, [course_id]);
+  }, []);
 
   const fetchData = async () => {
     try {
-      const courseResponse = await coursesAPI.getCourse(course_id);
-      const { course_name, course_code, semester_id, invite_code } =
-        courseResponse.data;
+      const course: Course = await coursesAPI.getCourse(courseId);
+      const { course_name, course_code, semester_id, invite_code } = course;
       setFormData({
         courseName: course_name,
         courseCode: course_code,
@@ -50,7 +53,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ course_id }) => {
     try {
       setSavingChanges(true);
 
-      const updatedCourse = await coursesAPI.editCourse(course_id, formData);
+      const updatedCourse = await coursesAPI.editCourse(courseId, formData);
       setFormData(updatedCourse);
       toast.success("Course successfully updated");
 

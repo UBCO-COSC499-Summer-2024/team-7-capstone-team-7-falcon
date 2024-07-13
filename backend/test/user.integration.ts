@@ -231,7 +231,7 @@ describe('User Integration', () => {
       return supertest().patch('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
 
-    it('should return status 400 when uid is not a number when trying to change user id', async () => {
+    it('should return status 400 when uid is not a number', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',

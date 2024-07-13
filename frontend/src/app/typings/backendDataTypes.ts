@@ -175,3 +175,21 @@ export enum SelectedButton {
   Analytics = "ANALYTICS",
   None = "NONE",
 }
+
+export interface StudentSubmission {
+  exam: {
+    id: number;
+    name: string;
+    examDate: number;
+  };
+  studentSubmission: {
+    id: number;
+    score: number;
+  };
+  course: {
+    id: number;
+    courseName: string;
+    courseCode: string;
+  };
+  grades: number[];
+}

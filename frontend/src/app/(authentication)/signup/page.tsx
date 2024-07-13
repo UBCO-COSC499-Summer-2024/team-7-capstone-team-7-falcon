@@ -125,7 +125,7 @@ export default function SignUpPage() {
       response = await authAPI.registerUser(formUserInfo);
 
       // if response is ok, display message to validate email, and redirect to login page
-      if (response.status === 201) {
+      if (response && response.status === 201) {
         redirectInfo.current.message =
           "Please check your email to validate your account.";
         redirectInfo.current.redirectPath = "/login";
@@ -136,7 +136,7 @@ export default function SignUpPage() {
     } catch (error) {
       let errMessage = "Failed to submit the data. Please try again.";
 
-      if (response.status === 409) {
+      if (response === 409) {
         errMessage = "This user already exists. Please try again.";
       }
 

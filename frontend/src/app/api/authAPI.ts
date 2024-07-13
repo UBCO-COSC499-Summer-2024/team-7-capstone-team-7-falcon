@@ -32,6 +32,10 @@ export const authAPI = {
     } catch (error: any) {
       // not throwing error here, as we want to handle the error in the component
       console.error("Failed to register user: ", error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        return error.response.status;
+      }
     }
   },
 

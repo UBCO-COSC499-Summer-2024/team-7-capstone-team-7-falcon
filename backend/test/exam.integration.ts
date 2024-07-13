@@ -37,6 +37,141 @@ describe('Exam Integration', () => {
     );
   });
 
+  describe('DELETE /exam/:eid/:cid', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().delete('/exam/1/1').expect(401);
+    });
+
+    it('should return 401 if user not TA or professor of course', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+      }).save();
+
+      await supertest()
+        .delete(`/exam/1/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 404 if exam not found', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await supertest()
+        .delete(`/exam/1/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(404);
+      expect(result.body).toEqual({
+        message: 'Exam not found',
+      });
+    });
+
+    it('should return 204 if exam is deleted successfully', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        course: course,
+      }).save();
+
+      const result = await supertest()
+        .delete(`/exam/${exam.id}/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+      });
+
+      expect(result.status).toBe(204);
+      expect(exam).toBeNull();
+    });
+  });
+
   describe('POST /exam/:cid/create', () => {
     it('should return 401 if user not authenticated', async () => {
       await supertest().post('/exam/1/create').expect(401);

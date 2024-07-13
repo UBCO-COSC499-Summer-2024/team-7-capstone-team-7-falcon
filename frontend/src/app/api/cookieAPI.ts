@@ -28,6 +28,7 @@ export async function fetchAuthToken() {
  *
  * @async
  * @function setAuthToken
+ * @param {string} auth_token - The 'auth_token' to be set.
  * @throws Will log an error message to the console if setting the 'auth_token' fails.
  */
 export async function setAuthToken(auth_token: string) {
@@ -36,5 +37,22 @@ export async function setAuthToken(auth_token: string) {
     cookieStore.set("auth_token", auth_token);
   } catch (error) {
     console.error("Failed to set auth token", error);
+  }
+}
+
+/**
+ * Deletes the 'auth_token' cookie.
+ *
+ * @async
+ * @function deleteAuthToken
+ * @param {string} auth_token - The 'auth_token' to be deleted.
+ * @throws Will log an error message to the console if deleting the 'auth_token' fails.
+ */
+export async function deleteAuthToken(auth_token: string = "auth_token") {
+  try {
+    const cookieStore = cookies();
+    cookieStore.delete(auth_token);
+  } catch (error) {
+    console.error("Failed to delete auth token", error);
   }
 }

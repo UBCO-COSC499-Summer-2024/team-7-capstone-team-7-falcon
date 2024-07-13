@@ -1,6 +1,8 @@
 "use client";
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { usersAPI } from "@/app/api/usersAPI";
+import { authAPI } from "@/app/api/authAPI";
+import { deleteAuthToken } from "@/app/api/cookieAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
 import { redirectModalData } from "../../typings/backendDataTypes";
@@ -9,6 +11,20 @@ import RedirectModal from "../components/redirectModal";
 
 export default function AccountSetup() {
   const router = useRouter();
+
+  // since this page is excluded from the middleware, we need to check if the user is authenticated
+  // if not, redirect to the login page
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
+  async function checkAuthentication() {
+    const hasVerifiedToken = await authAPI.hasVerifiedToken();
+    if (!hasVerifiedToken) {
+      await deleteAuthToken();
+      router.push("/login");
+    }
+  }
 
   // stores data needed for the redirect modal
   const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({

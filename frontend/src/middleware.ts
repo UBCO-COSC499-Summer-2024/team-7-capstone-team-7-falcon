@@ -37,24 +37,6 @@ const isTokenExpired = (token: string): boolean => {
 };
 
 /**
- * Fetches user details and extracts the role property.
- *
- * @async
- * @function getUserRole
- * @returns {Promise<string>} - A promise that resolves to the role of the user.
- * @throws Will log an error message to the console if fetching the user details fails.
- */
-const getUserRole = async (): Promise<string> => {
-  try {
-    const userDetails: User = await usersAPI.getUserDetails();
-    const userRole: string = userDetails.role;
-    return userRole;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
  * Verify that an authenticated user has at least one ID (employee or student) set.
  *
  * @async
@@ -110,7 +92,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
-    const userRole = await getUserRole();
+    const userRole = await usersAPI.getUserRole();
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
     );
@@ -132,7 +114,7 @@ export async function middleware(request: NextRequest) {
 
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
-  const userRole = await getUserRole();
+  const userRole = await usersAPI.getUserRole();
   const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
   if (!nextUrl.pathname.startsWith(userRolePath)) {
     const response = NextResponse.redirect(new URL(userRolePath, url));

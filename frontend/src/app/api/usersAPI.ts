@@ -62,6 +62,24 @@ export const usersAPI = {
   },
 
   /**
+   * Fetches user details and extracts the role property.
+   *
+   * @async
+   * @function getUserRole
+   * @returns {Promise<string>} - A promise that resolves to the role of the user.
+   * @throws Will log an error message to the console if fetching the user details fails.
+   */
+  getUserRole: async () => {
+    try {
+      const userDetails: User = await usersAPI.getUserDetails();
+      const userRole: string = userDetails.role;
+      return userRole;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**
    * Updates an authenticated user's details.
    *
    * @async

@@ -135,6 +135,11 @@ export interface SignUpFormData {
   employee_id: number | null;
 }
 
+export interface userLoginData {
+  email: string;
+  password: string;
+}
+
 // for authentication pages
 export interface redirectModalData {
   message: string;

@@ -6,10 +6,15 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
-import { Status, EmailValid } from "../../typings/backendDataTypes";
+import {
+  Status,
+  EmailValid,
+  userLoginData,
+} from "../../typings/backendDataTypes";
 import { HiMail } from "react-icons/hi";
 import { setAuthToken } from "@/app/api/cookieAPI";
 import RedirectModal from "../components/redirectModal";
+import { authAPI, validateEmail } from "@/app/api/authAPI";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -18,7 +23,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState(Status.Pending);
   const [emailValid, setEmailValid] = useState(EmailValid.Pending);
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<userLoginData>({
     //define user state
     email: "",
     password: "",
@@ -31,36 +36,18 @@ export default function LoginPage() {
   // verify if user is trying to validate their email
   async function validateEmail() {
     const confirm_token = searchParams.get("confirm_token");
+    let response;
 
     if (confirm_token !== null) {
       try {
-        const instance = axios.create({
-          baseURL: `${BACKEND_URL}/api/v1/token`,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        response = await authAPI.validateEmail(confirm_token);
 
-        await instance
-          .patch(`${BACKEND_URL}/api/v1/token`, { token: confirm_token })
-          .then((response) => {
-            setEmailValid(EmailValid.Valid);
-            return response;
-          })
-          .catch((error) => {
-            setEmailValid(EmailValid.Invalid);
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              console.error(error.response.data);
-              console.error(error.response.status);
-            } else if (error.request) {
-              // The request was made but no response was received
-              console.error(error.request);
-            } else {
-              // Something happened in setting up the request that triggered an Error
-              console.error("Error", error.message);
-            }
-          });
+        if (response && response.status === 200) {
+          setEmailValid(EmailValid.Valid);
+          return response;
+        } else {
+          setEmailValid(EmailValid.Invalid);
+        }
       } catch (error) {
         console.error("Error, failed to validate email", error);
       }
@@ -70,23 +57,14 @@ export default function LoginPage() {
   async function onLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus(Status.Pending);
-    const jsonPayload = JSON.stringify(user);
+
     let response;
 
     try {
-      response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login/`,
-        {
-          method: "POST",
-          body: jsonPayload,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      if (response.ok) {
-        const data = await response.json();
-        const accessToken = data.access_token;
+      response = await authAPI.loginUser(user);
+
+      if (response && response.status === 200) {
+        const accessToken = response.data.access_token;
 
         await setAuthToken(accessToken);
 
@@ -95,7 +73,7 @@ export default function LoginPage() {
         setStatus(Status.Failure);
       }
     } catch (error) {
-      console.log("Error logging in", error);
+      console.error("Error logging in", error);
     }
   }
 

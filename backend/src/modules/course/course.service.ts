@@ -345,30 +345,34 @@ export class CourseService {
   async getCourseAnalytics(
     cid: number,
   ): Promise<CourseAnalyticsResponseInterface> {
-    const courseMembersSize = await CourseUserModel.count({
-      where: { course: { id: cid, is_archived: false } },
-      relations: ['course'],
-    });
-
-    const courseExamsCount = await ExamModel.count({
-      where: { course: { id: cid, is_archived: false } },
-      relations: ['course'],
-    });
-
-    const examSubmissionsCount = await SubmissionModel.count({
-      where: { exam: { course: { id: cid, is_archived: false } } },
-      relations: ['exam', 'exam.course'],
-    });
-
-    const courseExams = await ExamModel.find({
-      where: { course: { id: cid, is_archived: false } },
-      relations: [
-        'course',
-        'submissions',
-        'submissions.student',
-        'submissions.student.user',
-      ],
-    });
+    const [
+      courseMembersSize,
+      courseExamsCount,
+      examSubmissionsCount,
+      courseExams,
+    ] = await Promise.all([
+      CourseUserModel.count({
+        where: { course: { id: cid, is_archived: false } },
+        relations: ['course'],
+      }),
+      ExamModel.count({
+        where: { course: { id: cid, is_archived: false } },
+        relations: ['course'],
+      }),
+      SubmissionModel.count({
+        where: { exam: { course: { id: cid, is_archived: false } } },
+        relations: ['exam', 'exam.course'],
+      }),
+      ExamModel.find({
+        where: { course: { id: cid, is_archived: false } },
+        relations: [
+          'course',
+          'submissions',
+          'submissions.student',
+          'submissions.student.user',
+        ],
+      }),
+    ]);
 
     const examSubmissions = courseExams.map((exam) => {
       return {

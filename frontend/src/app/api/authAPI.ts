@@ -163,6 +163,20 @@ export const authAPI = {
       }
     }
   },
+
+  /**
+   * Verifies if a user has a verified token
+   *
+   * @async
+   * @function hasVerifiedToken
+   * @returns {Promise<boolean>} - A promise that shows whether a user has a verified token or not.
+   * @throws Will log an error message to the console if resetting the password fails.
+   */
+  hasVerifiedToken: async () => {
+    const fetched_auth_token = await fetchAuthToken();
+    const auth_token = fetched_auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
+    return !isTokenExpired(auth_token);
+  },
 };
 
 /**

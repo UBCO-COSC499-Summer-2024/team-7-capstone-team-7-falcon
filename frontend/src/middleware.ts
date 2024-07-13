@@ -37,11 +37,8 @@ const verifyIdPresence = async (): Promise<boolean> => {
 
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
-  const fetched_auth_token = await fetchAuthToken();
-  const auth_token = fetched_auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
-
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
-  const hasVerifiedToken = !isTokenExpired(auth_token);
+  const hasVerifiedToken = await authAPI.hasVerifiedToken();
 
   // verify if user is trying to validate their email
   // if yes, redirect to login page which will handle that

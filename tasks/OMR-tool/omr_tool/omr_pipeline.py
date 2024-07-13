@@ -20,10 +20,11 @@ def omr_pipeline(raw_image: PIL.Image):
         if inference_tool.inference_classes[classes[i]] == "answer":
             color = i + 100
             answer_list = order_answers(box, answer_list)
+            # print(answer_list)
     
     for col in range(len(answer_list)):
         for question in range(len(answer_list[col])):
-            print(answer_list[col][question])
+            # print(answer_list[col][question])
             x1, y1, x2, y2 = map(int, answer_list[col][question])
             color = 255
             cv2.rectangle(prepped_image, (x1, y1), (x2, y2), (0, 255, color), 2)
@@ -42,24 +43,35 @@ def omr_pipeline(raw_image: PIL.Image):
 
 def order_answers(box, answer_list):
     x1, y1, x2, y2 = map(int, box)
+    box = [x1, y1, x2, y2]
     if answer_list == []:
         answer_list.append([box])
-        print(answer_list)
+        return answer_list
+    if x2 < answer_list[0][0][0]:
+        # Insert new column at the start of the row
+        answer_list.insert(0, [box])
+        return answer_list
+    if x1 > answer_list[-1][0][2]:
+        # Append new column at the end of the row
+        answer_list.append([box])
         return answer_list
     for i, col in enumerate(answer_list):
-        
-        col_x1, col_y1, col_x2, col_y2 = [val for val in col[0]]
-        if x2 < col_x1:
-            # Insert box at the start of the row
-            col.insert(0, [box])
+        col_x1, col_y1, col_x2, col_y2 = col[0]
+        if abs(col_x1 - x1)/2 < 10 and abs(col_x2 - x2)/2 < 10:
+            # Insert box in the current column if it fits 
+            for i, row in enumerate(col):
+                if y2 > row[1]:
+                    col.insert(i+1, box)
+                    break
+                if y1 < row[3]:
+                    col.insert(0, box)
+                    break
+                col.append(box)
+
             break
-        elif x1 > col_x2:
-            # Append box at the end of the row
-            col.append([box])
-            break
-        elif col_x2 <= x1 and (i == len(col) - 1 or col[i + 1][0] >= x2):
-            # Insert box in the current column if it fits between
-            col.append(box)
+        if x1 > col_x2 and x2 < answer_list[i+1][0][0]:
+            # Insert box between two columns
+            answer_list.insert(i+1, [box])
             break
     return answer_list
 

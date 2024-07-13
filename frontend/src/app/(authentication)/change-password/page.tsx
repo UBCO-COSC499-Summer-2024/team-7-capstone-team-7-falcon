@@ -10,14 +10,16 @@ import {
   Status,
   FormValid,
   redirectModalData,
+  resetPasswordData,
 } from "../../typings/backendDataTypes";
+import { authAPI } from "@/app/api/authAPI";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
   const [formValid, setFormValid] = useState(FormValid.Invalid);
   const searchParams = useSearchParams();
-  const [resetPassword, setResetPassword] = useState({
+  const [resetPassword, setResetPassword] = useState<resetPasswordData>({
     token: "",
     password: "",
     confirm_password: "",
@@ -64,24 +66,13 @@ export default function ChangePasswordPage() {
     setFormValid(FormValid.Valid);
 
     // send data to the database
-    const jsonPayload = JSON.stringify(resetPassword);
-
     let response;
 
     try {
-      response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/user/password/reset`,
-        {
-          method: "POST",
-          body: jsonPayload,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      response = await authAPI.resetPassword(resetPassword);
 
       // if response is ok, display confirmation message, and redirect to login page
-      if (response.ok) {
+      if (response.status === 200) {
         setRedirectInfo({
           message: "Password successfully updated!",
           redirectPath: "/login",
@@ -91,7 +82,7 @@ export default function ChangePasswordPage() {
     } catch (error) {
       let errMessage = "Failed to update password. Please try again.";
 
-      if (response.status === 403) {
+      if (response === 403) {
         errMessage = "Your link has expired. Please request for a new one.";
       }
 

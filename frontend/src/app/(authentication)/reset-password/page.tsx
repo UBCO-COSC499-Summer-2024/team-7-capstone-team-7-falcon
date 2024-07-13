@@ -4,12 +4,17 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import RedirectModal from "../components/redirectModal";
-import { Status, redirectModalData } from "../../typings/backendDataTypes";
+import {
+  Status,
+  redirectModalData,
+  requestResetPasswordData,
+} from "../../typings/backendDataTypes";
+import { authAPI } from "@/app/api/authAPI";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
-  const [userEmail, setUserEmail] = useState({
+  const [userEmail, setUserEmail] = useState<requestResetPasswordData>({
     email: "",
   });
 
@@ -23,23 +28,14 @@ export default function ResetPasswordPage() {
   async function onReset(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus(Status.Pending);
-    const jsonPayload = JSON.stringify(userEmail);
+
     let response;
 
     try {
-      response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/user/password/request_reset/`,
-        {
-          method: "POST",
-          body: jsonPayload,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      response = await authAPI.requestResetPassword(userEmail);
 
       // if response is ok, display message to check email, and redirect to login page
-      if (response.ok) {
+      if (response.status === 200) {
         redirectInfo.current.message =
           "Please check your email for the password reset link.";
         redirectInfo.current.redirectPath = "/login";
@@ -50,12 +46,12 @@ export default function ResetPasswordPage() {
     } catch (error) {
       let errMessage = "Failed to submit the data. Please try again.";
 
-      if (response.status === 403) {
+      if (response === 403) {
         errMessage =
           "An error occurred. Your email is either not verified or used for google authentication instead. Please try again.";
       }
 
-      if (response.status === 404) {
+      if (response === 404) {
         errMessage =
           "We could not find the email you provided. Please try again.";
       }

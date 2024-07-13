@@ -140,6 +140,16 @@ export interface userLoginData {
   password: string;
 }
 
+export interface requestResetPasswordData {
+  email: string;
+}
+
+export interface resetPasswordData {
+  token: string;
+  password: string;
+  confirm_password: string;
+}
+
 // for authentication pages
 export interface redirectModalData {
   message: string;

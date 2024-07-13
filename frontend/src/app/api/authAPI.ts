@@ -1,6 +1,11 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { SignUpFormData, userLoginData } from "../typings/backendDataTypes";
+import {
+  SignUpFormData,
+  userLoginData,
+  resetPasswordData,
+  requestResetPasswordData,
+} from "../typings/backendDataTypes";
 import { json } from "stream/consumers";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -91,6 +96,70 @@ export const authAPI = {
     } catch (error) {
       // not throwing error here, as we want to handle the error in the component
       console.error("Error, failed to login user", error);
+    }
+  },
+
+  /**
+   * Requests to reset a user's password.
+   *
+   * @async
+   * @function requestResetPassword
+   * @param {requestResetPasswordData} jsonPayload - The user's email data.
+   * @returns {Promise<axios.AxiosResponse<any>>} - The response from the backend API.
+   * @throws Will log an error message to the console if the request fails.
+   */
+  requestResetPassword: async (jsonPayload: requestResetPasswordData) => {
+    try {
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user/password/request_reset/`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const response = await instance.post(
+        `${BACKEND_URL}/api/v1/user/password/request_reset/`,
+        jsonPayload,
+      );
+      return response;
+    } catch (error: any) {
+      // not throwing error here, as we want to handle the error in the component
+      console.error("Failed to request to reset password: ", error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        return error.response.status;
+      }
+    }
+  },
+
+  /**
+   * Resets a user's password.
+   *
+   * @async
+   * @function resetPassword
+   * @param {resetPasswordData} jsonPayload - The user's new password data.
+   * @returns {Promise<axios.AxiosResponse<any>>} - The response from the backend API.
+   * @throws Will log an error message to the console if resetting the password fails.
+   */
+  resetPassword: async (jsonPayload: resetPasswordData) => {
+    try {
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user/password/reset`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const response = await instance.post(
+        `${BACKEND_URL}/api/v1/user/password/reset`,
+        jsonPayload,
+      );
+      return response;
+    } catch (error: any) {
+      // not throwing error here, as we want to handle the error in the component
+      console.error("Failed to reset password: ", error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        return error.response.status;
+      }
     }
   },
 };

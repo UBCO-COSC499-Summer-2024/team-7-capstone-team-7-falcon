@@ -1,12 +1,8 @@
 import React from "react";
-
 import CourseEditForm from "../../../components/courseEditForm";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
-  CourseEditData,
-  Status,
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
 import { redirect } from "next/navigation";
@@ -15,13 +11,10 @@ import CourseHeader from "../../../components/courseHeader";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 
-const EditCourse = async ({ params }: { params: { course_id: number } }) => {
-  const cid = Number(params.course_id);
-  const response = await coursesAPI.getCourse(cid);
-  const course: Course = response?.data;
-  const courseData: CourseData = { ...course };
-
-  if (!course || !response) {
+const EditCourse = async ({ params }: { params: { courseId: string } }) => {
+  const cid = Number(params.courseId);
+  const course: Course = await coursesAPI.getCourse(cid);
+  if (!course) {
     redirect(`../../`);
   }
 
@@ -30,8 +23,8 @@ const EditCourse = async ({ params }: { params: { course_id: number } }) => {
       <div className="grid grid-cols-2">
         <div className="col-span-1">
           <CourseHeader
-            course_code={courseData.course_code}
-            course_desc={courseData.course_name}
+            course_code={course.course_code}
+            course_desc={course.course_name}
             course_id={course.id}
             selected={SelectedButton.None}
           />
@@ -47,7 +40,7 @@ const EditCourse = async ({ params }: { params: { course_id: number } }) => {
         </div>
       </div>
       <h1 className="text-xl font-bold">Edit Course Information:</h1>
-      <CourseEditForm course_id={course.id} />
+      <CourseEditForm courseId={course.id} />
     </div>
   );
 };

@@ -33,12 +33,11 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
   const fetchData = async () => {
     try {
       const course: Course = await coursesAPI.getCourse(courseId);
-      const { course_name, course_code, semester_id, invite_code } = course;
       setFormData({
-        courseName: course_name,
-        courseCode: course_code,
-        semesterId: semester_id ?? -1,
-        inviteCode: invite_code ?? "",
+        courseName: course.course_name,
+        courseCode: course.course_code,
+        semesterId: course.semester_id ?? -1,
+        inviteCode: course.invite_code ?? "",
       });
 
       const semestersResponse = await semestersAPI.getAllSemestersLimited();
@@ -54,7 +53,12 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
       setSavingChanges(true);
 
       const updatedCourse = await coursesAPI.editCourse(courseId, formData);
-      setFormData(updatedCourse);
+      setFormData({
+        courseName: updatedCourse.course_name,
+        courseCode: updatedCourse.course_code,
+        semesterId: updatedCourse.semester_id ?? -1,
+        inviteCode: updatedCourse.invite_code ?? "",
+      });
       toast.success("Course successfully updated");
 
       fetchData();

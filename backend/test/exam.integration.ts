@@ -43,7 +43,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 401 if user not TA or professor of course', async () => {
-      let user = await UserModel.create({
+      const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -79,7 +79,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 404 if exam not found', async () => {
-      let user = await UserModel.create({
+      const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -120,7 +120,7 @@ describe('Exam Integration', () => {
     });
 
     it('should return 204 if exam is deleted successfully', async () => {
-      let user = await UserModel.create({
+      const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',

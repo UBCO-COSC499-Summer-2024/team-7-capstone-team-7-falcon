@@ -52,14 +52,6 @@ const ViewExam = async ({
     redirect(`../..`);
   }
 
-  const uploadSubmissions = () => {
-    return null;
-  };
-
-  const getCSV = () => {
-    return;
-  };
-
   return (
     <SubmissionProvider submissions={submissionData}>
       <Toaster />
@@ -98,7 +90,7 @@ const ViewExam = async ({
           <div className="space-y-4 col-span-2 pr-8 p-4">
             <ExamSettings courseId={cid} examId={exam_id} />
             <ExamPerformance />
-            <DangerZone />
+            <DangerZone courseId={cid} examId={exam_id} />
           </div>
         </div>
       </div>

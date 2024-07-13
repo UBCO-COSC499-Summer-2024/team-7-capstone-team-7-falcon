@@ -2,19 +2,12 @@ import React from "react";
 import { coursesAPI } from "../../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
   Exam,
   SelectedButton,
   Submission,
 } from "../../../../../../typings/backendDataTypes";
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import {
-  Upload,
-  Download,
-  CheckPlusCircle,
-  Edit,
-} from "flowbite-react-icons/solid";
+import { Edit } from "flowbite-react-icons/solid";
 import ExamPerformance from "../../../../components/examPerformance";
 import DangerZone from "../../../../components/dangerZone";
 import SubmissionTable from "../../../../components/submissionsTable";
@@ -22,24 +15,21 @@ import CourseHeader from "../../../../components/courseHeader";
 import { examsAPI } from "../../../../../../api/examAPI";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import SubmissionProvider from "../../../../../../contexts/submissionContext";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import ExamSettings from "@/app/(users)/instructor/components/examSettings";
+import { Toaster } from "react-hot-toast";
 
 const ViewExam = async ({
   params,
 }: {
-  params: { course_id: string; exam_id: string };
+  params: { courseId: string; examId: string };
 }) => {
-  const cid = Number(params.course_id);
-  const exam_id = Number(params.exam_id);
+  const cid = Number(params.courseId);
+  const examId = Number(params.examId);
 
-  const response = await coursesAPI.getCourse(cid);
-  const course: Course = response?.data;
-  const courseData: CourseData = { ...course };
+  const course: Course = await coursesAPI.getCourse(cid);
+  const exam: Exam = await examsAPI.getExam(examId, cid);
 
-  const exam_response = await examsAPI.getExam(exam_id, cid);
-  const exam: Exam = exam_response.data;
-
-  const res = await examsAPI.getSubmissions(cid, exam_id);
+  const res = await examsAPI.getSubmissions(cid, examId);
   const submissionData: Submission[] = res.data.map((item: any) => ({
     student_id: item.student.id,
     user: {
@@ -51,11 +41,6 @@ const ViewExam = async ({
     updated_at: new Date(Number(item.updated_at)).toLocaleString(),
   }));
 
-  // need to handle more checks here
-  if (!course || !response) {
-    redirect(`../..`);
-  }
-
   const uploadSubmissions = () => {
     return null;
   };
@@ -64,18 +49,15 @@ const ViewExam = async ({
     return;
   };
 
-  const releaseGrades = () => {
-    return;
-  };
-
   return (
     <SubmissionProvider submissions={submissionData}>
+      <Toaster />
       <div className="p-0">
         <div className="grid grid-cols-2">
           <div className="col-span-1">
             <CourseHeader
-              course_code={courseData.course_code}
-              course_desc={courseData.course_name}
+              course_code={course.course_code}
+              course_desc={course.course_name}
               course_id={course.id}
               selected={SelectedButton.None}
             />
@@ -100,36 +82,10 @@ const ViewExam = async ({
         <div className="grid grid-cols-5 gap-24 mt-4 border-t-2 border-black">
           <div className="col-span-3 p-4">
             <p className="">{}</p>
-            <SubmissionTable course_id={cid} exam_id={exam_id} />
+            <SubmissionTable course_id={cid} exam_id={examId} />
           </div>
           <div className="space-y-4 col-span-2 pr-8 p-4">
-            <button
-              type="button"
-              className="btn-primary flex justify-center bg-purple w-full"
-            >
-              <Link href={""} className="space-x-4 flex items-center">
-                <Upload />
-                <span>Upload Submissions</span>
-              </Link>
-            </button>
-            <button
-              type="button"
-              className="btn-primary flex justify-center bg-purple w-full"
-            >
-              <Link href={""} className="space-x-4 flex items-center">
-                <Download />
-                <span>Download Results CSV</span>
-              </Link>
-            </button>
-            <button
-              type="button"
-              className="btn-primary flex justify-center bg-purple w-full"
-            >
-              <Link href={""} className="space-x-4 flex items-center">
-                <CheckPlusCircle />
-                <span>Release Grades</span>
-              </Link>
-            </button>
+            <ExamSettings courseId={cid} examId={examId} />
             <ExamPerformance />
             <DangerZone />
           </div>

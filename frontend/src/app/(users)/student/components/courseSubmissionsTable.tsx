@@ -2,11 +2,11 @@
 import React, { CSSProperties, useEffect, useState } from "react";
 import Link from "next/link";
 import { UserEdit } from "flowbite-react-icons/solid";
-import { Column, DataItem } from "../../instructor/components/type";
+import { Column, DataItem } from "../../../components/type";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { StudentExam } from "../../../typings/tableTypes";
-import TableComponent from "../../components/tableComponent";
 import GradeDisplay from "../../components/gradeDisplay";
+import TableComponent from "../../../components/tableComponent";
 
 const exam_columns_graded: Column[] = [
   { label: "Name", renderCell: (item) => item.name },
@@ -71,7 +71,6 @@ type TableFilter = "Graded" | "Upcoming";
 const CourseSubmissionsTable: React.FC<{ course_id: number }> = ({
   course_id,
 }) => {
-  console.log("cid:", course_id);
   const [data_graded, setDataGraded] = useState<DataItem<StudentExam>[] | null>(
     null,
   );
@@ -132,7 +131,7 @@ const CourseSubmissionsTable: React.FC<{ course_id: number }> = ({
     };
 
     fetchData();
-  }, [course_id]);
+  }, []);
 
   return (
     <div className="flex flex-col items-left">

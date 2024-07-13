@@ -1,10 +1,10 @@
 "use client";
 
 import { examsAPI } from "@/app/api/examAPI";
+import { ExamSettingsProps } from "@/app/components/type";
 import { CheckPlusCircle, Download, Upload } from "flowbite-react-icons/solid";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { ExamSettingsProps } from "./type";
 
 const ExamSettings: React.FC<ExamSettingsProps> = ({ examId, courseId }) => {
   const releaseGrades = async () => {

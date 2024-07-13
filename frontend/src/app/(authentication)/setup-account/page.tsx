@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, FormEvent, useEffect } from "react";
 import { usersAPI } from "@/app/api/usersAPI";
-import { authAPI } from "@/app/api/authAPI";
+import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
 import { deleteAuthToken } from "@/app/api/cookieAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,14 @@ export default function AccountSetup() {
     if (!hasVerifiedToken) {
       await deleteAuthToken();
       router.push("/login");
+    }
+
+    // if the user is authenticated, check if they have at least one ID set
+    // if yes, redirect to the dashboard page
+    const hasID = await verifyIdPresence();
+    if (hasID) {
+      // the middleware will handle the redirect based on roles
+      router.push("/");
     }
   }
 

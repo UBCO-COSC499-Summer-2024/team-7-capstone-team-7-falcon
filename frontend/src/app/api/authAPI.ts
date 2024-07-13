@@ -1,6 +1,8 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
+import { usersAPI } from "./usersAPI";
 import {
+  User,
   SignUpFormData,
   userLoginData,
   resetPasswordData,
@@ -196,5 +198,24 @@ export const isTokenExpired = (token: string): boolean => {
   } catch (error) {
     console.error("Error decoding token:", error);
     return true;
+  }
+};
+
+/**
+ * Verify that an authenticated user has at least one ID (employee or student) set.
+ *
+ * @async
+ * @function verifyIdPresence
+ * @returns {Promise<boolean>} - A promise that shows whether a user has at least one ID or not.
+ * @throws Will log an error message to the console if fetching the user details fails.
+ */
+export const verifyIdPresence = async (): Promise<boolean> => {
+  try {
+    const userDetails: User = await usersAPI.getUserDetails();
+    return (
+      userDetails.student_user !== null || userDetails.employee_user !== null
+    );
+  } catch (error) {
+    throw error;
   }
 };

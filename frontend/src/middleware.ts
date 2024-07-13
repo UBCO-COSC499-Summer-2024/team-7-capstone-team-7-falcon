@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { usersAPI } from "@/app/api/usersAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
-import { authAPI, isTokenExpired } from "@/app/api/authAPI";
+import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
 
 const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
 
@@ -14,25 +14,6 @@ const userRoleMap = {
   student: "/student",
   professor: "/instructor",
   admin: "/admin",
-};
-
-/**
- * Verify that an authenticated user has at least one ID (employee or student) set.
- *
- * @async
- * @function verifyIdPresence
- * @returns {Promise<boolean>} - A promise that shows whether a user has at least one ID or not.
- * @throws Will log an error message to the console if fetching the user details fails.
- */
-const verifyIdPresence = async (): Promise<boolean> => {
-  try {
-    const userDetails: User = await usersAPI.getUserDetails();
-    return (
-      userDetails.student_user !== null || userDetails.employee_user !== null
-    );
-  } catch (error) {
-    throw error;
-  }
 };
 
 export async function middleware(request: NextRequest) {

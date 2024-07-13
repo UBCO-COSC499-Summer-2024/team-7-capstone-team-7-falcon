@@ -65,7 +65,7 @@ const ExamPerformance: React.FC = () => {
         <GradeDisplay
           properties={{ "--progress": max } as CSSProperties}
           text={"Maximum"}
-          progress={`${average}%`}
+          progress={`${max}%`}
         />
       </div>
     </div>

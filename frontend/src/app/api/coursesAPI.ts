@@ -11,6 +11,11 @@ const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
 const BACKEND_URL_SERVER = process.env.NEXT_PUBLIC_BACKEND_URL_SERVER;
 
 export const coursesAPI = {
+  /**
+   * Returns all the info about a course
+   * @param courseId
+   * @returns {Promise<Course>}
+   */
   getCourse: async (courseId: number): Promise<Course> => {
     try {
       const auth_token = await fetchAuthToken();
@@ -22,15 +27,46 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
+
       const response = await instance.get<Course>(`/${courseId}`);
       return response.data;
     } catch (error: any) {
-      // always axios error
       console.error("Failed to find course:", error);
       throw error;
     }
   },
 
+  /**
+   * Gets a subset of the course info used for users who are not enrolled
+   * @param courseId
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  getCoursePublic: async (courseId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.get<CourseData>(`/${courseId}/public`);
+      return response.data;
+    } catch (error: any) {
+      console.error("Failed to find course:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Enrolls the user in a course
+   * @param courseId
+   * @param invite_code
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   enrollCourse: async (courseId: number, invite_code: string) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -47,6 +83,7 @@ export const coursesAPI = {
         invite_code: invite_code,
       };
       const response = await instance.post(`/${courseId}/enroll`, enrollData);
+      console.log(response);
       return response;
     } catch (error: any) {
       //always axios error
@@ -99,6 +136,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets a list of all exams for a course
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExams: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -119,6 +161,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets a list of all exams that are graded
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsGraded: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -139,6 +186,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all upcoming exams
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsUpcoming: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -159,6 +211,11 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all members in a course by course id
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getCourseMembers: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -180,6 +237,10 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all graded exams for the logged in student
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsGradedStudent: async () => {
     try {
       const auth_token = await fetchAuthToken();
@@ -200,6 +261,10 @@ export const coursesAPI = {
     }
   },
 
+  /**
+   * Gets all upcoming exams for the logged in student
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getAllExamsUpcomingStudent: async () => {
     try {
       const auth_token = await fetchAuthToken();

@@ -3,15 +3,18 @@
 import { examsAPI } from "@/app/api/examAPI";
 import toast from "react-hot-toast";
 import { ExamSettingsProps } from "./type";
+import { useRouter } from "next/navigation";
 
 const DangerZone: React.FC<ExamSettingsProps> = ({ examId, courseId }) => {
+  const router = useRouter();
+
   const deleteExam = async () => {
     const result = await examsAPI.deleteExam(examId, courseId);
 
     if (result && result.status === 204) {
       toast.success("Exam deleted successfully", { duration: 1_000 });
       setTimeout(() => {
-        window.location.href = `../exam`;
+        router.push(`/courses/${courseId}/exam`);
       }, 1_500);
     } else {
       toast.error(result.response.data.message);

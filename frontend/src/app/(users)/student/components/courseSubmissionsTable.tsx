@@ -3,7 +3,6 @@ import React, { CSSProperties, useEffect, useState } from "react";
 import Link from "next/link";
 import { UserEdit } from "flowbite-react-icons/solid";
 import { Column, DataItem } from "../../../components/type";
-import { coursesAPI } from "../../../api/coursesAPI";
 import { StudentExam } from "../../../typings/tableTypes";
 import GradeDisplay from "../../components/gradeDisplay";
 import TableComponent from "../../../components/tableComponent";

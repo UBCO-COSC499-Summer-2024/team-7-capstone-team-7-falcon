@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   Header,
@@ -33,6 +33,7 @@ const TableComponent = <T,>({
   const theme = useTheme(getTheme());
   const [search, setSearch] = React.useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // make this dynamic?
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
@@ -43,6 +44,12 @@ const TableComponent = <T,>({
   const filteredData = data.filter(
     (item) => item && item.name.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+
+  let totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
     <div className="container flex flex-col">
@@ -61,7 +68,7 @@ const TableComponent = <T,>({
         </form>
       )}
       <div className="flex w-full mt-4">
-        <Table columns={columns} data={{ nodes: filteredData }} theme={theme}>
+        <Table columns={columns} data={{ nodes: paginatedData }} theme={theme}>
           {() => (
             <>
               <Header>
@@ -75,7 +82,7 @@ const TableComponent = <T,>({
               </Header>
 
               <Body>
-                {filteredData.map((item) => (
+                {paginatedData.map((item) => (
                   <Row key={item.name} item={item} className="bg-white">
                     {columns.map((column) => (
                       <Cell key={column.label} className="py-3 min-w-fit">
@@ -88,6 +95,14 @@ const TableComponent = <T,>({
             </>
           )}
         </Table>
+      </div>
+      <div className="flex overflow-x-auto sm:justify-center">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          showIcons
+        />
       </div>
     </div>
   );

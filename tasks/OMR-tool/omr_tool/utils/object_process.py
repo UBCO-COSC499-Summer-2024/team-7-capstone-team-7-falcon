@@ -270,7 +270,7 @@ if __name__ == "__main__":
 
     cv2.imshow("Prepared Image", cv2.resize(prepared_image, (800, 800)))
     cv2.imshow("Contoured Image", cv2.resize(image_with_contours, (900, 900)))
-    cv2.imshow("Objects Image", cv2.resize(image_with_objects_identified, (900, 900)))
+    # cv2.imshow("Objects Image", cv2.resize(image_with_objects_identified, (900, 900)))
 
     cv2.imshow("Contoured Image", image_with_contours)
     cv2.waitKey(0)

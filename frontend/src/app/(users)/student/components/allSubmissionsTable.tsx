@@ -7,6 +7,7 @@ import { coursesAPI } from "../../../api/coursesAPI";
 import { StudentExam } from "../../../typings/tableTypes";
 import GradeDisplay from "../../components/gradeDisplay";
 import TableComponent from "../../../components/tableComponent";
+import { examsAPI } from "../../../api/examAPI";
 
 const exam_columns_graded: Column[] = [
   { label: "Name", renderCell: (item) => item.name },
@@ -85,7 +86,7 @@ const AllSubmissionsTable: React.FC = () => {
   // gets the data once on mount
   useEffect(() => {
     const fetchData = async () => {
-      const result_graded = await coursesAPI.getAllExamsGradedStudent();
+      const result_graded = await examsAPI.getExamsGraded();
       if (result_graded.status === 200) {
         const exams: DataItem<StudentExam>[] = result_graded.data[0].exams.map(
           (item: any) => ({
@@ -106,7 +107,7 @@ const AllSubmissionsTable: React.FC = () => {
         setDataGraded(exams);
       }
 
-      const result_upcoming = await coursesAPI.getAllExamsUpcomingStudent();
+      const result_upcoming = await examsAPI.getExamsUpcoming();
       if (result_upcoming.status === 200) {
         const exams_upcoming: DataItem<StudentExam>[] =
           result_upcoming.data.flatMap((item: any) =>

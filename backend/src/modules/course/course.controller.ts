@@ -38,6 +38,7 @@ import { ExamService } from '../exam/exam.service';
 import { EditCourseGuard } from '../../guards/edit-course.guard';
 import { CourseEditDto } from './dto/course-edit.dto';
 import { CourseArchiveDto } from './dto/course-archive.dto';
+import { CourseAnalyticsResponseInterface } from '../../../src/common/interfaces';
 
 @Controller('course')
 export class CourseController {
@@ -80,6 +81,30 @@ export class CourseController {
           message: e.message,
         });
       }
+    }
+  }
+
+  /**
+   * Get course analytics
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:cid/analytics')
+  async getCourseAnalytics(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+  ): Promise<Response> {
+    try {
+      const analytics: CourseAnalyticsResponseInterface =
+        await this.courseService.getCourseAnalytics(cid);
+      return res.status(HttpStatus.OK).send(analytics);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
     }
   }
 

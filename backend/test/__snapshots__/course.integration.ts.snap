@@ -13,6 +13,203 @@ exports[`Course Integration GET /course/:cid should return course if course is f
 }
 `;
 
+exports[`Course Integration GET /course/:cid/analytics should return 200 and courseMembersSize, examCount if course has students, exams, but no submissions 1`] = `
+{
+  "courseExamsCount": 4,
+  "courseMembersSize": 4,
+  "examSubmissions": [
+    {
+      "exam": {
+        "id": 2,
+        "title": "Exam-1",
+      },
+      "submissions": [],
+    },
+    {
+      "exam": {
+        "id": 4,
+        "title": "Exam-3",
+      },
+      "submissions": [],
+    },
+    {
+      "exam": {
+        "id": 1,
+        "title": "Exam-0",
+      },
+      "submissions": [],
+    },
+    {
+      "exam": {
+        "id": 3,
+        "title": "Exam-2",
+      },
+      "submissions": [],
+    },
+  ],
+  "examSubmissionsCount": 0,
+}
+`;
+
+exports[`Course Integration GET /course/:cid/analytics should return 200 and courseMembersSize, examCount, submissionCount if course has students, exams, and submissions 1`] = `
+{
+  "courseExamsCount": 4,
+  "courseMembersSize": 4,
+  "examSubmissions": [
+    {
+      "exam": {
+        "id": 1,
+        "title": "Exam-0",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 4,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+    {
+      "exam": {
+        "id": 2,
+        "title": "Exam-1",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 4,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+    {
+      "exam": {
+        "id": 3,
+        "title": "Exam-2",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 4,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+    {
+      "exam": {
+        "id": 4,
+        "title": "Exam-3",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 4,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+  ],
+  "examSubmissionsCount": 12,
+}
+`;
+
+exports[`Course Integration GET /course/:cid/analytics should return 200 and only courseMembersStats if course has no exams or submissions 1`] = `
+{
+  "courseExamsCount": 0,
+  "courseMembersSize": 11,
+  "examSubmissions": [],
+  "examSubmissionsCount": 0,
+}
+`;
+
 exports[`Course Integration GET /course/:cid/exams should return 200 if user is enrolled with default query parameters 1`] = `
 {
   "data": [

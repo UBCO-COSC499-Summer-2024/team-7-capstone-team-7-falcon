@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "../../../components/type";
-import TableComponent from "../../../components/tableComponent";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { CourseUser } from "../../../typings/backendDataTypes";
 import Link from "next/link";
 import Avatar from "../../../components/avatar";
+import TableComponent from "../../../components/tableComponent";
 
 const user_columns: Column[] = [
   { label: "#", renderCell: (item) => item.id },

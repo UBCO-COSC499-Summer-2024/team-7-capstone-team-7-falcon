@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "../../../components/type";
-import TableComponent from "../../../components/tableComponent";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { Exam } from "../../../typings/backendDataTypes";
 import Link from "next/link";
 import { UserEdit } from "flowbite-react-icons/solid";
+import TableComponent from "../../../components/tableComponent";
 
 const exam_columns: Column[] = [
   { label: "Name", renderCell: (item) => item.name },

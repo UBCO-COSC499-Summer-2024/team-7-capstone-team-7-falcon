@@ -5,13 +5,7 @@ import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
 import { jwtDecode } from "jwt-decode";
 
-const auth_pages = [
-  "/login",
-  "/signup",
-  "/reset-password",
-  "/change-password",
-  "/setup-account",
-];
+const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
 
 const isAuthPages = (url: string) =>
   auth_pages.some((page) => page.startsWith(url));
@@ -26,15 +20,16 @@ const userRoleMap = {
  * Verifies if a jwt token is expired.
  *
  * @function isTokenExpired
+ * @param { string } token - The jwt token to verify.
  * @returns { boolean } - A boolean indicating if the token is expired.
  * @throws Will log an error message to the console if an error occurs when decoding the token.
  */
-const isTokenExpired = (token) => {
+const isTokenExpired = (token: string): boolean => {
   if (!token) return true;
   try {
     const decodedToken = jwtDecode(token);
     const currentTime = parseInt(new Date().getTime().toString()) / 1000;
-    return decodedToken.exp < currentTime;
+    return (decodedToken.exp as number) < currentTime;
   } catch (error) {
     console.error("Error decoding token:", error);
     return true;
@@ -59,6 +54,31 @@ const getUserRole = async (): Promise<string> => {
   }
 };
 
+/**
+ * Verify that an authenticated user has at least one ID (employee or student) set.
+ *
+ * @async
+ * @function verifyIdPresence
+ * @returns {Promise<boolean>} - A promise that shows whether a user has at least one ID or not.
+ * @throws Will log an error message to the console if fetching the user details fails.
+ */
+const verifyIdPresence = async (): Promise<boolean> => {
+  try {
+    const userDetails: User = await usersAPI.getUserDetails();
+
+    // if user does not have any IDs set, return false
+    if (userDetails === null) {
+      return false;
+    }
+
+    return (
+      userDetails.student_user !== null || userDetails.employee_user !== null
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
 export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request;
   const fetched_auth_token = await fetchAuthToken();
@@ -66,6 +86,34 @@ export async function middleware(request: NextRequest) {
 
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const hasVerifiedToken = !isTokenExpired(auth_token);
+
+  // verify if user is trying to validate their email
+  // if yes, redirect to login page which will handle that
+  if (nextUrl.pathname.startsWith("/auth/confirm")) {
+    const token = nextUrl.searchParams.get("token");
+    const redirectURL = new URL("/login", url);
+    redirectURL.searchParams.set("confirm_token", token);
+
+    const response = NextResponse.redirect(redirectURL);
+    return response;
+  }
+
+  // verify if user is trying to reset their password
+  // if yes, redirect to the change password page which will handle that
+  if (nextUrl.pathname.startsWith("/auth/reset-password")) {
+    const token = nextUrl.searchParams.get("token");
+    const redirectURL = new URL("/change-password", url);
+    redirectURL.searchParams.set("reset_token", token);
+
+    const response = NextResponse.redirect(redirectURL);
+    return response;
+  }
+
+  // if user is authenticated, verify that they have at least one ID set
+  const hasID = await verifyIdPresence();
+  if (!hasID) {
+    return NextResponse.redirect(new URL("/setup-account", url));
+  }
 
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
@@ -110,7 +158,8 @@ export const config = {
      * - favicon.ico (favicon file)
      * - scripts
      * - styles
+     * - setup-account (setup account page)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|scripts|styles).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|scripts|styles|setup-account).*)",
   ],
 };

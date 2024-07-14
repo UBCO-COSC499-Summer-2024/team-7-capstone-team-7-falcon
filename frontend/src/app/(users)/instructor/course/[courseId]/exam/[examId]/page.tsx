@@ -17,7 +17,8 @@ import { ArrowLeft } from "flowbite-react-icons/outline";
 import SubmissionProvider from "../../../../../../contexts/submissionContext";
 import ExamSettings from "@/app/(users)/instructor/components/examSettings";
 import { Toaster } from "react-hot-toast";
-
+import { Alert } from "flowbite-react";
+import { InfoCircle } from "flowbite-react-icons/outline";
 const ViewExam = async ({
   params,
 }: {
@@ -40,14 +41,6 @@ const ViewExam = async ({
     score: item.score,
     updated_at: new Date(Number(item.updated_at)).toLocaleString(),
   }));
-
-  const uploadSubmissions = () => {
-    return null;
-  };
-
-  const getCSV = () => {
-    return;
-  };
 
   return (
     <SubmissionProvider submissions={submissionData}>
@@ -82,10 +75,27 @@ const ViewExam = async ({
         <div className="grid grid-cols-5 gap-24 mt-4 border-t-2 border-black">
           <div className="col-span-3 p-4">
             <p className="">{}</p>
+            {exam.exam_folder?.length !== 0 ? (
+              <Alert color="purple" rounded className="my-4">
+                <div className="flex items-center space-x-2">
+                  <InfoCircle className="sm:size-48 md:size-10" />
+                  <p>
+                    The exam submissions have been uploaded to the system, you
+                    no longer able to upload for this exam.
+                  </p>
+                </div>
+              </Alert>
+            ) : (
+              <></>
+            )}
             <SubmissionTable course_id={cid} exam_id={examId} />
           </div>
           <div className="space-y-4 col-span-2 pr-8 p-4">
-            <ExamSettings courseId={cid} examId={examId} />
+            <ExamSettings
+              courseId={cid}
+              examId={examId}
+              examFolder={exam.exam_folder}
+            />
             <ExamPerformance />
             <DangerZone />
           </div>

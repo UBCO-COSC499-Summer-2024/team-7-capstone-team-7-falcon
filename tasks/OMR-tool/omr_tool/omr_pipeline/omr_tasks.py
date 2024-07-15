@@ -1,5 +1,5 @@
 import PIL.Image
-from omr_tool.omr_pipeline.grade_sheet import order_answers
+from omr_tool.omr_pipeline.generate_grades import order_answers
 from omr_tool.utils.image_process import prepare_img
 from omr_tool.object_inference.inferencer import Inferencer
 import cv2
@@ -20,30 +20,45 @@ def create_answer_key(key_imgs: list):
         dict: A dictionary of the answer key.
 
     """
-    answer_key = {"exam_length": key_imgs.__len__(), "answers": []}
+    answer_key = []
 
     for img in key_imgs:
-        answers = omr_on_image(img, is_key=True)
+        page_answers = omr_on_image(img, is_answer_key=True)
+        answer_key.append(page_answers)
     
     return answer_key
 
-def process_all_submissions(images: list, submission_grades: dict, answer_key: dict):
+def mark_submission_page(submission_img: PIL.Image, answer_key: dict):
     """
-    Process a list of images with the OMR pipeline.
+    Mark a single submission page and generate the corresponding results.
 
     Args:
-        images (list): A list of PIL.Image objects representing the images to be processed.
+        submission_img (PIL.Image): The submission image to be marked.
+        answer_key (dict): The answer key for the OMR (Optical Mark Recognition) tool.
 
     Returns:
-        dict: A dictionary of grades for each student.
-        list: A list of combined images per student.
+        tuple: A tuple containing the submission results and the graded image.
+            - submission_results (dict): A dictionary containing the following information:
+                - "student_id" (str): The ID of the student.
+                - "document_path" (str): The path of the document.
+                - "score" (int): The total score of the submission.
+                - "answers" (dict): A dictionary containing the list of answers.
+                    - "answer_list" (list): A list of dictionaries representing each answer.
+            - graded_img (PIL.Image): The graded image.
 
     """
-    for image in images:
-        isFirst, gradeomr_pipeline(image)
-    pass
+    submission_results = {
+        "student_id": None,
+        "document_path": None,
+        "score": 0,
+        "answers": []
+    }
 
-def omr_on_image(raw_image: PIL.Image, is_key: bool = False):
+    graded_img = omr_on_image(submission_img)
+
+    return submission_results, graded_img
+
+def omr_on_image(raw_image: PIL.Image, is_answer_key: bool = False):
     prepped_image = prepare_img(raw_image)
 
     inference_tool = Inferencer()

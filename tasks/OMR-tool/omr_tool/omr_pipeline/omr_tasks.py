@@ -69,8 +69,8 @@ def omr_on_image(raw_image: PIL.Image, is_answer_key: bool = False):
         if inference_tool.inference_classes[classes[i]] == "answer":
             answer_list = order_answers(box, answer_list)
     
-    for col in range(len(answer_list)):
-        for question in range(len(answer_list[col])):
+    for col in answer_list:
+        for i, question in enumerate(col):
             x1, y1, x2, y2 = map(int, answer_list[col][question])
 
     #         color = 255

@@ -23,7 +23,7 @@ def create_answer_key(key_imgs: list):
     answer_key = {"exam_length": key_imgs.__len__(), "answers": []}
 
     for img in key_imgs:
-        answers = omr_pipeline(img, is_key=True)
+        answers = omr_on_image(img, is_key=True)
     
     return answer_key
 
@@ -43,7 +43,7 @@ def process_all_submissions(images: list, submission_grades: dict, answer_key: d
         isFirst, gradeomr_pipeline(image)
     pass
 
-def omr_pipeline(raw_image: PIL.Image, is_key: bool = False):
+def omr_on_image(raw_image: PIL.Image, is_key: bool = False):
     prepped_image = prepare_img(raw_image)
 
     inference_tool = Inferencer()
@@ -85,4 +85,4 @@ if __name__ == "__main__":
     )
     print(sheet_path)
     images = convert_to_images(sheet_path)
-    omr_pipeline(images[0])
+    omr_on_image(images[0])

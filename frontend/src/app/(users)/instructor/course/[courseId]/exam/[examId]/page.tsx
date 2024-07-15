@@ -80,8 +80,8 @@ const ViewExam = async ({
                 <div className="flex items-center space-x-2">
                   <InfoCircle className="sm:size-48 md:size-10" />
                   <p>
-                    The exam submissions have been uploaded to the system, you
-                    no longer able to upload for this exam.
+                    The exam submissions have been uploaded to the system. You
+                    are no longer able to upload for this exam.
                   </p>
                 </div>
               </Alert>

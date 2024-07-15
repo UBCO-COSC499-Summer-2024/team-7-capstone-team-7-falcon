@@ -1,6 +1,12 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { Course, CourseData } from "../typings/backendDataTypes";
+import {
+  Course,
+  CourseData,
+  CourseAdminDetails,
+  CourseEditData,
+  CourseProtectedDetails,
+} from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
@@ -10,9 +16,9 @@ export const coursesAPI = {
   /**
    * Returns all the info about a course
    * @param courseId
-   * @returns {Promise<Course>}
+   * @returns {Promise<CourseProtectedDetails>}
    */
-  getCourse: async (courseId: number): Promise<Course> => {
+  getCourse: async (courseId: number): Promise<CourseProtectedDetails> => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -24,11 +30,64 @@ export const coursesAPI = {
         withCredentials: true,
       });
 
-      const response = await instance.get<Course>(`/${courseId}`);
+      const response = await instance.get<CourseProtectedDetails>(
+        `/${courseId}`,
+      );
       return response.data;
     } catch (error: any) {
       console.error("Failed to find course:", error);
       throw error;
+    }
+  },
+
+  /**
+   * {Function} - Gets all courses
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  getAllCourses: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.get<CourseAdminDetails[]>("/all");
+      return response;
+    } catch (error: any) {
+      console.error("Failed to find course:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Archives a course
+   * @param courseId {number} - The id of the course to archive
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  archiveCourse: async (courseId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.patch(`/${courseId}/archive`, {
+        archive: true,
+      });
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to archive course: ", error);
+      return error;
     }
   },
 
@@ -277,6 +336,32 @@ export const coursesAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to retrieve exams: ", error);
+      return error;
+    }
+  },
+
+  editCourse: async (courseId: number, courseData: CourseEditData) => {
+    try {
+      const auth_token = await fetchAuthToken();
+
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.patch(
+        `${BACKEND_URL}/api/v1/course/${courseId}`,
+        courseData,
+      );
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to edit users: ", error);
+
       return error;
     }
   },

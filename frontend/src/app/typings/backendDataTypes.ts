@@ -6,6 +6,53 @@ export interface CourseData {
   semester_id: number;
 }
 
+export interface CourseAdminDetails {
+  courseId: number;
+  courseCode: string;
+  semesterName: string;
+  members: number;
+  creator: {
+    firstName: string;
+    lastName: string;
+  };
+}
+
+export interface StudentUser {
+  student_id: number;
+  id: number;
+}
+
+export interface EmployeeUser {
+  employee_id: number;
+  id: number;
+}
+
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
+
+export interface CourseProtectedDetails {
+  id: number;
+  course_code: string;
+  course_name: string;
+  created_at: number;
+  updated_at: number;
+  is_archived: boolean;
+  invite_code: string;
+  section_name: string;
+  semester: {
+    id: number;
+    name: string;
+    starts_at: number;
+    ends_at: number;
+    created_at: number;
+    updated_at: number;
+  };
+}
+
 export interface User {
   id: number;
   first_name: string;
@@ -17,6 +64,8 @@ export interface User {
   email: string;
   password?: string | null;
   avatar_url: string;
+  student_user: StudentUser | null;
+  employee_user: EmployeeUser | null;
 }
 
 export interface Course {

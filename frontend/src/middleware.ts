@@ -46,8 +46,8 @@ const isTokenExpired = (token: string): boolean => {
  */
 const getUserRole = async (): Promise<string> => {
   try {
-    const userDetails: User = await usersAPI.getUserDetails();
-    const userRole: string = userDetails.role;
+    const userDetails: User | null = await usersAPI.getUserDetails();
+    const userRole: string = userDetails?.role ?? "";
     return userRole;
   } catch (error) {
     throw error;
@@ -64,7 +64,7 @@ const getUserRole = async (): Promise<string> => {
  */
 const verifyIdPresence = async (): Promise<boolean> => {
   try {
-    const userDetails: User = await usersAPI.getUserDetails();
+    const userDetails: User | null = await usersAPI.getUserDetails();
 
     // if user does not have any IDs set, return false
     if (userDetails === null) {
@@ -80,7 +80,7 @@ const verifyIdPresence = async (): Promise<boolean> => {
 };
 
 export async function middleware(request: NextRequest) {
-  const { url, nextUrl, cookies } = request;
+  const { url, nextUrl } = request;
   const fetched_auth_token = await fetchAuthToken();
   const auth_token = fetched_auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
 
@@ -92,7 +92,7 @@ export async function middleware(request: NextRequest) {
   if (nextUrl.pathname.startsWith("/auth/confirm")) {
     const token = nextUrl.searchParams.get("token");
     const redirectURL = new URL("/login", url);
-    redirectURL.searchParams.set("confirm_token", token);
+    redirectURL.searchParams.set("confirm_token", token ?? "");
 
     const response = NextResponse.redirect(redirectURL);
     return response;
@@ -103,16 +103,18 @@ export async function middleware(request: NextRequest) {
   if (nextUrl.pathname.startsWith("/auth/reset-password")) {
     const token = nextUrl.searchParams.get("token");
     const redirectURL = new URL("/change-password", url);
-    redirectURL.searchParams.set("reset_token", token);
+    redirectURL.searchParams.set("reset_token", token ?? "");
 
     const response = NextResponse.redirect(redirectURL);
     return response;
   }
 
   // if user is authenticated, verify that they have at least one ID set
-  const hasID = await verifyIdPresence();
-  if (!hasID) {
-    return NextResponse.redirect(new URL("/setup-account", url));
+  if (hasVerifiedToken) {
+    const hasID = await verifyIdPresence();
+    if (!hasID) {
+      return NextResponse.redirect(new URL("/setup-account", url));
+    }
   }
 
   // Redirect to dashboard if user is authenticated and tries to access login/signup page

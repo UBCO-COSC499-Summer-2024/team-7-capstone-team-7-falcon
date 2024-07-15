@@ -71,8 +71,8 @@ export const usersAPI = {
    */
   getUserRole: async () => {
     try {
-      const userDetails: User = await usersAPI.getUserDetails();
-      const userRole: string = userDetails.role;
+      const userDetails: User | null = await usersAPI.getUserDetails();
+      const userRole: string = userDetails?.role ?? "";
       return userRole;
     } catch (error) {
       throw error;

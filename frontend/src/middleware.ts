@@ -17,7 +17,7 @@ const userRoleMap = {
 };
 
 export async function middleware(request: NextRequest) {
-  const { url, nextUrl, cookies } = request;
+  const { url, nextUrl } = request;
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const hasVerifiedToken = await authAPI.hasVerifiedToken();
 
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   if (nextUrl.pathname.startsWith("/auth/confirm")) {
     const token = nextUrl.searchParams.get("token");
     const redirectURL = new URL("/login", url);
-    redirectURL.searchParams.set("confirm_token", token);
+    redirectURL.searchParams.set("confirm_token", token ?? "");
 
     const response = NextResponse.redirect(redirectURL);
     return response;
@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
   if (nextUrl.pathname.startsWith("/auth/reset-password")) {
     const token = nextUrl.searchParams.get("token");
     const redirectURL = new URL("/change-password", url);
-    redirectURL.searchParams.set("reset_token", token);
+    redirectURL.searchParams.set("reset_token", token ?? "");
 
     const response = NextResponse.redirect(redirectURL);
     return response;

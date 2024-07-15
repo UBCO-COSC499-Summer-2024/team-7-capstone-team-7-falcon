@@ -211,7 +211,7 @@ export const isTokenExpired = (token: string): boolean => {
  */
 export const verifyIdPresence = async (): Promise<boolean> => {
   try {
-    const userDetails: User = await usersAPI.getUserDetails();
+    const userDetails: User | null = await usersAPI.getUserDetails();
     return (
       userDetails.student_user !== null || userDetails.employee_user !== null
     );

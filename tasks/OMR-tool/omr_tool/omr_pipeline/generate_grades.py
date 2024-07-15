@@ -1,4 +1,11 @@
 
+def get_answers(answer_boxes):
+    pass
+
+    
+
+def populate_answer_key(answer_key_img):
+    pass
 
 def order_answers(box, answer_list):
     """
@@ -41,4 +48,4 @@ def order_answers(box, answer_list):
             break
     return answer_list
 
-
+    

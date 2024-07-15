@@ -67,27 +67,25 @@ def omr_on_image(raw_image: PIL.Image, is_answer_key: bool = False):
     answer_list = []
     for i, box in enumerate(boxes):
         if inference_tool.inference_classes[classes[i]] == "answer":
-            color = i + 100
             answer_list = order_answers(box, answer_list)
-            # print(answer_list)
     
     for col in range(len(answer_list)):
         for question in range(len(answer_list[col])):
-            # print(answer_list[col][question])
             x1, y1, x2, y2 = map(int, answer_list[col][question])
-            color = 255
-            cv2.rectangle(prepped_image, (x1, y1), (x2, y2), (0, 255, color), 2)
-            cv2.putText(
-                prepped_image,
-                f"{col+1}, {question+1}",
-                (x1, y1 - 10),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.9,
-                (0, 255, color),
-                2,
-            )
-    cv2.imshow("Inference", cv2.resize(prepped_image, (600, 800)))
-    cv2.waitKey(0)
+
+    #         color = 255
+    #         cv2.rectangle(prepped_image, (x1, y1), (x2, y2), (0, 255, color), 2)
+    #         cv2.putText(
+    #             prepped_image,
+    #             f"{col+1}, {question+1}",
+    #             (x1, y1 - 10),
+    #             cv2.FONT_HERSHEY_SIMPLEX,
+    #             0.9,
+    #             (0, 255, color),
+    #             2,
+    #         )
+    # cv2.imshow("Inference", cv2.resize(prepped_image, (600, 800)))
+    # cv2.waitKey(0)
 
 
 

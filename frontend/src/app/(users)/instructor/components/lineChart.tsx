@@ -16,19 +16,18 @@ const LineChart: React.FC<LineChartProps> = ({ data, x_label }) => {
         enabled: false,
       },
     },
+    title: {
+      text: "Student Exam Averages",
+      align: "center",
+      style: {
+        fontSize: "20px",
+        fontWeight: "bold",
+      },
+    } as ApexTitleSubtitle,
     tooltip: {
       enabled: true,
       x: {
         show: false,
-      },
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        opacityFrom: 0.55,
-        opacityTo: 0,
-        shade: "#1C64F2",
-        gradientToColors: ["#1C64F2"],
       },
     },
     dataLabels: {
@@ -74,7 +73,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, x_label }) => {
 
   return (
     <ReactApexChart
-      type="area"
+      type="line"
       series={options.series}
       options={options}
       height="100%"

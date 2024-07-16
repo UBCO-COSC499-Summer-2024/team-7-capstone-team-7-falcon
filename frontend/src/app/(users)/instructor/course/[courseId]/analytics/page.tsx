@@ -45,47 +45,53 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
       (acc, submission) => acc + submission.student.submissionScore,
       0,
     );
-    return totalScore / exam.submissions.length;
+    return Math.round(totalScore / exam.submissions.length);
   };
 
-  // Gets names of all exams, average score per exam, and class average per exam
+  // Gets names of all exams
   const examTitles = analyticsData.examSubmissions.map(
     (examSubmission) => examSubmission.exam.title,
   );
+
+  // Gets average score per exam in an array
   const averageScores = analyticsData.examSubmissions.map((examSubmission) =>
     calculateAverageScore(examSubmission),
   );
-  const average =
-    averageScores.reduce((acc, score) => acc + score, 0) / averageScores.length;
+
+  // Calculates a single number average exam score
+  const average = averageScores.length
+    ? Math.round(
+        averageScores.reduce((acc, score) => acc + score, 0) /
+          averageScores.length,
+      )
+    : 0;
 
   const studentScoresMap = new Map<string, StudentScore>();
 
   // Array of students with their info + average grade
-  const gradesByStudent = analyticsData.examSubmissions.forEach(
-    (examSubmission) => {
-      // Iterate over submissions for the current exam
-      examSubmission.submissions.forEach((submission) => {
-        const studentKey = `${submission.student.id}`;
-        let studentScore = studentScoresMap.get(studentKey);
+  analyticsData.examSubmissions.forEach((examSubmission) => {
+    // Iterate over submissions for the current exam
+    examSubmission.submissions.forEach((submission) => {
+      const studentKey = `${submission.student.id}`;
+      let studentScore = studentScoresMap.get(studentKey);
 
-        // If student score object doesn't exist, initialize it
-        if (!studentScore) {
-          studentScore = {
-            id: submission.student.id,
-            firstName: submission.student.firstName,
-            lastName: submission.student.lastName,
-            avatarUrl: submission.student.avatarUrl,
-            averageScore: 0,
-            scores: [],
-          };
-          studentScoresMap.set(studentKey, studentScore);
-        }
+      // If student score object doesn't exist, initialize it
+      if (!studentScore) {
+        studentScore = {
+          id: submission.student.id,
+          firstName: submission.student.firstName,
+          lastName: submission.student.lastName,
+          avatarUrl: submission.student.avatarUrl,
+          averageScore: 0,
+          scores: [],
+        };
+        studentScoresMap.set(studentKey, studentScore);
+      }
 
-        // Add submission score to student's scores array
-        studentScore.scores.push(submission.student.submissionScore);
-      });
-    },
-  );
+      // Add submission score to student's scores array
+      studentScore.scores.push(submission.student.submissionScore);
+    });
+  });
 
   // Convert map values to array
   const studentScores: StudentScore[] = Array.from(studentScoresMap.values());
@@ -93,7 +99,7 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
   // Calculate average score for each student
   studentScores.forEach((studentScore) => {
     const sum = studentScore.scores.reduce((acc, score) => acc + score, 0);
-    studentScore.averageScore = sum / studentScore.scores.length;
+    studentScore.averageScore = Math.round(sum / studentScore.scores.length);
   });
 
   // Gets top 5 scores
@@ -133,7 +139,7 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
               {analyticsData.courseExamsCount}
             </p>
           </div>
-          <div className="col-span-3">
+          <div className="col-span-3 my-4">
             <DynamicLineChart x_label={examTitles} data={averageScores} />
           </div>
         </div>

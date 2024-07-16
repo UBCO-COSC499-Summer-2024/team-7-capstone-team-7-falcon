@@ -57,11 +57,11 @@ export const examsAPI = {
 
   /**
    * Returns all the information about a specific exam
-   * @param exam_id
-   * @param course_id
-   * @returns {Promise<Exam>}
+   * @param exam_id {number} -  exam id
+   * @param course_id {number} - course id
+   * @returns {Promise<Exam>} {Exam} - exam information
    */
-  getExam: async (exam_id: number, course_id: number) => {
+  getExam: async (exam_id: number, course_id: number): Promise<Exam> => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({

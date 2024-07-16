@@ -57,11 +57,11 @@ export const examsAPI = {
 
   /**
    * Returns all the information about a specific exam
-   * @param exam_id
-   * @param course_id
-   * @returns {Promise<Exam>}
+   * @param exam_id {number} -  exam id
+   * @param course_id {number} - course id
+   * @returns {Promise<Exam>} {Exam} - exam information
    */
-  getExam: async (exam_id: number, course_id: number) => {
+  getExam: async (exam_id: number, course_id: number): Promise<Exam> => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -349,6 +349,33 @@ export const examsAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to retrieve submissions: ", error);
+      const response = await instance.post(
+        `/${examId}/${courseId}/upload`,
+        formData,
+      );
+      return response;
+    } 
+    
+ * Upload exam submissions
+ * @param formData {FormData} - form data
+ * @param examId {number} - exam id
+ * @param courseId {number} - course id
+ * @returns {Promise<any | Error>} - response
+ */
+  uploadExamSubmissions: async (
+    formData: FormData,
+    examId: number,
+    courseId: number,
+  ): Promise<any | Error> => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam`,
+        headers: {
+          "Content-Type": "multipart/form-data",
+    catch (error: any) {
+      // always axios error
+      console.error("Failed to upload exam submissions: ", error);
       return error;
     }
   },

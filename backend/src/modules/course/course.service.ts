@@ -20,6 +20,8 @@ import { ERROR_MESSAGES } from '../../common';
 import { CourseEditDto } from './dto/course-edit.dto';
 import { CourseDetailsInterface } from 'src/common/interfaces';
 import { SubmissionModel } from '../exam/entities/submission.entity';
+import { ExamModel } from '../exam/entities/exam.entity';
+import { CourseAnalyticsResponseInterface } from '../../common/interfaces';
 
 @Injectable()
 export class CourseService {
@@ -333,5 +335,70 @@ export class CourseService {
     });
 
     await CourseUserModel.delete({ id: courseUser.id });
+  }
+
+  /**
+   * Get course analytics
+   * @param cid {number} - Course id
+   * @returns
+   */
+  async getCourseAnalytics(
+    cid: number,
+  ): Promise<CourseAnalyticsResponseInterface> {
+    const [
+      courseMembersSize,
+      courseExamsCount,
+      examSubmissionsCount,
+      courseExams,
+    ] = await Promise.all([
+      CourseUserModel.count({
+        where: { course: { id: cid, is_archived: false } },
+        relations: ['course'],
+      }),
+      ExamModel.count({
+        where: { course: { id: cid, is_archived: false } },
+        relations: ['course'],
+      }),
+      SubmissionModel.count({
+        where: { exam: { course: { id: cid, is_archived: false } } },
+        relations: ['exam', 'exam.course'],
+      }),
+      ExamModel.find({
+        where: { course: { id: cid, is_archived: false } },
+        relations: [
+          'course',
+          'submissions',
+          'submissions.student',
+          'submissions.student.user',
+        ],
+      }),
+    ]);
+
+    const examSubmissions = courseExams.map((exam) => {
+      return {
+        exam: {
+          id: exam.id,
+          title: exam.name,
+        },
+        submissions: exam.submissions.map((submission) => {
+          return {
+            student: {
+              id: submission.student.user.id,
+              firstName: submission.student.user.first_name,
+              lastName: submission.student.user.last_name,
+              submissionScore: submission.score,
+              avatarUrl: submission.student.user.avatar_url,
+            },
+          };
+        }),
+      };
+    });
+
+    return {
+      courseMembersSize,
+      courseExamsCount,
+      examSubmissionsCount,
+      examSubmissions,
+    };
   }
 }

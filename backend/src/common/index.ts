@@ -87,6 +87,7 @@ export const ERROR_MESSAGES = {
   },
   queueController: {
     jobNotFound: 'Job not found',
+    queueNotFound: 'Queue not found',
   },
   examController: {
     examDateError: 'Exam date must be in the future',
@@ -96,6 +97,9 @@ export const ERROR_MESSAGES = {
     examsNotFound: 'Exams not found',
     submissionNotFound: 'Submission not found',
     userSubmissionNotFound: 'User submission not found',
+    examFilesAlreadyUploaded: 'Exam files have already been uploaded',
+    examFilesInvalid: 'Exam files are invalid, make sure they are PDFs',
+    examFilesMissing: 'Answer key and submission file are required',
   },
   submissionController: {
     submissionNotFound: 'Submission not found',

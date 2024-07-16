@@ -773,3 +773,23 @@ exports[`ExamService getUpcomingExamsByCourseUser should return upcoming exams f
   },
 ]
 `;
+
+exports[`ExamService retrieveSubmissionsByExamId should return only headers if no submissions are present 1`] = `
+"studentId,grade
+"
+`;
+
+exports[`ExamService retrieveSubmissionsByExamId should return submissions for an exam with student id and grade 1`] = `
+"studentId,grade
+1001,1
+1002,2
+1003,3
+1004,4
+1005,5
+1006,6
+1007,7
+1008,8
+1009,9
+1010,10
+"
+`;

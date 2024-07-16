@@ -9,6 +9,9 @@ import { SubmissionModel } from '../src/modules/exam/entities/submission.entity'
 import { StudentUserModel } from '../src/modules/user/entities/student-user.entity';
 import * as path from 'path';
 import * as fsExtra from 'fs-extra';
+import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
+import * as sinon from 'sinon';
+import * as fs from 'fs';
 
 describe('Exam Integration', () => {
   const supertest = setUpIntegrationTests(ExamModule);
@@ -20,6 +23,7 @@ describe('Exam Integration', () => {
     await CourseModel.delete({});
     await UserModel.delete({});
     await StudentUserModel.delete({});
+    await EmployeeUserModel.delete({});
 
     await ExamModel.query(`ALTER SEQUENCE exam_model_id_seq RESTART WITH 1`);
     await CourseModel.query(
@@ -34,6 +38,9 @@ describe('Exam Integration', () => {
     );
     await StudentUserModel.query(
       'ALTER SEQUENCE student_user_model_id_seq RESTART WITH 1',
+    );
+    await EmployeeUserModel.query(
+      'ALTER SEQUENCE employee_user_model_id_seq RESTART WITH 1',
     );
   });
 
@@ -2348,6 +2355,325 @@ describe('Exam Integration', () => {
 
       expect(result.status).toBe(200);
       await fsExtra.remove(tempFilePath);
+    });
+  });
+
+  describe('POST /exam/:eid/:cid/upload', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().post('/exam/1/1/upload').expect(401);
+    });
+
+    it('should return 401 if user not professor or ta', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: user,
+      }).save();
+
+      return supertest()
+        .post('/exam/1/1/upload')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 400 when answerKey and submissions are not PDF files', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await supertest()
+        .post('/exam/1/1/upload')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .attach('answerKey', Buffer.from('test'), {
+          filename: 'test.txt',
+          contentType: 'application/json',
+        })
+        .attach('submissions', Buffer.from('test'), {
+          filename: 'test.txt',
+          contentType: 'application/json',
+        });
+
+      expect(result.status).toBe(400);
+      expect(result.body.message).toStrictEqual(
+        'Exam files are invalid, make sure they are PDFs',
+      );
+    });
+
+    it('should return 404 if exam not found for the course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await supertest()
+        .post('/exam/1/1/upload')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .attach('answerKey', Buffer.from('test'), {
+          filename: 'test.pdf',
+          contentType: 'application/pdf',
+        })
+        .attach('submissions', Buffer.from('test'), {
+          filename: 'test.pdf',
+          contentType: 'application/pdf',
+        });
+
+      expect(result.status).toBe(404);
+      expect(result.body.message).toStrictEqual('Exam not found');
+    });
+
+    it('should return 400 if exam has already uploaded answer key and submissions files', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        course,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        exam_folder: 'folderName',
+      }).save();
+
+      const result = await supertest()
+        .post(`/exam/${exam.id}/${course.id}/upload`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .attach('answerKey', Buffer.from('test'), {
+          filename: 'test.pdf',
+          contentType: 'application/pdf',
+        })
+        .attach('submissions', Buffer.from('test'), {
+          filename: 'test.pdf',
+          contentType: 'application/pdf',
+        });
+
+      expect(result.status).toBe(400);
+      expect(result.body.message).toStrictEqual(
+        'Exam files have already been uploaded',
+      );
+    });
+
+    it('should return 200 if exam files are uploaded successfully', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        course,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      sinon.stub(fs, 'mkdirSync').returns({
+        on: sinon.stub(),
+      } as any);
+
+      sinon.stub(fs, 'writeFileSync').returns({
+        on: sinon.stub(),
+      } as any);
+
+      const result = await supertest()
+        .post(`/exam/${exam.id}/${course.id}/upload`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .attach('answerKey', Buffer.from('test'), {
+          filename: 'test.pdf',
+          contentType: 'application/pdf',
+        })
+        .attach('submissions', Buffer.from('test'), {
+          filename: 'test.pdf',
+          contentType: 'application/pdf',
+        });
+
+      expect(result.status).toBe(200);
+
+      sinon.restore();
+    });
+  });
+
+  describe('POST /exam/:eid/:studentId', () => {
+    it('should return 401 if worker token is not provided', async () => {
+      await supertest().post('/exam/1/1').expect(401);
+    });
+
+    it('should return 401 if worker token is invalid', async () => {
+      await supertest()
+        .post('/exam/1/1')
+        .set('x-worker-auth-token', 'invalid-token')
+        .expect(401);
+    });
+
+    it('should return 400 if request body is invalid', async () => {
+      await supertest()
+        .post('/exam/1/1')
+        .set('x-worker-auth-token', 'secret_worker_auth_token')
+        .send({})
+        .expect(400);
+    });
+
+    it('should return 404 if exam not found for the course', async () => {
+      await supertest()
+        .post(`/exam/1/1`)
+        .set('x-worker-auth-token', 'secret_worker_auth_token')
+        .send({ answers: {}, score: 0, documentPath: 'path' })
+        .expect(404);
+    });
+
+    it('should return 200 if submission is created successfully', async () => {
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: null,
+      }).save();
+
+      await supertest()
+        .post(`/exam/${exam.id}/123`)
+        .set('x-worker-auth-token', 'secret_worker_auth_token')
+        .send({ answers: {}, score: 32, documentPath: 'path' })
+        .expect(200);
+    });
+
+    it('should return 200 if student id is not found in the system', async () => {
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      await supertest()
+        .post(`/exam/${exam.id}/123`)
+        .set('x-worker-auth-token', 'secret_worker_auth_token')
+        .send({ answers: {}, score: 32, documentPath: 'path' })
+        .expect(200);
     });
   });
 });

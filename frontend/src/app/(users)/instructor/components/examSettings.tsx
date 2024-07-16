@@ -4,9 +4,17 @@ import { examsAPI } from "@/app/api/examAPI";
 import { ExamSettingsProps } from "@/app/components/type";
 import { CheckPlusCircle, Download, Upload } from "flowbite-react-icons/solid";
 import Link from "next/link";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import UploadExamSubmissionsModal from "./uploadExamSubmissionsModal";
 
-const ExamSettings: React.FC<ExamSettingsProps> = ({ examId, courseId }) => {
+const ExamSettings: React.FC<ExamSettingsProps> = ({
+  examId,
+  courseId,
+  examFolder,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const releaseGrades = async () => {
     const result = await examsAPI.releaseExamGrades(examId, courseId);
 
@@ -17,16 +25,29 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({ examId, courseId }) => {
     }
   };
 
+  const resetModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="space-y-3">
+      {isModalOpen && (
+        <UploadExamSubmissionsModal
+          onClose={resetModal}
+          examId={examId}
+          courseId={courseId}
+        />
+      )}
       <button
         type="button"
-        className="btn-primary flex justify-center bg-purple w-full"
+        className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-400"
+        disabled={examFolder.length !== 0}
+        onClick={() => setIsModalOpen(true)}
       >
-        <Link href={""} className="space-x-4 flex items-center">
+        <div className="space-x-4 flex items-center">
           <Upload />
           <span>Upload Submissions</span>
-        </Link>
+        </div>
       </button>
       <button
         type="button"

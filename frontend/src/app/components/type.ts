@@ -12,4 +12,5 @@ export interface Column {
 export type ExamSettingsProps = {
   examId: number;
   courseId: number;
+  examFolder: string;
 };

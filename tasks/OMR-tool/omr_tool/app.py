@@ -1,6 +1,7 @@
 from PIL.Image import Image
 from omr_tool.omr_pipeline.omr_tasks import create_answer_key, mark_submission_page
 from omr_tool.utils.pdf_to_images import convert_to_images
+import requests
 
 
 def process_submission_group(
@@ -32,11 +33,13 @@ def process_submission_group(
     }
     graded_imgs: list[Image] = []
     for submission_img in group_images:
-        page_results, new_img = mark_submission_page(submission_img, answer_key)
+        page_results, new_img = mark_submission_page(
+            submission_img, answer_key)
 
         if page_results["student_id"] is not None:
             submission_results["student_id"] = page_results["student_id"]
-        submission_results["answers"]["answer_list"].append(page_results["answers"])
+        submission_results["answers"]["answer_list"].append(
+            page_results["answers"])
         submission_results["score"] += page_results["score"]
 
         graded_imgs.append(new_img)
@@ -50,7 +53,8 @@ def app():
     exam_id: str = "something like info.exam_id"
     course_id: str = "something like info.course_id"
     sub_out_dir: str = (
-        "something like info.submission_dir (Output path where graded submission PDFs will be saved)"  # You may not actually need to destructure these last three
+        # You may not actually need to destructure these last three
+        "something like info.submission_dir (Output path where graded submission PDFs will be saved)"
     )
     answer_key_path: str = "path to the answer key PDF"
     submission_path: str = "path to the submission PDF"
@@ -69,7 +73,7 @@ def app():
     all_submission_images: list[Image] = convert_to_images(submission_path)
 
     for i in range(0, len(all_submission_images), num_pages_in_exam):
-        group_images = all_submission_images[i : i + num_pages_in_exam]
+        group_images = all_submission_images[i: i + num_pages_in_exam]
         submission_results, graded_imgs = process_submission_group(
             group_images, answer_key
         )

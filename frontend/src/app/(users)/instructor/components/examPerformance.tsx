@@ -51,7 +51,7 @@ const ExamPerformance: React.FC = () => {
   return (
     <div className="rounded ring-gray-300 ring-4 p-3">
       <p className="font-bold mb-2">Exam Performance</p>
-      <div className="space-x-12 flex">
+      <div className="flex flex-wrap lg:justify-between justify-stretch md:justify-center">
         <GradeDisplay
           properties={{ "--progress": average } as CSSProperties}
           text={"Average"}

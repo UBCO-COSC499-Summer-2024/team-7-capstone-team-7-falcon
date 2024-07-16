@@ -5,6 +5,8 @@ import { UserService } from '../user/user.service';
 import { CourseService } from '../course/course.service';
 import { TokenService } from '../token/token.service';
 import { MailService } from '../mail/mail.service';
+import { SubmissionsProcessingService } from '../queue/jobs/submissions-processing.service';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   controllers: [ExamController],
@@ -14,6 +16,12 @@ import { MailService } from '../mail/mail.service';
     UserService,
     TokenService,
     MailService,
+    SubmissionsProcessingService,
+  ],
+  imports: [
+    BullModule.registerQueue({
+      name: 'omr-submissions-processing',
+    }),
   ],
   exports: [ExamService],
 })

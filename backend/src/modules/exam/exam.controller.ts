@@ -10,7 +10,9 @@ import {
   Res,
   StreamableFile,
   UnauthorizedException,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -27,6 +29,7 @@ import {
   UserSubmissionNotFound,
   FileNotFoundException,
   SubmissionNotFoundException,
+  ExamUploadException,
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
@@ -40,6 +43,10 @@ import {
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { SystemRoleGuard } from '../../guards/system-role.guard';
 import { SubmissionGradeDto } from './dto/submission-grade.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { SubmissionsProcessingService } from '../queue/jobs/submissions-processing.service';
+import { SubmissionCreationDto } from './dto/submission-creation.dto';
+import { WorkerAuthGuard } from '../../guards/worker.guard';
 
 @Controller('exam')
 export class ExamController {
@@ -51,6 +58,7 @@ export class ExamController {
   constructor(
     private readonly examService: ExamService,
     private readonly courseService: CourseService,
+    private readonly sumbissionsProcessingService: SubmissionsProcessingService,
   ) {}
 
   /**
@@ -160,6 +168,96 @@ export class ExamController {
       return res.status(HttpStatus.OK).send({ message: 'ok' });
     } catch (e) {
       if (e instanceof ExamCreationException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Create submission for the exam
+   * @param res {Response} - Response object
+   * @param eid {number} - Exam id
+   * @param studentId {number} - Student id
+   * @param body {SubmissionCreationDto} - Submission data
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(WorkerAuthGuard)
+  @Post(':eid/:studentId')
+  async createSubmission(
+    @Res() res: Response,
+    @Param('eid', new ValidationPipe()) eid: number,
+    @Param('studentId', new ValidationPipe()) studentId: number,
+    @Body(new ValidationPipe()) body: SubmissionCreationDto,
+  ): Promise<Response> {
+    try {
+      await this.examService.createExamSubmission(eid, studentId, body);
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof ExamNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Upload exam submissions
+   * @param files {Object} - Files object
+   * @param res {Response} - Response object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR)
+  @Post(':eid/:cid/upload')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'answerKey', maxCount: 1 },
+      { name: 'submissions', maxCount: 1 },
+    ]),
+  )
+  async uploadExamSubmissions(
+    @Res() res: Response,
+    @UploadedFiles()
+    files: {
+      answerKey: Express.Multer.File[];
+      submissions: Express.Multer.File[];
+    },
+    @Param('eid', new ValidationPipe()) eid: number,
+    @Param('cid', new ValidationPipe()) cid: number,
+  ): Promise<Response> {
+    try {
+      const examFolder = await this.examService.uploadExamSubmissions(
+        eid,
+        files.answerKey,
+        files.submissions,
+      );
+
+      this.sumbissionsProcessingService.createJob({
+        payload: {
+          examId: eid,
+          courseId: cid,
+          folderName: examFolder,
+        },
+      });
+
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof ExamNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof ExamUploadException) {
         return res.status(HttpStatus.BAD_REQUEST).send({
           message: e.message,
         });

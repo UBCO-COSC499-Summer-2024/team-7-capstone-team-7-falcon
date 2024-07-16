@@ -1,13 +1,14 @@
 import PIL.Image
-from omr_tool.omr_pipeline.generate_grades import order_answers
-from omr_tool.utils.image_process import prepare_img
-from omr_tool.object_inference.inferencer import Inferencer
+from omr_pipeline.generate_grades import order_answers
+from utils.image_process import prepare_img
+from object_inference.inferencer import Inferencer
 import cv2
 import numpy as np
 
 """
 The primary sequence for OMR grading
 """
+
 
 def create_answer_key(key_imgs: list):
     """
@@ -25,8 +26,9 @@ def create_answer_key(key_imgs: list):
     for img in key_imgs:
         page_answers = omr_on_image(img, is_answer_key=True)
         answer_key.append(page_answers)
-    
+
     return answer_key
+
 
 def mark_submission_page(submission_img: PIL.Image, answer_key: dict):
     """
@@ -58,6 +60,7 @@ def mark_submission_page(submission_img: PIL.Image, answer_key: dict):
 
     return submission_results, graded_img
 
+
 def omr_on_image(raw_image: PIL.Image, is_answer_key: bool = False):
     prepped_image = prepare_img(raw_image)
 
@@ -68,7 +71,7 @@ def omr_on_image(raw_image: PIL.Image, is_answer_key: bool = False):
     for i, box in enumerate(boxes):
         if inference_tool.inference_classes[classes[i]] == "answer":
             answer_list = order_answers(box, answer_list)
-    
+
     for col in answer_list:
         for i, question in enumerate(col):
             x1, y1, x2, y2 = map(int, answer_list[col][question])
@@ -88,13 +91,13 @@ def omr_on_image(raw_image: PIL.Image, is_answer_key: bool = False):
     # cv2.waitKey(0)
 
 
-
 if __name__ == "__main__":
     from pathlib import Path
     from omr_tool.utils.pdf_to_images import convert_to_images
 
     sheet_path = (
-        Path(__file__).resolve().parents[2] / "fixtures" / "submission_2-page_1.jpg"
+        Path(__file__).resolve().parents[2] /
+        "fixtures" / "submission_2-page_1.jpg"
     )
     print(sheet_path)
     images = convert_to_images(sheet_path)

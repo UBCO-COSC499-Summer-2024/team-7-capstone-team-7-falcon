@@ -1,7 +1,18 @@
 from PIL.Image import Image
-from omr_tool.omr_pipeline.omr_tasks import create_answer_key, mark_submission_page
-from omr_tool.utils.pdf_to_images import convert_to_images
+from omr_pipeline.omr_tasks import create_answer_key, mark_submission_page
+from utils.pdf_to_images import convert_to_images
+from pathlib import Path
 import requests
+import os
+from dotenv import load_dotenv
+import logging
+
+load_dotenv()
+logging.basicConfig(
+    format="%(asctime)s >> %(message)s",
+    datefmt="%m-%d-%Y %I:%M:%S %p",
+    level=logging.INFO,
+)
 
 
 def process_submission_group(
@@ -47,7 +58,62 @@ def process_submission_group(
     return submission_results, graded_imgs
 
 
+def request_job(backend_url, queue_name):
+    """Request a job from the backend by sending a GET request
+
+    Args:
+        backend_url (str): URL of the backend
+        queue_name (str): name of the queue
+
+    Returns:
+        tuple: job_id, payload
+    """
+    request = requests.get(
+        f"{backend_url}/{queue_name}/pick",
+        headers={"x-queue-auth-token": os.getenv("API_TOKEN")},
+    )
+
+    if request.status_code == 401:
+        logging.critical("Invalid API token")
+        return None, None
+
+    if request.status_code == 404:
+        logging.info("No jobs available")
+        return None, None
+
+    job = request.json()
+
+    job_id = job.get("id")
+
+    payload = job.get("data").get("payload")
+    logging.info(f"Received job #{job_id}. Payload: {payload}")
+
+    return job_id, payload
+
+
+def complete_job(backend_url, queue_name, job_id, unique_id):
+    """Complete a job by sending a PATCH request to the backend
+
+    Args:
+        backend_url (str): URL of the backend
+        queue_name (str): name of the queue
+        job_id (int): ID of the job to complete
+        unique_id (str): unique identifier to store the file in folder
+    """
+    requests.patch(
+        f"{backend_url}/{queue_name}/{job_id}/complete",
+        headers={"x-queue-auth-token": os.getenv("API_TOKEN")},
+        json={"payload": {"filePath": f"{unique_id}"}},
+    )
+
+    logging.info(f"Job #{job_id} completed. Releasing it from queue")
+
+
 def app():
+
+    backend_url = os.getenv("BACKEND_URL")
+    queue_name = os.getenv("QUEUE_NAME")
+
     # Paula
     # Receive Files and exam info from the backend (Should be a path to the PDF answer sheet, a path to the PDF of submissions, and exam info)
     exam_id: str = "something like info.exam_id"

@@ -1,13 +1,32 @@
+import cv2
+import numpy as np
 
-def get_answers(answer_boxes):
-    pass
+def grade_answer(mask, sorted_bubble_contours, expected_answer):
+    bubbled = (200, None)
+
+    for i, cnt in enumerate(sorted_bubble_contours):
+        mask = np.zeros(mask.shape, dtype="uint8")
+        cv2.drawContours(mask, [cnt], -1, 255, -1)
+
+        mask = cv2.bitwise_and(mask, mask, mask=mask)
+        total = cv2.countNonZero(mask)
+
+        if bubbled is None or total > bubbled[0]:
+            bubbled = (total, i)
+    if bubbled[1] is None:
+        return False, None
+    if bubbled[1] == expected_answer:
+        return True, i
+    else:
+        return False, i
+    
 
     
 
 def populate_answer_key(answer_key_img):
     pass
 
-def order_answers(box, answer_list):
+def order_questions(box, answer_list):
     """
     Orders the answer boxes into a 2D list based on their coordinates.
 

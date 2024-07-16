@@ -71,7 +71,7 @@ def align_img(image):
 
 
 
-def threshold_img(image, blur=True):
+def threshold_img(image, blur=True, grayscale=True):
     """
     Function to threshold an image.
 
@@ -82,16 +82,17 @@ def threshold_img(image, blur=True):
         PIL.Image: The thresholded image.
 
     """
-    grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    if blur:
-        blurred_img = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
+    if grayscale:
+        grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     else:
-        blurred_img = grayscale_img
+        grayscale_img = image
+    if blur:
+        blur_image = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
+    else:
+        blur_image = grayscale_img
     thresh = cv2.threshold(
-        blurred_img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU
+        blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU
     )[1]
-    # cv2.imshow("thresh", thresh)
-    # cv2.waitKey(0)
     return thresh
 
 
@@ -108,8 +109,9 @@ def generate_bubble_contours(image):
     """
 
     # Threshold the image
-    thresh = threshold_img(image)
-
+    thresh = threshold_img(image, grayscale=False)
+    cv2.imshow("thresh", thresh)
+    cv2.waitKey(0)
     # Find contours
     all_contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
         0
@@ -124,8 +126,8 @@ def generate_bubble_contours(image):
             (x1, y1, w1, h1) = cv2.boundingRect(cnt)
             aspect_ratio1 = w1 / float(h1)
             if (
-                aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2 and w1 > 20
-            ):  # TODO: width checking is just a temporary measure, remove when object detection is implemented
+                aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2
+            ): 
                 bubble_contours.append(cnt)
 
     return bubble_contours
@@ -151,7 +153,6 @@ def sort_contours(cnts):
 def identify_object_contours(generated_contours):
     """
     Function to identify objects in an image without using machine learning.
-    TODO: Actually get this working or implement a machine learning model.
 
     Args:
         contours (list): A list of contours to identify objects in.
@@ -246,16 +247,16 @@ def identify_bubbled(img, cnts):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Please provide an image path as an argument.")
-        sys.exit(1)
-
-    image_path = sys.argv[1]
+        print("Please provide an image path as an argument, falling back to placeholder.")
+        image_path = Path(__file__).resolve().parents[2] / "fixtures" / "submission_2-page_1.jpg"
+    else:
+        image_path = sys.argv[1]
     image = cv2.imread(image_path)
     # cv2.imshow("aligned", align_img(image))
     # cv2.waitKey(0)
-    prepared_image = edge_detect_img(image)
-    question_contours = generate_bubble_contours(image)
-    objects = identify_object_contours(question_contours)
+    prepared_image = prepare_img(image)
+    question_contours = generate_bubble_contours(prepared_image)
+    # objects = identify_object_contours(question_contours)
 
     image_with_contours = image.copy()
 

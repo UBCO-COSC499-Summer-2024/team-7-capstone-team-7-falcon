@@ -37,6 +37,7 @@ export interface Exam {
   updated_at: number;
   exam_date: number;
   grades_released_at: number;
+  exam_folder: string;
 }
 
 export interface Submission {
@@ -115,4 +116,22 @@ export enum SelectedButton {
   People = "PEOPLE",
   Analytics = "ANALYTICS",
   None = "NONE",
+}
+
+export interface StudentSubmission {
+  exam: {
+    id: number;
+    name: string;
+    examDate: number;
+  };
+  studentSubmission: {
+    id: number;
+    score: number;
+  };
+  course: {
+    id: number;
+    courseName: string;
+    courseCode: string;
+  };
+  grades: number[];
 }

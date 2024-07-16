@@ -43,6 +43,7 @@ export interface Exam {
   updated_at: number;
   exam_date: number;
   grades_released_at: number;
+  exam_folder: string;
 }
 
 export interface Submission {

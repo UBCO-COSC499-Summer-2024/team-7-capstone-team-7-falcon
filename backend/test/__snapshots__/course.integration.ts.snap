@@ -217,6 +217,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000009",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 10,
       "name": "Exam 9",
@@ -226,6 +227,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000008",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 9,
       "name": "Exam 8",
@@ -235,6 +237,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000007",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 8,
       "name": "Exam 7",
@@ -244,6 +247,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000006",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 7,
       "name": "Exam 6",
@@ -253,6 +257,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000005",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 6,
       "name": "Exam 5",
@@ -262,6 +267,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000004",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 5,
       "name": "Exam 4",
@@ -271,6 +277,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000003",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 4,
       "name": "Exam 3",
@@ -280,6 +287,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000002",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 3,
       "name": "Exam 2",
@@ -289,6 +297,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000001",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 2,
       "name": "Exam 1",
@@ -298,6 +307,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 if user is 
     {
       "created_at": "1000000000",
       "exam_date": "1000000000",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 1,
       "name": "Exam 0",
@@ -320,6 +330,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 when only t
     {
       "created_at": "1000000000",
       "exam_date": "1000000009",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 10,
       "name": "Exam 9",
@@ -329,6 +340,7 @@ exports[`Course Integration GET /course/:cid/exams should return 200 when only t
     {
       "created_at": "1000000000",
       "exam_date": "1000000008",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 9,
       "name": "Exam 8",
@@ -352,6 +364,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 1,
     "name": "Exam 0",
     "questions": {},
@@ -360,6 +373,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 2,
     "name": "Exam 1",
     "questions": {},
@@ -368,6 +382,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 3,
     "name": "Exam 2",
     "questions": {},
@@ -376,6 +391,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 4,
     "name": "Exam 3",
     "questions": {},
@@ -384,6 +400,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 5,
     "name": "Exam 4",
     "questions": {},
@@ -392,6 +409,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 6,
     "name": "Exam 5",
     "questions": {},
@@ -400,6 +418,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 7,
     "name": "Exam 6",
     "questions": {},
@@ -408,6 +427,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 8,
     "name": "Exam 7",
     "questions": {},
@@ -416,6 +436,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 9,
     "name": "Exam 8",
     "questions": {},
@@ -424,6 +445,7 @@ exports[`Course Integration GET /course/:cid/exams/graded should return 200 and 
   {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 10,
     "name": "Exam 9",
     "questions": {},
@@ -436,6 +458,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
 [
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 1,
     "name": "Exam 0",
@@ -444,6 +467,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 2,
     "name": "Exam 1",
@@ -452,6 +476,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 3,
     "name": "Exam 2",
@@ -460,6 +485,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 4,
     "name": "Exam 3",
@@ -468,6 +494,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 5,
     "name": "Exam 4",
@@ -476,6 +503,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 6,
     "name": "Exam 5",
@@ -484,6 +512,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 7,
     "name": "Exam 6",
@@ -492,6 +521,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 8,
     "name": "Exam 7",
@@ -500,6 +530,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 9,
     "name": "Exam 8",
@@ -508,6 +539,7 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
   },
   {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 10,
     "name": "Exam 9",

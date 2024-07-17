@@ -1,6 +1,10 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { Course, CourseData } from "../typings/backendDataTypes";
+import {
+  Course,
+  CourseAnalytics,
+  CourseData,
+} from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
@@ -156,5 +160,31 @@ export const coursesAPI = {
 
       return error;
     }
+  }
+  
+  /**
+   * Gets all stats for a course
+   * @param courseId
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getCourseStats: async (courseId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get<CourseAnalytics>(
+        `/${courseId}/analytics`,
+      );
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
   },
+    
 };

@@ -1,5 +1,36 @@
 # Individual Logs for Paula
 
+## Wednesday (7/12 - 7/16)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.12_07.16"](images/clockify_07.12_07.16.png)
+
+### Current Tasks
+
+!["current_tasks_07.12_07.16"](images/current_tasks_07.12_07.16.png)
+
+* #1: Authentication pages (frontend and backend) - Code refactoring. Ready for a last review now.
+* #2: Admin create new semester page
+* #3: Admin edit semester page
+* #4: Creating API endpoints for the OMR tool
+
+### Progress Update (since 7/12/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I have been able to complete the tasks I promised. The process is going smoothly - I am just a bit slower than the others - and I am satisfied with the team's progress.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Admin edit semester page
+* Work on creating API endpoints for the OMR tool
+* Prep for the peer testing exercise on Friday
+* (If time permits) Repo clean up and documentation updates
+
 ## Friday (7/10 - 7/11)
 
 ### Timesheet

@@ -1,5 +1,40 @@
 # Personal Logs
 
+## Wednesday (7/12-7/16)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.12-07.16/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finish The grading pipeline in the OMR tool
+  2. Create data structures for Outputting answers and scores
+  3. Complete the graded page image generation for returning to backend as PDF
+
+### Progress Update (since 7/16/2024)
+
+![ProjectBoard](07.12-07.16/board.png)
+
+  1. Masking, cropping, contour detection, threshholding, and ordering of question inferenced objects is complete and functional. Grading formats just need to be resolved.
+  2. Scaffold for main app.py is completed and will also be worked on with Paula
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The OMR solution is still progressing well, I am still decently confident it will be done by the end of the week if everything keeps working as planned. Paula will be taking on a few of the tasks within the OMR pipeline so I have more time to dedicate to grading.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have page grading and image generation complete
+  2. Have the data formats and endpoints complete for backend
+  3. Have test examples ready for Peer testing
+
+---
+---
+---
+
 ## Friday (7/10-7/11)
 
 ### Timesheet

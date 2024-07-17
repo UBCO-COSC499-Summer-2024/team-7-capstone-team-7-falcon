@@ -57,6 +57,8 @@ def process_submission_group(
 
     return submission_results, graded_imgs
 
+# TODO: Consider moving to a shared module
+
 
 def request_job(backend_url, queue_name):
     """Request a job from the backend by sending a GET request
@@ -90,6 +92,8 @@ def request_job(backend_url, queue_name):
 
     return job_id, payload
 
+# TODO: Consider moving to a shared module
+
 
 def complete_job(backend_url, queue_name, job_id, unique_id):
     """Complete a job by sending a PATCH request to the backend
@@ -114,17 +118,21 @@ def app():
     backend_url = os.getenv("BACKEND_URL")
     queue_name = os.getenv("QUEUE_NAME")
 
-    # Paula
-    # Receive Files and exam info from the backend (Should be a path to the PDF answer sheet, a path to the PDF of submissions, and exam info)
-    exam_id: str = "something like info.exam_id"
-    course_id: str = "something like info.course_id"
-    sub_out_dir: str = (
-        # You may not actually need to destructure these last three
-        "something like info.submission_dir (Output path where graded submission PDFs will be saved)"
-    )
-    answer_key_path: str = "path to the answer key PDF"
-    submission_path: str = "path to the submission PDF"
-    # ---
+    # Receive files and exam info from the backend
+    # The answer sheet and submissions will be saved in the same folder
+    job_id, payload = request_job(backend_url, queue_name)
+    exam_id: str = payload.get("examId")
+    course_id: str = payload.get("courseId")
+    answer_key_path: str = payload.get("folderName")
+    submission_path: str = payload.get("folderName")
+
+    # sub_out_dir: str = (
+    #     # You may not actually need to destructure these last three
+    #     "something like info.submission_dir (Output path where graded submission PDFs will be saved)"
+    # )
+
+    # not too sure about this
+    sub_out_dir: str = payload.get("folderName")
 
     # Generate an answer key from the answer key PDF (Should return a dict of answers)
     # Convert the answer key PDF to list of images

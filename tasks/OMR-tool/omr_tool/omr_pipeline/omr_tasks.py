@@ -1,5 +1,5 @@
 import PIL.Image
-from omr_tool.omr_pipeline.generate_grades import grade_answer, order_questions
+from omr_tool.omr_pipeline.generate_grades import check_answer, order_questions
 from omr_tool.utils.image_process import generate_bubble_contours, prepare_img
 from omr_tool.object_inference.inferencer import Inferencer
 import cv2
@@ -59,7 +59,7 @@ def mark_submission_page(submission_img: PIL.Image, answer_key: list):
 
     return submission_results, graded_img
 
-def omr_on_image(input_image: PIL.Image, answer_key=None):
+def omr_on_image(input_image: PIL.Image, answer_key=[]):
     prepped_image = prepare_img(input_image)
     output_image = input_image.copy()
     inference_tool = Inferencer()
@@ -82,12 +82,13 @@ def omr_on_image(input_image: PIL.Image, answer_key=None):
         # Crop the region of interest to remove black background
             roi_cropped = roi[y1:y2, x1:x2]
             bubble_contours = generate_bubble_contours(roi_cropped)
-            print(bubble_contours)
+            # print(bubble_contours)
             sorted_indices = np.argsort([cv2.boundingRect(i)[0] for i in bubble_contours])
             sorted_contours = [bubble_contours[i] for i in sorted_indices]
-            print(sorted_contours)
-            if answer_key:
-                isCorrect, filled_index = grade_answer(mask, sorted_contours, answer_key[question_num])
+            # print(sorted_contours)
+            
+            if question_num < len(answer_key):
+                isCorrect, filled_index = check_answer(mask, sorted_contours, answer_key[question_num])
                 if isCorrect:
                         color = (0, 255, 0)
                         contour_index = filled_index
@@ -97,24 +98,10 @@ def omr_on_image(input_image: PIL.Image, answer_key=None):
             else: 
                 color = (255, 0, 0)
                 contour_index = 0
+            print(contour_index)
             translated_contour = sorted_contours[contour_index] + [x1, y1]
             cv2.drawContours(output_image, [translated_contour], -1, color, 2)
     return total_score, answers, output_image
-                    
-
-    #         color = 255
-    #         cv2.rectangle(prepped_image, (x1, y1), (x2, y2), (0, 255, color), 2)
-    #         cv2.putText(
-    #             prepped_image,
-    #             f"{col+1}, {question+1}",
-    #             (x1, y1 - 10),
-    #             cv2.FONT_HERSHEY_SIMPLEX,
-    #             0.9,
-    #             (0, 255, color),
-    #             2,
-    #         )
-    # cv2.imshow("Inference", cv2.resize(prepped_image, (600, 800)))
-    # cv2.waitKey(0)
 
 
 
@@ -127,7 +114,7 @@ if __name__ == "__main__":
     )
     print(sheet_path)
     images = convert_to_images(sheet_path)
-    score, grades, graded_image = omr_on_image(images[0])
+    score, grades, graded_image = omr_on_image(images[0], [1,1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1,])
     print(grades)
     cv2.imshow("graded", graded_image)
     cv2.waitKey(0)

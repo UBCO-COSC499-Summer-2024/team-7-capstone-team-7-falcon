@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def grade_answer(mask, sorted_bubble_contours, expected_answer):
+def check_answer(mask, sorted_bubble_contours, expected_answer):
     bubbled = (200, None)
 
     for i, cnt in enumerate(sorted_bubble_contours):

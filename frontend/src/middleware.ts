@@ -24,9 +24,9 @@ export async function middleware(request: NextRequest) {
   // verify if user is trying to validate their email
   // if yes, redirect to login page which will handle that
   if (nextUrl.pathname.startsWith("/auth/confirm")) {
-    const token = nextUrl.searchParams.get("token");
+    const token = nextUrl.searchParams.get("token") ?? "";
     const redirectURL = new URL("/login", url);
-    redirectURL.searchParams.set("confirm_token", token ?? "");
+    redirectURL.searchParams.set("confirm_token", token);
 
     const response = NextResponse.redirect(redirectURL);
     return response;
@@ -35,9 +35,9 @@ export async function middleware(request: NextRequest) {
   // verify if user is trying to reset their password
   // if yes, redirect to the change password page which will handle that
   if (nextUrl.pathname.startsWith("/auth/reset-password")) {
-    const token = nextUrl.searchParams.get("token");
+    const token = nextUrl.searchParams.get("token") ?? "";
     const redirectURL = new URL("/change-password", url);
-    redirectURL.searchParams.set("reset_token", token ?? "");
+    redirectURL.searchParams.set("reset_token", token);
 
     const response = NextResponse.redirect(redirectURL);
     return response;

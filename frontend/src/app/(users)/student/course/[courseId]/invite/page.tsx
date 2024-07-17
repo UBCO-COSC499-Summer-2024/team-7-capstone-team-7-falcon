@@ -1,6 +1,6 @@
 import React from "react";
 import { coursesAPI } from "../../../../../api/coursesAPI";
-import { Course, CourseData } from "../../../../../typings/backendDataTypes";
+import { CourseData } from "../../../../../typings/backendDataTypes";
 import JoinCourseModal from "../../../components/joinCourseModal";
 
 const JoinCourse = async ({

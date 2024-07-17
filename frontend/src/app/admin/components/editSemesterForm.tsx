@@ -28,8 +28,8 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
       const semester: SemesterData = await semestersAPI.getSemester(semesterId);
       setFormData({
         name: semester.name,
-        starts_at: semester.starts_at,
-        ends_at: semester.ends_at,
+        starts_at: new Date(Number(semester.starts_at)).toLocaleString(),
+        ends_at: new Date(Number(semester.ends_at)).toLocaleString(),
       });
     } catch (error) {
       toast.error("Failed to load semester data");

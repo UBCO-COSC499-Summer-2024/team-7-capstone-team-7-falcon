@@ -14,7 +14,7 @@ Clockify report
   2. Create data structures for Outputting answers and scores
   3. Complete the graded page image generation for returning to backend as PDF
 
-### Progress Update (since 7/16/2024)
+### Progress Update (since 7/12/2024)
 
 ![ProjectBoard](07.12-07.16/board.png)
 

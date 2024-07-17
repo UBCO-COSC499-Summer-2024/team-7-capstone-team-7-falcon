@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { TextInput, Label, Datepicker } from "flowbite-react";
+import { TextInput, Label, Datepicker, Alert } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { semestersAPI } from "@/app/api/semestersAPI";
-import { SemesterData } from "@/app/typings/backendDataTypes";
+import { SemesterData, SemesterValid } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
 
 interface SemesterEditFormProps {
@@ -11,6 +12,7 @@ interface SemesterEditFormProps {
 }
 
 const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
+  const [semesterValid, setSemesterValid] = useState(SemesterValid.Invalid);
   const [formData, setFormData] = useState<SemesterData>({
     name: "",
     starts_at: -1,
@@ -18,6 +20,10 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
   });
   const router = useRouter();
   const [savingChanges, setSavingChanges] = useState(false);
+
+  const resetStatus = () => {
+    setStatus(Status.Pending);
+  };
 
   useEffect(() => {
     fetchData();
@@ -40,6 +46,21 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
     try {
       e.preventDefault();
       setSavingChanges(true);
+
+      // validate dates
+      if (formData.starts_at < Date.now() || formData.ends_at < Date.now()) {
+        setSemesterValid(SemesterValid.DatesInThePast);
+        setSavingChanges(false);
+        return;
+      }
+
+      if (formData.starts_at > formData.ends_at) {
+        setSemesterValid(SemesterValid.EndDateBeforeStartDate);
+        setSavingChanges(false);
+        return;
+      }
+
+      setSemesterValid(SemesterValid.Valid);
 
       const updatedSemester = await semestersAPI.editSemester(
         semesterId,
@@ -125,6 +146,27 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
               required
             />
           </div>
+
+          {semesterValid === SemesterValid.DatesInThePast && (
+            <div className="mb-4">
+              <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">Date(s) in the past! &nbsp;</span>
+                Please select a date in the future.
+              </Alert>
+            </div>
+          )}
+
+          {semesterValid === SemesterValid.EndDateBeforeStartDate && (
+            <div className="mb-4">
+              <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">
+                  End date before start date! &nbsp;
+                </span>
+                Please select an end date that is after the start date.
+              </Alert>
+            </div>
+          )}
+
           <div>
             <button
               type="submit"

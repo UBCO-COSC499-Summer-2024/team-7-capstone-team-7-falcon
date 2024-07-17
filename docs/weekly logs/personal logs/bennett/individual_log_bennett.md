@@ -35,7 +35,7 @@ Clockify report
 </table>
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
-This cycle I completed both tasks that I planned to do wich were the instructor exam table and analytics pages. Our frontend is almost
+This cycle I have completed both tasks that I planned to do.  They were the instructor exam table and analytics pages. Our frontend is almost
 done and backend is finished. Overall we are on track to finish everything we have promised.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)

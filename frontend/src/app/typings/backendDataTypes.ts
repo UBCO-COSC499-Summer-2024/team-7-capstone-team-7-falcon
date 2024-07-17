@@ -155,6 +155,20 @@ export enum SelectedButton {
   None = "NONE",
 }
 
+export interface SemesterData {
+  name: string;
+  starts_at: number;
+  ends_at: number;
+  course_count?: number;
+}
+
+export enum SemesterValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  DatesInThePast = "DATES IN THE PAST",
+  EndDateBeforeStartDate = "END DATE BEFORE START DATE",
+}
+
 export interface StudentSubmission {
   exam: {
     id: number;

@@ -27,7 +27,6 @@ const CourseCreatorModal: React.FC<CourseCreatorProps> = (props) => {
       courseSection: courseSectionRef.current?.value,
       courseSemester: courseSemesterRef.current?.value,
     };
-    console.log(courseData);
     // Implement course creation here
   };
 

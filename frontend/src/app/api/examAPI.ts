@@ -293,4 +293,127 @@ export const examsAPI = {
       return error;
     }
   },
+
+  /**
+   * Gets a list of all exams for a course
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  getAllExams: async (course_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/${course_id}/exams/`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exams: ", error);
+      return error;
+    }
+  },
+
+  /**
+   * Gets a list of all exams that are graded for a course
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  getAllExamsGraded: async (course_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/${course_id}/exams/graded`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exams: ", error);
+      return error;
+    }
+  },
+
+  /**
+   * Gets all upcoming exams for a course
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  getAllExamsUpcoming: async (course_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/${course_id}/exams/upcoming`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exams: ", error);
+      return error;
+    }
+  },
+
+  /**
+   * Gets all graded exams for a student
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getExamsGraded: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/graded`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve submissions: ", error);
+      return error;
+    }
+  },
+
+  /**
+   * Gets all upcoming exams for a student
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getExamsUpcoming: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/upcoming`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve submissions: ", error);
+      return error;
+    }
+  },
 };

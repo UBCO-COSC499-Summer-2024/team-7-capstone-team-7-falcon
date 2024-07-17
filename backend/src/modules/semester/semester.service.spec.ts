@@ -253,4 +253,73 @@ describe('SemesterService', () => {
       expect(semesters).toHaveLength(0);
     });
   });
+
+  describe('deleteSemester', () => {
+    it('should throw an error if semester does not exist', async () => {
+      await expect(semesterService.deleteSemester(1)).rejects.toThrow(
+        'Semester not found',
+      );
+    });
+
+    it('should delete a semester', async () => {
+      let semester = await SemesterModel.create({
+        name: 'Test Semester',
+        created_at: 1_000_000,
+        updated_at: 1_000_000,
+        starts_at: 1_000_000,
+        ends_at: 1_000_000,
+      }).save();
+
+      await semesterService.deleteSemester(semester.id);
+
+      semester = await SemesterModel.findOne({
+        where: { id: semester.id },
+      });
+
+      expect(semester).toBeNull();
+    });
+
+    it('should delete a semester and ensure courses are not deleted, but return null for semester', async () => {
+      let semester = await SemesterModel.create({
+        name: 'Test Semester',
+        created_at: 1_000_000,
+        updated_at: 1_000_000,
+        starts_at: 1_000_000,
+        ends_at: 1_000_000,
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        await CourseModel.create({
+          course_code: 'COSC 499',
+          course_name: 'Capstone Project',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          section_name: '001',
+          invite_code: '123',
+          semester: semester,
+        }).save();
+      }
+
+      await semesterService.deleteSemester(semester.id);
+
+      semester = await SemesterModel.findOne({
+        where: { id: semester.id },
+        relations: ['courses'],
+      });
+
+      expect(semester).toBeNull();
+
+      const courses = await CourseModel.find({
+        relations: ['semester'],
+      });
+
+      expect(courses).toHaveLength(10);
+
+      courses.forEach((course) => {
+        expect(course.semester).toBeNull();
+      });
+
+      expect(courses).toMatchSnapshot();
+    });
+  });
 });

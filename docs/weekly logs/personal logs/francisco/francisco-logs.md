@@ -1,5 +1,40 @@
 # Personal Logs
 
+## Friday (7/10-7/11)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.10-07.11/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finish revisions for original OpenCV Utilities
+  2. Create the new Utilities for inferenced data with OpenCV
+  3. Integrate inferenced data into OMR Pipeline
+
+### Progress Update (since 7/10/2024)
+
+![ProjectBoard](07.10-07.11/board.png)
+
+  1. Created tests for, optimized, and cleaned up the Inference class to be pushed to the development branch
+  2. Prepared the other OpenCV Utilities to integrate with the inferenced data
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The ONNX Model is now fully implemented with tests and documentation done. The next steps are to finish all of the integration tasks, I am optimistic that the pipeline will be functional by the end of the cycle.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have inference fully integrated in the pipeline
+  2. Test model reliability on the full pipeline 
+  3. Begin work on grading schemas
+
+---
+---
+---
+
 ## Wednesday (7/05-7/09)
 
 ### Timesheet

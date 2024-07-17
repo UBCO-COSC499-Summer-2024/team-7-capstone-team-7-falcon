@@ -110,8 +110,7 @@ def generate_bubble_contours(image):
 
     # Threshold the image
     thresh = threshold_img(image, grayscale=False)
-    cv2.imshow("thresh", thresh)
-    cv2.waitKey(0)
+    
     # Find contours
     all_contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
         0

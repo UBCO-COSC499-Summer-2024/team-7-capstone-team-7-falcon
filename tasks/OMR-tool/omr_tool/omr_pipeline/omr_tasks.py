@@ -83,7 +83,8 @@ def omr_on_image(input_image: PIL.Image, answer_key=None):
             roi_cropped = roi[y1:y2, x1:x2]
             bubble_contours = generate_bubble_contours(roi_cropped)
             print(bubble_contours)
-            sorted_contours = np.argsort([cv2.boundingRect(i)[0] for i in bubble_contours])
+            sorted_indices = np.argsort([cv2.boundingRect(i)[0] for i in bubble_contours])
+            sorted_contours = [bubble_contours[i] for i in sorted_indices]
             print(sorted_contours)
             if answer_key:
                 isCorrect, filled_index = grade_answer(mask, sorted_contours, answer_key[question_num])
@@ -96,7 +97,8 @@ def omr_on_image(input_image: PIL.Image, answer_key=None):
             else: 
                 color = (255, 0, 0)
                 contour_index = 0
-            cv2.drawContours(output_image, sorted_contours, -1, color, 2)
+            translated_contour = sorted_contours[contour_index] + [x1, y1]
+            cv2.drawContours(output_image, [translated_contour], -1, color, 2)
     return total_score, answers, output_image
                     
 

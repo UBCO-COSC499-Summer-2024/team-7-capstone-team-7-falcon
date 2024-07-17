@@ -97,7 +97,6 @@ During this cycle I was able to complete all of the backend endpoints that we ne
   * Create test case scenarios for peer testing with a team
   * (If I have time) Work on exam view page to allow instructors to change the grade and update student id
 
-
 ## Friday (7/10 - 7/11)
 
 ### Timesheet

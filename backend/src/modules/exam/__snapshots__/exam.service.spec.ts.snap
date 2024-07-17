@@ -10,6 +10,64 @@ ExamModel {
 }
 `;
 
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is found 1`] = `
+StudentUserModel {
+  "id": 1,
+  "student_id": "1",
+  "submissions": [
+    SubmissionModel {
+      "answers": {},
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+    },
+  ],
+}
+`;
+
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is found 2`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "submissions": [
+    SubmissionModel {
+      "answers": {},
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+    },
+  ],
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is not found 1`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "submissions": [
+    SubmissionModel {
+      "answers": {},
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+      "student": null,
+    },
+  ],
+  "updated_at": "1000000000",
+}
+`;
+
 exports[`ExamService getExamById should return an exam by id 1`] = `
 ExamModel {
   "created_at": "1000000000",
@@ -714,4 +772,24 @@ exports[`ExamService getUpcomingExamsByCourseUser should return upcoming exams f
     ],
   },
 ]
+`;
+
+exports[`ExamService retrieveSubmissionsByExamId should return only headers if no submissions are present 1`] = `
+"studentId,grade
+"
+`;
+
+exports[`ExamService retrieveSubmissionsByExamId should return submissions for an exam with student id and grade 1`] = `
+"studentId,grade
+1001,1
+1002,2
+1003,3
+1004,4
+1005,5
+1006,6
+1007,7
+1008,8
+1009,9
+1010,10
+"
 `;

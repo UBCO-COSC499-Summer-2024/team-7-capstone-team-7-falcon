@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { Status } from "../../../typings/backendDataTypes";
+import { Status } from "../../../../typings/backendDataTypes";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 
 /**

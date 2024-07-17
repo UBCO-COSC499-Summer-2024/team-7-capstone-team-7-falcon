@@ -120,6 +120,6 @@ if __name__ == "__main__":
     images = convert_to_images(sheet_path)
     score, grades, graded_image = omr_on_image(images[0], answer_key)
     print(grades)
-    cv2.imshow("graded", graded_image)
+    cv2.imshow("graded", cv2.resize(graded_image , (800, 1000)))
     cv2.waitKey(0)
     

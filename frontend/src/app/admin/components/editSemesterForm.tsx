@@ -145,7 +145,7 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
         </p>
         <button
           className="ring-1 rounded ring-red-700 p-1 m-3 items-center"
-          onClick={deleteSemester}
+          onClick={DeleteSemester}
         >
           <p className="text-red-700 text-lg">Delete this semester</p>
         </button>

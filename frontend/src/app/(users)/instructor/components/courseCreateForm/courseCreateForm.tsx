@@ -2,7 +2,7 @@ import React, { FormEvent } from "react";
 import { Button, TextInput, Label } from "flowbite-react";
 
 import { coursesAPI } from "@/app/api/coursesAPI";
-import SemesterSelect from "./semesterSelect";
+import SemesterSelect from "@/app/components/semesterSelect";
 import toast from "react-hot-toast";
 
 interface CourseCreatorProps {

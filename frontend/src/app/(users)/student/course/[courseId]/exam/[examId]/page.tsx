@@ -1,7 +1,6 @@
 import { coursesAPI } from "../../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
   StudentSubmission,
   User,
 } from "../../../../../../typings/backendDataTypes";
@@ -22,7 +21,7 @@ const StudentExamPage = async ({
   const cid = Number(params.courseId);
   const eid = Number(params.examId);
   const course: Course = await coursesAPI.getCourse(cid);
-  const user: User = await usersAPI.getUserDetails();
+  const user: User = (await usersAPI.getUserDetails()) as User;
 
   if (!user) {
     throw new Error("User does not exist");

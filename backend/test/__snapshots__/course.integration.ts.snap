@@ -9,6 +9,7 @@ exports[`Course Integration GET /course/:cid should return course if course is f
   "invite_code": "123",
   "is_archived": false,
   "section_name": "001",
+  "semester": null,
   "updated_at": "1000000000",
 }
 `;

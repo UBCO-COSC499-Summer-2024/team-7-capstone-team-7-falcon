@@ -39,10 +39,10 @@ export const usersAPI = {
    *
    * @async
    * @function getUserDetails
-   * @returns {Promise<User>} - A promise that resolves to the details of an authenticated user. Returns null when the user does not have any IDs set.
+   * @returns {Promise<User | null>} - A promise that resolves to the details of an authenticated user. Returns null when the user does not have any IDs set.
    * @throws Will log an error message to the console if fetching the user details fails.
    */
-  getUserDetails: async (): Promise<User> => {
+  getUserDetails: async (): Promise<User | null> => {
     try {
       const auth_token = await fetchAuthToken();
 
@@ -56,7 +56,7 @@ export const usersAPI = {
 
       const response = await instance.get<User>(`${BACKEND_URL}/api/v1/user/`);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       if (
         error.response &&
         error.response.status === 403 &&

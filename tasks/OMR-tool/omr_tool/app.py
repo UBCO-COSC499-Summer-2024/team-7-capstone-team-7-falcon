@@ -126,12 +126,8 @@ def app():
     answer_key_path: str = payload.get("folderName")
     submission_path: str = payload.get("folderName")
 
-    # sub_out_dir: str = (
-    #     # You may not actually need to destructure these last three
-    #     "something like info.submission_dir (Output path where graded submission PDFs will be saved)"
-    # )
-
-    # not too sure about this
+    # TODO: not too sure about this
+    # output path where graded submission PDFs will be saved
     sub_out_dir: str = payload.get("folderName")
 
     # Generate an answer key from the answer key PDF (Should return a dict of answers)
@@ -143,30 +139,30 @@ def app():
 
     # Process the submissions
     # Process each image in the list with the OMR pipeline. Should return a dict of grades and a list of combined images per user
-    # (e.g. 2 pages spliced into on img per user)
+    # (e.g. 2 pages spliced into one img per user)
     all_submission_images: list[Image] = convert_to_images(submission_path)
 
     for i in range(0, len(all_submission_images), num_pages_in_exam):
+        # for each student
         group_images = all_submission_images[i: i + num_pages_in_exam]
         submission_results, graded_imgs = process_submission_group(
             group_images, answer_key
         )
 
-        # Paula
+        student_id = submission_results["student_id"]
+        output_pdf_path = conv_to_pdf(
+            graded_imgs, sub_out_dir, f"{course_id}_{exam_id}_{student_id}")
 
-        # process the submission in list
-        # find image with matching student ID in submission_images (You can find the student ID with submission_results["student_id"])
-        output_pdf, output_pdf_name = convert_to_PDF(graded_imgs)
-        # Put the image into its own PDF named with an identifier like a student num
-        # Its own module
-        send_pdf(pdf, output_pdf_name)
-
-        submission_results["document_path"] = output_pdf_name
-        # Return the new PDF to the backend (multi-PDF payload)
-        send_grades(submission_results)
-        # Return the single submission for this student to the backend (multi-image payload)
+        # convert graded images to PDF and name the resulting file "courseId_examId_studentId"
+        # submission_results["document_path"] = output_pdf_path
+        # (its own module) send "courseId_examId_studentId" file to backend
+        # send grades to backend
+        #  - 'POST /exam/:eid/:studentId'
+        #  - send({ submission_results["answers"], submission_results["score"], submission_results["document_path"] })
 
         # ---
+
+    # complete_job(backend_url, queue_name, job_id, unique_id)
 
 
 if __name__ == "__main__":

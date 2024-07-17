@@ -823,4 +823,141 @@ describe('Semester Integration', () => {
         .expect(204);
     });
   });
+
+  describe('DELETE /semester/:sid', () => {
+    it('should return status 401 if no token is provided', async () => {
+      await supertest().delete('/semester/1').expect(401);
+    });
+
+    it('should return 401 if the user is not an admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      await supertest()
+        .delete('/semester/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 400 if semester id is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      await supertest()
+        .delete('/semester/abc')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(400)
+        .expect({
+          message: 'Validation failed (numeric string is expected)',
+          error: 'Bad Request',
+          statusCode: 400,
+        });
+    });
+
+    it('should return 404 if the semester does not exist', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      await supertest()
+        .delete('/semester/1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(404)
+        .expect({
+          message: 'Semester not found',
+        });
+    });
+
+    it('should return 204 if the semester is deleted successfully', async () => {
+      const semester = await SemesterModel.create({
+        name: 'Test Semester',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        starts_at: 1_000_000_000,
+        ends_at: 1_000_000_000,
+      }).save();
+
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        await CourseModel.create({
+          course_code: 'COSC 499',
+          course_name: 'Capstone Project',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          section_name: '001',
+          invite_code: '123',
+          semester: semester,
+        }).save();
+      }
+
+      await supertest()
+        .delete(`/semester/${semester.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(204);
+
+      const result = await SemesterModel.findOne({
+        where: { id: semester.id },
+      });
+
+      expect(result).toBeNull();
+
+      const courses = await CourseModel.find({
+        relations: ['semester'],
+      });
+
+      expect(courses).toHaveLength(10);
+
+      courses.forEach((course) => {
+        expect(course.semester).toBeNull();
+      });
+    });
+  });
 });

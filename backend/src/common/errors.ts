@@ -235,3 +235,21 @@ export class CourseRoleException extends Error {
     super(message);
   }
 }
+
+/**
+ * Exception thrown when there is an error uploading exam files
+ */
+export class ExamUploadException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception thrown when queue is not found
+ */
+export class QueueNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.queueController.queueNotFound);
+  }
+}

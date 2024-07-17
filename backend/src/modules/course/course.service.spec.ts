@@ -1030,4 +1030,66 @@ describe('CourseService', () => {
       expect(result).toMatchSnapshot();
     });
   });
+
+  describe('getAndArchiveCourses', () => {
+    it('should return an empty array if there are no courses', async () => {
+      const result = await courseService.getAndArchiveCourses();
+      expect(result).toBeDefined();
+      expect(result).toStrictEqual([]);
+    });
+
+    it('should return an empty array if there are no courses to archive', async () => {
+      const semester = await SemesterModel.create({
+        name: 'Spring 2024',
+        starts_at: parseInt(new Date().getTime().toString()),
+        ends_at: parseInt(new Date().getTime().toString()),
+        created_at: parseInt(new Date('2021-01-01').getTime().toString()),
+        updated_at: parseInt(new Date('2021-01-01').getTime().toString()),
+      }).save();
+
+      for (let i = 0; i < 3; i++) {
+        await CourseModel.create({
+          course_code: 'CS101',
+          course_name: 'Introduction to Computer Science',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          semester,
+          section_name: '001',
+          invite_code: '123',
+        }).save();
+      }
+
+      const result = await courseService.getAndArchiveCourses();
+      expect(result).toBeDefined();
+      expect(result).toStrictEqual([]);
+    });
+
+    it('should archive courses where semester ends_at has passed one year mark', async () => {
+      const semester = await SemesterModel.create({
+        name: 'Spring 2024',
+        starts_at:
+          parseInt(new Date().getTime().toString()) - 1000 * 60 * 60 * 24 * 390,
+        ends_at:
+          parseInt(new Date().getTime().toString()) - 1000 * 60 * 60 * 24 * 366,
+        created_at: parseInt(new Date('2024-01-01').getTime().toString()),
+        updated_at: parseInt(new Date('2024-01-01').getTime().toString()),
+      }).save();
+
+      for (let i = 0; i < 3; i++) {
+        await CourseModel.create({
+          course_code: 'CS101',
+          course_name: 'Introduction to Computer Science',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          semester,
+          section_name: '001',
+          invite_code: '123',
+        }).save();
+      }
+
+      const result = await courseService.getAndArchiveCourses();
+      expect(result).toBeDefined();
+      expect(result).toHaveLength(3);
+    });
+  });
 });

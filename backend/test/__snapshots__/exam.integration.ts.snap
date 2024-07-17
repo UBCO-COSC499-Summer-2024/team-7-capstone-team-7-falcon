@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Exam Integration GET /exam/:cid/:eid/download_grades should return CSV file with studentId and grades 1`] = `
+"studentId,grade
+1001,1
+1002,2
+1003,3
+1004,4
+1005,5
+1006,6
+1007,7
+1008,8
+1009,9
+1010,10
+"
+`;
+
+exports[`Exam Integration GET /exam/:cid/:eid/download_grades should return CSV with only headers when exam has no submissions 1`] = `
+"studentId,grade
+"
+`;
+
 exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if exam submissions are returned 1`] = `
 [
   {
@@ -169,6 +189,7 @@ exports[`Exam Integration GET /exam/:cid/exam/:eid should return 200 if exam is 
 {
   "created_at": "1000000000",
   "exam_date": "1000000000",
+  "exam_folder": null,
   "grades_released_at": null,
   "id": 1,
   "name": "Exam",

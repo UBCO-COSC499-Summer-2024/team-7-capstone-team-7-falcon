@@ -2,6 +2,7 @@
 
 exports[`ExamService createExam should create an exam 1`] = `
 ExamModel {
+  "exam_folder": null,
   "grades_released_at": null,
   "id": 1,
   "name": "Test Exam",
@@ -9,10 +10,69 @@ ExamModel {
 }
 `;
 
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is found 1`] = `
+StudentUserModel {
+  "id": 1,
+  "student_id": "1",
+  "submissions": [
+    SubmissionModel {
+      "answers": {},
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+    },
+  ],
+}
+`;
+
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is found 2`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "submissions": [
+    SubmissionModel {
+      "answers": {},
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+    },
+  ],
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is not found 1`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "submissions": [
+    SubmissionModel {
+      "answers": {},
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+      "student": null,
+    },
+  ],
+  "updated_at": "1000000000",
+}
+`;
+
 exports[`ExamService getExamById should return an exam by id 1`] = `
 ExamModel {
   "created_at": "1000000000",
   "exam_date": "1000000000",
+  "exam_folder": null,
   "grades_released_at": null,
   "id": 1,
   "name": "Exam",
@@ -57,6 +117,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000009",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 10,
       "name": "Exam 9",
@@ -66,6 +127,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000008",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 9,
       "name": "Exam 8",
@@ -75,6 +137,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000007",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 8,
       "name": "Exam 7",
@@ -84,6 +147,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000006",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 7,
       "name": "Exam 6",
@@ -93,6 +157,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000005",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 6,
       "name": "Exam 5",
@@ -117,6 +182,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000004",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 5,
       "name": "Exam 4",
@@ -126,6 +192,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000003",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 4,
       "name": "Exam 3",
@@ -135,6 +202,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000002",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 3,
       "name": "Exam 2",
@@ -144,6 +212,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000001",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 2,
       "name": "Exam 1",
@@ -153,6 +222,7 @@ PageDto {
     ExamModel {
       "created_at": "1000000000",
       "exam_date": "1000000000",
+      "exam_folder": null,
       "grades_released_at": null,
       "id": 1,
       "name": "Exam 0",
@@ -176,6 +246,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000000",
+    "exam_folder": null,
     "id": 1,
     "name": "Exam 0",
     "questions": {},
@@ -184,6 +255,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000001",
+    "exam_folder": null,
     "id": 2,
     "name": "Exam 1",
     "questions": {},
@@ -192,6 +264,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000002",
+    "exam_folder": null,
     "id": 3,
     "name": "Exam 2",
     "questions": {},
@@ -200,6 +273,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000003",
+    "exam_folder": null,
     "id": 4,
     "name": "Exam 3",
     "questions": {},
@@ -208,6 +282,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000004",
+    "exam_folder": null,
     "id": 5,
     "name": "Exam 4",
     "questions": {},
@@ -216,6 +291,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000005",
+    "exam_folder": null,
     "id": 6,
     "name": "Exam 5",
     "questions": {},
@@ -224,6 +300,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000006",
+    "exam_folder": null,
     "id": 7,
     "name": "Exam 6",
     "questions": {},
@@ -232,6 +309,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000007",
+    "exam_folder": null,
     "id": 8,
     "name": "Exam 7",
     "questions": {},
@@ -240,6 +318,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000008",
+    "exam_folder": null,
     "id": 9,
     "name": "Exam 8",
     "questions": {},
@@ -248,6 +327,7 @@ exports[`ExamService getGradedExamsByCourseId should return graded exams by cour
   ExamModel {
     "created_at": "1000000000",
     "exam_date": "1000000009",
+    "exam_folder": null,
     "id": 10,
     "name": "Exam 9",
     "questions": {},
@@ -504,6 +584,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
 [
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 1,
     "name": "Exam 0",
@@ -512,6 +593,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 2,
     "name": "Exam 1",
@@ -520,6 +602,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 3,
     "name": "Exam 2",
@@ -528,6 +611,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 4,
     "name": "Exam 3",
@@ -536,6 +620,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 5,
     "name": "Exam 4",
@@ -544,6 +629,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 6,
     "name": "Exam 5",
@@ -552,6 +638,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 7,
     "name": "Exam 6",
@@ -560,6 +647,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 8,
     "name": "Exam 7",
@@ -568,6 +656,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 9,
     "name": "Exam 8",
@@ -576,6 +665,7 @@ exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by 
   },
   ExamModel {
     "created_at": "1000000000",
+    "exam_folder": null,
     "grades_released_at": null,
     "id": 10,
     "name": "Exam 9",
@@ -682,4 +772,24 @@ exports[`ExamService getUpcomingExamsByCourseUser should return upcoming exams f
     ],
   },
 ]
+`;
+
+exports[`ExamService retrieveSubmissionsByExamId should return only headers if no submissions are present 1`] = `
+"studentId,grade
+"
+`;
+
+exports[`ExamService retrieveSubmissionsByExamId should return submissions for an exam with student id and grade 1`] = `
+"studentId,grade
+1001,1
+1002,2
+1003,3
+1004,4
+1005,5
+1006,6
+1007,7
+1008,8
+1009,9
+1010,10
+"
 `;

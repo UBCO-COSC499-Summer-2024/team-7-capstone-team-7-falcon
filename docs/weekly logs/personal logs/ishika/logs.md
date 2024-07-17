@@ -1,3 +1,31 @@
+## Wednesday(7/12-7/16)
+
+<img width="1061" alt="image" src="https://github.com/user-attachments/assets/47be4f9e-fa14-498f-be8f-246e70f7afb0">
+
+### Project Board
+
+<img width="864" alt="image" src="https://github.com/user-attachments/assets/f82eafa3-809b-4603-b806-2f3bcbcdaee7">
+
+## Current Tasks
+
+1. Make fixes to Admin Dashboard page while calling API endpoints from backend
+2. Feature for admins to be able to edit user information and deactivate account.
+3. Pull new changes for Course Settings page and modify it.
+
+## Progress update since (7/12)
+
+1. Pushed some new changes to Course Settings page,which was later refactored by Dima in his PR as he found some bugs.
+2. Addressed Dima's comments on the Admin Dashboard page and refactored the code.
+3. Reviewed a couple PRs for the Peer Testing.
+
+## Cycle Goal Review
+
+I didn't make a lot of progress in this cycle due to midterm exam, however, I have a pretty good idea on the next feature. I am still working on the changes for my current PRs so hopefully they will be merged soon to the development.
+
+## Next Cycle Goal
+
+My main goal would be to address current comments on the Admin Dashboard and Course Settings page. I will also work on Edit User Information page for Admin but it wont be completed by Friday.
+
 ## Friday (7/10 - 7/11)
 
 <img width="1067" alt="image" src="https://github.com/user-attachments/assets/fce52f89-a25a-4c3d-b76d-913f91ef5e9c">

@@ -65,7 +65,7 @@ export const usersAPI = {
         // handle the case where no IDs are set for the user
         return null;
       } else {
-        throw error;
+        console.error("Failed to fetch user details:", error);
       }
     }
   },
@@ -84,7 +84,7 @@ export const usersAPI = {
       const userRole: string = userDetails?.role ?? "";
       return userRole;
     } catch (error) {
-      throw error;
+      console.error("Failed to fetch user role:", error);
     }
   },
 

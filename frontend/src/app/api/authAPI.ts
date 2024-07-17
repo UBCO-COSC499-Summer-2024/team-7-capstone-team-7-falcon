@@ -216,6 +216,6 @@ export const verifyIdPresence = async (): Promise<boolean> => {
       userDetails.student_user !== null || userDetails.employee_user !== null
     );
   } catch (error) {
-    throw error;
+    console.error("Failed to verify ID presence for user:", error);
   }
 };

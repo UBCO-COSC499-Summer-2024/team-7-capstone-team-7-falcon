@@ -135,3 +135,28 @@ export interface StudentSubmission {
   };
   grades: number[];
 }
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
+}
+
+export interface AnalyticsSubmission {
+  exam: {
+    id: number;
+    title: string;
+  };
+  submissions: AnalyticsExamSubmission[];
+}
+
+export interface CourseAnalytics {
+  courseMembersSize: number;
+  courseExamsCount: number;
+  examSubmissionsCount: number;
+  examSubmissions: AnalyticsSubmission[];
+}

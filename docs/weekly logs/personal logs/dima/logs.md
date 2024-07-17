@@ -1,5 +1,103 @@
 # Individual Logs
 
+## Wednesday (7/12 - 7/16)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07122024_07162024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Preparing a seed data for Peer testing on Friday in backend
+  * #2: Help other team members with frontend pages
+  * #3: Reviewing PRs
+
+### Progress Update (since 7/12/2024)
+
+![GitHub Board](./images/github_07122024-07162024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #311
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #322
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #323
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #329
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #331
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #335
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #339
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #325
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle I was able to complete all of the backend endpoints that we need based on the UI design. I have also implemented frontend pages for these backend endpoints. In addition, I have frontend page for admin pages such as showing all of the current courses in the system, and course editing. Overall, our team is doing great and we hope that we will finish all of the work on frontend and backend this week, so that we can focus on either helping with OMR processing or addressing feedback during the peer testing.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Prepare for Peer testing on Friday by creating a seed data in backend
+  * Create test case scenarios for peer testing with a team
+  * (If I have time) Work on exam view page to allow instructors to change the grade and update student id
+
+
 ## Friday (7/10 - 7/11)
 
 ### Timesheet

@@ -179,6 +179,7 @@ export class CourseService {
   public async getCourseById(id: number): Promise<CourseModel> {
     const course: CourseModel = await CourseModel.findOne({
       where: { id },
+      relations: ['semester'],
     });
 
     return course;

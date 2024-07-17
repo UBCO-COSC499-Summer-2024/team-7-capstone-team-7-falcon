@@ -2372,7 +2372,6 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
-        role: UserRoleEnum.ADMIN,
       }).save();
 
       await EmployeeUserModel.create({

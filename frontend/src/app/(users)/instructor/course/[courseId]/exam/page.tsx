@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
 import CourseHeader from "../../../components/courseHeader";

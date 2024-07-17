@@ -150,6 +150,35 @@ export class ExamController {
   }
 
   /**
+   * Retrieve grades for the exam
+   * @param res {Response} response object
+   * @param eid {number} exam id
+   * @returns {Promise<StreamableFile | void>} StreamableFile or void object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:eid/:cid/download_grades')
+  async retrieveGrades(
+    @Res({ passthrough: true }) res: Response,
+    @Param('eid', ParseIntPipe) eid: number,
+  ): Promise<StreamableFile | void> {
+    try {
+      const csvData = await this.examService.retrieveSubmissionsByExamId(eid);
+
+      res.set({
+        'Content-Type': 'text/csv',
+        'Content-Disposition': `attachment; filename="grades.csv"`,
+      });
+
+      return new StreamableFile(csvData);
+    } catch (e) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
    * Create an exam for the course
    * @param res {Response} response object
    * @param cid {number} course id

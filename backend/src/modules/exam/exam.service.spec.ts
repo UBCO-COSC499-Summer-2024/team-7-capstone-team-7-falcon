@@ -1752,6 +1752,100 @@ describe('ExamService', () => {
     });
   });
 
+  describe('retrieveSubmissionsByExamId', () => {
+    it('should return submissions for an exam with student id and grade', async () => {
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      for (let i = 1; i <= 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john.doe${i}@mail.com`,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          email_verified: true,
+        }).save();
+
+        const studentUser = await StudentUserModel.create({
+          user,
+          student_id: 1_000 + i,
+        }).save();
+
+        const submission = await SubmissionModel.create({
+          exam,
+          student: studentUser,
+          answers: {},
+          score: i,
+          document_path: 'path',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        exam.submissions.push(submission);
+      }
+      await exam.save();
+
+      const csvStream = await examService.retrieveSubmissionsByExamId(exam.id);
+
+      // Convert the stream to plain text
+      const result = await new Promise<string>((resolve, reject) => {
+        let data = '';
+        csvStream.on('data', (chunk) => {
+          data += chunk;
+        });
+        csvStream.on('end', () => {
+          resolve(data);
+        });
+        csvStream.on('error', (err) => {
+          reject(err);
+        });
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should return only headers if no submissions are present', async () => {
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      const csvStream = await examService.retrieveSubmissionsByExamId(exam.id);
+
+      // Convert the stream to plain text
+      const result = await new Promise<string>((resolve, reject) => {
+        let data = '';
+        csvStream.on('data', (chunk) => {
+          data += chunk;
+        });
+        csvStream.on('end', () => {
+          resolve(data);
+        });
+        csvStream.on('error', (err) => {
+          reject(err);
+        });
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toMatchSnapshot();
+    });
+  });
+
   describe('deleteExam', () => {
     it('should throw an error if the exam is not found', async () => {
       await expect(examService.deleteExam(1)).rejects.toThrow('Exam not found');

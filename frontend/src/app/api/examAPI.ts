@@ -265,6 +265,36 @@ export const examsAPI = {
   },
 
   /**
+   * Download submission grades as CSV
+   * @param examId {number} exam id
+   * @param courseId {number} course id
+   * @returns {Promise<AxiosResponse<any> | Error>}
+   */
+  downloadSubmissionGrades: async (
+    examId: number,
+    courseId: number,
+  ): Promise<any | Error> => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `/${examId}/${courseId}/download_grades`,
+        { responseType: "blob" },
+      );
+      return response;
+    } catch (error: any) {
+      return error;
+    }
+  },
+
+  /**
    * Delete exam
    * @param examId {number} exam id
    * @param courseId {number} course id

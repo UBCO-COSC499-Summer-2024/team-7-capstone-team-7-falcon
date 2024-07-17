@@ -11,6 +11,7 @@ import { ExamModule } from './modules/exam/exam.module';
 import { TokenModule } from './modules/token/token.module';
 import { MailModule } from './modules/mail/mail.module';
 import { FileModule } from './modules/file/file.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { FileModule } from './modules/file/file.module';
     TokenModule,
     MailModule,
     FileModule,
+    TasksModule,
   ],
 })
 export class AppModule {}

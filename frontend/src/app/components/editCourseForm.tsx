@@ -4,10 +4,7 @@ import { TextInput, Label } from "flowbite-react";
 import { coursesAPI } from "@/app/api/coursesAPI";
 import SemesterSelect from "./semesterSelect";
 import toast from "react-hot-toast";
-import {
-  CourseEditData,
-  CourseProtectedDetails,
-} from "@/app/typings/backendDataTypes";
+import { CourseEditData, Course } from "@/app/typings/backendDataTypes";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 
@@ -31,8 +28,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
 
   const fetchData = async () => {
     try {
-      const course: CourseProtectedDetails =
-        await coursesAPI.getCourse(courseId);
+      const course: Course = await coursesAPI.getCourse(courseId);
       setFormData({
         courseName: course.course_name,
         courseCode: course.course_code,

@@ -22,9 +22,12 @@ import { CourseDetailsInterface } from 'src/common/interfaces';
 import { SubmissionModel } from '../exam/entities/submission.entity';
 import { ExamModel } from '../exam/entities/exam.entity';
 import { CourseAnalyticsResponseInterface } from '../../common/interfaces';
+import { LessThan } from 'typeorm';
 
 @Injectable()
 export class CourseService {
+  private readonly ONE_YEAR: number = 31_556_952_000;
+
   /**
    * Remove member from course
    * @param cid {number} - Course id
@@ -401,5 +404,37 @@ export class CourseService {
       examSubmissionsCount,
       examSubmissions,
     };
+  }
+
+  /**
+   * Get and archive courses
+   * @returns {Promise<CourseModel[]>} - Promise array of CourseModel
+   */
+  async getAndArchiveCourses(): Promise<CourseModel[]> {
+    const courses = await CourseModel.find({
+      where: {
+        is_archived: false,
+        semester: {
+          ends_at: LessThan(
+            parseInt(new Date().getTime().toString()) - this.ONE_YEAR,
+          ),
+        },
+      },
+      relations: ['exams', 'semester'],
+      select: {
+        id: true,
+        exams: {
+          exam_folder: true,
+        },
+      },
+    });
+
+    await Promise.all(
+      courses.map(async (course) => {
+        await CourseModel.update({ id: course.id }, { is_archived: true });
+      }),
+    );
+
+    return courses;
   }
 }

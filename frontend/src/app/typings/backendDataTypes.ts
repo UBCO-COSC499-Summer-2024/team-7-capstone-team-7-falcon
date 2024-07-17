@@ -34,25 +34,6 @@ export interface CourseEditData {
   inviteCode: string;
 }
 
-export interface CourseProtectedDetails {
-  id: number;
-  course_code: string;
-  course_name: string;
-  created_at: number;
-  updated_at: number;
-  is_archived: boolean;
-  invite_code: string;
-  section_name: string;
-  semester: {
-    id: number;
-    name: string;
-    starts_at: number;
-    ends_at: number;
-    created_at: number;
-    updated_at: number;
-  };
-}
-
 export interface User {
   id: number;
   first_name: string;
@@ -72,12 +53,19 @@ export interface Course {
   id: number;
   course_code: string;
   course_name: string;
-  semester_id: number;
-  section_name: string;
-  created_at: string;
-  updated_at: string;
+  created_at: number;
+  updated_at: number;
   is_archived: boolean;
   invite_code: string;
+  section_name: string;
+  semester: {
+    id: number;
+    name: string;
+    starts_at: number;
+    ends_at: number;
+    created_at: number;
+    updated_at: number;
+  };
 }
 export interface Exam {
   id: number;
@@ -183,4 +171,29 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
+}
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
+}
+
+export interface AnalyticsSubmission {
+  exam: {
+    id: number;
+    title: string;
+  };
+  submissions: AnalyticsExamSubmission[];
+}
+
+export interface CourseAnalytics {
+  courseMembersSize: number;
+  courseExamsCount: number;
+  examSubmissionsCount: number;
+  examSubmissions: AnalyticsSubmission[];
 }

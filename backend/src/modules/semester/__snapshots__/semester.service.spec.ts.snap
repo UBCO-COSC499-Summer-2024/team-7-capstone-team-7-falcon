@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SemesterService deleteSemester should delete a semester and ensure courses have null value for semester 1`] = `
+exports[`SemesterService deleteSemester should delete a semester and ensure courses are not deleted, but return null for semester 1`] = `
 [
   CourseModel {
     "course_code": "COSC 499",

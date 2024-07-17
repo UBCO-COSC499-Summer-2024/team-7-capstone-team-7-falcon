@@ -279,7 +279,7 @@ describe('SemesterService', () => {
       expect(semester).toBeNull();
     });
 
-    it('should delete a semester and ensure courses have null value for semester', async () => {
+    it('should delete a semester and ensure courses are not deleted, but return null for semester', async () => {
       let semester = await SemesterModel.create({
         name: 'Test Semester',
         created_at: 1_000_000,

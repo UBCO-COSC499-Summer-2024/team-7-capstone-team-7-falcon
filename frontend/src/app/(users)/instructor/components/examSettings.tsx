@@ -54,7 +54,7 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       <button
         type="button"
         className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-400"
-        disabled={examFolder?.length !== 0}
+        disabled={!!examFolder && examFolder?.length !== 0}
         onClick={() => setIsModalOpen(true)}
       >
         <div className="space-x-4 flex items-center">

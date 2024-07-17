@@ -40,7 +40,7 @@ describe('TasksService', () => {
       expect(loggerWarnSpy).toHaveBeenCalledWith('Archived 0 courses');
     });
 
-    it('should log a warning that course was archived and folder deleted', async () => {
+    it('should log a warning that course was archived and existing folder deleted', async () => {
       const loggerWarnSpy = jest.spyOn(tasksService.logger, 'warn');
 
       const semester = await SemesterModel.create({
@@ -106,7 +106,7 @@ describe('TasksService', () => {
       );
     });
 
-    it('should log that course was archived, but no folder was deleted', async () => {
+    it('should log that course was archived, but non existing exam-folder was not deleted and no log message is produced', async () => {
       const loggerWarnSpy = jest.spyOn(tasksService.logger, 'warn');
 
       const semester = await SemesterModel.create({

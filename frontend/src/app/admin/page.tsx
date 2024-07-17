@@ -1,20 +1,14 @@
 "use client";
 import React from "react";
-import CourseCountCard from "../admin/components/CourseCountCard";
-import MembersCountCard from "../admin/components/MembersCountCard";
-import ProfessorsCountCard from "../admin/components/ProfessorsCountCard";
+import DashboardDataProvider from "../admin/components/DashboardData";
 
-const Dashboard: React.FC = () => {
+const AdminDashboard: React.FC = () => {
   return (
-    <div>
+    <div className="flex flex-col">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <div className="flex space-x-2">
-        <CourseCountCard />
-        <MembersCountCard />
-        <ProfessorsCountCard />
-      </div>
+      <DashboardDataProvider />
     </div>
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

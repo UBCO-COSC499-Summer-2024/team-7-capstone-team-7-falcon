@@ -6,18 +6,12 @@ interface CountCardProps {
   count: number;
   title: string;
   className?: string;
-  width?: string; // Add width prop
 }
 
-const CountCard: React.FC<CountCardProps> = ({
-  count,
-  title,
-  className,
-  width = "w-1/3",
-}) => {
+const CountCard: React.FC<CountCardProps> = ({ count, title, className }) => {
   return (
     <Card
-      className={`${className} ${width} bg-purple-700 p-2 rounded-xl shadow-md`}
+      className={`${className}  bg-purple-700 p-4 rounded-xl shadow-md w-1/5`}
     >
       <div className="text-center">
         <div className="text-3xl font-bold text-white mt-2">{count}</div>

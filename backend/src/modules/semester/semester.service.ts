@@ -7,6 +7,7 @@ import {
 import { ERROR_MESSAGES } from '../../common';
 import { SemesterModel } from './entities/semester.entity';
 import { MoreThan } from 'typeorm';
+import { CourseModel } from '../course/entities/course.entity';
 
 @Injectable()
 export class SemesterService {
@@ -117,5 +118,18 @@ export class SemesterService {
     }
 
     return semester;
+  }
+
+  /**
+   * Delete a semester
+   * @param sid {number} - The semester id
+   * @returns {Promise<void>} - The promise object
+   */
+  public async deleteSemester(sid: number): Promise<void> {
+    const semester = await this.getSemesterById(sid);
+
+    await CourseModel.update({ semester: semester }, { semester: null });
+
+    await semester.remove();
   }
 }

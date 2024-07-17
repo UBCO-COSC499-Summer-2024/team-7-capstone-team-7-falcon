@@ -49,6 +49,18 @@ export interface User {
   employee_user: EmployeeUser | null;
 }
 
+export interface UpdatedUser {
+  first_name: string;
+  last_name?: string;
+  role?: string;
+  email?: string;
+  password?: string | null;
+  avatar_url?: string;
+  employee_id?: number | null;
+  student_id?: number | null;
+  email_verified?: boolean;
+}
+
 export interface Course {
   id: number;
   course_code: string;
@@ -134,6 +146,53 @@ export enum Status {
   Failure = "FAILURE",
   Pending = "PENDING",
   InvalidDate = "INVALID DATE",
+  Redirect = "REDIRECT",
+}
+
+export enum FormValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  PasswordsDoNotMatch = "PASSWORDS DO NOT MATCH",
+  WeakPassword = "WEAK PASSWORD",
+  FirstNameLengthOutOfBounds = "FIRST NAME LENGTH OUT OF BOUNDS",
+}
+
+export enum EmailValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  Pending = "PENDING",
+}
+
+export interface SignUpFormData {
+  first_name: string;
+  last_name: string | null;
+  email: string;
+  password: string;
+  confirm_password: string;
+  student_id: number | null;
+  employee_id: number | null;
+}
+
+export interface userLoginData {
+  email: string;
+  password: string;
+}
+
+export interface requestResetPasswordData {
+  email: string;
+}
+
+export interface resetPasswordData {
+  token: string;
+  password: string;
+  confirm_password: string;
+}
+
+// for authentication pages
+export interface redirectModalData {
+  message: string;
+  redirectPath: string;
+  buttonText: string;
 }
 
 export interface CourseUser {

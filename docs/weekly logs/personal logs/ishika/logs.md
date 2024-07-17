@@ -1,3 +1,4 @@
+
 ## Wednesday(7/12-7/16)
 
 <img width="1061" alt="image" src="https://github.com/user-attachments/assets/47be4f9e-fa14-498f-be8f-246e70f7afb0">

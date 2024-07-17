@@ -3,6 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { Status } from "../../../../typings/backendDataTypes";
 import { ArrowLeft } from "flowbite-react-icons/outline";
+import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import SemesterEditForm from "@/app/admin/components/editSemesterForm";
 
@@ -28,15 +29,14 @@ const AdminSemesterManagement = async ({
             </div>
           </div>
           <div className="justify-self-end space-y-4">
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => setStatus(Status.Success)}
-            >
-              <div className="space-x-4 flex items-center">
+            <button type="button" className="btn-primary">
+              <Link
+                href={"../../semesters"}
+                className="space-x-4 flex items-center"
+              >
                 <ArrowLeft />
                 Back
-              </div>
+              </Link>
             </button>
           </div>
         </div>

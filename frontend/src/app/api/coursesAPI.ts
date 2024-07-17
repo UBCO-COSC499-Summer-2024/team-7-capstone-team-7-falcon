@@ -160,8 +160,8 @@ export const coursesAPI = {
 
       return error;
     }
-  },
-
+  }
+  
   /**
    * Gets all stats for a course
    * @param courseId
@@ -186,4 +186,5 @@ export const coursesAPI = {
       throw error;
     }
   },
+    
 };

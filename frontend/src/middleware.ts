@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { usersAPI } from "@/app/api/usersAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { fetchAuthToken } from "@/app/api/cookieAPI";
-import { jwtDecode } from "jwt-decode";
+import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
 
 const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
 
@@ -16,76 +16,10 @@ const userRoleMap = {
   admin: "/admin",
 };
 
-/**
- * Verifies if a jwt token is expired.
- *
- * @function isTokenExpired
- * @param { string } token - The jwt token to verify.
- * @returns { boolean } - A boolean indicating if the token is expired.
- * @throws Will log an error message to the console if an error occurs when decoding the token.
- */
-const isTokenExpired = (token: string): boolean => {
-  if (!token) return true;
-  try {
-    const decodedToken = jwtDecode(token);
-    const currentTime = parseInt(new Date().getTime().toString()) / 1000;
-    return (decodedToken.exp as number) < currentTime;
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return true;
-  }
-};
-
-/**
- * Fetches user details and extracts the role property.
- *
- * @async
- * @function getUserRole
- * @returns {Promise<string>} - A promise that resolves to the role of the user.
- * @throws Will log an error message to the console if fetching the user details fails.
- */
-const getUserRole = async (): Promise<string> => {
-  try {
-    const userDetails: User | null = await usersAPI.getUserDetails();
-    const userRole: string = userDetails?.role ?? "";
-    return userRole;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * Verify that an authenticated user has at least one ID (employee or student) set.
- *
- * @async
- * @function verifyIdPresence
- * @returns {Promise<boolean>} - A promise that shows whether a user has at least one ID or not.
- * @throws Will log an error message to the console if fetching the user details fails.
- */
-const verifyIdPresence = async (): Promise<boolean> => {
-  try {
-    const userDetails: User | null = await usersAPI.getUserDetails();
-
-    // if user does not have any IDs set, return false
-    if (userDetails === null) {
-      return false;
-    }
-
-    return (
-      userDetails.student_user !== null || userDetails.employee_user !== null
-    );
-  } catch (error) {
-    throw error;
-  }
-};
-
 export async function middleware(request: NextRequest) {
   const { url, nextUrl } = request;
-  const fetched_auth_token = await fetchAuthToken();
-  const auth_token = fetched_auth_token.replace("auth_token=", ""); // based on implementation of fetchAuthToken
-
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
-  const hasVerifiedToken = !isTokenExpired(auth_token);
+  const hasVerifiedToken = await authAPI.hasVerifiedToken();
 
   // verify if user is trying to validate their email
   // if yes, redirect to login page which will handle that
@@ -109,14 +43,6 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // if user is authenticated, verify that they have at least one ID set
-  if (hasVerifiedToken) {
-    const hasID = await verifyIdPresence();
-    if (!hasID) {
-      return NextResponse.redirect(new URL("/setup-account", url));
-    }
-  }
-
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
     if (!hasVerifiedToken) {
@@ -124,7 +50,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
-    const userRole = await getUserRole();
+    const userRole = await usersAPI.getUserRole();
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
     );
@@ -138,9 +64,15 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // if user is authenticated, verify that they have at least one ID set
+  const hasID = await verifyIdPresence();
+  if (!hasID) {
+    return NextResponse.redirect(new URL("/setup-account", url));
+  }
+
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
-  const userRole = await getUserRole();
+  const userRole = await usersAPI.getUserRole();
   const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
   if (!nextUrl.pathname.startsWith(userRolePath)) {
     const response = NextResponse.redirect(new URL(userRolePath, url));

@@ -122,14 +122,17 @@ def generate_bubble_contours(image):
         approx = cv2.approxPolyDP(cnt, 0.03 * cv2.arcLength(cnt, True), True)
 
         if cv2.isContourConvex(approx):
-            (x1, y1, w1, h1) = cv2.boundingRect(cnt)
-            aspect_ratio1 = w1 / float(h1)
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            aspect_ratio1 = w / float(h)
             if (
                 aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2
             ): 
                 bubble_contours.append(cnt)
+    
+    #Sort Conbtours by x value
+    sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
 
-    return bubble_contours
+    return sorted_contours
 
 
 def sort_contours(cnts):
@@ -144,9 +147,9 @@ def sort_contours(cnts):
     """
 
     # Sort the contours by y-value
-    sorted_by_y = sorted(cnts, key=lambda cnt: cv2.boundingRect(cnt)[1])  # y values
+    sorted_contours = sorted(cnts, key=lambda cnt: cv2.boundingRect(cnt)[1])  # y values
 
-    return sorted_by_y
+    return sorted_contours
 
 
 def identify_object_contours(generated_contours):

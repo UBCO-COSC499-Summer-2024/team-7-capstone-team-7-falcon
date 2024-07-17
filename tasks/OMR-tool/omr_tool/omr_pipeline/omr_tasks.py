@@ -78,28 +78,22 @@ def omr_on_image(input_image: PIL.Image, answer_key=[]):
             cv2.fillPoly(mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
              # Extract the region of interest from the prepped image
             roi = cv2.bitwise_and(prepped_image, prepped_image, mask=mask)
-        
+            contour_index = 0
         # Crop the region of interest to remove black background
             roi_cropped = roi[y1:y2, x1:x2]
             bubble_contours = generate_bubble_contours(roi_cropped)
-            # print(bubble_contours)
-            sorted_indices = np.argsort([cv2.boundingRect(i)[0] for i in bubble_contours])
-            sorted_contours = [bubble_contours[i] for i in sorted_indices]
-            # print(sorted_contours)
             
             if question_num < len(answer_key):
-                isCorrect, filled_index = check_answer(mask, sorted_contours, answer_key[question_num])
+                isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
                 if isCorrect:
-                        color = (0, 255, 0)
-                        contour_index = filled_index
+                    color = (0, 255, 0)
                 else:
-                        color = (0, 0, 255)
-                        contour_index = answer_key[question_num]
+                    color = (0, 0, 255)       
+                contour_index = answer_key[question_num]
             else: 
                 color = (255, 0, 0)
                 contour_index = 0
-            print(contour_index)
-            translated_contour = sorted_contours[contour_index] + [x1, y1]
+            translated_contour = bubble_contours[contour_index] + [x1, y1]
             cv2.drawContours(output_image, [translated_contour], -1, color, 2)
     return total_score, answers, output_image
 
@@ -108,13 +102,23 @@ def omr_on_image(input_image: PIL.Image, answer_key=[]):
 if __name__ == "__main__":
     from pathlib import Path
     from omr_tool.utils.pdf_to_images import convert_to_images
+    answer_key = [1, 1, 4, 2, 2, 2, 3, 2, 2, 4, 
+                  3, 1, 4, 4, 1, 0, 3, 1, 3, 2, 
+                  0, 1, 3, 1, 1, 0, 0, 2, 0, 4, 
+                  4, 3, 0, 0, 1, 1, 2, 3, 3, 4, 
+                  0, 4, 1, 0, 0, 1, 3, 4, 0, 0, 
+                  0, 2, 4, 1, 0, 2, 1, 3, 1, 4, 
+                  1, 4, 2, 3, 0, 1, 0, 2, 0, 4, 
+                  2, 0, 4, 4, 0, 3, 4, 4, 1, 1, 
+                  4, 3, 4, 0, 3, 4, 0, 4, 4, 3, 
+                  2, 2, 3, 4, 1, 0, 4, 4, 4, 1]
 
     sheet_path = (
         Path(__file__).resolve().parents[2] / "fixtures" / "submission_2-page_1.jpg"
     )
     print(sheet_path)
     images = convert_to_images(sheet_path)
-    score, grades, graded_image = omr_on_image(images[0], [1,1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1,])
+    score, grades, graded_image = omr_on_image(images[0], answer_key)
     print(grades)
     cv2.imshow("graded", graded_image)
     cv2.waitKey(0)

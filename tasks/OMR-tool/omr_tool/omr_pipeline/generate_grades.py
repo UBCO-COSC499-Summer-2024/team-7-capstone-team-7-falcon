@@ -1,24 +1,28 @@
 import cv2
 import numpy as np
+from omr_tool.utils.image_process import threshold_img
 
-def check_answer(mask, sorted_bubble_contours, expected_answer):
-    bubbled = (200, None)
 
+def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
+    bubbled = None
+    bubbled_amount = 0
+    thresh = threshold_img(mask, grayscale=False)
     for i, cnt in enumerate(sorted_bubble_contours):
-        mask = np.zeros(mask.shape, dtype="uint8")
+        mask = np.zeros(thresh.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
-
-        mask = cv2.bitwise_and(mask, mask, mask=mask)
+        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-
-        if bubbled is None or total > bubbled[0]:
-            bubbled = (total, i)
-    if bubbled[1] is None:
+        if bubbled is None or total > min_threshold:
+            bubbled = i
+            bubbled_amount += 1
+    if bubbled_amount > 2:
+            return False, bubbled
+    if bubbled is None:
         return False, None
-    if bubbled[1] == expected_answer:
-        return True, i
+    if bubbled == expected_answer:
+        return True, bubbled
     else:
-        return False, i
+        return False, bubbled
     
 
     

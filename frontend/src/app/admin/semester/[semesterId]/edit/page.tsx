@@ -3,14 +3,20 @@ import React from "react";
 import { useState } from "react";
 import { Status } from "../../../../typings/backendDataTypes";
 import { ArrowLeft } from "flowbite-react-icons/outline";
+import { Toaster } from "react-hot-toast";
+import SemesterEditForm from "@/app/admin/components/editSemesterForm";
 
 /**
  * Renders the edit semester page
  * @component
  * @returns TSX element
  */
-const AdminSemesterManagement: React.FC = () => {
-  const [status, setStatus] = useState(Status.Pending);
+const AdminSemesterManagement = async ({
+  params,
+}: {
+  params: { semesterId: string };
+}) => {
+  const semId = Number(params.semesterId);
 
   return (
     <>
@@ -35,6 +41,8 @@ const AdminSemesterManagement: React.FC = () => {
           </div>
         </div>
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+        <Toaster />
+        <SemesterEditForm semesterId={semId} />
       </div>
     </>
   );

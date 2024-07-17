@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   Header,
@@ -12,9 +12,12 @@ import {
 } from "@table-library/react-table-library/table";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
-import { usePagination } from "@table-library/react-table-library/pagination";
-import { Column } from "../instructor/components/type";
-import { DataItem } from "../instructor/components/type";
+import { Pagination } from "flowbite-react";
+import { useState } from "react";
+import { Column } from "./type";
+import { DataItem } from "./type";
+import { MdOutlineSearch } from "react-icons/md";
+import { Label, TextInput, Button } from "flowbite-react";
 
 type TableComponentProps<T> = {
   data: DataItem<T>[];
@@ -29,6 +32,10 @@ const TableComponent = <T,>({
 }: TableComponentProps<T>) => {
   const theme = useTheme(getTheme());
   const [search, setSearch] = React.useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // make this dynamic?
+
+  const onPageChange = (page: number) => setCurrentPage(page);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -38,22 +45,30 @@ const TableComponent = <T,>({
     (item) => item && item.name.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+
+  let totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
   return (
     <div className="container flex flex-col">
       {showSearch && (
-        <div className="w-full overflow-x-auto my-3">
-          <input
-            id="search"
-            type="text"
-            value={search}
-            onChange={handleSearch}
-            className="border pl-2 w-1/2 border-purple-500 focus:border-purple-500"
-            placeholder="Search by name"
-          />
-        </div>
+        <form className="flex max-w-full flex-col">
+          <div className="grid grid-cols-2 gap-4">
+            <TextInput
+              id="search"
+              type="text"
+              value={search}
+              icon={MdOutlineSearch}
+              onChange={handleSearch}
+              placeholder="Search by name"
+            />
+          </div>
+        </form>
       )}
       <div className="flex w-full mt-4">
-        <Table columns={columns} data={{ nodes: filteredData }} theme={theme}>
+        <Table columns={columns} data={{ nodes: paginatedData }} theme={theme}>
           {() => (
             <>
               <Header>
@@ -67,7 +82,7 @@ const TableComponent = <T,>({
               </Header>
 
               <Body>
-                {filteredData.map((item) => (
+                {paginatedData.map((item) => (
                   <Row key={item.name} item={item} className="bg-white">
                     {columns.map((column) => (
                       <Cell key={column.label} className="py-3 min-w-fit">
@@ -80,6 +95,14 @@ const TableComponent = <T,>({
             </>
           )}
         </Table>
+      </div>
+      <div className="flex overflow-x-auto sm:justify-center">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          showIcons
+        />
       </div>
     </div>
   );

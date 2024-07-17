@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
 import { coursesAPI } from "../../../../../api/coursesAPI";
-import { Course, CourseData } from "../../../../../typings/backendDataTypes";
+import { Course } from "../../../../../typings/backendDataTypes";
 import CourseSubmissionsTable from "../../../components/courseSubmissionsTable";
 
 const StudentExamPage = async ({
@@ -9,18 +8,12 @@ const StudentExamPage = async ({
   params: { courseId: string };
 }) => {
   const cid = Number(params.courseId);
-  const response = await coursesAPI.getCourse(cid);
-  const course: Course = response?.data;
-  const courseData: CourseData = { ...course };
-
-  if (!course || !response) {
-    redirect(`../../`);
-  }
+  const course: Course = await coursesAPI.getCourse(cid);
 
   return (
     <div className="p-2">
-      <h1 className="text-4xl font-bold p-1">{courseData.course_code}</h1>
-      <h2 className="text-xl p-1">{courseData.course_name}</h2>
+      <h1 className="text-4xl font-bold p-1">{course.course_code}</h1>
+      <h2 className="text-xl p-1">{course.course_name}</h2>
       <CourseSubmissionsTable course_id={cid} />
     </div>
   );

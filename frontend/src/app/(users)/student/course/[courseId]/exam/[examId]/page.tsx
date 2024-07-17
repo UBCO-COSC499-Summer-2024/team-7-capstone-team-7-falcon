@@ -1,8 +1,6 @@
-import { redirect } from "next/navigation";
 import { coursesAPI } from "../../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
   StudentSubmission,
   User,
 } from "../../../../../../typings/backendDataTypes";
@@ -22,13 +20,11 @@ const StudentExamPage = async ({
 }) => {
   const cid = Number(params.courseId);
   const eid = Number(params.examId);
-  const response = await coursesAPI.getCourse(cid);
-  const course: Course = response?.data;
-  const courseData: CourseData = { ...course };
-  const user: User = await usersAPI.getUserDetails();
+  const course: Course = await coursesAPI.getCourse(cid);
+  const user: User = (await usersAPI.getUserDetails()) as User;
 
-  if (!course || !response || !user) {
-    redirect(`../../`);
+  if (!user) {
+    throw new Error("User does not exist");
   }
 
   const calculateStats = (arr: number[]) => {
@@ -50,20 +46,20 @@ const StudentExamPage = async ({
   const submission: StudentSubmission = submissionResponse.data;
 
   if (!submissionResponse || !submission) {
-    redirect(`../../`);
+    throw new Error("Submission does not exist");
   }
 
   const stats = calculateStats(submission.grades);
   if (!stats) {
-    redirect(`../../`);
+    throw new Error("Error calculating stats");
   }
 
   return (
     <div className="p-2">
       <div className="grid grid-cols-2">
         <div className="col-span-1">
-          <h1 className="text-4xl font-bold p-1">{courseData.course_code}</h1>
-          <h2 className="text-xl p-1">{courseData.course_name}</h2>
+          <h1 className="text-4xl font-bold p-1">{course.course_code}</h1>
+          <h2 className="text-xl p-1">{course.course_name}</h2>
         </div>
         <div className="justify-self-end space-y-4">
           <Link

@@ -39,4 +39,7 @@ export class ExamModel extends BaseEntity {
 
   @OneToMany(() => SubmissionModel, (submission) => submission.exam)
   submissions: SubmissionModel[];
+
+  @Column({ nullable: true })
+  exam_folder: string;
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -157,6 +158,35 @@ export class SemesterController {
     try {
       const semester = await this.semesterService.getSemesterById(sid);
       return res.status(HttpStatus.OK).send(semester);
+    } catch (e) {
+      if (e instanceof SemesterNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Delete semester by id
+   * @param res {Response} - The response object
+   * @param sid {number} - The semester id
+   * @returns {Promise<Response>} - The response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Delete('/:sid')
+  async delete(
+    @Res() res: Response,
+    @Param('sid', ParseIntPipe) sid: number,
+  ): Promise<Response> {
+    try {
+      await this.semesterService.deleteSemester(sid);
+      return res.status(HttpStatus.NO_CONTENT).send();
     } catch (e) {
       if (e instanceof SemesterNotFoundException) {
         return res.status(HttpStatus.NOT_FOUND).send({

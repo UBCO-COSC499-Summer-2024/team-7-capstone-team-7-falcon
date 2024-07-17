@@ -7,6 +7,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { CourseService } from '../modules/course/course.service';
+import { UserService } from '../modules/user/user.service';
+import { UserRoleEnum } from '../enums/user.enum';
 
 @Injectable()
 export class CourseRoleGuard implements CanActivate {
@@ -18,6 +20,7 @@ export class CourseRoleGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private readonly courseService: CourseService,
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -56,6 +59,12 @@ export class CourseRoleGuard implements CanActivate {
     userId: number,
     roles: string[],
   ): Promise<boolean> {
+    const user = await this.userService.getUserById(userId);
+
+    if (user && user.role === UserRoleEnum.ADMIN) {
+      return true;
+    }
+
     const userCourse = await this.courseService.getUserByCourseAndUserId(
       cid,
       userId,

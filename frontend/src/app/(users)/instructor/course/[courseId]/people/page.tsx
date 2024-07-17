@@ -1,7 +1,6 @@
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
-  CourseData,
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
 import CourseHeader from "../../../components/courseHeader";
@@ -10,19 +9,17 @@ import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 
-const PeoplePage = async ({ params }: { params: { course_id: string } }) => {
-  const cid = Number(params.course_id);
-  const response = await coursesAPI.getCourse(cid);
-  const course: Course = response?.data;
-  const courseData: CourseData = { ...course };
+const PeoplePage = async ({ params }: { params: { courseId: string } }) => {
+  const cid = Number(params.courseId);
+  const course: Course = await coursesAPI.getCourse(cid);
 
   return (
     <div>
       <div className="grid grid-cols-2">
         <div className="col-span-1">
           <CourseHeader
-            course_code={courseData.course_code}
-            course_desc={courseData.course_name}
+            course_code={course.course_code}
+            course_desc={course.course_name}
             course_id={course.id}
             selected={SelectedButton.None}
           />
@@ -42,7 +39,7 @@ const PeoplePage = async ({ params }: { params: { course_id: string } }) => {
           </button>
         </div>
         <div className="mt-4 col-span-2">
-          <PeopleTable course_id={Number(params.course_id)} />
+          <PeopleTable course_id={Number(params.courseId)} />
         </div>
       </div>
     </div>

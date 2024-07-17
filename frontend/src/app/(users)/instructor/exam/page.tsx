@@ -1,4 +1,5 @@
 import React from "react";
+import AllExamsTable from "../components/allExamsTable";
 
 /**
  * Renders the page component for the exams the instructor has created.
@@ -8,7 +9,8 @@ import React from "react";
 const instructorExams: React.FC = () => {
   return (
     <div>
-      <h1>Instructor Exams</h1>
+      <p className="p-2 text-4xl font-bold">Exams</p>
+      <AllExamsTable />
     </div>
   );
 };

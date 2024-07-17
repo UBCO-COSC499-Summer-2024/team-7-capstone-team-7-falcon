@@ -7,12 +7,16 @@ interface SemesterSelectProps {
   required: boolean;
   name: string;
   labelText: string;
+  value?: number;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const SemesterSelect: React.FC<SemesterSelectProps> = ({
   required,
   name,
   labelText,
+  value,
+  onChange,
 }) => {
   const [courseSemesters, setCourseSemesters] = useState<Semester[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -47,9 +51,20 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
         <h2 className="pt-2">{labelText}</h2>
       </Label>
       {courseSemesters !== undefined ? (
-        <Select id="semesterID" name={name} required={required}>
+        <Select
+          id="semesterID"
+          name={name}
+          required={required}
+          value={value}
+          onChange={onChange}
+        >
+          {value === null && <option value="">Select a semester</option>}
           {courseSemesters.map((semester: Semester) => (
-            <option key={semester.id} value={semester.id}>
+            <option
+              key={semester.id}
+              value={semester.id}
+              selected={value !== null}
+            >
               {semester.name}
             </option>
           ))}

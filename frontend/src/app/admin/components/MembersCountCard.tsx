@@ -1,42 +1,23 @@
-// MembersCountCard.tsx
 "use client";
-import React, { useEffect, useState } from "react";
-import { Card } from "flowbite-react";
-import { usersAPI } from "../../api/usersAPI";
+import React from "react";
+import useFetchUsersCount from "../../admin/components/useFetchUsersCount";
+import CountCard from "./CountCard";
 
 interface MembersCountCardProps {
   className?: string;
 }
 
 const MembersCountCard: React.FC<MembersCountCardProps> = ({ className }) => {
-  const [membersCount, setMembersCount] = useState<number>(0);
-
-  useEffect(() => {
-    fetchMembersCount();
-  }, []);
-
-  const fetchMembersCount = async () => {
-    try {
-      const response = await usersAPI.getAllUsersCount();
-      const totalMembersCount = response.reduce(
-        (acc: number, curr: { role: string; count: number }) =>
-          acc + curr.count,
-        0,
-      );
-      setMembersCount(totalMembersCount);
-    } catch (error) {
-      console.error("Error fetching members count:", error);
-    }
-  };
+  const membersCount = useFetchUsersCount();
 
   return (
-    <Card className={`bg-purple-700 p-2 rounded-xl shadow-md ${className}`}>
-      <div className="text-center">
-        <div className="text-3xl font-bold text-white mt-2">{membersCount}</div>
-        <h2 className="text-lg font-semibold text-white">Members</h2>
-      </div>
-    </Card>
-  );
+    <CountCard
+      count={membersCount}
+      title="Members"
+      className={className}
+      width="w-1/4"
+    />
+  ); // Set the width prop
 };
 
 export default MembersCountCard;

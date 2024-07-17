@@ -1,15 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card } from "flowbite-react";
-import { coursesAPI } from "../../api/coursesAPI"; 
+import { coursesAPI } from "../../api/coursesAPI";
+import CountCard from "./CountCard";
 
 interface CourseCountCardProps {
   className?: string;
 }
 
-const CourseCountCard: React.FC<CourseCountCardProps> = ({
-  className = "w-64 mb-4",
-}) => {
+const CourseCountCard: React.FC<CourseCountCardProps> = ({ className }) => {
   const [courseCount, setCourseCount] = useState<number>(0);
 
   useEffect(() => {
@@ -20,19 +18,17 @@ const CourseCountCard: React.FC<CourseCountCardProps> = ({
     try {
       const count = await coursesAPI.getAllCoursesCount();
       setCourseCount(count);
-    } catch (error) {
-      // Handle error if needed
-    }
+    } catch (error) {}
   };
 
   return (
-    <Card className={`${className} bg-purple-700 p-2 rounded-xl shadow-md`}>
-      <div className="text-center">
-        <div className="text-3xl font-bold text-white mt-2">{courseCount}</div>
-        <h2 className="text-lg font-semibold text-white">Courses</h2>
-      </div>
-    </Card>
-  );
+    <CountCard
+      count={courseCount}
+      title="Courses"
+      className={className}
+      width="w-1/4"
+    />
+  ); // Set the width prop
 };
 
 export default CourseCountCard;

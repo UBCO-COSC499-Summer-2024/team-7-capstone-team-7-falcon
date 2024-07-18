@@ -1,23 +1,24 @@
+"use client";
 import { Edit } from "flowbite-react-icons/solid";
 import Link from "next/link";
-import {
-  Course,
-  CourseData,
-  CourseEditData,
-  SelectedButton,
-} from "../../../typings/backendDataTypes";
+import React from "react";
+import { Course } from "../../../typings/backendDataTypes";
+import ButtonTemplate from "../../../components/buttonTemplate";
+import { FileCirclePlus } from "flowbite-react-icons/solid";
+
 interface EditCourseButtonProps {
   course_id: number;
   className?: string;
 }
-const EditCourseButton: React.FC<EditCourseButtonProps> = (
+
+const EditCourseButton: React.FC<EditCourseButtonProps> = ({
   course_id,
   className,
-) => {
+}) => {
   return (
     <button type="button" className="btn-primary">
       <Link
-        href={`/instructor/course/1/edit-course`} //href = {'/instructor/course/${course_id}/edit-course'} gives undefined error
+        href={`/instructor/course/${course_id}/edit-course`}
         className="space-x-4 flex items-center"
       >
         <Edit />
@@ -28,4 +29,3 @@ const EditCourseButton: React.FC<EditCourseButtonProps> = (
 };
 
 export default EditCourseButton;
-

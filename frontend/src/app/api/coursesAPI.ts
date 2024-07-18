@@ -239,7 +239,6 @@ export const coursesAPI = {
       throw error;
     }
   },
-
   editCourse: async (courseId: number, courseData: CourseEditData) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -334,31 +333,6 @@ export const coursesAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
-  editCourse: async (courseId: number, courseData: CourseEditData) => {
-    try {
-      const auth_token = await fetchAuthToken();
-
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/course/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-
-      const response = await instance.patch(
-        `${BACKEND_URL}/api/v1/course/${courseId}`,
-        courseData,
-      );
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to edit users: ", error);
-
       return error;
     }
   },

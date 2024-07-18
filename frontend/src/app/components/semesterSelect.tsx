@@ -7,8 +7,8 @@ interface SemesterSelectProps {
   required: boolean;
   name: string;
   labelText: string;
-  value?: number; // Adding value prop
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void; // Adding onChange prop
+  value?: number;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const SemesterSelect: React.FC<SemesterSelectProps> = ({
@@ -26,7 +26,6 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
    * @function
    * @returns {Promise<void>}
    */
-
   const fetchSemesters = async (): Promise<void> => {
     const fetchedSemesters = await semestersAPI
       .getAllSemestersLimited()
@@ -36,12 +35,12 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
     setCourseSemesters(fetchedSemesters);
     setIsLoaded(true);
   };
+
   /**
    * Fetches semesters when the modal is opened and the semesters are not already loaded.
    * @function
    * @returns {void}
    */
-
   useEffect(() => {
     if (courseSemesters.length === 0) fetchSemesters();
   }, []);

@@ -5,7 +5,7 @@ import { ArrowLeft } from "flowbite-react-icons/outline";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import editUserForm from "../../../components/editUserForm";
-import UserEditForm from "../../../components/editUserForm";
+import EditUserForm from "../../../components/editUserForm";
 
 /**
  * Renders the edit semester page
@@ -42,7 +42,7 @@ const AdminUserManagement = async ({
         </div>
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <Toaster />
-        <UserEditForm userId={uId} />
+        <EditUserForm userId={uId} />
       </div>
     </>
   );

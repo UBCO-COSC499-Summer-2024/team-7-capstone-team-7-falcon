@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import { TextInput, Label } from "flowbite-react";
 import { usersAPI } from "@/app/api/usersAPI";
 import toast from "react-hot-toast";
-import { UserEditData } from "@/app/typings/backendDataTypes";
+import { UserEditData, User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
+import DangerZone from "./DangerZone"; // Import DangerZone component
 
 interface EditUserFormProps {
   userId: number;
@@ -20,6 +21,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
   });
   const [savingChanges, setSavingChanges] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     fetchUserData();
@@ -27,7 +29,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
 
   const fetchUserData = async () => {
     try {
-      const user = await usersAPI.getUserDetails();
+      const user: User | null = await usersAPI.getUserDetails();
       if (user) {
         setFormData({
           first_name: user.first_name,
@@ -48,6 +50,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
     e.preventDefault();
     try {
       setSavingChanges(true);
+
       const updatedUser = await usersAPI.editUser(userId, formData);
 
       if (updatedUser && updatedUser.status === 200) {
@@ -131,35 +134,37 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="employee_id">
-                <h2>Employee Number</h2>
-              </Label>
-              <TextInput
-                id="employee_id"
-                name="employee_id"
-                className="mb-3"
-                value={formData.employee_id}
-                placeholder="Enter employee number"
-                required
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="student_id">
-                <h2>Student Number</h2>
-              </Label>
-              <TextInput
-                id="student_id"
-                name="student_id"
-                className="mb-3"
-                value={formData.student_id}
-                placeholder="Enter student number"
-                required
-                onChange={handleChange}
-              />
-            </div>
+          <div>
+            <Label htmlFor="employee_id">
+              <h2>Employee Number</h2>
+            </Label>
+            <TextInput
+              id="employee_id"
+              name="employee_id"
+              className="mb-3"
+              value={
+                formData.employee_id === -1
+                  ? ""
+                  : formData.employee_id.toString()
+              }
+              placeholder="Enter employee number"
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <Label htmlFor="student_id">
+              <h2>Student Number</h2>
+            </Label>
+            <TextInput
+              id="student_id"
+              name="student_id"
+              className="mb-3"
+              value={
+                formData.student_id === -1 ? "" : formData.student_id.toString()
+              }
+              placeholder="Enter student number"
+              onChange={handleChange}
+            />
           </div>
           <div>
             <button

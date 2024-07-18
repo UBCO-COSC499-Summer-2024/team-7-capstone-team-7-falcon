@@ -1,17 +1,12 @@
 "use client";
 
 import { examsAPI } from "@/app/api/examAPI";
+import { ExamSettingsProps } from "@/app/components/type";
 import { saveAs } from "file-saver";
 import { CheckPlusCircle, Download, Upload } from "flowbite-react-icons/solid";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import UploadExamSubmissionsModal from "./uploadExamSubmissionsModal";
-
-type ExamSettingsProps = {
-  examId: number;
-  courseId: number;
-  examFolder: string;
-};
 
 const ExamSettings: React.FC<ExamSettingsProps> = ({
   examId,
@@ -59,7 +54,7 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       <button
         type="button"
         className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-400"
-        disabled={examFolder.length !== 0}
+        disabled={!!examFolder && examFolder?.length !== 0}
         onClick={() => setIsModalOpen(true)}
       >
         <div className="space-x-4 flex items-center">

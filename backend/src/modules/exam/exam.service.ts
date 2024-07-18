@@ -574,4 +574,31 @@ export class ExamService {
 
     return csvStream;
   }
+
+  /**
+   * Delete an exam
+   * @param examId {number} - Exam id
+   * @returns {Promise<void>} - Promise of void
+   */
+  async deleteExam(examId: number): Promise<void> {
+    const exam = await ExamModel.findOne({
+      where: {
+        id: examId,
+        course: {
+          is_archived: false,
+        },
+      },
+      relations: ['course'],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    await SubmissionModel.delete({
+      exam: exam,
+    });
+
+    await exam.remove();
+  }
 }

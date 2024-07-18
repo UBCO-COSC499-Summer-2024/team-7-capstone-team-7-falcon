@@ -167,7 +167,7 @@ export const usersAPI = {
         `${BACKEND_URL}/api/v1/user/${userId}`,
         userData,
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       //always axios error
       console.error("Failed to edit user: ", error);

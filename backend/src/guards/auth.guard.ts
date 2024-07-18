@@ -109,7 +109,6 @@ export class AuthGuard implements CanActivate {
     if (!user) {
       throw new UnauthorizedException();
     }
-    if (process.env.NODE_ENV === 'development') return;
     // Allow PATCH request to update user details. PATH must be /user/{id}
     // Allow GET request to logout user if the path is /auth/logout
     if (

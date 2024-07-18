@@ -132,4 +132,22 @@ export const usersAPI = {
       console.error("Error, failed to update user details", error);
     }
   },
+  getAllUsersCount: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get("/all/count");
+      return response.data;
+    } catch (error: any) {
+      console.error("Failed to get all users count:", error);
+      throw error;
+    }
+  },
 };

@@ -10,7 +10,7 @@ import { Toaster } from "react-hot-toast";
 const AdminUserManagement: React.FC = () => {
   return (
     <div>
-      <p className="p-2 text-4xl font-bold">Users</p>
+      <p className="p-2 text-4xl font-bold border-b-2 mb-4">Users</p>
       <Toaster />
       <UserTable />
     </div>

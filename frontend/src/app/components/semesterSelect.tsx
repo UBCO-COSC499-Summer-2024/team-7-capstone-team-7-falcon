@@ -24,7 +24,7 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
    * Fetches all semesters from the API and sets them in the state.
    * @async
    * @function
-  * @returns {Promise<void>}
+   * @returns {Promise<void>}
    */
 
   const fetchSemesters = async (): Promise<void> => {
@@ -59,10 +59,13 @@ const SemesterSelect: React.FC<SemesterSelectProps> = ({
           value={value}
           onChange={onChange}
         >
-          <option value="">Select a semester</option>{" "}
-          {/* Adding a default option */}
+          {value === null && <option value="">Select a semester</option>}
           {courseSemesters.map((semester: Semester) => (
-            <option key={semester.id} value={semester.id}>
+            <option
+              key={semester.id}
+              value={semester.id}
+              selected={value !== null}
+            >
               {semester.name}
             </option>
           ))}

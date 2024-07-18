@@ -75,7 +75,7 @@ const ViewExam = async ({
         <div className="grid grid-cols-5 gap-24 mt-4 border-t-2 border-black">
           <div className="col-span-3 p-4">
             <p className="">{}</p>
-            {exam.exam_folder?.length !== 0 ? (
+            {exam.exam_folder && exam.exam_folder?.length !== 0 ? (
               <Alert color="purple" rounded className="my-4">
                 <div className="flex items-center space-x-2">
                   <InfoCircle className="sm:size-48 md:size-10" />
@@ -97,7 +97,7 @@ const ViewExam = async ({
               examFolder={exam.exam_folder}
             />
             <ExamPerformance />
-            <DangerZone />
+            <DangerZone courseId={cid} examId={examId} />
           </div>
         </div>
       </div>

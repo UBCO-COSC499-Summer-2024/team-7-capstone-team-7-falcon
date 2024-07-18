@@ -8,6 +8,10 @@ import {
 import { UserModel } from '../src/modules/user/entities/user.entity';
 import { UserRoleEnum } from '../src/enums/user.enum';
 import Redis from 'ioredis';
+import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.entity';
+import * as sinon from 'sinon';
+import { FileService } from '../src/modules/file/file.service';
+import { SubmissionsProcessingJobDto } from 'src/modules/queue/dto/submissions-processing-job.dto';
 
 describe('Queue Integration', () => {
   const supertest = setUpIntegrationTests(QueueModule);
@@ -31,16 +35,21 @@ describe('Queue Integration', () => {
     await UserModel.delete({});
     // Reset user id sequence (also known as auto increment)
     await UserModel.query('ALTER SEQUENCE user_model_id_seq RESTART WITH 1');
+
+    await EmployeeUserModel.delete({});
+    await EmployeeUserModel.query(
+      'ALTER SEQUENCE employee_user_model_id_seq RESTART WITH 1',
+    );
   });
 
   describe('POST /queue/:queue/add', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest()
         .post('/queue/bubble-sheet-creation/add')
         .expect(HttpStatus.UNAUTHORIZED);
     });
 
-    it('should add a job to the queue and return status 202', async () => {
+    it('should reutrn status 404 if the queue is not found', async () => {
       const payload: BubbleSheetCreationJobDto = {
         payload: {
           numberOfQuestions: 50,
@@ -51,7 +60,7 @@ describe('Queue Integration', () => {
         },
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -62,8 +71,106 @@ describe('Queue Integration', () => {
         email_verified: true,
       }).save();
 
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
+      const response = await supertest()
+        .post('/queue/invalid-queue/add')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send(payload);
+
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
+    });
+
+    it('should add a job to the bubble-sheet-creation queue and return status 202', async () => {
+      const payload: BubbleSheetCreationJobDto = {
+        payload: {
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
+        },
+      };
+
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send(payload);
+
+      expect(response.status).toBe(HttpStatus.ACCEPTED);
+      expect(response.body.jobId).toBeDefined();
+    });
+
+    it('should add a job to the omr-processing queue and return status 202', async () => {
+      const payload: SubmissionsProcessingJobDto = {
+        payload: {
+          courseId: 1,
+          examId: 1,
+          folderName: '/',
+        },
+      };
+
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
+      const response = await supertest()
+        .post('/queue/omr-submissions-processing/add')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .send(payload);
 
@@ -76,7 +183,7 @@ describe('Queue Integration', () => {
         invalidPayload: 'invalid',
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -86,6 +193,19 @@ describe('Queue Integration', () => {
         role: UserRoleEnum.PROFESSOR,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
@@ -97,7 +217,7 @@ describe('Queue Integration', () => {
   });
 
   describe('GET /queue/:queue/pick', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest()
         .get('/queue/bubble-sheet-creation/pick')
         .expect(HttpStatus.UNAUTHORIZED);
@@ -128,7 +248,7 @@ describe('Queue Integration', () => {
         },
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -138,6 +258,19 @@ describe('Queue Integration', () => {
         role: UserRoleEnum.PROFESSOR,
         email_verified: true,
       }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
 
       await supertest()
         .post('/queue/bubble-sheet-creation/add')
@@ -153,27 +286,97 @@ describe('Queue Integration', () => {
           expect(response.body.data.payload).toEqual(payload.payload);
         });
     });
+
+    it('should return status 200 and the job when the queue is omr-submissions-processing', async () => {
+      const payload: SubmissionsProcessingJobDto = {
+        payload: {
+          courseId: 1,
+          examId: 1,
+          folderName: '/',
+        },
+      };
+
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
+      await supertest()
+        .post('/queue/omr-submissions-processing/add')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send(payload);
+
+      await supertest()
+        .get('/queue/omr-submissions-processing/pick')
+        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .expect(HttpStatus.OK)
+        .expect((response) => {
+          expect(response.body.id).toBeDefined();
+          expect(response.body.data.payload).toEqual(payload.payload);
+        });
+    });
   });
 
   describe('GET /queue/:queue/:jobId', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when no auth token is provided', () => {
       return supertest()
         .get('/queue/bubble-sheet-creation/1')
         .expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 404 when the job is not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/bubble-sheet-creation/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.NOT_FOUND);
     });
 
-    it('should return status 400 when the queue is not found', async () => {
+    it('should return status 404 if queue not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
       supertest()
         .get('/queue/invalid-queue/1')
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
-        .expect(HttpStatus.BAD_REQUEST);
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.NOT_FOUND);
     });
 
     it('should return status 200 and the job when the job is found', async () => {
@@ -187,7 +390,7 @@ describe('Queue Integration', () => {
         },
       };
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -198,6 +401,19 @@ describe('Queue Integration', () => {
         email_verified: true,
       }).save();
 
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -205,7 +421,7 @@ describe('Queue Integration', () => {
 
       await supertest()
         .get(`/queue/bubble-sheet-creation/${response.body.jobId}`)
-        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.OK)
         .expect((response) => {
           expect(response.body.id).toBeDefined();
@@ -215,7 +431,7 @@ describe('Queue Integration', () => {
   });
 
   describe('POST /queue/:queue/:jobId/complete', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when not authenticated', () => {
       return supertest()
         .patch('/queue/bubble-sheet-creation/1/complete')
         .expect(HttpStatus.UNAUTHORIZED);
@@ -228,14 +444,78 @@ describe('Queue Integration', () => {
         .expect(HttpStatus.NOT_FOUND);
     });
 
-    it('should return status 400 when the queue is not found', async () => {
+    it('should return status 404 when the queue is not found', async () => {
       supertest()
         .patch('/queue/invalid-queue/1/complete')
         .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
-        .expect(HttpStatus.BAD_REQUEST);
+        .expect(HttpStatus.NOT_FOUND);
     });
 
     it('should complete the job and return status 200', async () => {
+      const payload: BubbleSheetCreationJobDto = {
+        payload: {
+          numberOfQuestions: 50,
+          defaultPointsPerQuestion: 1,
+          numberOfAnswers: 5,
+          instructions: 'Default instructions',
+          answers: [1, 2, 3, 4, 5],
+        },
+      };
+
+      const completionPayload: BubbleSheetCompletionJobDto = {
+        payload: {
+          filePath: '/path/to/file',
+        },
+      };
+
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.PROFESSOR,
+        email_verified: true,
+      }).save();
+
+      const employeeUser = await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      user.employee_user = employeeUser;
+      await user.save();
+      sinon.stub(FileService.prototype, 'zipFiles').returns(Promise.resolve());
+
+      const response = await supertest()
+        .post('/queue/bubble-sheet-creation/add')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send(payload);
+
+      await supertest()
+        .get('/queue/bubble-sheet-creation/pick')
+        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .expect(HttpStatus.OK);
+
+      await supertest()
+        .patch(`/queue/bubble-sheet-creation/${response.body.jobId}/complete`)
+        .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
+        .send(completionPayload)
+        .expect(HttpStatus.OK)
+        .expect((response) => {
+          expect(response.body).toStrictEqual({ message: 'ok' });
+        });
+
+      sinon.restore();
+    });
+
+    it('should return status 400 when the job failed to complete due to missing bubble sheet files', async () => {
       const payload: BubbleSheetCreationJobDto = {
         payload: {
           numberOfQuestions: 50,
@@ -263,6 +543,11 @@ describe('Queue Integration', () => {
         email_verified: true,
       }).save();
 
+      await EmployeeUserModel.create({
+        user: user,
+        employee_id: 1,
+      }).save();
+
       const response = await supertest()
         .post('/queue/bubble-sheet-creation/add')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -277,10 +562,7 @@ describe('Queue Integration', () => {
         .patch(`/queue/bubble-sheet-creation/${response.body.jobId}/complete`)
         .set('x-queue-auth-token', process.env.QUEUE_AUTH_TOKEN)
         .send(completionPayload)
-        .expect(HttpStatus.OK)
-        .expect((response) => {
-          expect(response.body).toStrictEqual({ message: 'ok' });
-        });
+        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 });

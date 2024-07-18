@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import GradeDisplay from "./gradeDisplay";
+import React, { CSSProperties } from "react";
+import GradeDisplay from "../../components/gradeDisplay";
 import { useSubmissionContext } from "../../../contexts/submissionContext";
 import { Submission } from "../../../typings/backendDataTypes";
 
@@ -51,10 +51,22 @@ const ExamPerformance: React.FC = () => {
   return (
     <div className="rounded ring-gray-300 ring-4 p-3">
       <p className="font-bold mb-2">Exam Performance</p>
-      <div className="space-x-12 flex">
-        <GradeDisplay progress={average} text={"Average"} />
-        <GradeDisplay progress={min} text={"Minimum"} />
-        <GradeDisplay progress={max} text={"Maximum"} />
+      <div className="flex flex-wrap lg:justify-between justify-stretch md:justify-center">
+        <GradeDisplay
+          properties={{ "--progress": average } as CSSProperties}
+          text={"Average"}
+          progress={`${average}%`}
+        />
+        <GradeDisplay
+          properties={{ "--progress": min } as CSSProperties}
+          text={"Minimum"}
+          progress={`${min}%`}
+        />
+        <GradeDisplay
+          properties={{ "--progress": max } as CSSProperties}
+          text={"Maximum"}
+          progress={`${max}%`}
+        />
       </div>
     </div>
   );

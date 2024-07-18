@@ -23,8 +23,10 @@ import { User } from '../../decorators/user.decorator';
 import {
   CourseArchivedException,
   CourseNotFoundException,
+  CourseRoleException,
   InvalidInviteCodeException,
   SemesterNotFoundException,
+  UserNotFoundException,
 } from '../../common/errors';
 import { CourseRoleGuard } from '../../guards/course-role.guard';
 import { Roles } from '../../decorators/roles.decorator';
@@ -36,6 +38,7 @@ import { ExamService } from '../exam/exam.service';
 import { EditCourseGuard } from '../../guards/edit-course.guard';
 import { CourseEditDto } from './dto/course-edit.dto';
 import { CourseArchiveDto } from './dto/course-archive.dto';
+import { CourseAnalyticsResponseInterface } from '../../../src/common/interfaces';
 
 @Controller('course')
 export class CourseController {
@@ -82,6 +85,30 @@ export class CourseController {
   }
 
   /**
+   * Get course analytics
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:cid/analytics')
+  async getCourseAnalytics(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+  ): Promise<Response> {
+    try {
+      const analytics: CourseAnalyticsResponseInterface =
+        await this.courseService.getCourseAnalytics(cid);
+      return res.status(HttpStatus.OK).send(analytics);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
    * Delete member from course
    * @param res {Response} - Response object
    * @param cid {number} - Course id
@@ -89,7 +116,7 @@ export class CourseController {
    * @returns {Promise<Response>} - Response object
    */
   @UseGuards(AuthGuard, CourseRoleGuard)
-  @Roles(CourseRoleEnum.PROFESSOR)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
   @Delete('/:cid/member/:uid')
   async removeStudentFromCourse(
     @Res() res: Response,
@@ -97,13 +124,20 @@ export class CourseController {
     @Param('uid', ParseIntPipe) uid: number,
   ): Promise<Response> {
     try {
-      await this.courseService.removeMemberFromCourse(cid, uid);
+      await this.courseService.removeStudentFromCourse(cid, uid);
       return res.status(HttpStatus.OK).send({
         message: 'ok',
       });
     } catch (e) {
-      if (e instanceof CourseNotFoundException) {
+      if (
+        e instanceof CourseNotFoundException ||
+        e instanceof UserNotFoundException
+      ) {
         return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof CourseRoleException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
           message: e.message,
         });
       } else {
@@ -111,6 +145,44 @@ export class CourseController {
           message: e.message,
         });
       }
+    }
+  }
+
+  /**
+   * Get the number of courses in the system that are not archived
+   * @param res Parameter {Response} - Response object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Get('/all/count')
+  async getAllCoursesCount(@Res() res: Response): Promise<Response> {
+    try {
+      const count = await this.courseService.getAllCoursesCount();
+      return res.status(HttpStatus.OK).send({ count });
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
+   * Get all courses
+   * @param res {Response} - Response object
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, SystemRoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
+  @Get('/all')
+  async getAllCourses(@Res() res: Response): Promise<Response> {
+    try {
+      const courses = await this.courseService.getAllCourses();
+      return res.status(HttpStatus.OK).send(courses);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
     }
   }
 

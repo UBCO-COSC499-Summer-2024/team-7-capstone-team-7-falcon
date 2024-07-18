@@ -3,8 +3,10 @@ import { CourseModel } from './entities/course.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
   CourseNotFoundException,
+  CourseRoleException,
   InvalidInviteCodeException,
   SemesterNotFoundException,
+  UserNotFoundException,
 } from '../../common/errors';
 import { CourseUserModel } from './entities/course-user.entity';
 import { CourseCreateDto } from './dto/course-create.dto';
@@ -16,9 +18,16 @@ import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
 import { ERROR_MESSAGES } from '../../common';
 import { CourseEditDto } from './dto/course-edit.dto';
+import { CourseDetailsInterface } from 'src/common/interfaces';
+import { SubmissionModel } from '../exam/entities/submission.entity';
+import { ExamModel } from '../exam/entities/exam.entity';
+import { CourseAnalyticsResponseInterface } from '../../common/interfaces';
+import { LessThan } from 'typeorm';
 
 @Injectable()
 export class CourseService {
+  private readonly ONE_YEAR: number = 31_556_952_000;
+
   /**
    * Remove member from course
    * @param cid {number} - Course id
@@ -38,6 +47,62 @@ export class CourseService {
       course: { id: cid },
       user: userCourse.user,
     });
+  }
+
+  /**
+   * Get number of courses in the system that are not archived
+   * @returns {Promise<number>} - Promise number
+   */
+  async getAllCoursesCount(): Promise<number> {
+    return await CourseModel.count({ where: { is_archived: false } });
+  }
+
+  /**
+   * Get all courses
+   * @returns {Promise<CourseDetailsInterface[]>} - Promise array of CourseDetailsInterface
+   */
+  async getAllCourses(): Promise<CourseDetailsInterface[]> {
+    const queryBuilder = CourseModel.createQueryBuilder('course');
+
+    queryBuilder
+      .select(['course.id', 'course.course_code', 'semester.name'])
+      .addSelect('COUNT(course_user.id)', 'members')
+      .leftJoin('course.semester', 'semester')
+      .leftJoin('course.users', 'course_user')
+      .where('course.is_archived = false')
+      .andWhere('course.semester.id = semester.id')
+      .groupBy('course.id')
+      .addGroupBy('semester.name')
+      .orderBy('course.id');
+
+    let courses = await queryBuilder.getRawMany();
+
+    courses = await Promise.all(
+      courses.map(async (courseDetails) => {
+        const courseCreator = await CourseUserModel.findOne({
+          where: {
+            course: { id: courseDetails.id },
+            course_role: CourseRoleEnum.PROFESSOR,
+          },
+          relations: ['user', 'course'],
+        });
+
+        courseDetails.creator = {
+          firstName: courseCreator.user.first_name,
+          lastName: courseCreator.user.last_name,
+        };
+
+        return {
+          courseId: courseDetails.course_id,
+          courseCode: courseDetails.course_course_code,
+          semesterName: courseDetails.semester_name,
+          members: courseDetails.members,
+          creator: courseDetails.creator,
+        };
+      }),
+    );
+
+    return courses as CourseDetailsInterface[];
   }
 
   /**
@@ -114,6 +179,7 @@ export class CourseService {
   public async getCourseById(id: number): Promise<CourseModel> {
     const course: CourseModel = await CourseModel.findOne({
       where: { id },
+      relations: ['semester'],
     });
 
     return course;
@@ -228,5 +294,147 @@ export class CourseService {
    */
   async archiveCourse(cid: number, archive: boolean): Promise<void> {
     await CourseModel.update({ id: cid }, { is_archived: archive });
+  }
+
+  /**
+   * Delete student from course
+   * @param cid {number} - Course id
+   * @param uid {number} - User id
+   * @returns {Promise<void>} - Promise object
+   */
+  async removeStudentFromCourse(cid: number, uid: number): Promise<void> {
+    const course = await CourseModel.findOne({
+      where: {
+        id: cid,
+        is_archived: false,
+      },
+      relations: ['users', 'users.user', 'users.user.student_user', 'exams'],
+    });
+
+    if (!course) {
+      throw new CourseNotFoundException();
+    }
+
+    const courseUser = course.users.find(
+      (courseUser) => courseUser.user.id === uid,
+    );
+
+    if (!courseUser) {
+      throw new UserNotFoundException(
+        ERROR_MESSAGES.courseController.userNotEnrolledInCourse,
+      );
+    }
+
+    if (courseUser.course_role !== CourseRoleEnum.STUDENT) {
+      throw new CourseRoleException(
+        ERROR_MESSAGES.courseController.deleteStudentFromCourseError,
+      );
+    }
+
+    course.exams.forEach(async (exam) => {
+      await SubmissionModel.delete({
+        exam,
+        student: { id: courseUser.user.student_user.id },
+      });
+    });
+
+    await CourseUserModel.delete({ id: courseUser.id });
+  }
+
+  /**
+   * Get course analytics
+   * @param cid {number} - Course id
+   * @returns
+   */
+  async getCourseAnalytics(
+    cid: number,
+  ): Promise<CourseAnalyticsResponseInterface> {
+    const [
+      courseMembersSize,
+      courseExamsCount,
+      examSubmissionsCount,
+      courseExams,
+    ] = await Promise.all([
+      CourseUserModel.count({
+        where: { course: { id: cid, is_archived: false } },
+        relations: ['course'],
+      }),
+      ExamModel.count({
+        where: { course: { id: cid, is_archived: false } },
+        relations: ['course'],
+      }),
+      SubmissionModel.count({
+        where: { exam: { course: { id: cid, is_archived: false } } },
+        relations: ['exam', 'exam.course'],
+      }),
+      ExamModel.find({
+        where: { course: { id: cid, is_archived: false } },
+        relations: [
+          'course',
+          'submissions',
+          'submissions.student',
+          'submissions.student.user',
+        ],
+      }),
+    ]);
+
+    const examSubmissions = courseExams.map((exam) => {
+      return {
+        exam: {
+          id: exam.id,
+          title: exam.name,
+        },
+        submissions: exam.submissions.map((submission) => {
+          return {
+            student: {
+              id: submission.student.user.id,
+              firstName: submission.student.user.first_name,
+              lastName: submission.student.user.last_name,
+              submissionScore: submission.score,
+              avatarUrl: submission.student.user.avatar_url,
+            },
+          };
+        }),
+      };
+    });
+
+    return {
+      courseMembersSize,
+      courseExamsCount,
+      examSubmissionsCount,
+      examSubmissions,
+    };
+  }
+
+  /**
+   * Get and archive courses
+   * @returns {Promise<CourseModel[]>} - Promise array of CourseModel
+   */
+  async getAndArchiveCourses(): Promise<CourseModel[]> {
+    const courses = await CourseModel.find({
+      where: {
+        is_archived: false,
+        semester: {
+          ends_at: LessThan(
+            parseInt(new Date().getTime().toString()) - this.ONE_YEAR,
+          ),
+        },
+      },
+      relations: ['exams', 'semester'],
+      select: {
+        id: true,
+        exams: {
+          exam_folder: true,
+        },
+      },
+    });
+
+    await Promise.all(
+      courses.map(async (course) => {
+        await CourseModel.update({ id: course.id }, { is_archived: true });
+      }),
+    );
+
+    return courses;
   }
 }

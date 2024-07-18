@@ -31,8 +31,8 @@ export class OAuthGoogleErrorException extends Error {
  * Exception to be thrown when a user is not found
  */
 export class UserNotFoundException extends Error {
-  constructor() {
-    super(ERROR_MESSAGES.userController.userNotFound);
+  constructor(message?: string) {
+    super(message ?? ERROR_MESSAGES.userController.userNotFound);
   }
 }
 
@@ -224,5 +224,32 @@ export class SubmissionNotFoundException extends Error {
 export class FileNotFoundException extends Error {
   constructor() {
     super(ERROR_MESSAGES.common.fileNotFound);
+  }
+}
+
+/**
+ * Exception thrown when there is an error with course role
+ */
+export class CourseRoleException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception thrown when there is an error uploading exam files
+ */
+export class ExamUploadException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception thrown when queue is not found
+ */
+export class QueueNotFoundException extends Error {
+  constructor() {
+    super(ERROR_MESSAGES.queueController.queueNotFound);
   }
 }

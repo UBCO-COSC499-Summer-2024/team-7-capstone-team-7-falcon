@@ -1,6 +1,6 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { UserModel } from './entities/user.entity';
-import { OAuthGoogleUserPayload } from '../../common/interfaces';
+import { OAuthGoogleUserPayload, UserRoleCount } from '../../common/interfaces';
 import {
   EmailNotVerifiedException,
   EmployeeIdAlreadyExistsException,
@@ -10,7 +10,7 @@ import {
   UserNotFoundException,
   UserStudentEmployeeFieldException,
 } from '../../common/errors';
-import { AuthTypeEnum } from '../../enums/user.enum';
+import { AuthTypeEnum, UserRoleEnum } from '../../enums/user.enum';
 import { EmployeeUserModel } from './entities/employee-user.entity';
 import { StudentUserModel } from './entities/student-user.entity';
 import { UserEditDto } from './dto/user-edit.dto';
@@ -21,6 +21,9 @@ import * as bcrypt from 'bcrypt';
 import { ERROR_MESSAGES } from '../../common';
 import { TokenTypeEnum } from '../../enums/token-type.enum';
 import { MailService } from '../mail/mail.service';
+import { PageDto } from '../../dto/page.dto';
+import { PageOptionsDto } from '../../dto/page-options.dto';
+import { PageMetaDto } from '../../dto/page-meta.dto';
 
 @Injectable()
 export class UserService {
@@ -35,7 +38,7 @@ export class UserService {
     @Inject(forwardRef(() => TokenService))
     private readonly tokenService: TokenService,
     private readonly mailService: MailService,
-  ) {}
+  ) { }
 
   /**
    * Search for courses based on user id
@@ -338,6 +341,89 @@ export class UserService {
     additionalProps?: any,
   ): Promise<UserModel> {
     return await UserModel.findOne({ where: { email }, ...additionalProps });
+  }
+
+  /**
+   * Finds a user by token
+   * @param pageOptionsDto {PageOptionsDto} - Page options
+   * @returns {Promise<PageDto<any>>} - PageDto<any> promise
+   */
+  async getAllUsers(
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<UserModel>> {
+    const queryBuilder = UserModel.createQueryBuilder('user');
+
+    queryBuilder
+      .select([
+        'user.id',
+        'user.email',
+        'user.first_name',
+        'user.last_name',
+        'user.auth_type',
+        'user.avatar_url',
+        'user.role',
+      ])
+      .orderBy('user.id', 'ASC')
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const usersCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({
+      itemCount: usersCount,
+      pageOptionsDto,
+    });
+
+    return new PageDto(entities, pageMetaDto);
+  }
+
+  /**
+   * Counts all users by role in the system
+   * @returns {Promise<UserRoleCount[]>} - UserRoleCount[] promise
+   */
+  async countAllUsersByRole(): Promise<UserRoleCount[]> {
+    const queryBuilder = UserModel.createQueryBuilder('user');
+
+    const usersCount = await queryBuilder
+      .select(['user.role as role', 'COUNT(user.id) as count'])
+      .groupBy('user.role')
+      .getRawMany();
+
+    return usersCount;
+  }
+
+  /**
+   * Updates user role
+   * @param uid {number} - User id
+   * @param role {UserRoleEnum} - User role
+   * @returns {Promise<void>} - Void promise
+   */
+  async updateUserRole(uid: number, role: UserRoleEnum): Promise<void> {
+    const user = await this.getUserById(uid);
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    user.role = role;
+    await user.save();
+  }
+
+  /**
+   * Deletes user profile picture
+   * @param uid {number} - User id
+   * @returns {Promise<void>} - Void promise
+   */
+  async deleteProfilePicture(uid: number): Promise<void> {
+    const user = await this.getUserById(uid);
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    user.avatar_url = null;
+    await user.save();
   }
 
   /**

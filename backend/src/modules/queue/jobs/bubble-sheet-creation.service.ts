@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Job, Queue } from 'bull';
-import { IJobQueueService } from 'src/common/interfaces';
+import { IJobQueueService } from '../../../common/interfaces';
 import {
   BubbleSheetCompletionJobDto,
   BubbleSheetCreationJobDto,
@@ -11,6 +11,8 @@ import {
   JobCreationException,
   JobNotFoundException,
 } from '../../../common/errors';
+import { FileService } from '../../../modules/file/file.service';
+import * as path from 'path';
 
 @Injectable()
 export class BubbleSheetCreationService implements IJobQueueService {
@@ -21,6 +23,7 @@ export class BubbleSheetCreationService implements IJobQueueService {
   constructor(
     @InjectQueue('bubble-sheet-creation')
     private readonly bubbleSheetCreationQueue: Queue,
+    private readonly fileService: FileService,
   ) {}
 
   /**
@@ -74,6 +77,16 @@ export class BubbleSheetCreationService implements IJobQueueService {
         if (job.isActive()) {
           await job.update({ ...result, status: 'completed' });
           await job.moveToCompleted();
+
+          const basePath = `${path.join(__dirname, '..', '..', '..', '..', '..', 'uploads/bubble_sheets')}/${result.payload.filePath}`;
+
+          const filePaths = [`${basePath}/answer.pdf`, `${basePath}/sheet.pdf`];
+
+          // We should zip the files as early as possible to avoid client to wait for the zipping process
+          await this.fileService.zipFiles(
+            filePaths,
+            `${basePath}/bubble_sheet.zip`,
+          );
         }
       } catch (e) {
         throw new CouldNotCompleteJobException(

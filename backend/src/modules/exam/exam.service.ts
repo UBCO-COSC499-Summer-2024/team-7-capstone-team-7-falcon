@@ -4,6 +4,7 @@ import {
   CourseNotFoundException,
   ExamCreationException,
   ExamNotFoundException,
+  ExamUploadException,
   SubmissionNotFoundException,
   UserSubmissionNotFound,
 } from '../../common/errors';
@@ -24,6 +25,11 @@ import {
   UserSubmissionExamInterface,
 } from '../../common/interfaces';
 import { StudentUserModel } from '../user/entities/student-user.entity';
+import { Readable } from 'stream';
+import { v4 as uuidv4 } from 'uuid';
+import { join } from 'path';
+import { mkdirSync, writeFileSync } from 'fs';
+import { SubmissionCreationDto } from './dto/submission-creation.dto';
 
 @Injectable()
 export class ExamService {
@@ -401,5 +407,198 @@ export class ExamService {
         grades_released_at: parseInt(new Date().getTime().toString()),
       },
     );
+  }
+
+  /**
+   * Update grade
+   * @param eid {number} - Exam id
+   * @param cid {number} - Course id
+   * @param sid {number} - Submission id
+   * @param grade {number} - Grade
+   */
+  async updateGrade(
+    eid: number,
+    cid: number,
+    sid: number,
+    grade: number,
+  ): Promise<void> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: sid,
+        exam: { id: eid, course: { id: cid, is_archived: false } },
+      },
+      relations: ['exam', 'exam.course'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    submission.score = grade;
+    await submission.save();
+  }
+
+  /**
+   * Upload exam submissions
+   * @param eid {number} - Exam id
+   * @param answerKey {Express.Multer.File[]} - Answer key file
+   * @param submissions {Express.Multer.File[]} - Submissions file
+   * @returns {Promise<string>} - Folder name
+   */
+  async uploadExamSubmissions(
+    eid: number,
+    answerKey: Express.Multer.File[],
+    submissions: Express.Multer.File[],
+  ): Promise<string> {
+    if (!answerKey || !submissions) {
+      throw new ExamUploadException(
+        ERROR_MESSAGES.examController.examFilesMissing,
+      );
+    }
+
+    if (
+      answerKey[0].mimetype !== 'application/pdf' ||
+      submissions[0].mimetype !== 'application/pdf'
+    ) {
+      throw new ExamUploadException(
+        ERROR_MESSAGES.examController.examFilesInvalid,
+      );
+    }
+    const exam = await this.getExamById(eid);
+
+    if (exam.exam_folder) {
+      throw new ExamUploadException(
+        ERROR_MESSAGES.examController.examFilesAlreadyUploaded,
+      );
+    }
+    const folderName = uuidv4();
+
+    const rawFolderPath = join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'uploads',
+      'exams',
+      'raw',
+      folderName,
+    );
+
+    const processedFolderPath = join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'uploads',
+      'exams',
+      'processed_submissions',
+      folderName,
+    );
+
+    mkdirSync(rawFolderPath, { recursive: true });
+    mkdirSync(processedFolderPath, { recursive: true });
+
+    const answerKeyPath = join(rawFolderPath, 'answer_key.pdf');
+    const submissionsPath = join(rawFolderPath, 'submissions.pdf');
+
+    writeFileSync(answerKeyPath, answerKey[0].buffer);
+    writeFileSync(submissionsPath, submissions[0].buffer);
+
+    exam.exam_folder = folderName;
+    await exam.save();
+
+    return folderName;
+  }
+
+  /**
+   * Create exam submission
+   * @param examId {number} - Exam id
+   * @param studentId {number} - Student id
+   * @param requestBody {SubmissionCreationDto} - Request body
+   */
+  async createExamSubmission(
+    examId: number,
+    studentId: number,
+    requestBody: SubmissionCreationDto,
+  ): Promise<void> {
+    const { answers, documentPath, score } = requestBody;
+
+    const exam = await this.getExamById(examId);
+
+    const student = await StudentUserModel.findOne({
+      where: { student_id: studentId },
+    });
+
+    await SubmissionModel.create({
+      document_path: documentPath,
+      score,
+      answers,
+      student,
+      exam,
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+    }).save();
+  }
+
+  /**
+   * Retrieve submission grades by exam id
+   * @param examId {number} - Exam id
+   * @returns {Promise<Readable>} - Readable stream
+   */
+  async retrieveSubmissionsByExamId(examId: number): Promise<Readable> {
+    const examSubmissions = await SubmissionModel.find({
+      where: {
+        exam: {
+          id: examId,
+        },
+      },
+      relations: ['student', 'exam'],
+    });
+
+    // Using stream to avoid memory issues and to allow for large data sets
+    const csvStream: Readable = new Readable();
+    csvStream._read = () => {};
+
+    csvStream.push('studentId,grade\n');
+
+    examSubmissions.forEach((examSubmission) => {
+      const studentId = examSubmission.student.student_id;
+      const grade = examSubmission.score;
+      csvStream.push(`${studentId},${grade}\n`);
+    });
+
+    // End the stream
+    csvStream.push(null);
+
+    return csvStream;
+  }
+
+  /**
+   * Delete an exam
+   * @param examId {number} - Exam id
+   * @returns {Promise<void>} - Promise of void
+   */
+  async deleteExam(examId: number): Promise<void> {
+    const exam = await ExamModel.findOne({
+      where: {
+        id: examId,
+        course: {
+          is_archived: false,
+        },
+      },
+      relations: ['course'],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    await SubmissionModel.delete({
+      exam: exam,
+    });
+
+    await exam.remove();
   }
 }

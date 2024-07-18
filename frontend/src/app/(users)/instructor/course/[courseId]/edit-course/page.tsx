@@ -1,5 +1,5 @@
 import React from "react";
-import CourseEditForm from "../../../components/courseEditForm";
+import CourseEditForm from "../../../../../components/editCourseForm";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,

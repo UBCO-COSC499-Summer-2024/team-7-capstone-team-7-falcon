@@ -1,7 +1,7 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import { User } from "@/app/typings/backendDataTypes";
-import { UpdatedUser } from "../typings/backendDataTypes";
+import { UpdatedUser, UserEditData } from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -148,6 +148,49 @@ export const usersAPI = {
     } catch (error: any) {
       console.error("Failed to get all users count:", error);
       throw error;
+    }
+  },
+  editUser: async (userId: number, userData: UserEditData) => {
+    try {
+      const auth_token = await fetchAuthToken();
+
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.patch(
+        `${BACKEND_URL}/api/v1/user/${userId}`,
+        userData,
+      );
+      return response.data;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to edit user: ", error);
+
+      return error;
+    }
+  },
+  deleteProfilePicture: async (userId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      await axios.delete(
+        `${BACKEND_URL}/api/v1/user/${userId}/delete_profile_picture`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: auth_token,
+          },
+        },
+      );
+      return true;
+    } catch (error) {
+      console.error("Failed to delete profile picture: ", error);
+      return false;
     }
   },
 };

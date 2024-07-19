@@ -52,7 +52,7 @@ const user_columns: Column[] = [
   {
     label: "Actions",
     renderCell: (item) => (
-      <Link href={`./users/${item.id}`}>
+      <Link href={`./users/${item.id}/edit`}>
         <UserSettings className="text-purple-700" />
       </Link>
     ),

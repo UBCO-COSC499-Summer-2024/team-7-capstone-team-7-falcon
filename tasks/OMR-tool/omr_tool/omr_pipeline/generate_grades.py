@@ -3,7 +3,7 @@ import numpy as np
 from omr_tool.utils.image_process import threshold_img
 
 
-def evaluate_question(roi_cropped, bubble_contours, answer_key, question_num):
+def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     if question_num < len(answer_key):
         isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
         color = (0, 255, 0) if isCorrect else (0, 0, 255)

@@ -1,5 +1,5 @@
 from PIL.Image import Image
-from omr_tool.omr_pipeline.generate_grades import order_questions, evaluate_question
+from omr_tool.omr_pipeline.generate_grades import order_questions, evaluate_answer
 from omr_tool.utils.image_process import generate_bubble_contours, prepare_img
 from omr_tool.object_inference.inferencer import Inferencer
 import cv2
@@ -72,7 +72,7 @@ def omr_on_image(input_image: Image, answer_key=[]):
     for question_num, question_bounds in enumerate(flat_list):
         roi_cropped = extract_roi(prepped_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
-        color, contour_index = evaluate_question(roi_cropped, bubble_contours, answer_key, question_num)
+        color, contour_index = evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num)
         translated_contour = bubble_contours[contour_index] + [question_bounds[0], question_bounds[1]]
         cv2.drawContours(output_image, [translated_contour], -1, color, 2)
 

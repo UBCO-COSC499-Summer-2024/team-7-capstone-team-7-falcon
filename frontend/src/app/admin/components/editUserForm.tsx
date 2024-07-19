@@ -33,7 +33,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
       if (user) {
         setFormData({
           first_name: user.first_name,
-          last_name: user.last_name,
+          last_name: user.last_name ?? "", //set to an empty string if the last name is null
           student_id: user.student_user?.id || -1,
           employee_id: user.employee_user?.id || -1,
         });
@@ -96,12 +96,12 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
         />
       );
     } else {
+      const initials = `${formData.first_name.charAt(0).toUpperCase()}${
+        formData.last_name ? formData.last_name.charAt(0).toUpperCase() : ""
+      }`;
       return (
         <div className="w-48 h-48 rounded-full bg-gray-300 flex items-center justify-center">
-          <span className="text-xl text-white">
-            {formData.first_name.charAt(0).toUpperCase()}
-            {formData.last_name.charAt(0).toUpperCase()}
-          </span>
+          <span className="text-xl text-white">{initials}</span>
         </div>
       );
     }

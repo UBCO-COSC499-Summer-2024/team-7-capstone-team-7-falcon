@@ -48,6 +48,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
+    console.log(isAuthPageRequested, nextUrl.pathname);
     const userRole = await usersAPI.getUserRole();
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
@@ -65,6 +66,7 @@ export async function middleware(request: NextRequest) {
   // if user is authenticated, verify that they have at least one ID set
   try {
     const hasID = await verifyIdPresence();
+    console.log(hasID);
     if (!hasID) {
       return NextResponse.redirect(new URL("/setup-account", url));
     }
@@ -77,12 +79,12 @@ export async function middleware(request: NextRequest) {
 
   // Users should not be able to access pages that are not meant for their role
   // Redirecting here, but could also show a 404 page
-  const userRole = await usersAPI.getUserRole();
-  const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
-  if (!nextUrl.pathname.startsWith(userRolePath)) {
-    const response = NextResponse.redirect(new URL(userRolePath, url));
-    return response;
-  }
+  // const userRole = await usersAPI.getUserRole();
+  // const userRolePath = userRoleMap[userRole as keyof typeof userRoleMap];
+  // if (!nextUrl.pathname.startsWith(userRolePath)) {
+  //   const response = NextResponse.redirect(new URL(userRolePath, url));
+  //   return response;
+  // }
 
   return NextResponse.next();
 }

@@ -25,11 +25,15 @@ export default function AccountSetup() {
 
     // if the user is authenticated, check if they have at least one ID set
     // if yes, redirect to the dashboard page
-    const hasID = await verifyIdPresence();
-    if (hasID) {
-      // the middleware will handle the redirect based on roles
-      router.push("/");
-    }
+    // try {
+    //   const hasID = await verifyIdPresence();
+    //   if (hasID) {
+    //     // the middleware will handle the redirect based on roles
+    //     router.push("/");
+    //   }
+    // } catch (e) {
+    //   console.log(e)
+    // }
   }
 
   // stores data to be sent to the database

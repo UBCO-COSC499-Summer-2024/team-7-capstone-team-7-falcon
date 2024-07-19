@@ -48,7 +48,6 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
-    console.log(isAuthPageRequested, nextUrl.pathname);
     const userRole = await usersAPI.getUserRole();
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
@@ -66,12 +65,10 @@ export async function middleware(request: NextRequest) {
   // if user is authenticated, verify that they have at least one ID set
   try {
     const hasID = await verifyIdPresence();
-    console.log(hasID);
     if (!hasID) {
       return NextResponse.redirect(new URL("/setup-account", url));
     }
   } catch (e) {
-    console.log(e);
     const response = NextResponse.redirect(new URL("/login", url));
     response.cookies.delete("auth_token");
     return response;

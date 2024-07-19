@@ -1,5 +1,33 @@
 # Individual Logs for Paula
 
+## Friday (7/17 - 7/18)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.17_07.18"](images/clockify_07.17_07.18.png)
+
+### Current Tasks
+
+!["current_tasks_07.17_07.18"](images/current_tasks_07.17_07.18.png)
+
+* #1: Creating API endpoints for the OMR tool
+* #2: Bug fixes
+
+### Progress Update (since 7/17/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I completed the admin edit semester page and focused on prepping for tomorrow's peer testing. During today's team meeting, the team discussed about a lack of testing for edge cases on the frontend and that is for me an area for improvement.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Work on creating API endpoints for the OMR tool
+* Bug fixes
+* (If time permits) Repo clean up and documentation updates
+
 ## Wednesday (7/12 - 7/16)
 
 ### Timesheet

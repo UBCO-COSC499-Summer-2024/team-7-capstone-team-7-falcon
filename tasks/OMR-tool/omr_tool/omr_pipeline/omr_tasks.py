@@ -1,4 +1,4 @@
-import PIL.Image
+from PIL.Image import Image
 from omr_tool.omr_pipeline.generate_grades import check_answer, order_questions
 from omr_tool.utils.image_process import generate_bubble_contours, prepare_img
 from omr_tool.object_inference.inferencer import Inferencer
@@ -24,12 +24,12 @@ def create_answer_key(key_imgs: list):
     answer_key = []
 
     for img in key_imgs:
-        page_answers = omr_on_image(img, is_answer_key=True)
+        page_answers = omr_on_image(img)
         answer_key.append(page_answers)
     
     return answer_key
 
-def mark_submission_page(submission_img: PIL.Image, answer_key: list):
+def mark_submission_page(submission_img: Image, answer_key: list):
     """
     Mark a single submission page and generate the corresponding results.
 
@@ -59,43 +59,49 @@ def mark_submission_page(submission_img: PIL.Image, answer_key: list):
 
     return submission_results, graded_img
 
-def omr_on_image(input_image: PIL.Image, answer_key=[]):
+def omr_on_image(input_image: Image, answer_key=[]):
     prepped_image = prepare_img(input_image)
     output_image = input_image.copy()
     inference_tool = Inferencer()
-    answers = []
-    total_score = 0
+    answers, total_score = [], 0
+
     boxes, scores, classes = inference_tool.infer(prepped_image)
+    question_2d_list = get_question_boxes(inference_tool, boxes, classes)
+
+    flat_list = [question_bounds for column in question_2d_list for question_bounds in column]
+    for question_num, question_bounds in enumerate(flat_list):
+        roi_cropped = extract_roi(prepped_image, question_bounds)
+        bubble_contours = generate_bubble_contours(roi_cropped)
+        color, contour_index = evaluate_question(roi_cropped, bubble_contours, answer_key, question_num)
+        translated_contour = bubble_contours[contour_index] + [question_bounds[0], question_bounds[1]]
+        cv2.drawContours(output_image, [translated_contour], -1, color, 2)
+
+    return total_score, answers, output_image
+
+def get_question_boxes(inference_tool, boxes, classes):
     question_2d_list = []
-    mask = np.zeros(prepped_image.shape[:2], dtype="uint8")
     for i, box in enumerate(boxes):
         if inference_tool.inference_classes[classes[i]] == "answer":
             question_2d_list = order_questions(box, question_2d_list)
-    flat_list = [question_bounds for column in question_2d_list for question_bounds in column]
-    for question_num, question_bounds in enumerate(flat_list):
-            x1, y1, x2, y2 = question_bounds
-            mask.fill(0)
-            cv2.fillPoly(mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
-             # Extract the region of interest from the prepped image
-            roi = cv2.bitwise_and(prepped_image, prepped_image, mask=mask)
-            contour_index = 0
-        # Crop the region of interest to remove black background
-            roi_cropped = roi[y1:y2, x1:x2]
-            bubble_contours = generate_bubble_contours(roi_cropped)
-            
-            if question_num < len(answer_key):
-                isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
-                if isCorrect:
-                    color = (0, 255, 0)
-                else:
-                    color = (0, 0, 255)       
-                contour_index = answer_key[question_num]
-            else: 
-                color = (255, 0, 0)
-                contour_index = 0
-            translated_contour = bubble_contours[contour_index] + [x1, y1]
-            cv2.drawContours(output_image, [translated_contour], -1, color, 2)
-    return total_score, answers, output_image
+    return question_2d_list
+
+def extract_roi(image, question_bounds):
+    mask = np.zeros(image.shape[:2], dtype="uint8")
+    x1, y1, x2, y2 = question_bounds
+    cv2.fillPoly(mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
+    roi = cv2.bitwise_and(image, image, mask=mask)
+    roi_cropped = roi[y1:y2, x1:x2]
+    return roi_cropped
+
+def evaluate_question(roi_cropped, bubble_contours, answer_key, question_num):
+    if question_num < len(answer_key):
+        isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
+        color = (0, 255, 0) if isCorrect else (0, 0, 255)
+        contour_index = answer_key[question_num]
+    else:
+        color = (255, 0, 0)
+        contour_index = 0
+    return color, contour_index
 
 
 

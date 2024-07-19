@@ -1,5 +1,5 @@
 from PIL.Image import Image
-from omr_tool.omr_pipeline.generate_grades import check_answer, order_questions
+from omr_tool.omr_pipeline.generate_grades import order_questions, evaluate_question
 from omr_tool.utils.image_process import generate_bubble_contours, prepare_img
 from omr_tool.object_inference.inferencer import Inferencer
 import cv2
@@ -86,6 +86,17 @@ def get_question_boxes(inference_tool, boxes, classes):
     return question_2d_list
 
 def extract_roi(image, question_bounds):
+    """
+    Extracts the region of interest (ROI) from the given image based on the provided question bounds.
+
+    Parameters:
+        image (numpy.ndarray): The input image from which the ROI needs to be extracted.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The cropped ROI image.
+
+    """
     mask = np.zeros(image.shape[:2], dtype="uint8")
     x1, y1, x2, y2 = question_bounds
     cv2.fillPoly(mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
@@ -93,15 +104,7 @@ def extract_roi(image, question_bounds):
     roi_cropped = roi[y1:y2, x1:x2]
     return roi_cropped
 
-def evaluate_question(roi_cropped, bubble_contours, answer_key, question_num):
-    if question_num < len(answer_key):
-        isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
-        color = (0, 255, 0) if isCorrect else (0, 0, 255)
-        contour_index = answer_key[question_num]
-    else:
-        color = (255, 0, 0)
-        contour_index = 0
-    return color, contour_index
+
 
 
 

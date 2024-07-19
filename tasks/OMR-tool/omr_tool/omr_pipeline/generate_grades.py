@@ -3,6 +3,16 @@ import numpy as np
 from omr_tool.utils.image_process import threshold_img
 
 
+def evaluate_question(roi_cropped, bubble_contours, answer_key, question_num):
+    if question_num < len(answer_key):
+        isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
+        color = (0, 255, 0) if isCorrect else (0, 0, 255)
+        contour_index = answer_key[question_num]
+    else:
+        color = (255, 0, 0)
+        contour_index = 0
+    return color, contour_index
+
 def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
     bubbled = None
     bubbled_amount = 0
@@ -23,8 +33,6 @@ def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=45
         return True, bubbled
     else:
         return False, bubbled
-    
-
     
 
 def populate_answer_key(answer_key_img):

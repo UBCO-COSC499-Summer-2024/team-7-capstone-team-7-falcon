@@ -1,5 +1,43 @@
 # Personal Logs
 
+## Friday (7/17-7/18)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.17-07.18/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Creating the payloads for returning to the backend including score, answers, alerts, and images
+  2. Implementing answer key generation from images
+  3. Identifying student numbers
+  4. Documenting and writing tests for all the tasks
+  5. Setting up materials for the demo tomorrow
+
+### Progress Update (since 7/17/2024)
+
+![ProjectBoard](07.17-07.18/board.png)
+
+  1. Generating graded images is fully functional
+  2. Survey is created for the demo
+  3. Script is created for the demo
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle was a bit slower in OMR progress but still quite productive, it took a backburner so we could prepare for tomorrow.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have answer key generation done
+  2. Have functional student number identification
+  3. Have payloads ready
+
+---
+---
+---
+
 ## Wednesday (7/12-7/16)
 
 ### Timesheet

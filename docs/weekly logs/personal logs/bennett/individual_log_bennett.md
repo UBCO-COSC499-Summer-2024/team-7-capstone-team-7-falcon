@@ -1,4 +1,4 @@
-## Wednesday (7/17- 7/18)
+## Friday (7/17- 7/18)
 
 ### Timesheet
 Clockify report

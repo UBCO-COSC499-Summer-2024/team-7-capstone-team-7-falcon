@@ -67,7 +67,6 @@ const UserTable: React.FC = () => {
     const fetchData = async () => {
       // getAllUsers throws an error that if it fails that is caught by error.tsx
       const response = await usersAPI.getAllUsers();
-      console.log(response.data.data);
       const usersDataItem: DataItem<User>[] = response.data.data.map(
         (item: User) => ({
           id: item.id,
@@ -80,7 +79,6 @@ const UserTable: React.FC = () => {
     fetchData();
   }, []);
 
-  console.log(userData);
   if (!userData) {
     return <p>Loading...</p>;
   }

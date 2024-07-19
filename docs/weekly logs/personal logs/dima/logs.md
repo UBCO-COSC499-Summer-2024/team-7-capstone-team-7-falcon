@@ -1,5 +1,43 @@
 # Individual Logs
 
+## Friday (7/17 - 7/18)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07172024_07182024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Code review of other team members
+
+### Progress Update (since 7/17/2024)
+
+![GitHub Board](./images/github_07122024-07162024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #325
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle, I was mostly working on endpoints to create mock data for Peer testing. I haven't created a task for it as I am still debating whether it's worth adding these endpoints to our backend. Other than that, I was trying to fix the issue on frontend (and most likely on backend) where user with missing student/employee id is not able to update their account details.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Address the issue with frontend and backend when user tries to authenticate to the system, but missing student or employee id
+  * Add instructor page to view individual student's exam submission
+
 ## Wednesday (7/12 - 7/16)
 
 ### Timesheet

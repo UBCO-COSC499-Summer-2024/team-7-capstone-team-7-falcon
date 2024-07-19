@@ -155,6 +155,7 @@ def app():
 
         # convert graded images to PDF and name the resulting file "courseId_examId_studentId"
         # submission_results["document_path"] = output_pdf_path
+
         # (its own module) send "courseId_examId_studentId" file to backend
         # send grades to backend
         #  - 'POST /exam/:eid/:studentId'

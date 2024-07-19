@@ -5,9 +5,7 @@ import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
 import { deleteAuthToken } from "@/app/api/cookieAPI";
 import { User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
-import { redirectModalData } from "../../typings/backendDataTypes";
 import AccountSetupForm from "../components/accountSetupForm";
-import RedirectModal from "../components/redirectModal";
 
 export default function AccountSetup() {
   const router = useRouter();
@@ -33,13 +31,6 @@ export default function AccountSetup() {
       router.push("/");
     }
   }
-
-  // stores data needed for the redirect modal
-  const [redirectInfo, setRedirectInfo] = useState<redirectModalData>({
-    message: "",
-    redirectPath: "",
-    buttonText: "",
-  });
 
   // stores data to be sent to the database
   const [userIDs, setUserIDs] = useState({

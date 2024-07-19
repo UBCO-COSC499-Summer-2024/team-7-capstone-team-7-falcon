@@ -8,7 +8,6 @@ import {
   resetPasswordData,
   requestResetPasswordData,
 } from "../typings/backendDataTypes";
-import { json } from "stream/consumers";
 import { jwtDecode } from "jwt-decode";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -20,16 +19,14 @@ export const authAPI = {
    * @async
    * @function registerUser
    * @param {SignUpFormData} jsonPayload - The user's registration data.
-   * @returns {Promise<axios.AxiosResponse<any>>} - The response from the backend API.
    * @throws Will log an error message to the console if registering the user fails.
    */
-  registerUser: async (jsonPayload: SignUpFormData) => {
+  registerUser: async (jsonPayload: SignUpFormData): Promise<any> => {
     try {
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/auth/register/`,
         headers: {
           "Content-Type": "application/json",
-          body: jsonPayload,
         },
       });
       const response = await instance.post(
@@ -53,10 +50,9 @@ export const authAPI = {
    * @async
    * @function validateEmail
    * @param {string} confirm_token - The confirmation token sent to the user's email.
-   * @returns {Promise<axios.AxiosResponse<any>>} - The response from the backend API.
    * @throws Will log an error message to the console if email validation fails.
    */
-  validateEmail: async (confirm_token: string) => {
+  validateEmail: async (confirm_token: string): Promise<any> => {
     try {
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/token`,
@@ -213,7 +209,7 @@ export const verifyIdPresence = async (): Promise<boolean> => {
   try {
     const userDetails: User | null = await usersAPI.getUserDetails();
     return (
-      userDetails.student_user !== null || userDetails.employee_user !== null
+      userDetails?.student_user !== null || userDetails?.employee_user !== null
     );
   } catch (error) {
     console.error("Failed to verify ID presence for user:", error);

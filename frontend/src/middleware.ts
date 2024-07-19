@@ -1,8 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { usersAPI } from "@/app/api/usersAPI";
-import { User } from "@/app/typings/backendDataTypes";
-import { fetchAuthToken } from "@/app/api/cookieAPI";
 import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
 
 const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
@@ -65,9 +63,16 @@ export async function middleware(request: NextRequest) {
   }
 
   // if user is authenticated, verify that they have at least one ID set
-  const hasID = await verifyIdPresence();
-  if (!hasID) {
-    return NextResponse.redirect(new URL("/setup-account", url));
+  try {
+    const hasID = await verifyIdPresence();
+    if (!hasID) {
+      return NextResponse.redirect(new URL("/setup-account", url));
+    }
+  } catch (e) {
+    console.log(e);
+    const response = NextResponse.redirect(new URL("/login", url));
+    response.cookies.delete("auth_token");
+    return response;
   }
 
   // Users should not be able to access pages that are not meant for their role

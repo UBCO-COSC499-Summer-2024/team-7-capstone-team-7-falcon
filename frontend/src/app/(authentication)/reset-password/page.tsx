@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import React, { useRef, useState, FormEvent } from "react";
+import { Button, Label, TextInput } from "flowbite-react";
 import RedirectModal from "../components/redirectModal";
 import {
   Status,
@@ -12,7 +11,6 @@ import {
 import { authAPI } from "@/app/api/authAPI";
 
 export default function ResetPasswordPage() {
-  const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
   const [userEmail, setUserEmail] = useState<requestResetPasswordData>({
     email: "",

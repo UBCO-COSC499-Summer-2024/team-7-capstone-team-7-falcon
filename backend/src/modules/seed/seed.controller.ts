@@ -54,7 +54,7 @@ export class SeedController {
     return res.status(HttpStatus.OK).send({ message: 'Database reset' });
   }
 
-  @Get('/seed')
+  @Get('/')
   async seed(@Res() res: Response): Promise<Response> {
     const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
     const hashedPassword = await bcrypt.hash('seed', salt);

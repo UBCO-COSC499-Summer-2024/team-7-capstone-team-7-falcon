@@ -1,7 +1,9 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import { User } from "@/app/typings/backendDataTypes";
-import { UpdatedUser, UserEditData } from "../typings/backendDataTypes";
+import { UpdatedUser } from "../typings/backendDataTypes";
+import { Toast } from "flowbite-react";
+import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -148,6 +150,61 @@ export const usersAPI = {
     } catch (error: any) {
       console.error("Failed to get all users count:", error);
       throw error;
+    }
+  },
+
+  /**
+   * Returns data for all users in the system
+   * @returns {Promise<axios.AxiosResponse<any>>}
+   */
+  getAllUsers: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get("/all");
+      return response;
+    } catch (error: any) {
+      console.log("Failed to get all users:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Updates the role for any user
+   * @param user_id
+   * @param new_role new role that the user is being set to
+   * @returns {Promise<axios.AxiosResponse<any>>}
+   */
+  updateUserRole: async (userId: number, new_role: string) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const payload = {
+        userRole: new_role,
+      };
+      const response = await instance.patch(`/${userId}/change_role`, payload);
+      if (response.status == 204) {
+        toast.success("Role updated successfully!");
+      } else {
+        toast.error("Failed to change user role");
+      }
+    } catch (error: any) {
+      console.log("Failed to change user role", error);
+      toast.error("Failed to change user role");
     }
   },
   editUser: async (userId: number, userData: UserEditData) => {

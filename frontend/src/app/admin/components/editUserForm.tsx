@@ -37,7 +37,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
           student_id: user.student_user?.id || -1,
           employee_id: user.employee_user?.id || -1,
         });
-        setAvatarUrl(user.avatar_url || "/default-avatar.png");
+        setAvatarUrl(user.avatar_url);
       } else {
         toast.error("Failed to load user data");
       }
@@ -55,12 +55,14 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
 
       if (updatedUser && updatedUser.status === 200) {
         toast.success("User successfully updated");
-        fetchUserData();
+        fetchUserData(); // Refresh the user data
       } else {
-        toast.error(updatedUser.response.data.message);
+        toast.error("Failed to update user");
+        console.error("Error response:", updatedUser);
       }
     } catch (error) {
       toast.error("Failed to update user");
+      console.error("Catch error:", error);
     } finally {
       setSavingChanges(false);
     }
@@ -77,10 +79,31 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
   const handleDeletePicture = async () => {
     try {
       await usersAPI.deleteProfilePicture(userId);
-      setAvatarUrl("/default-avatar.png");
+      setAvatarUrl(null);
       toast.success("Profile picture deleted");
     } catch (error) {
       toast.error("Failed to delete profile picture");
+    }
+  };
+
+  const renderAvatar = () => {
+    if (avatarUrl) {
+      return (
+        <img
+          src={avatarUrl}
+          alt="User Avatar"
+          className="w-48 h-48 rounded-full object-cover border-2 border-gray-300"
+        />
+      );
+    } else {
+      return (
+        <div className="w-48 h-48 rounded-full bg-gray-300 flex items-center justify-center">
+          <span className="text-xl text-white">
+            {formData.first_name.charAt(0).toUpperCase()}
+            {formData.last_name.charAt(0).toUpperCase()}
+          </span>
+        </div>
+      );
     }
   };
 
@@ -90,11 +113,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
         <div className="space-y-4 p-4 ring ring-gray-100 rounded-md flex flex-col">
           <div className="flex flex-col items-center">
             <div className="relative">
-              <img
-                src={avatarUrl || "/default-avatar.png"}
-                alt="User Avatar"
-                className="w-48 h-48 rounded-full object-cover border-2 border-gray-300"
-              />
+              {renderAvatar()}
               <button
                 type="button"
                 className="btn-primary mt-4"
@@ -134,37 +153,42 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
               />
             </div>
           </div>
-          <div>
-            <Label htmlFor="employee_id">
-              <h2>Employee Number</h2>
-            </Label>
-            <TextInput
-              id="employee_id"
-              name="employee_id"
-              className="mb-3"
-              value={
-                formData.employee_id === -1
-                  ? ""
-                  : formData.employee_id.toString()
-              }
-              placeholder="Enter employee number"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="student_id">
-              <h2>Student Number</h2>
-            </Label>
-            <TextInput
-              id="student_id"
-              name="student_id"
-              className="mb-3"
-              value={
-                formData.student_id === -1 ? "" : formData.student_id.toString()
-              }
-              placeholder="Enter student number"
-              onChange={handleChange}
-            />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="employee_id">
+                <h2>Employee Number</h2>
+              </Label>
+              <TextInput
+                id="employee_id"
+                name="employee_id"
+                className="mb-3"
+                value={
+                  formData.employee_id === -1
+                    ? ""
+                    : formData.employee_id.toString()
+                }
+                placeholder="Enter employee number"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="student_id">
+                <h2>Student Number</h2>
+              </Label>
+              <TextInput
+                id="student_id"
+                name="student_id"
+                className="mb-3"
+                value={
+                  formData.student_id === -1
+                    ? ""
+                    : formData.student_id.toString()
+                }
+                placeholder="Enter student number"
+                onChange={handleChange}
+              />
+            </div>
           </div>
           <div>
             <button
@@ -177,17 +201,6 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
           </div>
         </div>
       </form>
-      <div className="ring-1 rounded ring-red-700 pt-4 mt-4 flex flex-col p-4">
-        <p className="font-bold text-lg mb-2">Danger Zone</p>
-        <p className="font-bold mt-2">Deactivate this account</p>
-        <p>
-          Once you deactivate this account, the user will not be able to access
-          the system
-        </p>
-        <button className="ring-1 rounded ring-red-700 p-1 m-3 items-center">
-          <p className="text-red-700 text-lg">Deactivate this account</p>
-        </button>
-      </div>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "../../components/type";
 import TableComponent from "../../components/tableComponent";
 import Link from "next/link";
+import { UserEdit } from "flowbite-react-icons/solid";
 import { SemesterData } from "@/app/typings/backendDataTypes";
 import { semestersAPI } from "@/app/api/semestersAPI";
 
@@ -18,9 +19,13 @@ const user_columns: Column[] = [
   {
     label: "Actions",
     renderCell: (item) => (
-      <Link href={`./semesters/${item.id}`}>
-        <button type="button" className="btn-primary flex p-1 px-4">
-          Edit
+      <Link href={`./semester/${item.id}/edit`}>
+        <button
+          type="button"
+          className="btn-primary flex p-1 px-4 items-center space-x-1"
+        >
+          <UserEdit />
+          <span>Edit</span>
         </button>
       </Link>
     ),

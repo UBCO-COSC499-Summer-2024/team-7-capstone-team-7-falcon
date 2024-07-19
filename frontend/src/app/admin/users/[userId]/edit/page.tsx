@@ -31,7 +31,7 @@ const AdminUserManagement = async ({
           <div className="justify-self-end space-y-4">
             <button type="button" className="btn-primary">
               <Link
-                href={"../../semesters"}
+                href={"../../users"}
                 className="space-x-4 flex items-center"
               >
                 <ArrowLeft />

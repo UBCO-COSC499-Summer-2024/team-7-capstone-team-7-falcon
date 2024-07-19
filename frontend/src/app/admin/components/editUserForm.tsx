@@ -6,7 +6,7 @@ import { usersAPI } from "@/app/api/usersAPI";
 import toast from "react-hot-toast";
 import { UserEditData, User } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
-import DangerZone from "./DangerZone"; // Import DangerZone component
+import Avatar from "../../components/avatar";
 
 interface EditUserFormProps {
   userId: number;
@@ -86,34 +86,17 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
     }
   };
 
-  const renderAvatar = () => {
-    if (avatarUrl) {
-      return (
-        <img
-          src={avatarUrl}
-          alt="User Avatar"
-          className="w-48 h-48 rounded-full object-cover border-2 border-gray-300"
-        />
-      );
-    } else {
-      const initials = `${formData.first_name.charAt(0).toUpperCase()}${
-        formData.last_name ? formData.last_name.charAt(0).toUpperCase() : ""
-      }`;
-      return (
-        <div className="w-48 h-48 rounded-full bg-gray-300 flex items-center justify-center">
-          <span className="text-xl text-white">{initials}</span>
-        </div>
-      );
-    }
-  };
-
   return (
     <div className="container mx-auto p-8">
       <form method="PATCH" onSubmit={handleSaveChanges}>
         <div className="space-y-4 p-4 ring ring-gray-100 rounded-md flex flex-col">
           <div className="flex flex-col items-center">
             <div className="relative">
-              {renderAvatar()}
+              <Avatar
+                avatarUrl={avatarUrl ?? undefined}
+                firstName={formData.first_name}
+                lastName={formData.last_name ?? undefined}
+              />
               <button
                 type="button"
                 className="btn-primary mt-4"
@@ -153,7 +136,6 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
               />
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="employee_id">

@@ -1,3 +1,37 @@
+## Wednesday (7/17- 7/18)
+
+### Timesheet
+Clockify report
+![time for 07.17_- 07.18](07.17_07.18.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1:Create the admin users table [S]
+
+### Progress Update (since 7/17/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Create the admin users table #353
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have completed the admin user table which is the only task I planned to do. Overall we discussed that we should be more thorough
+with our error handling and testing for future PRs
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle I will work on adding the instructor submission page and fixing any errors found during the peer testing.
+
 ## Wednesday (7/12- 7/16)
 
 ### Timesheet

@@ -91,11 +91,16 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
       <form method="PATCH" onSubmit={handleSaveChanges}>
         <div className="space-y-4 p-4 ring ring-gray-100 rounded-md flex flex-col">
           <div className="flex flex-col items-center">
-            <div className="relative">
+            <div className="relative flex flex-col items-center">
               <Avatar
                 avatarUrl={avatarUrl ?? undefined}
                 firstName={formData.first_name}
-                lastName={formData.last_name ?? undefined}
+                lastName={formData.last_name}
+                imageWidth={200}
+                imageHeight={200}
+                imageTextWidth="w-48"
+                imageTextHeight="h-48"
+                textSize={4}
               />
               <button
                 type="button"

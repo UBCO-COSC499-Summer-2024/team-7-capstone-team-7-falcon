@@ -43,4 +43,6 @@ The raw results can be found under the `/raw-results` folder. Based on the feedb
 
 ## Analysis
 
+The questionnaire was administered through Qualtrics, and results were downloaded as a CSV file with numeric values. Since not all likert-scale questions were answered, blank questions were given a value of 0.
+
 ## Discussion

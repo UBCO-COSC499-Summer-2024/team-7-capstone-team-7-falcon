@@ -68,7 +68,9 @@ def wrap_text(text, width, canvas, font, font_size):
     return lines
 
 
-def draw_exam_information(c, current_x, current_y, margin=0.5 * inch, course_name="", exam_name=""):
+def draw_exam_information(
+    c, current_x, current_y, margin=0.5 * inch, course_name="", exam_name=""
+):
     """Draw the exam information on the canvas
 
     Args:
@@ -226,7 +228,14 @@ def generate_bubble_sheet(
     current_y = start_y
 
     # Draw the exam information
-    draw_exam_information(c, current_x, current_y, margin=margin, course_name=course_name, exam_name=exam_name)
+    draw_exam_information(
+        c,
+        current_x,
+        current_y,
+        margin=margin,
+        course_name=course_name,
+        exam_name=exam_name,
+    )
 
     # Draw student identification section
     draw_student_identification(c, current_x, current_y, width)

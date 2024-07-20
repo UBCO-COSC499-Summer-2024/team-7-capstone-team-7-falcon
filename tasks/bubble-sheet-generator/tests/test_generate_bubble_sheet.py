@@ -128,7 +128,7 @@ def test_generate_bubble_sheet(generated_pdf):
 
     expected_strings = [
         "Default exam\n",
-        "Default course\n"
+        "Default course\n",
         "Student Name:",
         "Please follow the directions",
         "Please fill in marks like this:",

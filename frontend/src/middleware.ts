@@ -48,6 +48,12 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
+
+    const hasID = await verifyIdPresence();
+    if (!hasID) {
+      return NextResponse.redirect(new URL("/setup-account", url));
+    }
+
     const userRole = await usersAPI.getUserRole();
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),

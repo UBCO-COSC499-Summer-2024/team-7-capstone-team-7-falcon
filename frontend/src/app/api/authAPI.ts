@@ -209,7 +209,8 @@ export const verifyIdPresence = async (): Promise<boolean> => {
   try {
     const userDetails: User | null = await usersAPI.getUserDetails();
     return (
-      userDetails?.student_user !== null || userDetails?.employee_user !== null
+      userDetails?.student_user !== undefined ||
+      userDetails?.employee_user !== undefined
     );
   } catch (error) {
     console.error("Failed to verify ID presence for user:", error);

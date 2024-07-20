@@ -127,7 +127,7 @@ export class AuthGuard implements CanActivate {
     // Allow PATCH request to update user details. PATH must be /user/{id}
     // Allow GET request to logout user if the path is /auth/logout
     if (
-      (request.method === 'PATCH' && request.path.match(/\/user\/[1-9]$/)) ||
+      (request.method === 'PATCH' && request.path.match(/\/user\/(\d+|-1)$/)) ||
       (request.method === 'GET' && request.path === '/auth/logout')
     )
       return;

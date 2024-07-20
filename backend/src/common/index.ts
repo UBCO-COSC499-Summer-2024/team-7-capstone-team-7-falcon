@@ -91,6 +91,7 @@ export const ERROR_MESSAGES = {
   },
   examController: {
     examDateError: 'Exam date must be in the future',
+    examNameTooLong: 'Exam name is too long',
     noUpcomingExamsFound: 'No upcoming exams found',
     noGradedExamsFound: 'No graded exams found',
     examNotFound: 'Exam not found',

@@ -42,7 +42,11 @@ const CreateExam = async ({ params }: { params: { courseId: string } }) => {
         </div>
       </div>
       <h1 className="text-xl font-bold">Create Exam:</h1>
-      <CreateExamForm course_id={course.id} />
+      <CreateExamForm
+        courseId={course.id}
+        courseCode={course.course_code}
+        courseName={course.course_name}
+      />
     </div>
   );
 };

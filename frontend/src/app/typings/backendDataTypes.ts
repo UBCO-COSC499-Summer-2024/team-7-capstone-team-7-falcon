@@ -130,7 +130,9 @@ export interface BubbleSheetPayload {
     numberOfQuestions: number;
     defaultPointsPerQuestion: number;
     numberOfAnswers: number;
-    instructions: string;
+    courseCode: string;
+    courseName: string;
+    examName: string;
     answers: number[];
   };
 }

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState, FormEvent } from "react";
+import React, { useEffect, useState, FormEvent, KeyboardEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Button, Label, TextInput, Alert } from "flowbite-react";
@@ -10,7 +10,7 @@ import {
   EmailValid,
   userLoginData,
 } from "../../typings/backendDataTypes";
-import { HiMail } from "react-icons/hi";
+import { HiMail, HiLockClosed } from "react-icons/hi";
 import { setAuthToken } from "@/app/api/cookieAPI";
 import RedirectModal from "../components/redirectModal";
 import { authAPI } from "@/app/api/authAPI";
@@ -21,7 +21,6 @@ export default function LoginPage() {
   const [status, setStatus] = useState(Status.Pending);
   const [emailValid, setEmailValid] = useState(EmailValid.Pending);
   const [user, setUser] = useState<userLoginData>({
-    //define user state
     email: "",
     password: "",
   });
@@ -72,9 +71,18 @@ export default function LoginPage() {
         setStatus(Status.Failure);
       }
     } catch (error) {
-      console.error("Error logging in", error);
+      setStatus(Status.Failure);
     }
   }
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter") {
+      const form = event.currentTarget.closest("form");
+      if (form) {
+        onLogin(new Event("submit") as unknown as FormEvent<HTMLFormElement>);
+      }
+    }
+  };
 
   const onGoogleSignup = async () => {
     //handle Google Signup
@@ -105,7 +113,10 @@ export default function LoginPage() {
         )}
 
         <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
-          <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
+          <form
+            className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md "
+            onSubmit={onLogin}
+          >
             <h1 className="font-bold mb-3">OwlMark OMS Portal</h1>
             <Button
               onClick={onGoogleSignup}
@@ -160,7 +171,7 @@ export default function LoginPage() {
                 value={user.email}
                 icon={HiMail}
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
-                placeholder="john123@gmail.com"
+                placeholder="Enter your email address"
               />
             </div>
 
@@ -177,7 +188,9 @@ export default function LoginPage() {
                 type="password"
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
-                placeholder="********"
+                placeholder="Enter your password"
+                onKeyDown={handleKeyDown}
+                icon={HiLockClosed}
               />
             </div>
 

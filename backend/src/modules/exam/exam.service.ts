@@ -25,6 +25,7 @@ import {
   UserSubmissionExamInterface,
 } from '../../common/interfaces';
 import { StudentUserModel } from '../user/entities/student-user.entity';
+import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 import { join } from 'path';
 import { mkdirSync, writeFileSync } from 'fs';
@@ -539,5 +540,65 @@ export class ExamService {
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
     }).save();
+  }
+
+  /**
+   * Retrieve submission grades by exam id
+   * @param examId {number} - Exam id
+   * @returns {Promise<Readable>} - Readable stream
+   */
+  async retrieveSubmissionsByExamId(examId: number): Promise<Readable> {
+    const examSubmissions = await SubmissionModel.find({
+      where: {
+        exam: {
+          id: examId,
+        },
+      },
+      relations: ['student', 'exam'],
+    });
+
+    // Using stream to avoid memory issues and to allow for large data sets
+    const csvStream: Readable = new Readable();
+    csvStream._read = () => {};
+
+    csvStream.push('studentId,grade\n');
+
+    examSubmissions.forEach((examSubmission) => {
+      const studentId = examSubmission.student.student_id;
+      const grade = examSubmission.score;
+      csvStream.push(`${studentId},${grade}\n`);
+    });
+
+    // End the stream
+    csvStream.push(null);
+
+    return csvStream;
+  }
+
+  /**
+   * Delete an exam
+   * @param examId {number} - Exam id
+   * @returns {Promise<void>} - Promise of void
+   */
+  async deleteExam(examId: number): Promise<void> {
+    const exam = await ExamModel.findOne({
+      where: {
+        id: examId,
+        course: {
+          is_archived: false,
+        },
+      },
+      relations: ['course'],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    await SubmissionModel.delete({
+      exam: exam,
+    });
+
+    await exam.remove();
   }
 }

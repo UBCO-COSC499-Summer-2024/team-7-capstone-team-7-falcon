@@ -44,6 +44,141 @@ describe('Exam Integration', () => {
     );
   });
 
+  describe('DELETE /exam/:eid/:cid', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().delete('/exam/1/1').expect(401);
+    });
+
+    it('should return 401 if user not TA or professor of course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+      }).save();
+
+      await supertest()
+        .delete(`/exam/1/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 404 if exam not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await supertest()
+        .delete(`/exam/1/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(404);
+      expect(result.body).toEqual({
+        message: 'Exam not found',
+      });
+    });
+
+    it('should return 204 if exam is deleted successfully', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'COSC 499',
+        course_name: 'Capstone Project',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        course: course,
+      }).save();
+
+      const result = await supertest()
+        .delete(`/exam/${exam.id}/${course.id}`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+      });
+
+      expect(result.status).toBe(204);
+      expect(exam).toBeNull();
+    });
+  });
+
   describe('POST /exam/:cid/create', () => {
     it('should return 401 if user not authenticated', async () => {
       await supertest().post('/exam/1/create').expect(401);
@@ -2237,7 +2372,6 @@ describe('Exam Integration', () => {
         created_at: 1_000_000_000,
         updated_at: 1_000_000_000,
         email_verified: true,
-        role: UserRoleEnum.ADMIN,
       }).save();
 
       await EmployeeUserModel.create({
@@ -2539,6 +2673,217 @@ describe('Exam Integration', () => {
         .set('x-worker-auth-token', 'secret_worker_auth_token')
         .send({ answers: {}, score: 32, documentPath: 'path' })
         .expect(200);
+    });
+  });
+
+  describe('GET /exam/:cid/:eid/download_grades', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().get('/exam/1/1/download_grades').expect(401);
+    });
+
+    it('should return 401 if user not professor or ta', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      return supertest()
+        .get(`/exam/1/${course.id}/download_grades`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 400 if exam id is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return supertest()
+        .get(`/exam/a/${course.id}/download_grades`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(400);
+    });
+
+    it('should return CSV file with studentId and grades', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      for (let i = 1; i <= 10; i++) {
+        const user = await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john.doe${i}@mail.com`,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+          email_verified: true,
+        }).save();
+
+        const studentUser = await StudentUserModel.create({
+          user,
+          student_id: 1_000 + i,
+        }).save();
+
+        const submission = await SubmissionModel.create({
+          exam,
+          student: studentUser,
+          answers: {},
+          score: i,
+          document_path: 'path',
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+
+        exam.submissions.push(submission);
+      }
+      await exam.save();
+
+      const result = await supertest()
+        .get(`/exam/${exam.id}/${course.id}/download_grades`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(200);
+      expect(result.headers['content-type']).toBe('text/csv; charset=utf-8');
+
+      expect(result.text).toMatchSnapshot();
+    });
+
+    it('should return CSV with only headers when exam has no submissions', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@test.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+      }).save();
+
+      const result = await supertest()
+        .get(`/exam/${exam.id}/${course.id}/download_grades`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(200);
+      expect(result.headers['content-type']).toBe('text/csv; charset=utf-8');
+
+      expect(result.text).toMatchSnapshot();
     });
   });
 });

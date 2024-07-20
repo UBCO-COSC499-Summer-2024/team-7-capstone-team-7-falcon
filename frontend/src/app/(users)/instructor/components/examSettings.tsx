@@ -1,17 +1,12 @@
 "use client";
 
 import { examsAPI } from "@/app/api/examAPI";
+import { ExamSettingsProps } from "@/app/components/type";
+import { saveAs } from "file-saver";
 import { CheckPlusCircle, Download, Upload } from "flowbite-react-icons/solid";
-import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import UploadExamSubmissionsModal from "./uploadExamSubmissionsModal";
-
-type ExamSettingsProps = {
-  examId: number;
-  courseId: number;
-  examFolder: string;
-};
 
 const ExamSettings: React.FC<ExamSettingsProps> = ({
   examId,
@@ -25,6 +20,19 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
 
     if (result && result.status === 200) {
       toast.success("Grades released successfully");
+    } else {
+      toast.error(result.response.data.message);
+    }
+  };
+
+  const downloadSubmissionGrades = async () => {
+    const result = await examsAPI.downloadSubmissionGrades(examId, courseId);
+
+    if (result && result.status === 200) {
+      const blob = new Blob([result.data], { type: "text/csv" });
+
+      saveAs(blob, "grades.csv");
+      toast.success("Submission grades downloaded");
     } else {
       toast.error(result.response.data.message);
     }
@@ -46,7 +54,7 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       <button
         type="button"
         className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-400"
-        disabled={examFolder.length !== 0}
+        disabled={!!examFolder && examFolder?.length !== 0}
         onClick={() => setIsModalOpen(true)}
       >
         <div className="space-x-4 flex items-center">
@@ -57,11 +65,12 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       <button
         type="button"
         className="btn-primary flex justify-center bg-purple w-full"
+        onClick={() => downloadSubmissionGrades()}
       >
-        <Link href={""} className="space-x-4 flex items-center">
+        <div className="space-x-4 flex items-center">
           <Download />
           <span>Download Results CSV</span>
-        </Link>
+        </div>
       </button>
       <button
         type="button"

@@ -6,6 +6,34 @@ export interface CourseData {
   semester_id: number;
 }
 
+export interface CourseAdminDetails {
+  courseId: number;
+  courseCode: string;
+  semesterName: string;
+  members: number;
+  creator: {
+    firstName: string;
+    lastName: string;
+  };
+}
+
+export interface StudentUser {
+  student_id: number;
+  id: number;
+}
+
+export interface EmployeeUser {
+  employee_id: number;
+  id: number;
+}
+
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
+
 export interface User {
   id: number;
   first_name: string;
@@ -17,18 +45,39 @@ export interface User {
   email: string;
   password?: string | null;
   avatar_url: string;
+  student_user: StudentUser | null;
+  employee_user: EmployeeUser | null;
+}
+
+export interface UpdatedUser {
+  first_name: string;
+  last_name?: string;
+  role?: string;
+  email?: string;
+  password?: string | null;
+  avatar_url?: string;
+  employee_id?: number | null;
+  student_id?: number | null;
+  email_verified?: boolean;
 }
 
 export interface Course {
   id: number;
   course_code: string;
   course_name: string;
-  semester_id: number;
-  section_name: string;
-  created_at: string;
-  updated_at: string;
+  created_at: number;
+  updated_at: number;
   is_archived: boolean;
   invite_code: string;
+  section_name: string;
+  semester: {
+    id: number;
+    name: string;
+    starts_at: number;
+    ends_at: number;
+    created_at: number;
+    updated_at: number;
+  };
 }
 export interface Exam {
   id: number;
@@ -97,6 +146,53 @@ export enum Status {
   Failure = "FAILURE",
   Pending = "PENDING",
   InvalidDate = "INVALID DATE",
+  Redirect = "REDIRECT",
+}
+
+export enum FormValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  PasswordsDoNotMatch = "PASSWORDS DO NOT MATCH",
+  WeakPassword = "WEAK PASSWORD",
+  FirstNameLengthOutOfBounds = "FIRST NAME LENGTH OUT OF BOUNDS",
+}
+
+export enum EmailValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  Pending = "PENDING",
+}
+
+export interface SignUpFormData {
+  first_name: string;
+  last_name: string | null;
+  email: string;
+  password: string;
+  confirm_password: string;
+  student_id: number | null;
+  employee_id: number | null;
+}
+
+export interface userLoginData {
+  email: string;
+  password: string;
+}
+
+export interface requestResetPasswordData {
+  email: string;
+}
+
+export interface resetPasswordData {
+  token: string;
+  password: string;
+  confirm_password: string;
+}
+
+// for authentication pages
+export interface redirectModalData {
+  message: string;
+  redirectPath: string;
+  buttonText: string;
 }
 
 export interface CourseUser {
@@ -118,6 +214,20 @@ export enum SelectedButton {
   None = "NONE",
 }
 
+export interface SemesterData {
+  name: string;
+  starts_at: number;
+  ends_at: number;
+  course_count?: number;
+}
+
+export enum SemesterValid {
+  Valid = "VALID",
+  Invalid = "INVALID",
+  DatesInThePast = "DATES IN THE PAST",
+  EndDateBeforeStartDate = "END DATE BEFORE START DATE",
+}
+
 export interface StudentSubmission {
   exam: {
     id: number;
@@ -134,4 +244,29 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
+}
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
+}
+
+export interface AnalyticsSubmission {
+  exam: {
+    id: number;
+    title: string;
+  };
+  submissions: AnalyticsExamSubmission[];
+}
+
+export interface CourseAnalytics {
+  courseMembersSize: number;
+  courseExamsCount: number;
+  examSubmissionsCount: number;
+  examSubmissions: AnalyticsSubmission[];
 }

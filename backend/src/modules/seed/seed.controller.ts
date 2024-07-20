@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { TokenModel } from '../token/entities/token.entity';
 import { CourseUserModel } from '../course/entities/course-user.entity';
@@ -11,8 +11,10 @@ import { SubmissionModel } from '../exam/entities/submission.entity';
 import { SemesterModel } from '../semester/entities/semester.entity';
 import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';
-import { CourseRoleEnum, UserRoleEnum } from 'src/enums/user.enum';
+import { CourseRoleEnum, UserRoleEnum } from '../../enums/user.enum';
+import { EnvironmentGuard } from '../../guards/environment.guard';
 
+@UseGuards(EnvironmentGuard)
 @Controller('seed')
 export class SeedController {
   private readonly SALT_ROUNDS: number = 10;
@@ -62,8 +64,8 @@ export class SeedController {
     // Create users
     const student = await UserModel.create({
       email: 'student@owlmark.com',
-      first_name: faker.name.firstName(),
-      last_name: faker.name.lastName(),
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
       email_verified: true,
@@ -72,8 +74,8 @@ export class SeedController {
 
     const professor = await UserModel.create({
       email: 'professor@owlmark.com',
-      first_name: faker.name.firstName(),
-      last_name: faker.name.lastName(),
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
       email_verified: true,
@@ -83,8 +85,8 @@ export class SeedController {
 
     const admin = await UserModel.create({
       email: 'admin@owlmark.com',
-      first_name: faker.name.firstName(),
-      last_name: faker.name.lastName(),
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
       email_verified: true,

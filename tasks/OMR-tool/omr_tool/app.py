@@ -1,6 +1,7 @@
 from PIL.Image import Image
 from omr_pipeline.omr_tasks import create_answer_key, mark_submission_page
 from utils.pdf_to_images import convert_to_images
+from utils.images_to_pdf import convert_to_pdf
 from pathlib import Path
 import requests
 import os
@@ -57,10 +58,9 @@ def process_submission_group(
 
     return submission_results, graded_imgs
 
-# TODO: Consider moving to a shared module
-
 
 def request_job(backend_url, queue_name):
+    # TODO: Consider moving to a shared module
     """Request a job from the backend by sending a GET request
 
     Args:
@@ -92,10 +92,9 @@ def request_job(backend_url, queue_name):
 
     return job_id, payload
 
-# TODO: Consider moving to a shared module
-
 
 def complete_job(backend_url, queue_name, job_id, unique_id):
+    # TODO: Consider moving to a shared module
     """Complete a job by sending a PATCH request to the backend
 
     Args:
@@ -111,6 +110,37 @@ def complete_job(backend_url, queue_name, job_id, unique_id):
     )
 
     logging.info(f"Job #{job_id} completed. Releasing it from queue")
+
+
+def send_grades(backend_url, exam_id, submission_results):
+    """Send grades to the backend
+
+    Args:
+        backend_url (str): URL of the backend
+        exam_id (str): ID of the exam
+        submission_results: A dictionary containing the following information:
+            - "student_id" (str): The ID of the student.
+            - "document_path" (str): The path of the document.
+            - "score" (int): The total score of the submission.
+            - "answers" (dict): A dictionary containing the list of answers.
+                - "answer_list" (list): A list of dictionaries representing each answer.
+    """
+
+    student_id = submission_results["student_id"]
+
+    request = requests.post(
+        f"{backend_url}/exam/{exam_id}/{student_id}",
+        headers={"x-worker-auth-token": os.getenv("WORKER_TOKEN")},
+        data={'answers': submission_results["answers"],
+              'score': submission_results["score"],
+              'documentPath': submission_results["document_path"]}
+    )
+
+    if request.status_code == 401:
+        logging.critical("Invalid WORKER token")
+
+    if request.status_code == 404:
+        logging.info("Exam not found for course")
 
 
 def app():
@@ -149,17 +179,16 @@ def app():
             group_images, answer_key
         )
 
+        # convert graded images to PDF
         student_id = submission_results["student_id"]
-        output_pdf_path = conv_to_pdf(
+        output_pdf_path = convert_to_pdf(
             graded_imgs, sub_out_dir, f"{course_id}_{exam_id}_{student_id}")
+        submission_results["document_path"] = output_pdf_path
 
-        # convert graded images to PDF and name the resulting file "courseId_examId_studentId"
-        # submission_results["document_path"] = output_pdf_path
+        # TODO: (its own module) send "courseId_examId_studentId" file to backend
 
-        # (its own module) send "courseId_examId_studentId" file to backend
         # send grades to backend
-        #  - 'POST /exam/:eid/:studentId'
-        #  - send({ submission_results["answers"], submission_results["score"], submission_results["document_path"] })
+        send_grades(backend_url, exam_id, submission_results)
 
         # ---
 

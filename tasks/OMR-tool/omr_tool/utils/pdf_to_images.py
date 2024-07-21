@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 def check_is_pdf(file_path: str) -> bool:
     """Check if the file is a PDF."""
-    if file_path.suffix == ".pdf":
+    if file_path.endswith(".pdf"):
         return True
-    if file_path.suffix in (".png", ".jpg", ".jpeg"):
+    if file_path.endswith((".png", ".jpg", ".jpeg")):
         return False
     raise ValueError(
         f'File Path "{file_path}" does not point to a PDF or allowed image type'

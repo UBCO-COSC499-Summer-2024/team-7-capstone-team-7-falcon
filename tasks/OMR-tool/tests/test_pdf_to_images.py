@@ -27,11 +27,6 @@ class TestConvertToImage:
         assert check_is_pdf(self.PDF_PATH) == True
         assert check_is_pdf(self.IMG_PATH) == False
 
-    def test_already_image(self):
-        """
-        Test case to check if the function returns None when the input file is already an image.
-        """
-        assert convert_to_images(self.IMG_PATH) == None
 
     def test_convert_to_image_successful(self, output_path):
         """

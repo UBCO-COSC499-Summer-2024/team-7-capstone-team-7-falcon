@@ -71,7 +71,7 @@ def request_job(backend_url, queue_name):
         tuple: job_id, payload
     """
     request = requests.get(
-        f"{backend_url}/{queue_name}/pick",
+        f"{backend_url}/queue/{queue_name}/pick",
         headers={"x-queue-auth-token": os.getenv("API_TOKEN")},
     )
 
@@ -104,7 +104,7 @@ def complete_job(backend_url, queue_name, job_id, unique_id):
         unique_id (str): unique identifier to store the file in folder
     """
     requests.patch(
-        f"{backend_url}/{queue_name}/{job_id}/complete",
+        f"{backend_url}/queue/{queue_name}/{job_id}/complete",
         headers={"x-queue-auth-token": os.getenv("API_TOKEN")},
         json={"payload": {"filePath": f"{unique_id}"}},
     )

@@ -1,13 +1,44 @@
+import cv2
+import numpy as np
+from omr_tool.utils.image_process import threshold_img
 
-def get_answers(answer_boxes):
-    pass
 
+def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
+    if question_num < len(answer_key):
+        isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
+        color = (0, 255, 0) if isCorrect else (0, 0, 255)
+        contour_index = answer_key[question_num]
+    else:
+        color = (255, 0, 0)
+        contour_index = 0
+    return color, contour_index
+
+def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
+    bubbled = None
+    bubbled_amount = 0
+    thresh = threshold_img(mask, grayscale=False)
+    for i, cnt in enumerate(sorted_bubble_contours):
+        mask = np.zeros(thresh.shape, dtype="uint8")
+        cv2.drawContours(mask, [cnt], -1, 255, -1)
+        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
+        total = cv2.countNonZero(mask)
+        if bubbled is None or total > min_threshold:
+            bubbled = i
+            bubbled_amount += 1
+    if bubbled_amount > 2:
+            return False, bubbled
+    if bubbled is None:
+        return False, None
+    if bubbled == expected_answer:
+        return True, bubbled
+    else:
+        return False, bubbled
     
 
 def populate_answer_key(answer_key_img):
     pass
 
-def order_answers(box, answer_list):
+def order_questions(box, answer_list):
     """
     Orders the answer boxes into a 2D list based on their coordinates.
 

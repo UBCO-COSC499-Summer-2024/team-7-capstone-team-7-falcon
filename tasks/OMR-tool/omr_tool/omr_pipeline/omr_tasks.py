@@ -1,9 +1,10 @@
-import PIL.Image
-from omr_pipeline.generate_grades import order_answers
-from utils.image_process import prepare_img
-from object_inference.inferencer import Inferencer
+from PIL.Image import Image
+from omr_tool.omr_pipeline.generate_grades import order_questions, evaluate_answer
+from omr_tool.utils.image_process import generate_bubble_contours, prepare_img
+from omr_tool.object_inference.inferencer import Inferencer
 import cv2
 import numpy as np
+from itertools import chain
 
 """
 The primary sequence for OMR grading
@@ -24,13 +25,13 @@ def create_answer_key(key_imgs: list):
     answer_key = []
 
     for img in key_imgs:
-        page_answers = omr_on_image(img, is_answer_key=True)
+        page_answers = omr_on_image(img)
         answer_key.append(page_answers)
 
     return answer_key
 
 
-def mark_submission_page(submission_img: PIL.Image, answer_key: dict):
+def mark_submission_page(submission_img: Image, answer_key: list):
     """
     Mark a single submission page and generate the corresponding results.
 
@@ -56,44 +57,76 @@ def mark_submission_page(submission_img: PIL.Image, answer_key: dict):
         "answers": []
     }
 
-    graded_img = omr_on_image(submission_img)
+    graded_img = omr_on_image(submission_img, answer_key)
 
     return submission_results, graded_img
 
 
-def omr_on_image(raw_image: PIL.Image, is_answer_key: bool = False):
-    prepped_image = prepare_img(raw_image)
-
+def omr_on_image(input_image: Image, answer_key=[]):
+    prepped_image = prepare_img(input_image)
+    output_image = input_image.copy()
     inference_tool = Inferencer()
+    answers, total_score = [], 0
 
     boxes, scores, classes = inference_tool.infer(prepped_image)
-    answer_list = []
+    question_2d_list = get_question_boxes(inference_tool, boxes, classes)
+
+    flat_list = [
+        question_bounds for column in question_2d_list for question_bounds in column]
+    for question_num, question_bounds in enumerate(flat_list):
+        roi_cropped = extract_roi(prepped_image, question_bounds)
+        bubble_contours = generate_bubble_contours(roi_cropped)
+        color, contour_index = evaluate_answer(
+            roi_cropped, bubble_contours, answer_key, question_num)
+        translated_contour = bubble_contours[contour_index] + \
+            [question_bounds[0], question_bounds[1]]
+        cv2.drawContours(output_image, [translated_contour], -1, color, 2)
+
+    return total_score, answers, output_image
+
+
+def get_question_boxes(inference_tool, boxes, classes):
+    question_2d_list = []
     for i, box in enumerate(boxes):
         if inference_tool.inference_classes[classes[i]] == "answer":
-            answer_list = order_answers(box, answer_list)
+            question_2d_list = order_questions(box, question_2d_list)
+    return question_2d_list
 
-    for col in answer_list:
-        for i, question in enumerate(col):
-            x1, y1, x2, y2 = map(int, answer_list[col][question])
 
-    #         color = 255
-    #         cv2.rectangle(prepped_image, (x1, y1), (x2, y2), (0, 255, color), 2)
-    #         cv2.putText(
-    #             prepped_image,
-    #             f"{col+1}, {question+1}",
-    #             (x1, y1 - 10),
-    #             cv2.FONT_HERSHEY_SIMPLEX,
-    #             0.9,
-    #             (0, 255, color),
-    #             2,
-    #         )
-    # cv2.imshow("Inference", cv2.resize(prepped_image, (600, 800)))
-    # cv2.waitKey(0)
+def extract_roi(image, question_bounds):
+    """
+    Extracts the region of interest (ROI) from the given image based on the provided question bounds.
+
+    Parameters:
+        image (numpy.ndarray): The input image from which the ROI needs to be extracted.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The cropped ROI image.
+
+    """
+    mask = np.zeros(image.shape[:2], dtype="uint8")
+    x1, y1, x2, y2 = question_bounds
+    cv2.fillPoly(
+        mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
+    roi = cv2.bitwise_and(image, image, mask=mask)
+    roi_cropped = roi[y1:y2, x1:x2]
+    return roi_cropped
 
 
 if __name__ == "__main__":
     from pathlib import Path
     from omr_tool.utils.pdf_to_images import convert_to_images
+    answer_key = [1, 1, 4, 2, 2, 2, 3, 2, 2, 4,
+                  3, 1, 4, 4, 1, 0, 3, 1, 3, 2,
+                  0, 1, 3, 1, 1, 0, 0, 2, 0, 4,
+                  4, 3, 0, 0, 1, 1, 2, 3, 3, 4,
+                  0, 4, 1, 0, 0, 1, 3, 4, 0, 0,
+                  0, 2, 4, 1, 0, 2, 1, 3, 1, 4,
+                  1, 4, 2, 3, 0, 1, 0, 2, 0, 4,
+                  2, 0, 4, 4, 0, 3, 4, 4, 1, 1,
+                  4, 3, 4, 0, 3, 4, 0, 4, 4, 3,
+                  2, 2, 3, 4, 1, 0, 4, 4, 4, 1]
 
     sheet_path = (
         Path(__file__).resolve().parents[2] /
@@ -101,4 +134,7 @@ if __name__ == "__main__":
     )
     print(sheet_path)
     images = convert_to_images(sheet_path)
-    omr_on_image(images[0])
+    score, grades, graded_image = omr_on_image(images[0], answer_key)
+    print(grades)
+    cv2.imshow("graded", cv2.resize(graded_image, (800, 1000)))
+    cv2.waitKey(0)

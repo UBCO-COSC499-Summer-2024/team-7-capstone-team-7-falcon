@@ -5,13 +5,13 @@ import { mean, median, quantile } from "d3-array";
 import {
   Course,
   StudentSubmission,
-  User,
 } from "../../../../../../../../../typings/backendDataTypes";
 import { coursesAPI } from "../../../../../../../../../api/coursesAPI";
-import { usersAPI } from "../../../../../../../../../api/usersAPI";
 import { examsAPI } from "../../../../../../../../../api/examAPI";
 import PdfViewer from "../../../../../../../../student/components/pdfViewer";
 import GradeDisplay from "../../../../../../../../components/gradeDisplay";
+import ChangeGrade from "../../../../../../../components/changeGrade";
+import { Toaster } from "react-hot-toast";
 
 const InstructorSubmissionPage = async ({
   params,
@@ -51,6 +51,7 @@ const InstructorSubmissionPage = async ({
 
   return (
     <div className="p-2">
+      <Toaster />
       <div className="grid grid-cols-2">
         <div className="col-span-1">
           <h1 className="text-4xl font-bold p-1">{course.course_code}</h1>
@@ -63,6 +64,12 @@ const InstructorSubmissionPage = async ({
           >
             <ArrowLeft /> Back
           </Link>
+          <ChangeGrade
+            examId={eid}
+            courseId={cid}
+            submissionId={submission.studentSubmission.id}
+            currentGrade={submission.studentSubmission.score}
+          />
         </div>
         <h3 className="text-xl p-1 mt-10 border-b-2 border-gray-300 col-span-2">
           Submission Details

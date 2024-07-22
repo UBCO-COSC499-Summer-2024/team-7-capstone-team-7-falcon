@@ -6,6 +6,7 @@ import {
   ExamData,
   StudentSubmission,
 } from "../typings/backendDataTypes";
+import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -441,6 +442,41 @@ export const examsAPI = {
       return response;
     } catch (error: any) {
       return error;
+    }
+  },
+
+  // @Patch('/:eid/course/:cid/submission/:sid/grade')
+  updateGrade: async (
+    examId: number,
+    courseId: number,
+    submissionId: number,
+    newGrade: number,
+  ) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const payload = {
+        grade: newGrade,
+      };
+
+      const response = await instance.patch(
+        `${examId}/course/${courseId}/submission/${submissionId}/grade`,
+        payload,
+      );
+      toast.success("Grade updated!");
+      return response;
+    } catch (error: any) {
+      //always axios error
+      toast.error("Failed to update grade");
+      console.error("Failed to update grade: ", error);
     }
   },
 };

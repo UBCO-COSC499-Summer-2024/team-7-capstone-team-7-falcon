@@ -74,8 +74,8 @@ const ViewExam = async ({
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-24 mt-4 border-t-2 border-black">
-          <div className="col-span-3 p-4">
+        <div className="grid grid-cols-5 mt-4 border-t-2 border-black">
+          <div className="col-span-3 py-4">
             <p className="">{}</p>
             {exam.exam_folder && exam.exam_folder?.length !== 0 ? (
               <Alert color="purple" rounded className="my-4">

@@ -39,7 +39,6 @@ const InstructorSubmissionPage = async ({
     Number(params.userId),
   );
   const submission: StudentSubmission = submissionResponse.data;
-  console.log("submissiondata", submission);
   if (!submissionResponse || !submission) {
     throw new Error("Submission does not exist");
   }
@@ -59,17 +58,11 @@ const InstructorSubmissionPage = async ({
         </div>
         <div className="justify-self-end space-y-4">
           <Link
-            href={`../`}
+            href={`../../`}
             className="space-x-4 flex items-center btn-primary px-8"
           >
             <ArrowLeft /> Back
           </Link>
-          <ChangeGrade
-            examId={eid}
-            courseId={cid}
-            submissionId={submission.studentSubmission.id}
-            currentGrade={submission.studentSubmission.score}
-          />
         </div>
         <h3 className="text-xl p-1 mt-10 border-b-2 border-gray-300 col-span-2">
           Submission Details
@@ -98,6 +91,12 @@ const InstructorSubmissionPage = async ({
               } as CSSProperties
             }
             textStyle={"font-normal text-normal"}
+          />
+          <ChangeGrade
+            examId={eid}
+            courseId={cid}
+            submissionId={submission.studentSubmission.id}
+            currentGrade={submission.studentSubmission.score}
           />
           <div className="text-normal mt-8 space-y-2">
             <p>Mean: {stats.meanValue}</p>

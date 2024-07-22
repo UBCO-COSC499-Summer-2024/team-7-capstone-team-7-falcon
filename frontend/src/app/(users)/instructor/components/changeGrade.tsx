@@ -24,6 +24,9 @@ const ChangeGrade: React.FC<ChangeGradeProps> = ({
   const handleKeyPress = async (e: any) => {
     if (e.key === "Enter") {
       examsAPI.updateGrade(examId, courseId, submissionId, grade);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   };
 

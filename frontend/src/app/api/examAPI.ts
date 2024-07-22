@@ -166,7 +166,6 @@ export const examsAPI = {
       const response = await instance.get(
         `/${examId}/${courseId}/user/${userId}/grade`,
       );
-      console.log("exam response", response);
       return response;
     } catch (error: any) {
       //always axios error

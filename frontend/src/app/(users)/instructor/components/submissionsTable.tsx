@@ -24,7 +24,7 @@ const exam_columns: Column[] = [
           imageTextWidth={`w-12`}
           textSize={1}
         />
-        <span className="mt-1">
+        <span className="mt-1 truncate flex-1 ">
           {item.user.first_name} {item.user.last_name ?? ""}
         </span>
       </div>

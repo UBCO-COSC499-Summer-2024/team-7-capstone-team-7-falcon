@@ -92,12 +92,15 @@ export interface Exam {
 export interface Submission {
   student_id: string;
   user: {
+    id: string;
     avatar_url: string;
     first_name: string;
     last_name: string;
   };
   score: number;
   updated_at: number;
+  submission_id: string;
+  exam_id: string;
 }
 
 export interface CourseRole {

@@ -444,7 +444,14 @@ export const examsAPI = {
     }
   },
 
-  // @Patch('/:eid/course/:cid/submission/:sid/grade')
+  /**
+   * Updates the grade for a user submission
+   * @param examId
+   * @param courseId
+   * @param submissionId
+   * @param newGrade
+   * @returns {Promise<AxiosResponse<any>>}
+   */
   updateGrade: async (
     examId: number,
     courseId: number,

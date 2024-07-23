@@ -283,4 +283,22 @@ export const coursesAPI = {
       throw error;
     }
   },
+  removeStudentFromCourse: async (course_id: number, user_id: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.delete(`/${course_id}/member/${user_id}`);
+      return response;
+    } catch (error: any) {
+      console.error("Failed to remove student from course: ", error);
+      return error;
+    }
+  },
 };

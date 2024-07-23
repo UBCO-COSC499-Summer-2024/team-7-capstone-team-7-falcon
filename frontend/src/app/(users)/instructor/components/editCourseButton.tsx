@@ -4,14 +4,14 @@ import Link from "next/link";
 import React from "react";
 
 interface EditCourseButtonProps {
-  course_id: number;
+  courseId: number;
 }
 
-const EditCourseButton: React.FC<EditCourseButtonProps> = ({ course_id }) => {
+const EditCourseButton: React.FC<EditCourseButtonProps> = ({ courseId }) => {
   return (
     <button type="button" className="btn-primary">
       <Link
-        href={`/instructor/course/${course_id}/edit-course`}
+        href={`/instructor/course/${courseId}/edit-course`}
         className="space-x-4 flex items-center"
       >
         <Edit />

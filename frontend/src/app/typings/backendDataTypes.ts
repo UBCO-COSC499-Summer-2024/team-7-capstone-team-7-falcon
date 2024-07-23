@@ -218,6 +218,7 @@ export enum SelectedButton {
   People = "PEOPLE",
   Analytics = "ANALYTICS",
   None = "NONE",
+  Edit_Course = "COURSE SETTINGS",
 }
 
 export interface SemesterData {

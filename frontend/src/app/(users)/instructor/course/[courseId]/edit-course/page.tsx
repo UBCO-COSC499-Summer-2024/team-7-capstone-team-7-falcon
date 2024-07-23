@@ -26,7 +26,7 @@ const EditCourse = async ({ params }: { params: { courseId: string } }) => {
             course_code={course.course_code}
             course_desc={course.course_name}
             course_id={course.id}
-            selected={SelectedButton.None}
+            selected={SelectedButton.Edit_Course}
           />
         </div>
         <div className="justify-self-end">

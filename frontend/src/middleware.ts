@@ -14,68 +14,6 @@ const userRoleMap = {
   admin: "/admin",
 };
 
-/**
- * Verifies if a jwt token is expired.
- *
- * @function isTokenExpired
- * @returns { boolean } - A boolean indicating if the token is expired.
- * @throws Will log an error message to the console if an error occurs when decoding the token.
- */
-const isTokenExpired = (token) => {
-  if (!token) return true;
-  try {
-    const decodedToken = jwtDecode(token);
-    const currentTime = parseInt(new Date().getTime().toString()) / 1000;
-    return decodedToken.exp < currentTime;
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return true;
-  }
-};
-
-/**
- * Fetches user details and extracts the role property.
- *
- * @async
- * @function getUserRole
- * @returns {Promise<string>} - A promise that resolves to the role of the user.
- * @throws Will log an error message to the console if fetching the user details fails.
- */
-const getUserRole = async (): Promise<string> => {
-  try {
-    const userDetails: User = await usersAPI.getUserDetails();
-    const userRole: string = userDetails.role;
-    return userRole;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * Verify that an authenticated user has at least one ID (employee or student) set.
- *
- * @async
- * @function verifyIdPresence
- * @returns {Promise<boolean>} - A promise that shows whether a user has at least one ID or not.
- * @throws Will log an error message to the console if fetching the user details fails.
- */
-const verifyIdPresence = async (): Promise<boolean> => {
-  try {
-    const userDetails: User = await usersAPI.getUserDetails();
-
-    // if user does not have any IDs set, return false
-    if (userDetails === null) {
-      return false;
-    }
-
-    return (
-      userDetails.student_user !== null || userDetails.employee_user !== null
-    );
-  } catch (error) {
-    throw error;
-  }
-};
-
 export async function middleware(request: NextRequest) {
   const { url, nextUrl } = request;
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);

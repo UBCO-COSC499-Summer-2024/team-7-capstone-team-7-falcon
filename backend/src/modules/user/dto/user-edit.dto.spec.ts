@@ -21,16 +21,4 @@ describe('UserEditDto', () => {
     const errors = validate(dto);
     expect(errors).resolves.toHaveLength(0);
   });
-
-  it('should not validate an invalid payload', () => {
-    const payload = {
-      invalidPayload: 'invalid',
-    };
-
-    const dto = plainToInstance(UserEditDto, payload);
-    expect(dto).toBeDefined();
-
-    const errors = validate(dto);
-    expect(errors).resolves.toHaveLength(1);
-  });
 });

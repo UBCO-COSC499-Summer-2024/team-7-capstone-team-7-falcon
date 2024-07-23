@@ -5,6 +5,7 @@ import { Edit } from "flowbite-react-icons/solid";
 import CreateSemesterForm from "../components/createSemesterForm";
 import { Status } from "../../typings/backendDataTypes";
 import SemesterTable from "../components/semesterTable";
+import { Toaster } from "react-hot-toast";
 
 /**
  * Renders the admin semester management page.
@@ -20,6 +21,7 @@ const AdminSemesterManagement: React.FC = () => {
 
   return (
     <>
+      <Toaster />
       {status === Status.Success && (
         <CreateSemesterForm onClose={resetStatus} />
       )}

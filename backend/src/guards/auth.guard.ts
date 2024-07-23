@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -11,6 +12,7 @@ import { getCookie } from '../common/helpers';
 import { UserService } from '../modules/user/user.service';
 import { AuthTypeEnum } from '../enums/user.enum';
 import { ERROR_MESSAGES } from '../common';
+import { UserModel } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -48,10 +50,12 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
+    const user = await this.validateUserExists(request);
+
     // Validate if the email is verified
-    await this.validateEmailVerified(request);
+    await this.validateEmailVerified(user);
     // Validate if the student or employee id is present
-    await this.validateStudentEmployeeIdProvided(request);
+    await this.validateStudentEmployeeIdProvided(request, user);
 
     return true;
   }
@@ -82,15 +86,9 @@ export class AuthGuard implements CanActivate {
 
   /**
    * Validates if the email is verified
-   * @param request {Request} - The request object
+   * @param user {UserModel} - The user model
    */
-  private async validateEmailVerified(request: Request): Promise<void> {
-    const user = await this.userService.getUserById(request['user'].id);
-    // Additional check to ensure that the user exists
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
+  private async validateEmailVerified(user: UserModel): Promise<void> {
     // We should only raise an error if the user is trying to login with AuthType that requires email & password only
     if (!user.email_verified && user.auth_type === AuthTypeEnum.EMAIL) {
       // Frontend should redirect to the email verification page based on the Forbidden status code
@@ -101,18 +99,35 @@ export class AuthGuard implements CanActivate {
     }
   }
 
+  /**
+   * Validates if the user exists
+   * @param request {Request} - The request object
+   * @returns {Promise<UserModel>} - The user model
+   */
+  private async validateUserExists(request: Request): Promise<UserModel> {
+    const user = await this.userService.getUserById(request['user'].id);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
+  }
+
+  /**
+   * Validates if the student or employee id is present
+   * @param request {Request} - The request object
+   * @param user {UserModel} - The user model
+   * @returns {Promise<void>} - The result of the validation
+   */
   private async validateStudentEmployeeIdProvided(
     request: Request,
+    user: UserModel,
   ): Promise<void> {
-    const user = await this.userService.getUserById(request['user'].id);
-    // Additional check to ensure that the user exists
-    if (!user) {
-      throw new UnauthorizedException();
-    }
     // Allow PATCH request to update user details. PATH must be /user/{id}
     // Allow GET request to logout user if the path is /auth/logout
     if (
-      (request.method === 'PATCH' && request.path.match(/\/user\/[1-9]$/)) ||
+      (request.method === 'PATCH' && request.path.match(/\/user\/(\d+|-1)$/)) ||
       (request.method === 'GET' && request.path === '/auth/logout')
     )
       return;

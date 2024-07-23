@@ -9,7 +9,7 @@ interface RedirectModalProps {
   buttonText: string;
 }
 
-const RedirectModal: React.FC<{ RedirectModalProps }> = (props) => {
+const RedirectModal: React.FC<RedirectModalProps> = (props) => {
   const { message, redirectPath, buttonText } = props;
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(true);

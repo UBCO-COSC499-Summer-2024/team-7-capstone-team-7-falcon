@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useRef, useState, FormEvent, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
+import { Button, Label, TextInput, Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import {
   SignUpFormData,
@@ -15,9 +14,9 @@ import RedirectModal from "../components/redirectModal";
 import { authAPI } from "@/app/api/authAPI";
 
 export default function SignUpPage() {
-  const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
   const [formValid, setFormValid] = useState(FormValid.Invalid);
+  const [domLoaded, setDomLoaded] = useState(false);
 
   // stores data needed for the redirect modal
   const redirectInfo = useRef<redirectModalData>({
@@ -78,6 +77,7 @@ export default function SignUpPage() {
     if (formValid === FormValid.Valid) {
       setStatus(Status.Success);
     }
+    setDomLoaded(true);
   }, [formValid]);
 
   // needed for account setup form
@@ -149,181 +149,189 @@ export default function SignUpPage() {
   }
 
   return (
-    <>
-      {status === Status.Success && (
-        <AccountSetupForm
-          userID={userID}
-          handleInputChange={handleInputChange}
-          onSetup={onSetup}
-        />
-      )}
-      {status === Status.Redirect && (
-        <RedirectModal
-          message={redirectInfo.current.message}
-          redirectPath={redirectInfo.current.redirectPath}
-          buttonText={redirectInfo.current.buttonText}
-        />
-      )}
-      <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
-        <form
-          onSubmit={onSignUp}
-          className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md "
-        >
-          <h1 className="text-center font-bold mb-3">OwlMark OMS Portal</h1>
-          <h2 className="text-md mb-6 text-center text-gray-400">
-            Create an Account
-          </h2>
-
-          <div className="mb-4">
-            <Label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="first_name"
-            >
-              First Name
-            </Label>
-            <TextInput
-              className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              id="first_name"
-              type="text"
-              value={formUserInfo.first_name}
-              onChange={(e) =>
-                setFormUserInfo({ ...formUserInfo, first_name: e.target.value })
-              }
-              placeholder="John"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <Label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="last_name"
-            >
-              Last Name
-            </Label>
-            <TextInput
-              className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              id="last_name"
-              type="text"
-              value={formUserInfo.last_name}
-              onChange={(e) =>
-                setFormUserInfo({ ...formUserInfo, last_name: e.target.value })
-              }
-              placeholder="Adams"
-            />
-          </div>
-
-          <div className="mb-4">
-            <Label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="email"
-            >
-              Email
-            </Label>
-            <TextInput
-              className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              id="email"
-              type="email"
-              value={formUserInfo.email}
-              onChange={(e) =>
-                setFormUserInfo({ ...formUserInfo, email: e.target.value })
-              }
-              placeholder="john123@gmail.com"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <Label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="password"
-            >
-              Password
-            </Label>
-            <TextInput
-              className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              id="password"
-              type="password"
-              value={formUserInfo.password}
-              onChange={(e) =>
-                setFormUserInfo({ ...formUserInfo, password: e.target.value })
-              }
-              placeholder="********"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <Label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="confirm_password"
-            >
-              Confirm Password
-            </Label>
-            <TextInput
-              className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              id="confirm_password"
-              type="password"
-              value={formUserInfo.confirm_password}
-              onChange={(e) =>
-                setFormUserInfo({
-                  ...formUserInfo,
-                  confirm_password: e.target.value,
-                })
-              }
-              placeholder="********"
-              required
-            />
-          </div>
-
-          {formValid === FormValid.FirstNameLengthOutOfBounds && (
-            <div className="mb-4">
-              <Alert color="failure" icon={HiInformationCircle}>
-                <span className="font-medium">
-                  First name length out of bounds! &nbsp;
-                </span>
-                The length of the first name should be between 2 and 15
-                characters.
-              </Alert>
-            </div>
-          )}
-
-          {formValid === FormValid.PasswordsDoNotMatch && (
-            <div className="mb-4">
-              <Alert color="failure" icon={HiInformationCircle}>
-                <span className="font-medium">Passwords do not match!</span>
-              </Alert>
-            </div>
-          )}
-
-          {formValid === FormValid.WeakPassword && (
-            <div className="mb-4">
-              <Alert color="failure" icon={HiInformationCircle}>
-                <span className="font-medium">Weak password! &nbsp;</span>
-                Passwords should be at least 8 characters long and contain at
-                least one lowercase letter, one uppercase letter, one number,
-                and one symbol.
-              </Alert>
-            </div>
-          )}
-
-          <Button
-            type="submit"
-            color="purple"
-            size="xs"
-            className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"
+    domLoaded && (
+      <>
+        {status === Status.Success && (
+          <AccountSetupForm
+            userID={userID}
+            handleInputChange={handleInputChange}
+            onSetup={onSetup}
+          />
+        )}
+        {status === Status.Redirect && (
+          <RedirectModal
+            message={redirectInfo.current.message}
+            redirectPath={redirectInfo.current.redirectPath}
+            buttonText={redirectInfo.current.buttonText}
+          />
+        )}
+        <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
+          <form
+            onSubmit={onSignUp}
+            className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md "
           >
-            Sign Up
-          </Button>
+            <h1 className="text-center font-bold mb-3">OwlMark OMS Portal</h1>
+            <h2 className="text-md mb-6 text-center text-gray-400">
+              Create an Account
+            </h2>
 
-          <Link
-            href="/login"
-            className="text-purple-500 font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center mt-4"
-          >
-            Login
-          </Link>
-        </form>
-      </div>
-    </>
+            <div className="mb-4">
+              <Label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="first_name"
+              >
+                First Name
+              </Label>
+              <TextInput
+                className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                id="first_name"
+                type="text"
+                value={formUserInfo.first_name}
+                onChange={(e) =>
+                  setFormUserInfo({
+                    ...formUserInfo,
+                    first_name: e.target.value,
+                  })
+                }
+                placeholder="John"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <Label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="last_name"
+              >
+                Last Name
+              </Label>
+              <TextInput
+                className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                id="last_name"
+                type="text"
+                value={formUserInfo.last_name ?? ""}
+                onChange={(e) =>
+                  setFormUserInfo({
+                    ...formUserInfo,
+                    last_name: e.target.value,
+                  })
+                }
+                placeholder="Adams"
+              />
+            </div>
+
+            <div className="mb-4">
+              <Label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
+                Email
+              </Label>
+              <TextInput
+                className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                id="email"
+                type="email"
+                value={formUserInfo.email}
+                onChange={(e) =>
+                  setFormUserInfo({ ...formUserInfo, email: e.target.value })
+                }
+                placeholder="john123@gmail.com"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <Label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="password"
+              >
+                Password
+              </Label>
+              <TextInput
+                className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                id="password"
+                type="password"
+                value={formUserInfo.password}
+                onChange={(e) =>
+                  setFormUserInfo({ ...formUserInfo, password: e.target.value })
+                }
+                placeholder="********"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <Label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="confirm_password"
+              >
+                Confirm Password
+              </Label>
+              <TextInput
+                className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                id="confirm_password"
+                type="password"
+                value={formUserInfo.confirm_password}
+                onChange={(e) =>
+                  setFormUserInfo({
+                    ...formUserInfo,
+                    confirm_password: e.target.value,
+                  })
+                }
+                placeholder="********"
+                required
+              />
+            </div>
+
+            {formValid === FormValid.FirstNameLengthOutOfBounds && (
+              <div className="mb-4">
+                <Alert color="failure" icon={HiInformationCircle}>
+                  <span className="font-medium">
+                    First name length out of bounds! &nbsp;
+                  </span>
+                  The length of the first name should be between 2 and 15
+                  characters.
+                </Alert>
+              </div>
+            )}
+
+            {formValid === FormValid.PasswordsDoNotMatch && (
+              <div className="mb-4">
+                <Alert color="failure" icon={HiInformationCircle}>
+                  <span className="font-medium">Passwords do not match!</span>
+                </Alert>
+              </div>
+            )}
+
+            {formValid === FormValid.WeakPassword && (
+              <div className="mb-4">
+                <Alert color="failure" icon={HiInformationCircle}>
+                  <span className="font-medium">Weak password! &nbsp;</span>
+                  Passwords should be at least 8 characters long and contain at
+                  least one lowercase letter, one uppercase letter, one number,
+                  and one symbol.
+                </Alert>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              color="purple"
+              size="xs"
+              className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"
+            >
+              Sign Up
+            </Button>
+
+            <Link
+              href="/login"
+              className="text-purple-500 font-medium text-primary-600 hover:underline dark:text-primary-500 flex items-center justify-center mt-4"
+            >
+              Login
+            </Link>
+          </form>
+        </div>
+      </>
+    )
   );
 }

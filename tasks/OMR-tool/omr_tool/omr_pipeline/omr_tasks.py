@@ -1,6 +1,6 @@
 from PIL.Image import Image
-from omr_tool.omr_pipeline.generate_grades import order_questions, evaluate_answer
-from omr_tool.utils.image_process import generate_bubble_contours, prepare_img
+from omr_tool.omr_pipeline.read_bubbles import order_questions, evaluate_answer
+from omr_tool.utils.image_process import generate_bubble_contours, prepare_img, threshold_img
 from omr_tool.object_inference.inferencer import Inferencer
 import cv2
 import numpy as np
@@ -10,7 +10,7 @@ The primary sequence for OMR grading
 """
 
 
-def create_answer_key(key_imgs: list):
+def create_answer_key(key_imgs: list[Image]):
     """
     Process the answer key for the exam.
 
@@ -63,7 +63,7 @@ def process_submission_group(
             submission_img, answer_key
         )
 
-        if student_id is not "":
+        if student_id != "":
             submission_results["student_id"] = student_id
         submission_results["answers"]["answer_list"].append(answers)
         submission_results["score"] += score
@@ -82,11 +82,11 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
 
     boxes, scores, classes = inference_tool.infer(prepped_image)
 
-    detected_student_num, question_2d_list = get_question_boxes(
+    student_num_section, question_2d_list = identify_page_details(
         inference_tool, boxes, classes
     )
-    if detected_student_num != "":
-        student_id = detected_student_num
+    if student_num_section is not None:
+        student_id = extract_student_num(prepped_image, student_num_section)
 
     flat_list = [
         question_bounds for column in question_2d_list for question_bounds in column
@@ -94,26 +94,47 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
     for question_num, question_bounds in enumerate(flat_list):
         roi_cropped = extract_roi(prepped_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
-        color, contour_index = evaluate_answer(
+        color, answer_indices = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )
-        translated_contour = bubble_contours[contour_index] + [
-            question_bounds[0],
-            question_bounds[1],
-        ]
-        cv2.drawContours(output_image, [translated_contour], -1, color, 2)
+        for idx in answer_indices:
+            translated_contour = bubble_contours[idx] + [
+                question_bounds[0],
+                question_bounds[1],
+            ]
+            cv2.drawContours(output_image, [translated_contour], -1, color, 2)
 
     return student_id, total_score, answers, output_image
 
 
-def get_question_boxes(inference_tool, boxes, classes):
+def identify_page_details(inference_tool, boxes, classes):
+    student_num_section = None
     question_2d_list = []
     for i, box in enumerate(boxes):
         if inference_tool.inference_classes[classes[i]] == "answer":
             question_2d_list = order_questions(box, question_2d_list)
-    print(inference_tool.inference_classes)
-    return question_2d_list
+        if inference_tool.inference_classes[classes[i]] == "student-num-section":
+            student_num_section = box
+    return student_num_section, question_2d_list
 
+def extract_student_num(prepped_image, section):
+    x1, y1, x2, y2 = map(int, section)
+    student_id = ""
+    student_num_roi = extract_roi(prepped_image, (x1, y1, x2, y2))
+    bubble_contours = generate_bubble_contours(student_num_roi)
+    thresh = threshold_img(student_num_roi, grayscale=False) 
+    id_num = 0
+    for cnt in bubble_contours:
+        mask = np.zeros(thresh.shape, dtype="uint8")
+        cv2.drawContours(mask, [cnt], -1, 255, -1)
+        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
+        total = cv2.countNonZero(mask)
+
+    id_num = 0
+    # for bubble in generate_bubble_contours:
+
+    
+    return student_id
 
 def extract_roi(image, question_bounds):
     """
@@ -141,11 +162,11 @@ if __name__ == "__main__":
 
     answer_key = [
         1,
-        1,
+        [1],
         4,
         2,
         2,
-        2,
+        [1,2],
         3,
         2,
         2,
@@ -247,7 +268,8 @@ if __name__ == "__main__":
     )
     print(sheet_path)
     images = convert_to_images(sheet_path)
-    score, grades, graded_image = omr_on_image(images[0], answer_key)
+    student_id, score, grades, graded_image = omr_on_image(images[0], answer_key)
+    print(student_id)
     print(grades)
     cv2.imshow("graded", cv2.resize(graded_image, (800, 1000)))
     cv2.waitKey(0)

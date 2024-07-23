@@ -66,6 +66,8 @@ export const usersAPI = {
       ) {
         // handle the case where no IDs are set for the user
         return null;
+      } else if (error.response && error.response.status === 404) {
+        throw new Error("User not found");
       } else {
         console.error("Failed to fetch user details:", error);
       }

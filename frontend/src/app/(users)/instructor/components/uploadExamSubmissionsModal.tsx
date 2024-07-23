@@ -76,6 +76,7 @@ const UploadExamSubmissionsModal: React.FC<UploadExamSubmissionsModalProps> = ({
     if (result && result.status === 200) {
       toast.success(
         "Submissions uploaded successfully. Check back later for the results.",
+        { duration: 5_000 },
       );
       handleClose();
     } else {

@@ -19,12 +19,13 @@ const DashboardDataProvider: React.FC = () => {
         // Fetch users count
         const response = await usersAPI.getAllUsersCount();
 
-        const totalMembersCount = response.reduce(
-          (acc: number, curr: { role: string; count: number }) =>
-            acc + curr.count,
-          0,
-        );
-        setMembersCount(totalMembersCount);
+        let totalMembersCount = 0;
+
+        for (let i = 0; i < response.length; i++) {
+          totalMembersCount += Number(response[i].count);
+        }
+
+        setMembersCount(Number(totalMembersCount));
 
         const professors = response.find(
           (item: { role: string }) => item.role === "professor",

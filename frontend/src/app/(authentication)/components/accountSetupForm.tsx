@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, FormEvent } from "react";
+import React, { useState } from "react";
 import { Button, Label, TextInput, Radio } from "flowbite-react";
 
 export default function AccountSetupForm({
@@ -43,7 +43,7 @@ export default function AccountSetupForm({
               id="employee-role"
               name="roles"
               value="instructor"
-              onChange={(e) => setUserRole({ ...userRole, role: "instructor" })}
+              onChange={(_) => setUserRole({ ...userRole, role: "instructor" })}
             />
             <Label htmlFor="employee-role">employee</Label>
           </div>

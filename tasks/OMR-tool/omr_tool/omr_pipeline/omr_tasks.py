@@ -86,7 +86,9 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
         inference_tool, boxes, classes
     )
     if student_num_section is not None:
-        student_id = extract_student_num(prepped_image, student_num_section)
+        student_id, id_cnts = extract_student_num(prepped_image, student_num_section)
+        for cnt in id_cnts:
+            output_image = draw_bubble_contours(output_image, cnt, map(int, student_num_section), (255, 0, 0))
 
     flat_list = [
         question_bounds for column in question_2d_list for question_bounds in column
@@ -98,14 +100,35 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
             roi_cropped, bubble_contours, answer_key, question_num
         )
         for idx in answer_indices:
-            translated_contour = bubble_contours[idx] + [
-                question_bounds[0],
-                question_bounds[1],
-            ]
-            cv2.drawContours(output_image, [translated_contour], -1, color, 2)
+            output_image = draw_bubble_contours(
+                output_image, bubble_contours[idx], question_bounds, color
+            )
+            # translated_contour = bubble_contours[idx] + [
+            #     question_bounds[0],
+            #     question_bounds[1],
+            # ]
+            # cv2.drawContours(output_image, [translated_contour], -1, color, 2)
 
     return student_id, total_score, answers, output_image
 
+def draw_bubble_contours(image, bubble_contour, question_bounds, color):
+    """
+    Draw the bubble contours on the image.
+
+    Args:
+        image (numpy.ndarray): The input image.
+        bubble_contours (list): The list of bubble contours.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The image with the bubble contours drawn.
+
+    """
+    output_image = image.copy()
+    x1, y1, x2, y2 = question_bounds
+    repositioned_cnt = bubble_contour + [x1, y1]
+    cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2)
+    return output_image
 
 def identify_page_details(inference_tool, boxes, classes):
     student_num_section = None
@@ -117,24 +140,29 @@ def identify_page_details(inference_tool, boxes, classes):
             student_num_section = box
     return student_num_section, question_2d_list
 
-def extract_student_num(prepped_image, section):
+def extract_student_num(image, section):
     x1, y1, x2, y2 = map(int, section)
     student_id = ""
-    student_num_roi = extract_roi(prepped_image, (x1, y1, x2, y2))
+    student_num_roi = extract_roi(image, (x1, y1, x2, y2))
     bubble_contours = generate_bubble_contours(student_num_roi)
     thresh = threshold_img(student_num_roi, grayscale=False) 
     id_num = 0
+    bubbled = []
     for cnt in bubble_contours:
         mask = np.zeros(thresh.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-
-    id_num = 0
-    # for bubble in generate_bubble_contours:
+        if total > 450:
+            student_id += str(id_num)
+            bubbled.append(cnt)
+        if id_num == 9:
+            id_num = 0
+        else:
+            id_num += 1
 
     
-    return student_id
+    return student_id, bubbled
 
 def extract_roi(image, question_bounds):
     """

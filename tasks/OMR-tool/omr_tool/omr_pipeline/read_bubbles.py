@@ -22,10 +22,10 @@ def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=45
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-        if bubbled is None or total > min_threshold:
+        if total > min_threshold:
             bubbled.append(i)
             bubbled_amount += 1
-    if bubbled is None:
+    if bubbled == []:
         return False, None
     if bubbled == expected_answer:
         return True, bubbled

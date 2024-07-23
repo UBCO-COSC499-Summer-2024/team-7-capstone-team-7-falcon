@@ -156,9 +156,11 @@ def app():
     answer_key_path: str = payload.get("folderName")
     submission_path: str = payload.get("folderName")
 
-    # TODO: not too sure about this
     # output path where graded submission PDFs will be saved
-    sub_out_dir: str = payload.get("folderName")
+    sub_out_dir: str = (
+        Path(__file__).resolve().parents[3] / "backend" /
+        "uploads" / "exams" / "processed_submissions"
+    )
 
     # Generate an answer key from the answer key PDF (Should return a dict of answers)
     # Convert the answer key PDF to list of images
@@ -179,13 +181,11 @@ def app():
             group_images, answer_key
         )
 
-        # convert graded images to PDF
+        # convert graded images to PDF and send "courseId_examId_studentId" file to backend (manually)
         student_id = submission_results["student_id"]
         output_pdf_path = convert_to_pdf(
             graded_imgs, sub_out_dir, f"{course_id}_{exam_id}_{student_id}")
         submission_results["document_path"] = output_pdf_path
-
-        # TODO: (its own module) send "courseId_examId_studentId" file to backend
 
         # send grades to backend
         send_grades(backend_url, exam_id, submission_results)

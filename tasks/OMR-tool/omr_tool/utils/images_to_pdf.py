@@ -1,5 +1,6 @@
 import logging
 from PIL import Image
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,12 @@ def convert_to_pdf(graded_images, output_dir, file_name):
         Exception: If there was an error while converting the images to a PDF.
 
     """
+    # Ensure the directory for saving exists
+    try:
+        os.path.isdir(output_dir)
+    except OSError:
+        return
+
     try:
         pdf_path = f"{output_dir}/{file_name}.pdf"
         if not all(is_pil_image(img) for img in graded_images):

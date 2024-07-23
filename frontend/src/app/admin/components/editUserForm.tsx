@@ -39,10 +39,10 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
         });
         setAvatarUrl(user.avatar_url);
       } else {
-        toast.error("Failed to load user data");
+        throw new Error("Failed to load user data");
       }
     } catch (error) {
-      toast.error("Failed to load user data");
+      throw new Error("Failed to load user data");
     }
   };
 

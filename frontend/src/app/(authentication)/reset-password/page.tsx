@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import React, { useRef, useState, FormEvent, KeyboardEvent } from "react";
+import { Button, Label, TextInput } from "flowbite-react";
 import RedirectModal from "../components/redirectModal";
 import {
   Status,
@@ -12,7 +11,6 @@ import {
 import { authAPI } from "@/app/api/authAPI";
 
 export default function ResetPasswordPage() {
-  const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
   const [userEmail, setUserEmail] = useState<requestResetPasswordData>({
     email: "",
@@ -24,6 +22,15 @@ export default function ResetPasswordPage() {
     redirectPath: "",
     buttonText: "",
   });
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter") {
+      const form = event.currentTarget.closest("form");
+      if (form) {
+        onReset(new Event("submit") as unknown as FormEvent<HTMLFormElement>);
+      }
+    }
+  };
 
   async function onReset(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -74,7 +81,10 @@ export default function ResetPasswordPage() {
         />
       )}
       <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
-        <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
+        <form
+          className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md"
+          onSubmit={onReset}
+        >
           <h1 className="text-center font-bold mb-3">OwlMark OMS Portal</h1>
           <h2 className="text-md mb-6 text-center text-gray-400">
             Reset your password
@@ -95,13 +105,14 @@ export default function ResetPasswordPage() {
               onChange={(e) =>
                 setUserEmail({ ...userEmail, email: e.target.value })
               }
+              onKeyDown={handleKeyDown}
               placeholder="john123@gmail.com"
               required
             />
           </div>
 
           <Button
-            onClick={onReset}
+            onClick={(e: any) => onReset(e)}
             color="purple"
             size="xs"
             className="w-full text-white text-xl font-bold py-3 rounded-md transition duration-300"

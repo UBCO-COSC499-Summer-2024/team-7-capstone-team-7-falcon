@@ -27,7 +27,7 @@ const exam_columns: Column[] = [
           className="btn-primary flex p-1 px-4 items-center space-x-1"
         >
           <UserEdit />
-          <span>Edit</span>
+          <span>View</span>
         </button>
       </Link>
     ),

@@ -3,11 +3,16 @@ import CourseCard from "./courseCard";
 import { usersAPI } from "@/app/api/usersAPI";
 import { CourseRole } from "@/app/typings/backendDataTypes";
 
+// Define the props for CourseGrid
+interface CourseGridProps {
+  reload: boolean;
+}
+
 /**
  * CourseGrid component that displays a grid of course cards.
  * @returns {React.JSX.Element} - The CourseGrid component.
  */
-const CourseGrid: React.FC = () => {
+const CourseGrid: React.FC<CourseGridProps> = ({ reload }) => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [userCourses, setUserCourses] = React.useState<CourseRole[]>([]);
 
@@ -29,7 +34,7 @@ const CourseGrid: React.FC = () => {
     };
 
     fetchDataAsync();
-  }, []);
+  }, [reload]);
 
   if (!isLoaded) return <div>Loading...</div>;
   if (

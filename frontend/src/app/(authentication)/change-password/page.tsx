@@ -1,9 +1,7 @@
 "use client";
-import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
+import { Button, Label, TextInput, Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import RedirectModal from "../components/redirectModal";
 import {
@@ -15,7 +13,6 @@ import {
 import { authAPI } from "@/app/api/authAPI";
 
 export default function ChangePasswordPage() {
-  const router = useRouter();
   const [status, setStatus] = useState(Status.Pending);
   const [formValid, setFormValid] = useState(FormValid.Invalid);
   const searchParams = useSearchParams();
@@ -48,7 +45,7 @@ export default function ChangePasswordPage() {
     // update reset token
     // needs to be defined outside of onPasswordUpdate for the hook to work.
     const updateInfo = async () => {
-      setResetPassword({ ...resetPassword, token: reset_token });
+      setResetPassword({ ...resetPassword, token: reset_token ?? "" });
     };
 
     updateInfo();

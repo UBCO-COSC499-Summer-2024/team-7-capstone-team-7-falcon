@@ -7,14 +7,14 @@ def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     if question_num < len(answer_key):
         isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
         color = (0, 255, 0) if isCorrect else (0, 0, 255)
-        contour_index = answer_key[question_num]
+        answer_indices = filled_index
     else:
         color = (255, 0, 0)
-        contour_index = 0
-    return color, contour_index
+        answer_indices = [0]
+    return color, answer_indices
 
 def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
-    bubbled = None
+    bubbled = []
     bubbled_amount = 0
     thresh = threshold_img(mask, grayscale=False)
     for i, cnt in enumerate(sorted_bubble_contours):
@@ -22,12 +22,10 @@ def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=45
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-        if bubbled is None or total > min_threshold:
-            bubbled = i
+        if total > min_threshold:
+            bubbled.append(i)
             bubbled_amount += 1
-    if bubbled_amount > 2:
-            return False, bubbled
-    if bubbled is None:
+    if bubbled == []:
         return False, None
     if bubbled == expected_answer:
         return True, bubbled
@@ -63,7 +61,7 @@ def order_questions(box, answer_list):
         answer_list.append([box_coords])
         return answer_list
     for i, col in enumerate(answer_list):
-        col_x1, col_y1, col_x2, col_y2 = col[0]
+        col_x1, col_x2 = col[0][0], col[0][2]
         if abs(col_x1 - x1)/2 < 10 and abs(col_x2 - x2)/2 < 10:
             pos_index = 0 
             # Insert box in the current column if it fits

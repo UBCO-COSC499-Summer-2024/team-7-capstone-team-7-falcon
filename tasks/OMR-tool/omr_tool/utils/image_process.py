@@ -129,8 +129,10 @@ def generate_bubble_contours(image):
             ): 
                 bubble_contours.append(cnt)
     
-    #Sort Conbtours by x value
+    #Sort Contours by x value
     sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
+    
+    sorted_contours = sorted(sorted_contours, key=lambda cnt: cv2.boundingRect(cnt)[1])
 
     return sorted_contours
 

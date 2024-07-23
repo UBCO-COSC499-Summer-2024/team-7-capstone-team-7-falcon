@@ -142,7 +142,6 @@ def send_grades(backend_url, exam_id, submission_results):
     if request.status_code == 404:
         logging.info("Exam not found for course")
 
-
 def app():
 
     backend_url = os.getenv("BACKEND_URL")

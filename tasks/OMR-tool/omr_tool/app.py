@@ -1,47 +1,6 @@
 from PIL.Image import Image
-from omr_tool.omr_pipeline.omr_tasks import create_answer_key, mark_submission_page
+from omr_tool.omr_pipeline.omr_tasks import create_answer_key, process_submission_group
 from omr_tool.utils.pdf_to_images import convert_to_images
-
-
-def process_submission_group(
-    group_images: list[Image], answer_key: dict
-) -> tuple[dict, list[Image]]:
-    """
-    Process a group of submission images and generate the corresponding results.
-
-    Args:
-        group_images (list[Image]): A list of submission images.
-        answer_key (dict): The answer key for the OMR (Optical Mark Recognition) tool.
-
-    Returns:
-        tuple[dict, list[Image]]: A tuple containing the submission results and the graded images.
-            - submission_results (dict): A dictionary containing the following information:
-                - "student_id" (str): The ID of the student.
-                - "document_path" (str): The path of the document.
-                - "score" (int): The total score of the submission.
-                - "answers" (dict): A dictionary containing the list of answers.
-                    - "answer_list" (list): A list of dictionaries representing each answer.
-            - graded_imgs (list[Image]): A list of graded images.
-
-    """
-    submission_results: dict = {
-        "student_id": None,
-        "document_path": None,
-        "score": None,
-        "answers": {"answer_list": []},
-    }
-    graded_imgs: list[Image] = []
-    for submission_img in group_images:
-        page_results, new_img = mark_submission_page(submission_img, answer_key)
-
-        if page_results["student_id"] is not None:
-            submission_results["student_id"] = page_results["student_id"]
-        submission_results["answers"]["answer_list"].append(page_results["answers"])
-        submission_results["score"] += page_results["score"]
-
-        graded_imgs.append(new_img)
-
-    return submission_results, graded_imgs
 
 
 def app():

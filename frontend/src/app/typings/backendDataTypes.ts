@@ -273,3 +273,9 @@ export interface CourseAnalytics {
   examSubmissionsCount: number;
   examSubmissions: AnalyticsSubmission[];
 }
+export interface UserEditData {
+  first_name: string;
+  last_name: string;
+  student_id: number;
+  employee_id: number;
+}

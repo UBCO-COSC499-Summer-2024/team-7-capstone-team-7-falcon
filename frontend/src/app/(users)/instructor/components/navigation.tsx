@@ -11,9 +11,9 @@ const instructorLinks = [
     icon: <Book />,
   },
   {
-    title: "Exams",
+    title: "My Exams",
     href: {
-      base: "/instructor/exams",
+      base: "/instructor/exam",
     },
     icon: <Clipboard />,
   },

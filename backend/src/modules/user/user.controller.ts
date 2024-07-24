@@ -303,14 +303,14 @@ export class UserController {
     @Body(new ValidationPipe()) body: UserEditDto,
     @User() user: UserModel,
   ): Promise<Response> {
-    if (user.id !== uid && user.role !== UserRoleEnum.ADMIN) {
+    if (user.id !== uid && user.role !== UserRoleEnum.ADMIN && uid !== -1) {
       return res.status(HttpStatus.FORBIDDEN).send({
         message: ERROR_MESSAGES.userController.editForbidden,
       });
     }
 
     try {
-      await this.userService.editUser(uid, body);
+      await this.userService.editUser(uid === -1 ? user.id : uid, body);
       return res.status(HttpStatus.OK).send({ message: 'ok' });
     } catch (e) {
       if (e instanceof UserNotFoundException) {

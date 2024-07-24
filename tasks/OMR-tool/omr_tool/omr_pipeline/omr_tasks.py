@@ -1,6 +1,10 @@
 from PIL.Image import Image
 from omr_tool.omr_pipeline.read_bubbles import order_questions, evaluate_answer
-from omr_tool.utils.image_process import generate_bubble_contours, prepare_img, threshold_img
+from omr_tool.utils.image_process import (
+    generate_bubble_contours,
+    prepare_img,
+    threshold_img,
+)
 from omr_tool.object_inference.inferencer import Inferencer
 import cv2
 import numpy as np
@@ -88,7 +92,9 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
     if student_num_section is not None:
         student_id, id_cnts = extract_student_num(prepped_image, student_num_section)
         for cnt in id_cnts:
-            output_image = draw_bubble_contours(output_image, cnt, map(int, student_num_section), (255, 0, 0))
+            output_image = draw_bubble_contours(
+                output_image, cnt, map(int, student_num_section), (255, 0, 0)
+            )
 
     flat_list = [
         question_bounds for column in question_2d_list for question_bounds in column
@@ -111,6 +117,7 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
 
     return student_id, total_score, answers, output_image
 
+
 def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     """
     Draw the bubble contours on the image.
@@ -130,6 +137,7 @@ def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2)
     return output_image
 
+
 def identify_page_details(inference_tool, boxes, classes):
     student_num_section = None
     question_2d_list = []
@@ -140,12 +148,13 @@ def identify_page_details(inference_tool, boxes, classes):
             student_num_section = box
     return student_num_section, question_2d_list
 
+
 def extract_student_num(image, section):
     x1, y1, x2, y2 = map(int, section)
     student_id = ""
     student_num_roi = extract_roi(image, (x1, y1, x2, y2))
     bubble_contours = generate_bubble_contours(student_num_roi)
-    thresh = threshold_img(student_num_roi, grayscale=False) 
+    thresh = threshold_img(student_num_roi, grayscale=False)
     id_num = 0
     bubbled = []
     for cnt in bubble_contours:
@@ -161,8 +170,8 @@ def extract_student_num(image, section):
         else:
             id_num += 1
 
-    
     return student_id, bubbled
+
 
 def extract_roi(image, question_bounds):
     """
@@ -194,7 +203,7 @@ if __name__ == "__main__":
         4,
         2,
         2,
-        [1,2],
+        [1, 2],
         3,
         2,
         2,

@@ -41,6 +41,14 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // redirect to login page if user tries to access the root
+  // the next logic block will redirect to the dashboard if the user is authenticated and accesses the login page
+  if (nextUrl.pathname === "/") {
+    const redirectURL = new URL("/login", url);
+    const response = NextResponse.redirect(redirectURL);
+    return response;
+  }
+
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
     if (!hasVerifiedToken) {

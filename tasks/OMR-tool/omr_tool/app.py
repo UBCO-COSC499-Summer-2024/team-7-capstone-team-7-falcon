@@ -180,6 +180,7 @@ def app():
             group_images, answer_key
         )
 
+
         # convert graded images to PDF and send "courseId_examId_studentId" file to backend (manually)
         student_id = submission_results["student_id"]
         output_pdf_path = convert_to_pdf(
@@ -188,6 +189,7 @@ def app():
 
         # send grades to backend
         send_grades(backend_url, exam_id, submission_results)
+
 
         # ---
 

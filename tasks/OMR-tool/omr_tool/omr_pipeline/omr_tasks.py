@@ -1,6 +1,10 @@
 from PIL.Image import Image
 from omr_tool.omr_pipeline.read_bubbles import order_questions, evaluate_answer
-from omr_tool.utils.image_process import generate_bubble_contours, prepare_img, threshold_img
+from omr_tool.utils.image_process import (
+    generate_bubble_contours,
+    prepare_img,
+    threshold_img,
+)
 from omr_tool.object_inference.inferencer import Inferencer
 import cv2
 import numpy as np
@@ -88,7 +92,9 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
     if student_num_section is not None:
         student_id, id_cnts = extract_student_num(prepped_image, student_num_section)
         for cnt in id_cnts:
-            output_image = draw_bubble_contours(output_image, cnt, map(int, student_num_section), (255, 0, 0))
+            output_image = draw_bubble_contours(
+                output_image, cnt, map(int, student_num_section), (255, 0, 0)
+            )
 
     flat_list = [
         question_bounds for column in question_2d_list for question_bounds in column
@@ -96,20 +102,18 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
     for question_num, question_bounds in enumerate(flat_list):
         roi_cropped = extract_roi(prepped_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
-        color, answer_indices = evaluate_answer(
+        color, answer_indices, isCorrect = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )
         for idx in answer_indices:
             output_image = draw_bubble_contours(
                 output_image, bubble_contours[idx], question_bounds, color
             )
-            # translated_contour = bubble_contours[idx] + [
-            #     question_bounds[0],
-            #     question_bounds[1],
-            # ]
-            # cv2.drawContours(output_image, [translated_contour], -1, color, 2)
+        if isCorrect:
+            total_score += 1
 
     return student_id, total_score, answers, output_image
+
 
 def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     """
@@ -130,6 +134,7 @@ def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2)
     return output_image
 
+
 def identify_page_details(inference_tool, boxes, classes):
     student_num_section = None
     question_2d_list = []
@@ -140,12 +145,13 @@ def identify_page_details(inference_tool, boxes, classes):
             student_num_section = box
     return student_num_section, question_2d_list
 
+
 def extract_student_num(image, section):
     x1, y1, x2, y2 = map(int, section)
     student_id = ""
     student_num_roi = extract_roi(image, (x1, y1, x2, y2))
     bubble_contours = generate_bubble_contours(student_num_roi)
-    thresh = threshold_img(student_num_roi, grayscale=False) 
+    thresh = threshold_img(student_num_roi, grayscale=False)
     id_num = 0
     bubbled = []
     for cnt in bubble_contours:
@@ -153,7 +159,7 @@ def extract_student_num(image, section):
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-        if total > 450:
+        if total > 500:
             student_id += str(id_num)
             bubbled.append(cnt)
         if id_num == 9:
@@ -161,8 +167,8 @@ def extract_student_num(image, section):
         else:
             id_num += 1
 
-    
     return student_id, bubbled
+
 
 def extract_roi(image, question_bounds):
     """
@@ -189,106 +195,106 @@ if __name__ == "__main__":
     from omr_tool.utils.pdf_to_images import convert_to_images
 
     answer_key = [
-        1,
         [1],
-        4,
-        2,
-        2,
-        [1,2],
-        3,
-        2,
-        2,
-        4,
-        3,
-        1,
-        4,
-        4,
-        1,
-        0,
-        3,
-        1,
-        3,
-        2,
-        0,
-        1,
-        3,
-        1,
-        1,
-        0,
-        0,
-        2,
-        0,
-        4,
-        4,
-        3,
-        0,
-        0,
-        1,
-        1,
-        2,
-        3,
-        3,
-        4,
-        0,
-        4,
-        1,
-        0,
-        0,
-        1,
-        3,
-        4,
-        0,
-        0,
-        0,
-        2,
-        4,
-        1,
-        0,
-        2,
-        1,
-        3,
-        1,
-        4,
-        1,
-        4,
-        2,
-        3,
-        0,
-        1,
-        0,
-        2,
-        0,
-        4,
-        2,
-        0,
-        4,
-        4,
-        0,
-        3,
-        4,
-        4,
-        1,
-        1,
-        4,
-        3,
-        4,
-        0,
-        3,
-        4,
-        0,
-        4,
-        4,
-        3,
-        2,
-        2,
-        3,
-        4,
-        1,
-        0,
-        4,
-        4,
-        4,
-        1,
+        [1],
+        [4],
+        [2],
+        [2],
+        [1, 2],
+        [3],
+        [2],
+        [2],
+        [4],
+        [3],
+        [1],
+        [4],
+        [4],
+        [1],
+        [0],
+        [3],
+        [1],
+        [3],
+        [2],
+        [0],
+        [1],
+        [3],
+        [1],
+        [1],
+        [0],
+        [0],
+        [2],
+        [0],
+        [4],
+        [4],
+        [3],
+        [0],
+        [0],
+        [1],
+        [1],
+        [2],
+        [3],
+        [3],
+        [4],
+        [0],
+        [4],
+        [1],
+        [0],
+        [0],
+        [1],
+        [3],
+        [4],
+        [0],
+        [0],
+        [0],
+        [2],
+        [4],
+        [1],
+        [0],
+        [2],
+        [1],
+        [3],
+        [1],
+        [4],
+        [1],
+        [4],
+        [2],
+        [3],
+        [0],
+        [1],
+        [0],
+        [2],
+        [0],
+        [4],
+        [2],
+        [0],
+        [4],
+        [4],
+        [0],
+        [3],
+        [4],
+        [4],
+        [1],
+        [1],
+        [4],
+        [3],
+        [4],
+        [0],
+        [3],
+        [4],
+        [0],
+        [4],
+        [4],
+        [3],
+        [2],
+        [2],
+        [3],
+        [4],
+        [1],
+        [0],
+        [4],
+        [4],
+        [4],
+        [1],
     ]
 
     sheet_path = (
@@ -298,6 +304,7 @@ if __name__ == "__main__":
     images = convert_to_images(sheet_path)
     student_id, score, grades, graded_image = omr_on_image(images[0], answer_key)
     print(student_id)
+    print(score)
     print(grades)
     cv2.imshow("graded", cv2.resize(graded_image, (800, 1000)))
     cv2.waitKey(0)

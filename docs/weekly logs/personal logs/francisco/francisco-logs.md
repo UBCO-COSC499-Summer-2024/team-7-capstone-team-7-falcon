@@ -1,5 +1,41 @@
 # Personal Logs
 
+## Wednesday (7/19-7/23)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.19-07.23/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Debugging student number detection
+  2. Formatting payloads for the backend
+  3. Finalizing pipeline logic for final PR
+
+### Progress Update (since 7/19/2024)
+
+![ProjectBoard](07.19-07.23/board.png)
+
+  1. Added functionality for grading multiple choices per question
+  2. Added Student Number OMR detection
+  3. Debugged and contributed to endpoints for the OMR tool
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+I was not able to dedicate much time to working this weekend but in general progress is still looking good. Most of the main functionality is complete and only cleanup and outputs need to be finalized.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Fix student number generation
+  2. Complete payload creation for the backend
+  3. Organize the omr pipeline and document
+
+---
+---
+---
+
 ## Friday (7/17-7/18)
 
 ### Timesheet

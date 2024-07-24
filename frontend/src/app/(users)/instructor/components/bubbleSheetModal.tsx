@@ -95,6 +95,10 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
       },
     };
 
+    toast.success("Bubble sheet job has been submitted to the server", {
+      duration: 5_000,
+    });
+
     // make a request to create the job
     const response = await examsAPI.postBubbleSheet(payload);
 

@@ -22,32 +22,6 @@ I am happy that my PRs has been merged into development. Overall, it was a slow 
 
 I am going to try my best to get my upcoming PR merged into development.
 
-
-## Friday(7/17-7/18)
-
-<img width="1070" alt="image" src="https://github.com/user-attachments/assets/53e1d462-cd9d-4bea-adba-997f0530674e">
-
-### Project Board
-
-<img width="386" alt="image" src="https://github.com/user-attachments/assets/cf01480f-a726-41f4-8116-bb6273bfa599">
-
-## Current Tasks
-
-1. Complete Edit User Information page for Admin
-2. PR Reviews
-
-## Progress update since (7/17)
-
-I addressed the comments on the Course Settings page for instructors and tested it. I created a PR today for Edit User Information page that had some changes which have been addressed. 
-
-### Cycle Goal Review
-
-Overall, it was decent as I only had troubleshooting and fixes to do, apart from the Edit User Page. 
-
-## Next Cycle Goal
-
-Test frontend pages to see if there are any bug fixes and consider other edge cases. Make changes based on the Peer Testing feedback if required? 
-
 ## Friday(7/17-7/18)
 
 <img width="1070" alt="image" src="https://github.com/user-attachments/assets/53e1d462-cd9d-4bea-adba-997f0530674e">

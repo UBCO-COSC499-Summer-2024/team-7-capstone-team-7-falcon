@@ -1,5 +1,197 @@
 # Individual Logs
 
+## Friday (7/17 - 7/18)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07172024_07182024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Code review of other team members
+
+### Progress Update (since 7/17/2024)
+
+![GitHub Board](./images/github_07172024-07182024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #325
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle, I was mostly working on endpoints to create mock data for Peer testing. I haven't created a task for it as I am still debating whether it's worth adding these endpoints to our backend. Other than that, I was trying to fix the issue on frontend (and most likely on backend) where user with missing student/employee id is not able to update their account details.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Address the issue with frontend and backend when user tries to authenticate to the system, but missing student or employee id
+  * Add instructor page to view individual student's exam submission
+
+## Wednesday (7/12 - 7/16)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07122024_07162024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Preparing a seed data for Peer testing on Friday in backend
+  * #2: Help other team members with frontend pages
+  * #3: Reviewing PRs
+
+### Progress Update (since 7/12/2024)
+
+![GitHub Board](./images/github_07122024-07162024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #311
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #322
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #323
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #329
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #331
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #335
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #339
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #325
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle I was able to complete all of the backend endpoints that we need based on the UI design. I have also implemented frontend pages for these backend endpoints. In addition, I have frontend page for admin pages such as showing all of the current courses in the system, and course editing. Overall, our team is doing great and we hope that we will finish all of the work on frontend and backend this week, so that we can focus on either helping with OMR processing or addressing feedback during the peer testing.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Prepare for Peer testing on Friday by creating a seed data in backend
+  * Create test case scenarios for peer testing with a team
+  * (If I have time) Work on exam view page to allow instructors to change the grade and update student id
+
+## Friday (7/10 - 7/11)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07102024-07112024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Backend endpoints for queue system for OMR processing script
+
+### Progress Update (since 7/10/2024)
+
+![GitHub Board](./images/github_07102024-07112024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #239
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #294
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #311
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+For this cycle I promised to implement course analytics backend endpoint and start looking at implementing backend endpoints for OMR processing script. To summarize my progress, I have finished course analytics endpoint and it's being reviewed by the team. As for the OMR processing endpoints, I have a solid understanding of how it should be implemented; I strongly believe that I will be able to finish this work by the end of Wednesday. I hope that all remaining backend endpoints will be done by next Wednesday, which would allow me to dedicate time to help my team with the frontend work.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Finish backend endpoints for OMR processing script
+  * Add backend endpoint to delete exam in the course and connect it to frontend
+  * Add backend endpoint to download all submission grades for the exam in CSV file, and connect it to frontend
+  * Connect exam release backend endpoint with frontend
+  * Create a scheduled worker that archives courses when semester has ended
+
 ## Wednesday (7/5 - 7/9)
 
 ### Timesheet

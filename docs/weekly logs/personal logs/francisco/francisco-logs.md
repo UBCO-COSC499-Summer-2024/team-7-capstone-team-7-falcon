@@ -1,5 +1,113 @@
 # Personal Logs
 
+## Friday (7/17-7/18)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.17-07.18/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Creating the payloads for returning to the backend including score, answers, alerts, and images
+  2. Implementing answer key generation from images
+  3. Identifying student numbers
+  4. Documenting and writing tests for all the tasks
+  5. Setting up materials for the demo tomorrow
+
+### Progress Update (since 7/17/2024)
+
+![ProjectBoard](07.17-07.18/board.png)
+
+  1. Generating graded images is fully functional
+  2. Survey is created for the demo
+  3. Script is created for the demo
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle was a bit slower in OMR progress but still quite productive, it took a backburner so we could prepare for tomorrow.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have answer key generation done
+  2. Have functional student number identification
+  3. Have payloads ready
+
+---
+---
+---
+
+## Wednesday (7/12-7/16)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.12-07.16/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finish The grading pipeline in the OMR tool
+  2. Create data structures for Outputting answers and scores
+  3. Complete the graded page image generation for returning to backend as PDF
+
+### Progress Update (since 7/12/2024)
+
+![ProjectBoard](07.12-07.16/board.png)
+
+  1. Masking, cropping, contour detection, threshholding, and ordering of question inferenced objects is complete and functional. Grading formats just need to be resolved.
+  2. Scaffold for main app.py is completed and will also be worked on with Paula
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The OMR solution is still progressing well, I am still decently confident it will be done by the end of the week if everything keeps working as planned. Paula will be taking on a few of the tasks within the OMR pipeline so I have more time to dedicate to grading.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have page grading and image generation complete
+  2. Have the data formats and endpoints complete for backend
+  3. Have test examples ready for Peer testing
+
+---
+---
+---
+
+## Friday (7/10-7/11)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.10-07.11/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finish revisions for original OpenCV Utilities
+  2. Create the new Utilities for inferenced data with OpenCV
+  3. Integrate inferenced data into OMR Pipeline
+
+### Progress Update (since 7/10/2024)
+
+![ProjectBoard](07.10-07.11/board.png)
+
+  1. Created tests for, optimized, and cleaned up the Inference class to be pushed to the development branch
+  2. Prepared the other OpenCV Utilities to integrate with the inferenced data
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+The ONNX Model is now fully implemented with tests and documentation done. The next steps are to finish all of the integration tasks, I am optimistic that the pipeline will be functional by the end of the cycle.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Have inference fully integrated in the pipeline
+  2. Test model reliability on the full pipeline 
+  3. Begin work on grading schemas
+
+---
+---
+---
+
 ## Wednesday (7/05-7/09)
 
 ### Timesheet

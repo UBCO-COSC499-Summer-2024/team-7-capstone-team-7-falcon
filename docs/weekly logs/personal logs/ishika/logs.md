@@ -1,3 +1,86 @@
+
+## Wednesday(7/12-7/16)
+
+<img width="1061" alt="image" src="https://github.com/user-attachments/assets/47be4f9e-fa14-498f-be8f-246e70f7afb0">
+
+### Project Board
+
+<img width="864" alt="image" src="https://github.com/user-attachments/assets/f82eafa3-809b-4603-b806-2f3bcbcdaee7">
+
+## Current Tasks
+
+1. Make fixes to Admin Dashboard page while calling API endpoints from backend
+2. Feature for admins to be able to edit user information and deactivate account.
+3. Pull new changes for Course Settings page and modify it.
+
+## Progress update since (7/12)
+
+1. Pushed some new changes to Course Settings page,which was later refactored by Dima in his PR as he found some bugs.
+2. Addressed Dima's comments on the Admin Dashboard page and refactored the code.
+3. Reviewed a couple PRs for the Peer Testing.
+
+## Cycle Goal Review
+
+I didn't make a lot of progress in this cycle due to midterm exam, however, I have a pretty good idea on the next feature. I am still working on the changes for my current PRs so hopefully they will be merged soon to the development.
+
+## Next Cycle Goal
+
+My main goal would be to address current comments on the Admin Dashboard and Course Settings page. I will also work on Edit User Information page for Admin but it wont be completed by Friday.
+
+## Friday (7/10 - 7/11)
+
+<img width="1067" alt="image" src="https://github.com/user-attachments/assets/fce52f89-a25a-4c3d-b76d-913f91ef5e9c">
+
+### Project Board
+
+<img width="413" alt="image" src="https://github.com/user-attachments/assets/87c91228-1f12-4e68-9c68-bc603b87d965">
+
+## Current Tasks
+
+1. Connect frontend admin dashboard page to the backend endpoints
+2. Finish Course Settings page and test the implementation
+
+### Progress update since (7/10)
+1. I connected the Admin dashboard layout page to the backend endpoints and got the functionality working.
+2. I finished the Course Settings implementation and fixed the test fail error.
+
+## Cycle Goal Review
+
+Overall,I am quite satisfied that I managed to get both features working except minor fixes that I saw during the PR review. I am ready to start a new feature once I make small changes and my PRs are merged to development branch. 
+
+## Next Cycle Goal
+
+I am ready to start on Admin settings page. I haven't assigned myself a new task yet but I will most probably work on Admin settings page or analytics page.
+
+## Wednesday (7/05 - 7/09)
+
+## Timesheet
+
+<img width="811" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/fa82be9b-256c-46f2-bbe4-eb034e3540cb">
+
+##Project Board
+<img width="1130" alt="image" src="https://github.com/UBCO-COSC499-Summer-2024/team-7-capstone-team-7-falcon/assets/105883848/cb374cd2-3146-45c8-a215-3a39c66c44ef">
+
+##Current Tasks
+
+1. Finish implementing the Admin dashboard
+2. Fix bugs on Course Settings Page
+3. PR Reviews
+
+##Progress update since (7/05)
+1. I worked on the course settings page - finished UI, added button functionalities and addressed other comments.
+2. I finished the navbar component for the admin dashboard page
+3. I worked on the other portion of the admin dashboard.
+4. I fixed some bugs on my code for the instructor settings page.
+
+##Cycle Goal Review
+
+Overall, I made a decent progress on the tasks I was assigned at. I am almost ready to take up more tasks after I get my Course Settings PR merged before the next cycle.
+
+##Next Cycle Goal
+
+I am hoping to get my admin dashboard PR and Course Settings PR merged into development.
+
 ##Friday (7/03 - 7/04)
 
 ##Timesheet

@@ -1,3 +1,125 @@
+## Friday (7/17- 7/18)
+
+### Timesheet
+Clockify report
+![time for 07.17_- 07.18](07.17_07.18.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1:Create the admin users table [S]
+
+### Progress Update (since 7/17/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Create the admin users table #353
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have completed the admin user table which is the only task I planned to do. Overall we discussed that we should be more thorough
+with our error handling and testing for future PRs
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle I will work on adding the instructor submission page and fixing any errors found during the peer testing.
+
+## Wednesday (7/12- 7/16)
+
+### Timesheet
+Clockify report
+![time for 07.12_- 07.16](07.12_07.16.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Add instructor exam tables [XS]
+  * #2: Add instructor analytics page with graphs [S]
+
+### Progress Update (since 7/12/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Add instructor exam tables #332
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Add instructor analytics page with graphs #336
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have completed both tasks that I planned to do.  They were the instructor exam table and analytics pages. Our frontend is almost
+done and backend is finished. Overall we are on track to finish everything we have promised.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle I will work on the admin role assigning page and participate in the meeting to create tasks for the peer review.
+
+## (7/10- 7/11)
+
+### Timesheet
+Clockify report
+![time for 07.10_- 07.11](07.10_07.11.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Add site wide error handling [S]
+  * #2: Create the student view exam page [S]
+
+### Progress Update (since 7/10/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Add site wide error handling
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create the student view exam page #172
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I finished all of the student view exam page. I also added site wide error handling and refactored a lot of the code. I cleaned up a lot of the code by moving error handling that is happening in every page to the APIs instead. Overall I completed everything I set out to do this cycle and the process is going smoothly.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Add instructor exam tables
+  * Add instructor analytics page with graphs
+  * Work on admin edit semester page? (during the meeting I mentioned I would take an admin page if I have time)
+
 ## (7/05- 7/09)
 
 ### Timesheet

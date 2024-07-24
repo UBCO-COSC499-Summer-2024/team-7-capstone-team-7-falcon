@@ -17,7 +17,7 @@ const ChangeGrade: React.FC<ChangeGradeProps> = ({
 }) => {
   const [grade, setGrade] = useState(currentGrade);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: FormEvent<HTMLFormElement) => {
     setGrade(e.target.value);
   };
 

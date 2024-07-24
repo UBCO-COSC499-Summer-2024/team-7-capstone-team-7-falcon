@@ -14,6 +14,7 @@ interface BubbleSheetModalProps {
 
 const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [isCreateDisabled, setIsCreateDisabled] = useState<boolean>(false);
   const [isDownloadAvailable, setIsDownloadAvailable] =
     useState<boolean>(false);
   const [questionCount, setQuestionCount] = useState<string>("");
@@ -53,6 +54,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
 
       saveAs(blob, "bubble_sheet.zip");
       toast.success("Bubble sheet file downloaded");
+      setIsCreateDisabled(false);
     } catch (e) {
       toast.error("Failed to download bubble sheet file");
       setIsDownloadAvailable(false);
@@ -60,6 +62,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   };
 
   const submitJob = async () => {
+    setIsCreateDisabled(true);
     setIsDownloadAvailable(false);
     const keys = Object.keys(selectedOptions);
 
@@ -81,6 +84,10 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
         answers: answerIndexes,
       },
     };
+
+    toast.success("Bubble sheet job has been submitted to the server", {
+      duration: 5_000,
+    });
 
     // make a request to create the job
     const response = await examsAPI.postBubbleSheet(payload);
@@ -104,6 +111,12 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
         }
 
         if (fileIdReceived) {
+          toast.success(
+            "Bubble sheet has been created, you can now download it",
+            {
+              duration: 5_000,
+            },
+          );
           break;
         }
       }
@@ -113,7 +126,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   const options = ["A", "B", "C", "D", "E"];
 
   return (
-    <Modal show={isModalOpen} onClose={handleClose} size="7xl">
+    <Modal show={isModalOpen} size="7xl" onClose={() => handleClose()}>
       <Modal.Body>
         <div className="grid grid-cols-1 space-x-4">
           <div className="col-span-1 space-y-3">
@@ -122,7 +135,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
                 htmlFor="number-input"
                 className="block text-gray-700 mb-2"
               >
-                No. of Questions:
+                Number of questions to be created on the bubble sheet
               </label>
               <input
                 type="number"
@@ -131,7 +144,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
                 onChange={handleOptionChange}
                 min={0}
                 max={200}
-                placeholder="1-200"
+                placeholder="Min: 0, Max: 200"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -192,7 +205,11 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
           )}
         </div>
         <div className="col-span-1 flex justify-start space-x-2">
-          <button className="btn-primary" onClick={submitJob}>
+          <button
+            className="btn-primary disabled:bg-purple-400"
+            onClick={submitJob}
+            disabled={isCreateDisabled}
+          >
             Create
           </button>
           <button
@@ -205,7 +222,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
         </div>
         <div className="col-span-2 flex justify-center"></div>
         <div className="col-span-1 flex justify-end ">
-          <button className="btn-secondary px-8" onClick={handleClose}>
+          <button className="btn-secondary px-8" onClick={() => handleClose()}>
             Close
           </button>
         </div>

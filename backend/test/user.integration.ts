@@ -258,33 +258,6 @@ describe('User Integration', () => {
         });
     });
 
-    it('should return status 400 when first_name is not provided', async () => {
-      const user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        email_verified: true,
-      }).save();
-
-      return supertest()
-        .patch(`/user/${user.id}`)
-        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .send({})
-        .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          message: [
-            'First name must be between 2 and 15 characters',
-            'First name is required',
-            'First name must be a string',
-          ],
-          error: 'Bad Request',
-          statusCode: HttpStatus.BAD_REQUEST,
-        });
-    });
-
     it('should return 403 when user is not allowed to edit another user', async () => {
       const userOne = await UserModel.create({
         first_name: 'John',

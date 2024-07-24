@@ -22,7 +22,7 @@ const CreateExam = async ({ params }: { params: { courseId: string } }) => {
             course_code={course.course_code}
             course_desc={course.course_name}
             course_id={course.id}
-            selected={SelectedButton.None}
+            selected={SelectedButton.Create_Exam}
           />
         </div>
         <div className="justify-self-end space-y-4">

@@ -38,7 +38,7 @@ export class UserService {
     @Inject(forwardRef(() => TokenService))
     private readonly tokenService: TokenService,
     private readonly mailService: MailService,
-  ) { }
+  ) {}
 
   /**
    * Search for courses based on user id

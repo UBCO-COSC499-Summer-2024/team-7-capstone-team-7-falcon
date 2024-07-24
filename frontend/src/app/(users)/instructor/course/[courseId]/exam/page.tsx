@@ -23,7 +23,7 @@ const ExamPage = async ({ params }: { params: { courseId: string } }) => {
           />
         </div>
         <div className="col-span-1 justify-self-end space-y-4">
-          <EditCourseButton />
+          <EditCourseButton courseId={Number(params.courseId)} />
         </div>
         <div className="col-span-2 mt-4 justify-self-start">
           <ExamTable course_id={Number(params.courseId)} />

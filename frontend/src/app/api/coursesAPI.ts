@@ -2,10 +2,10 @@ import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import {
   Course,
-  CourseData,
-  CourseEditData,
   CourseAdminDetails,
+  CourseEditData,
   CourseAnalytics,
+  CourseData,
 } from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -238,6 +238,7 @@ export const coursesAPI = {
       throw error;
     }
   },
+
   editCourse: async (courseId: number, courseData: CourseEditData) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -280,59 +281,6 @@ export const coursesAPI = {
     } catch (error: any) {
       console.error("Failed to get all courses count:", error);
       throw error;
-    }
-  },
-
-  ///:cid/submission/:sid/user/:uid
-  getAllExamsGradedStudentCourse: async (
-    course_id: number,
-    student_id: number,
-    user_id: number,
-  ) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(
-        `/${course_id}/submission/${student_id}/user/${user_id}`,
-      );
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
-
-  getAllExamsUpcomingStudentCourse: async (
-    course_id: number,
-    student_id: number,
-    user_id: number,
-  ) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(
-        `/${course_id}/submission/${student_id}/user/${user_id}`,
-      );
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
     }
   },
 };

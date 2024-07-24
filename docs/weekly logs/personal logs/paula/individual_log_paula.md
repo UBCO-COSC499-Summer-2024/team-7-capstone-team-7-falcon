@@ -11,7 +11,7 @@ Clockify report
 
 !["current_tasks_07.19_07.23"](images/current_tasks_07.19_07.23.png)
 
-* #1:
+* #1: Repo clean up and documentation updates
 
 ### Progress Update (since 7/19/2024)
 
@@ -19,7 +19,7 @@ See the image in the previous section.
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-This cycle, I mainly worked on the analysis of the results from the first round of peer testing. I was also able to complete my part of the work on the OMR pipeline and that is now awaiting review.
+This cycle, I mainly worked on the analysis of the results from the first round of peer testing. I was also able to complete my part of the work on the OMR pipeline.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 

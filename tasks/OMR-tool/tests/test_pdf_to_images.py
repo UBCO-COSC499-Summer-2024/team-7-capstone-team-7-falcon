@@ -27,7 +27,6 @@ class TestConvertToImage:
         assert check_is_pdf(self.PDF_PATH) == True
         assert check_is_pdf(self.IMG_PATH) == False
 
-
     def test_convert_to_image_successful(self, output_path):
         """
         Test case to check if the conversion to image is successful.

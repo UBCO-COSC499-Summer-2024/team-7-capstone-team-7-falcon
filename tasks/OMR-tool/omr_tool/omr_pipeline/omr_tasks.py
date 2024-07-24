@@ -121,6 +121,7 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
     return student_id, total_score, results, output_image
 
 
+
 def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     """
     Draw the bubble contours on the image.

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -22,12 +23,24 @@ import {
 } from './dto/bubble-sheet-creation-job.dto';
 import { Job } from 'bull';
 import { QueueAuthGuard } from '../../guards/queue-auth.guard';
-import { CouldNotCompleteJobException } from '../../common/errors';
+import {
+  CouldNotCompleteJobException,
+  QueueNotFoundException,
+} from '../../common/errors';
+import { SubmissionsProcessingService } from './jobs/submissions-processing.service';
+import { SubmissionsProcessingJobDto } from './dto/submissions-processing-job.dto';
+import { createQueueValidationPipe } from './pipes/queue-validation.pipe';
 
 @Controller('queue')
 export class QueueController {
+  /**
+   * Constructor
+   * @param bubbleSheetCreationQueueService {BubbleSheetCreationService} Bubble sheet creation queue service
+   * @param submissionsProcessingQueueService {SubmissionsProcessingService} Submissions processing queue service
+   */
   constructor(
     private readonly bubbleSheetCreationQueueService: BubbleSheetCreationService,
+    private readonly submissionsProcessingQueueService: SubmissionsProcessingService,
   ) {}
 
   /**
@@ -41,16 +54,39 @@ export class QueueController {
   @Post(':queue/add')
   async addJobToQueue(
     @Res() res: Response,
-    @Body(new ValidationPipe()) payload: BubbleSheetCreationJobDto,
+    @Param('queue') queueName: string,
+    @Body(new ValidationPipe({ transform: true }))
+    payload: BubbleSheetCreationJobDto | SubmissionsProcessingJobDto,
   ): Promise<Response> {
     try {
-      const jobId: string =
-        await this.bubbleSheetCreationQueueService.createJob(payload);
+      let jobId: string = null;
+      const validationPipe = createQueueValidationPipe(queueName);
+      await validationPipe.transform(payload, { type: 'body' });
+
+      switch (queueName) {
+        case 'bubble-sheet-creation':
+          jobId = await this.bubbleSheetCreationQueueService.createJob(
+            payload as BubbleSheetCreationJobDto,
+          );
+          break;
+        case 'omr-submissions-processing':
+          jobId = await this.submissionsProcessingQueueService.createJob(
+            payload as SubmissionsProcessingJobDto,
+          );
+          break;
+      }
+
       return res.status(HttpStatus.ACCEPTED).send({ jobId });
     } catch (e) {
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send({ message: e.message });
+      if (e instanceof QueueNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({ message: e.message });
+      } else if (e instanceof BadRequestException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({ message: e.message });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ message: e.message });
+      }
     }
   }
 
@@ -70,6 +106,9 @@ export class QueueController {
     switch (queueName) {
       case 'bubble-sheet-creation':
         job = await this.bubbleSheetCreationQueueService.pickUpJob();
+        break;
+      case 'omr-submissions-processing':
+        job = await this.submissionsProcessingQueueService.pickUpJob();
         break;
       default:
         return res.status(HttpStatus.BAD_REQUEST).send();
@@ -97,15 +136,28 @@ export class QueueController {
     @Param('queue') queueName: string,
     @Param('jobId') jobId: string,
   ): Promise<Response> {
-    let job: Job | null;
-    switch (queueName) {
-      case 'bubble-sheet-creation':
-        job = await this.bubbleSheetCreationQueueService.getJobById(jobId);
-        break;
-      default:
-        job = null;
+    try {
+      let job: Job | null;
+      switch (queueName) {
+        case 'bubble-sheet-creation':
+          job = await this.bubbleSheetCreationQueueService.getJobById(jobId);
+          break;
+        case 'omr-submissions-processing':
+          job = await this.submissionsProcessingQueueService.getJobById(jobId);
+          break;
+        default:
+          throw new QueueNotFoundException();
+      }
+      return res.status(HttpStatus.OK).send(job);
+    } catch (e) {
+      if (e instanceof QueueNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({ message: e.message });
+      } else {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ message: e.message });
+      }
     }
-    return res.status(HttpStatus.OK).send(job);
   }
 
   /**
@@ -132,12 +184,18 @@ export class QueueController {
             result,
           );
           break;
+        case 'omr-submissions-processing':
+          await this.submissionsProcessingQueueService.markJobAsComplete(jobId);
+          break;
         default:
+          throw new QueueNotFoundException();
       }
       return res.status(HttpStatus.OK).send({ message: 'ok' });
     } catch (e) {
       if (e instanceof CouldNotCompleteJobException) {
         return res.status(HttpStatus.BAD_REQUEST).send({ message: e.message });
+      } else if (e instanceof QueueNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({ message: e.message });
       } else {
         return res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)

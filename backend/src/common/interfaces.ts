@@ -113,6 +113,40 @@ export interface UserSubmissionExamInterface {
 }
 
 /**
+ * Course analytics submission student interface
+ */
+interface CourseAnalyticsSubmissionStudentInterface {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
+}
+
+/**
+ * Course analytics submission interface
+ */
+interface CourseAnalyticsSubmissionInterface {
+  submissions: CourseAnalyticsSubmissionStudentInterface[];
+  exam: {
+    id: number;
+    title: string;
+  };
+}
+
+/**
+ * Course analytics response interface
+ */
+export interface CourseAnalyticsResponseInterface {
+  courseMembersSize: number;
+  courseExamsCount: number;
+  examSubmissionsCount: number;
+  examSubmissions: CourseAnalyticsSubmissionInterface[];
+}
+
+/**
  * User role count interface
  */
 export interface UserRoleCount {

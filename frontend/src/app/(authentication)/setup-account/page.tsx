@@ -1,104 +1,77 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
+import { usersAPI } from "@/app/api/usersAPI";
+import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
+import { deleteAuthToken } from "@/app/api/cookieAPI";
 import { useRouter } from "next/navigation";
-import { Button, Label, TextInput, Radio } from "flowbite-react";
+import AccountSetupForm from "../components/accountSetupForm";
 
 export default function AccountSetup() {
   const router = useRouter();
-  const [user, setUser] = useState({
-    userRole: "student",
-    studentId: "",
-    employeeId: "",
+
+  // since this page is excluded from the middleware, we need to check if the user is authenticated
+  // if not, redirect to the login page
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
+  async function checkAuthentication() {
+    const hasVerifiedToken = await authAPI.hasVerifiedToken();
+    if (!hasVerifiedToken) {
+      await deleteAuthToken();
+      router.push("/login");
+    }
+
+    // if the user is authenticated, check if they have at least one ID set
+    // if yes, redirect to the dashboard page
+    const hasID = await verifyIdPresence();
+    if (hasID) {
+      // the middleware will handle the redirect based on roles
+      router.push("/");
+    }
+  }
+
+  // stores data to be sent to the database
+  const [userIDs, setUserIDs] = useState({
+    student_id: "",
+    employee_id: "",
   });
 
-  const onSetup = async () => {
-    //handle Setup
+  const handleInputChange = (fieldName: string, value: string) => {
+    setUserIDs({
+      ...userIDs,
+      [fieldName]: value,
+    });
   };
 
+  async function onSetup(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    try {
+      const newUserDetails = {
+        student_id:
+          userIDs.student_id !== "" ? Number(userIDs.student_id) : null,
+        employee_id:
+          userIDs.employee_id !== "" ? Number(userIDs.employee_id) : null,
+      };
+
+      // update user details in database
+      await usersAPI.updateUserDetails("-1", newUserDetails);
+
+      // if no errors, redirect to the dashboard
+      router.push("/");
+
+      // set any error messages
+    } catch (error) {
+      throw error;
+    }
+  }
+
   return (
-    <div className="container mx-auto py-8 flex flex-col items-center justify-center min-h-screen py-">
-      <form className="w-full max-w-lg mx-auto bg-white p-8 rounded-md shadow-md ">
-        <h1 className="text-center font-bold mb-3">OwlMark</h1>
-        <h2 className="text-md mb-6 text-center text-gray-400">
-          You are almost done
-        </h2>
-
-        <div className="mb-4">
-          <Label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="role"
-          >
-            I am a/an...
-          </Label>
-
-          <div className="flex items-center gap-2 mb-2">
-            <Radio
-              id="student-role"
-              name="roles"
-              value="student"
-              onChange={(e) => setUser({ ...user, userRole: "student" })}
-              defaultChecked
-            />
-            <Label htmlFor="student-role">student</Label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Radio
-              id="employee-role"
-              name="roles"
-              value="instructor"
-              onChange={(e) => setUser({ ...user, userRole: "instructor" })}
-            />
-            <Label htmlFor="employee-role">employee</Label>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <Label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="student-id"
-          >
-            Student ID
-          </Label>
-          <TextInput
-            className="w-full border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            id="studentID"
-            type="number"
-            value={user.studentId}
-            onChange={(e) => setUser({ ...user, studentId: e.target.value })}
-            disabled={user.userRole !== "student"}
-            placeholder="12345678"
-          />
-        </div>
-
-        <div className="mb-4">
-          <Label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="employee-id"
-          >
-            Employee ID
-          </Label>
-          <TextInput
-            className="w-full  border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            id="employeeID"
-            type="number"
-            value={user.employeeId}
-            onChange={(e) => setUser({ ...user, employeeId: e.target.value })}
-            placeholder={
-              user.userRole === "student" ? "(Optional) 1234567" : "1234567"
-            }
-          />
-        </div>
-
-        <Button
-          onClick={onSetup}
-          color="purple"
-          size="xs"
-          className="w-full text-white text-xl purple-700 font-bold py-3 rounded-md transition duration-300"
-        >
-          Setup Account
-        </Button>
-      </form>
-    </div>
+    <AccountSetupForm
+      userID={userIDs}
+      handleInputChange={handleInputChange}
+      onSetup={onSetup}
+    />
   );
 }

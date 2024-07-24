@@ -1,13 +1,24 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { CourseData } from "../typings/backendDataTypes";
+import {
+  Course,
+  CourseAdminDetails,
+  CourseEditData,
+  CourseAnalytics,
+  CourseData,
+} from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
 const BACKEND_URL_SERVER = process.env.NEXT_PUBLIC_BACKEND_URL_SERVER;
 
 export const coursesAPI = {
-  getCourse: async (courseId: number) => {
+  /**
+   * Returns all the info about a course
+   * @param courseId
+   * @returns {Promise<Course>}
+   */
+  getCourse: async (courseId: number): Promise<Course> => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
@@ -18,15 +29,97 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/${courseId}/public`);
+
+      const response = await instance.get<Course>(`/${courseId}`);
+      return response.data;
+    } catch (error: any) {
+      console.error("Failed to find course:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * {Function} - Gets all courses
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  getAllCourses: async () => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.get<CourseAdminDetails[]>("/all");
       return response;
     } catch (error: any) {
-      // always axios error
       console.error("Failed to find course:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Archives a course
+   * @param courseId {number} - The id of the course to archive
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  archiveCourse: async (courseId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.patch(`/${courseId}/archive`, {
+        archive: true,
+      });
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to archive course: ", error);
       return error;
     }
   },
 
+  /**
+   * Gets a subset of the course info used for users who are not enrolled
+   * @param courseId
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
+  getCoursePublic: async (courseId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.get<CourseData>(`/${courseId}/public`);
+      return response.data;
+    } catch (error: any) {
+      console.error("Failed to find course:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Enrolls the user in a course
+   * @param courseId
+   * @param invite_code
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   enrollCourse: async (courseId: number, invite_code: string) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -95,66 +188,11 @@ export const coursesAPI = {
     }
   },
 
-  getAllExams: async (course_id: number) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/course/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(`/${course_id}/exams/`);
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
-
-  getAllExamsGraded: async (course_id: number) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/course/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(`/${course_id}/exams/graded`);
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
-
-  getAllExamsUpcoming: async (course_id: number) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/course/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(`/${course_id}/exams/upcoming`);
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
-
+  /**
+   * Gets all members in a course by course id
+   * @param course_id
+   * @returns {Promise<axios.AxiosResponse<any>>} - post response from backend
+   */
   getCourseMembers: async (course_id: number) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -176,96 +214,73 @@ export const coursesAPI = {
     }
   },
 
-  getAllExamsGradedStudent: async () => {
+  /**
+   * Gets all stats for a course
+   * @param courseId
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getCourseStats: async (courseId: number) => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
         withCredentials: true,
       });
-      const response = await instance.get(`/graded`);
-      return response;
+      const response = await instance.get<CourseAnalytics>(
+        `/${courseId}/analytics`,
+      );
+      return response.data;
     } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
+      throw error;
     }
   },
 
-  getAllExamsUpcomingStudent: async () => {
+  editCourse: async (courseId: number, courseData: CourseEditData) => {
     try {
       const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-      const response = await instance.get(`/upcoming`);
-      return response;
-    } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
-    }
-  },
 
-  ///:cid/submission/:sid/user/:uid
-  getAllExamsGradedStudentCourse: async (
-    course_id: number,
-    student_id: number,
-    user_id: number,
-  ) => {
-    try {
-      const auth_token = await fetchAuthToken();
       const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        baseURL: `${BACKEND_URL}/api/v1/course/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
         withCredentials: true,
       });
-      const response = await instance.get(
-        `/${course_id}/submission/${student_id}/user/${user_id}`,
+
+      const response = await instance.patch(
+        `${BACKEND_URL}/api/v1/course/${courseId}`,
+        courseData,
       );
       return response;
     } catch (error: any) {
       //always axios error
-      console.error("Failed to retrieve exams: ", error);
+      console.error("Failed to edit users: ", error);
+
       return error;
     }
   },
 
-  getAllExamsUpcomingStudentCourse: async (
-    course_id: number,
-    student_id: number,
-    user_id: number,
-  ) => {
+  getAllCoursesCount: async () => {
     try {
       const auth_token = await fetchAuthToken();
       const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: auth_token,
         },
         withCredentials: true,
       });
-      const response = await instance.get(
-        `/${course_id}/submission/${student_id}/user/${user_id}`,
-      );
-      return response;
+      const response = await instance.get("/all/count");
+      return response.data.count;
     } catch (error: any) {
-      //always axios error
-      console.error("Failed to retrieve exams: ", error);
-      return error;
+      console.error("Failed to get all courses count:", error);
+      throw error;
     }
   },
 };

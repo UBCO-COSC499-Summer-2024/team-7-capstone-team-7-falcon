@@ -1,16 +1,16 @@
 "use client";
 
-import { Label, TextInput, FileInput } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 import { Datepicker } from "flowbite-react";
 import { ExamData } from "../../../typings/backendDataTypes";
 import { useState } from "react";
 import { examsAPI } from "../../../api/examAPI";
 import { Status } from "../../../typings/backendDataTypes";
-import ModalMessage from "../../components/modalMessage";
 import { redirect } from "next/navigation";
 import { Plus } from "flowbite-react-icons/outline";
 import BubbleSheetModal from "./bubbleSheetModal";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import { datePickerTheme } from "@/app/components/datePickerTheme";
 
 interface CreateExamFormProps {
   course_id: number;
@@ -42,16 +42,29 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (examData.exam_name.trim().length === 0) {
+      toast.error("Exam name cannot be empty!");
+      return;
+    }
     if (examData.exam_date < Date.now()) {
-      setStatus(Status.InvalidDate);
+      toast.error("Exam date must be in the future");
       return;
     }
     const result = await examsAPI.createExam(examData, course_id);
     if (result.status == 200) {
       setStatus(Status.Success);
     } else {
-      setStatus(Status.Failure);
+      toast.error("Failed to create exam");
+      resetStatus();
     }
+  };
+
+  const setDateToTomorrow = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    return tomorrow;
   };
 
   return (
@@ -60,12 +73,6 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
         <BubbleSheetModal onClose={resetBubbleSheetModal} />
       )}
       {status === Status.Success && redirect(`../${course_id}/exam`)}
-      {status === Status.Failure && (
-        <ModalMessage message={"Error creating exam"} onClose={resetStatus} />
-      )}
-      {status === Status.InvalidDate && (
-        <ModalMessage message={"Invalid date entered"} onClose={resetStatus} />
-      )}
       <form onSubmit={handleSubmit}>
         <Toaster />
         <div className="space-y-5 p-4 ring ring-gray-300 rounded-md flex flex-col">
@@ -83,11 +90,14 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
             className="w-1/4"
             onSelectedDateChanged={handleDate}
             id="exam_date"
+            minDate={setDateToTomorrow()}
+            showTodayButton={false}
+            theme={datePickerTheme}
           />
           <Label
             className="justify-center my-4"
             htmlFor="pdf"
-            value="Exam paper"
+            value="Generate a custom bubble sheet exam"
           />
           <div className="w-1/12">
             <div

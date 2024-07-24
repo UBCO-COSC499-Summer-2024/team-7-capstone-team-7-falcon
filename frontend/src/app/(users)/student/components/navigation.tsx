@@ -11,7 +11,7 @@ const studentLinks = [
     icon: <Book />,
   },
   {
-    title: "Exams",
+    title: "My Exams",
     href: {
       base: "/student/exam",
     },

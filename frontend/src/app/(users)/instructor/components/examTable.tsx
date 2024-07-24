@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Column, DataItem } from "./type";
-import TableComponent from "../../components/tableComponent";
-import { coursesAPI } from "../../../api/coursesAPI";
+import { Column, DataItem } from "../../../components/type";
 import { Exam } from "../../../typings/backendDataTypes";
 import Link from "next/link";
 import { UserEdit } from "flowbite-react-icons/solid";
+import TableComponent from "../../../components/tableComponent";
+import { examsAPI } from "../../../api/examAPI";
 
 const exam_columns: Column[] = [
   { label: "Name", renderCell: (item) => item.name },
@@ -27,7 +27,7 @@ const exam_columns: Column[] = [
           className="btn-primary flex p-1 px-4 items-center space-x-1"
         >
           <UserEdit />
-          <span>Edit</span>
+          <span>View</span>
         </button>
       </Link>
     ),
@@ -55,7 +55,7 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
   // gets the data once on mount
   useEffect(() => {
     const fetchData = async () => {
-      const result_all = await coursesAPI.getAllExams(course_id);
+      const result_all = await examsAPI.getAllExams(course_id);
 
       if (result_all.status === 200) {
         const exams: DataItem<Exam>[] = result_all.data.data.map(
@@ -75,8 +75,7 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
         setDataAll(exams);
       }
 
-      const result_graded = await coursesAPI.getAllExamsGraded(course_id);
-      console.log("result graded is ", result_graded);
+      const result_graded = await examsAPI.getAllExamsGraded(course_id);
       if (result_graded.status === 200) {
         const exams: DataItem<Exam>[] = result_graded.data.map((item: any) => ({
           name: item.name,
@@ -93,7 +92,7 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
         setDataGraded(exams);
       }
 
-      const result_upcoming = await coursesAPI.getAllExamsUpcoming(course_id);
+      const result_upcoming = await examsAPI.getAllExamsUpcoming(course_id);
       if (result_upcoming.status === 200) {
         const exams_upcoming: DataItem<Exam>[] = result_upcoming.data.map(
           (item: any) => ({
@@ -114,7 +113,7 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
     };
 
     fetchData();
-  }, [course_id]);
+  }, []);
 
   return (
     <div className="flex flex-col items-left">

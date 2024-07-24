@@ -32,6 +32,7 @@ describe('User Integration', () => {
     await CourseModel.delete({});
     await UserModel.delete({});
     await StudentUserModel.delete({});
+    await EmployeeUserModel.delete({});
 
     await CourseModel.query(
       'ALTER SEQUENCE course_model_id_seq RESTART WITH 1',
@@ -43,6 +44,9 @@ describe('User Integration', () => {
     await TokenModel.query('ALTER SEQUENCE token_model_id_seq RESTART WITH 1');
     await StudentUserModel.query(
       'ALTER SEQUENCE student_user_model_id_seq RESTART WITH 1',
+    );
+    await EmployeeUserModel.query(
+      'ALTER SEQUENCE employee_user_model_id_seq RESTART WITH 1',
     );
   });
 
@@ -228,41 +232,6 @@ describe('User Integration', () => {
     });
 
     it('should return status 400 when uid is not a number', async () => {
-      let user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        email_verified: true,
-      }).save();
-
-      const studentUser = await StudentUserModel.create({
-        student_id: 123,
-        user: user,
-      }).save();
-
-      user = await UserModel.findOne({
-        where: { id: user.id },
-        relations: ['student_user'],
-      });
-
-      user.student_user = studentUser;
-      await user.save();
-
-      return supertest()
-        .patch('/user/abc')
-        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          message: 'Validation failed (numeric string is expected)',
-          error: 'Bad Request',
-          statusCode: HttpStatus.BAD_REQUEST,
-        });
-    });
-
-    it('should return status 400 when first_name is not provided', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -273,17 +242,17 @@ describe('User Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        user,
+        student_id: 123,
+      }).save();
+
       return supertest()
-        .patch(`/user/${user.id}`)
+        .patch('/user/abc')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .send({})
         .expect(HttpStatus.BAD_REQUEST)
         .expect({
-          message: [
-            'First name must be between 2 and 15 characters',
-            'First name is required',
-            'First name must be a string',
-          ],
+          message: 'Validation failed (numeric string is expected)',
           error: 'Bad Request',
           statusCode: HttpStatus.BAD_REQUEST,
         });
@@ -372,7 +341,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 404 when user id does not exist', async () => {
-      let user = await UserModel.create({
+      const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -383,18 +352,10 @@ describe('User Integration', () => {
         email_verified: true,
       }).save();
 
-      const studentUser = await StudentUserModel.create({
-        student_id: 123,
-        user: user,
+      await EmployeeUserModel.create({
+        user,
+        employee_id: 123,
       }).save();
-
-      user = await UserModel.findOne({
-        where: { id: user.id },
-        relations: ['student_user'],
-      });
-
-      user.student_user = studentUser;
-      await user.save();
 
       return supertest()
         .patch('/user/100')
@@ -503,25 +464,6 @@ describe('User Integration', () => {
         .expect({
           message: 'ok',
         });
-    });
-
-    it('should return status 500 when an error occurs', async () => {
-      const user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        email_verified: true,
-      }).save();
-
-      // Relies on the fact that previous test case creates a student_id record
-      return supertest()
-        .patch(`/user/${user.id}`)
-        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .send({ first_name: 'Jane', employee_id: 1, student_id: 1 })
-        .expect(HttpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 

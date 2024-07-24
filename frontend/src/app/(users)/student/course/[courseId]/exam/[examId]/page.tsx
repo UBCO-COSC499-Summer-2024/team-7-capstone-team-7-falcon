@@ -12,6 +12,7 @@ import { CSSProperties } from "react";
 import { mean, median, quantile } from "d3-array";
 import PdfViewer from "../../../../components/pdfViewer";
 import { usersAPI } from "../../../../../../api/usersAPI";
+import ReportSubmissionIssue from "../../../../components/reportSubmissionIssue";
 
 const StudentExamPage = async ({
   params,
@@ -105,6 +106,10 @@ const StudentExamPage = async ({
             <p>Lower Quartile: {stats.lowerQuartile}</p>
             <p>Median: {stats.medianValue}</p>
           </div>
+          <ReportSubmissionIssue
+            examId={submission.exam.id}
+            submissionId={submission.studentSubmission.id}
+          />
         </div>
       </div>
     </div>

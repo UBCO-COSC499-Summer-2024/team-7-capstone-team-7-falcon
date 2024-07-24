@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ExamCreateDto } from './dto/exam-create.dto';
 import {
   CourseNotFoundException,
+  DisputeSubmissionException,
   ExamCreationException,
   ExamNotFoundException,
   ExamUploadException,
@@ -20,6 +21,7 @@ import { MoreThan, Not } from 'typeorm';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
+  ExamSubmissionsDisputesInterface,
   GradedSubmissionsInterface,
   UpcomingExamsInterface,
   UserSubmissionExamInterface,
@@ -30,6 +32,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { join } from 'path';
 import { mkdirSync, writeFileSync } from 'fs';
 import { SubmissionCreationDto } from './dto/submission-creation.dto';
+import { DisputeStatusEnum } from '../../enums/exam-dispute.enum';
+import { SubmissionDisputeModel } from './entities/submission-dispute.entity';
 
 @Injectable()
 export class ExamService {
@@ -600,5 +604,186 @@ export class ExamService {
     });
 
     await exam.remove();
+  }
+
+  /**
+   * Get exams with submissions disputes by course id
+   * @param cid {number} - Course id
+   * @returns {Promise<ExamSubmissionsDisputesInterface[]>} - List of exams with submissions disputes
+   */
+  async getExamsWithSubmissionsDisputesByCourseId(
+    cid: number,
+  ): Promise<ExamSubmissionsDisputesInterface[]> {
+    const result = await ExamModel.createQueryBuilder('exam')
+      .select('exam.id', 'examId')
+      .addSelect('exam.name', 'examName')
+      .addSelect('COUNT(dispute.id)', 'numberOfDisputes')
+      .innerJoin(
+        'exam.course',
+        'course',
+        'course.id = :cid AND course.is_archived = false',
+        { cid },
+      )
+      .leftJoin('exam.submissions', 'submission')
+      .leftJoin(
+        'submission.dispute',
+        'dispute',
+        'dispute.status NOT IN (:...statuses)',
+        { statuses: [DisputeStatusEnum.RESOLVED, DisputeStatusEnum.REJECTED] },
+      )
+      .groupBy('exam.id')
+      .addGroupBy('exam.name')
+      .orderBy('COUNT(dispute.id)', 'DESC')
+      .getRawMany();
+
+    const filteredResult = result
+      .map((exam) => ({
+        examId: exam.examId,
+        examName: exam.examName,
+        numberOfDisputes: parseInt(exam.numberOfDisputes, 10),
+      }))
+      .filter((exam) => exam.numberOfDisputes > 0);
+
+    return filteredResult;
+  }
+
+  /**
+   * Create submission dispute by submission id
+   * @param submissionId {number} - Submission id
+   * @param description {string} - Description
+   * @param userId {number} - User id
+   */
+  async createSubmissionDisputeBySubmissionId(
+    submissionId: number,
+    description: string,
+    userId: number,
+  ): Promise<void> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: submissionId,
+      },
+      relations: ['dispute', 'student', 'student.user'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    if (submission.student.user.id !== userId) {
+      throw new DisputeSubmissionException(
+        ERROR_MESSAGES.examController.submissionDoesNotBelongToUser,
+      );
+    }
+
+    if (submission.dispute) {
+      throw new DisputeSubmissionException(
+        ERROR_MESSAGES.examController.disputeAlreadyExists,
+      );
+    }
+
+    await SubmissionDisputeModel.create({
+      description,
+      submission,
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+    }).save();
+  }
+
+  /**
+   * Update submission dispute status
+   * @param submissionId {number} - Submission id
+   * @param status {DisputeStatusEnum} - Dispute status
+   */
+  async updateSubmissionDisputeStatus(
+    disputeId: number,
+    status: DisputeStatusEnum,
+  ): Promise<void> {
+    const submissionDispute = await SubmissionDisputeModel.findOne({
+      where: {
+        id: disputeId,
+      },
+      relations: ['submission'],
+    });
+
+    if (!submissionDispute) {
+      throw new DisputeSubmissionException(
+        ERROR_MESSAGES.examController.disputeNotFound,
+      );
+    }
+
+    submissionDispute.status = status;
+
+    await submissionDispute.save();
+  }
+
+  /**
+   * Get exam submissions disputes by exam id
+   * @param examId {number} - Exam id
+   * @returns {Promise<SubmissionDisputeModel[]>} - List of exam submissions disputes
+   */
+  async getExamSubmissionsDisputesByExamId(
+    examId: number,
+  ): Promise<SubmissionDisputeModel[]> {
+    const exam = await SubmissionDisputeModel.find({
+      where: {
+        submission: {
+          exam: {
+            id: examId,
+            course: {
+              is_archived: false,
+            },
+          },
+        },
+      },
+      relations: ['submission', 'submission.exam', 'submission.exam.course'],
+    });
+
+    if (!exam || exam.length === 0) {
+      throw new DisputeSubmissionException(
+        ERROR_MESSAGES.examController.disputesNotFound,
+      );
+    }
+
+    return exam;
+  }
+
+  /**
+   * Get submission dispute by submission id
+   * @param submissionId {number} - Submission id
+   * @param disputeId {number} - Dispute id
+   * @returns {Promise<SubmissionDisputeModel>} - Submission dispute model
+   */
+  async getSubmissionDisputeBySubmissionIdAndDisputeId(
+    submissionId: number,
+    disputeId: number,
+  ): Promise<SubmissionDisputeModel> {
+    const submissionDispute = await SubmissionDisputeModel.findOne({
+      where: {
+        id: disputeId,
+        submission: {
+          id: submissionId,
+          exam: {
+            course: {
+              is_archived: false,
+            },
+          },
+        },
+      },
+      relations: [
+        'submission',
+        'submission.exam',
+        'submission.exam.course',
+        'submission.student',
+        'submission.student.user',
+      ],
+    });
+
+    if (!submissionDispute) {
+      throw new DisputeSubmissionException(
+        ERROR_MESSAGES.examController.disputeNotFound,
+      );
+    }
+
+    return submissionDispute;
   }
 }

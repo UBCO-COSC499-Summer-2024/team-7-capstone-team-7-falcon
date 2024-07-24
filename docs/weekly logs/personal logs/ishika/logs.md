@@ -22,6 +22,7 @@ I am happy that my PRs has been merged into development. Overall, it was a slow 
 
 I am going to try my best to get my upcoming PR merged into development.
 
+
 ## Friday(7/17-7/18)
 
 <img width="1070" alt="image" src="https://github.com/user-attachments/assets/53e1d462-cd9d-4bea-adba-997f0530674e">

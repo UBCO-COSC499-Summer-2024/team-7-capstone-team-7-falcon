@@ -7,11 +7,12 @@ def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     if question_num < len(answer_key):
         isCorrect, filled_index = check_answer(roi_cropped, bubble_contours, answer_key[question_num])
         color = (0, 255, 0) if isCorrect else (0, 0, 255)
-        answer_indices = answer_key[question_num]
+        correct_answer_indices = answer_key[question_num]
+        result = {"expected": answer_key[question_num], "answered": filled_index}
     else:
         color = (255, 0, 0)
-        answer_indices = [0]
-    return color, answer_indices, isCorrect
+        correct_answer_indices = [0]
+    return color, correct_answer_indices, result
 
 def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
     bubbled = []

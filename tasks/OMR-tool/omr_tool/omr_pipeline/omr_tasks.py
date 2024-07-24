@@ -81,8 +81,11 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
     prepped_image = prepare_img(input_image)
     output_image = input_image.copy()
     inference_tool = Inferencer()
-    answers = []
+    results = []
     total_score = 0
+
+    if answer_key == [] and student_id != "key":
+        raise ValueError("Answer key is required for grading.")
 
     boxes, scores, classes = inference_tool.infer(prepped_image)
 
@@ -99,20 +102,23 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
     flat_list = [
         question_bounds for column in question_2d_list for question_bounds in column
     ]
+
+    
     for question_num, question_bounds in enumerate(flat_list):
         roi_cropped = extract_roi(prepped_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
-        color, answer_indices, isCorrect = evaluate_answer(
+        color, correct_answer_indices, question_result = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )
-        for idx in answer_indices:
+        for idx in correct_answer_indices:
             output_image = draw_bubble_contours(
                 output_image, bubble_contours[idx], question_bounds, color
             )
-        if isCorrect:
+        if question_result["expected"] == question_result["answered"]:
             total_score += 1
+        results.append(question_result)
 
-    return student_id, total_score, answers, output_image
+    return student_id, total_score, results, output_image
 
 
 def draw_bubble_contours(image, bubble_contour, question_bounds, color):
@@ -149,12 +155,13 @@ def identify_page_details(inference_tool, boxes, classes):
 def extract_student_num(image, section):
     x1, y1, x2, y2 = map(int, section)
     student_id = ""
-    student_num_roi = extract_roi(image, (x1, y1, x2, y2))
-    bubble_contours = generate_bubble_contours(student_num_roi)
-    thresh = threshold_img(student_num_roi, grayscale=False)
+    sid_roi = extract_roi(image, (x1, y1, x2, y2))
+    bubble_contours = generate_bubble_contours(sid_roi)
+    sorted_sid_cnts = extract_sid_rows(bubble_contours)
+    thresh = threshold_img(sid_roi, grayscale=False)
     id_num = 0
     bubbled = []
-    for cnt in bubble_contours:
+    for cnt in sorted_sid_cnts:
         mask = np.zeros(thresh.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
@@ -168,6 +175,12 @@ def extract_student_num(image, section):
             id_num += 1
 
     return student_id, bubbled
+
+def extract_sid_rows(bubble_contours):
+    sorted_cnts= sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[1])
+    for cnt in np.arange(0, len(sorted_cnts), 10):
+        sorted_cnts[cnt:cnt+10] = sorted(sorted_cnts[cnt:cnt+10], key=lambda cnt: cv2.boundingRect(cnt)[0])
+    return sorted_cnts
 
 
 def extract_roi(image, question_bounds):

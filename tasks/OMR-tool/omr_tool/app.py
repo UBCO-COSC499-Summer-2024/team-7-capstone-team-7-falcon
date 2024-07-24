@@ -33,19 +33,19 @@ def app():
             group_images, answer_key
         )
 
-        # Paula
+    # Paula
 
-        # process the submission in list
-        # find image with matching student ID in submission_images (You can find the student ID with submission_results["student_id"])
-        output_pdf, output_pdf_name = convert_to_PDF(graded_imgs)
-        # Put the image into its own PDF named with an identifier like a student num
-        # Its own module
-        send_pdf(pdf, output_pdf_name)
+    # process the submission in list
+    # find image with matching student ID in submission_images (You can find the student ID with submission_results["student_id"])
+    output_pdf, output_pdf_name = convert_to_PDF(graded_imgs)
+    # Put the image into its own PDF named with an identifier like a student num
+    # Its own module
+    send_pdf(pdf, output_pdf_name)
 
-        submission_results["document_path"] = output_pdf_name
-        # Return the new PDF to the backend (multi-PDF payload)
-        send_grades(submission_results)
-        # Return the single submission for this student to the backend (multi-image payload)
+    submission_results["document_path"] = output_pdf_name
+    # Return the new PDF to the backend (multi-PDF payload)
+    send_grades(submission_results)
+    # Return the single submission for this student to the backend (multi-image payload)
 
         # ---
 

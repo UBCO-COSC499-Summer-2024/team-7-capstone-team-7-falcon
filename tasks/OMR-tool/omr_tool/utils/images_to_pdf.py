@@ -36,9 +36,9 @@ def convert_to_pdf(graded_images, output_dir, file_name):
         pdf_path = f"{output_dir}/{file_name}.pdf"
         if not all(is_pil_image(img) for img in graded_images):
             raise ValueError(
-                "All elements in the graded_images must be PIL.Image objects")
-        graded_images[0].save(pdf_path, save_all=True,
-                              append_images=graded_images[1:])
+                "All elements in the graded_images must be PIL.Image objects"
+            )
+        graded_images[0].save(pdf_path, save_all=True, append_images=graded_images[1:])
         logging.info(f"Images converted to PDF successfully")
         return pdf_path
     except Exception as e:

@@ -9,14 +9,23 @@ Class for running inference on an image using our pre-trained object detection m
 """
 
 MODEL_PATH = (
-        Path(__file__).resolve().parents[2]
-        / "model_training"
-        / "trained_model_onnx"
-        / "weights"
-        / "best.onnx"
-    )
+    Path(__file__).resolve().parents[2]
+    / "model_training"
+    / "trained_model_onnx"
+    / "weights"
+    / "best.onnx"
+)
 
-INFERENCE_CLASSES = ['answer', 'firstname-section', 'lastname-section', 'name-chars', 'orientation-mark', 'sn-digits', 'student-num-section', 'top-page-num']
+INFERENCE_CLASSES = [
+    "answer",
+    "firstname-section",
+    "lastname-section",
+    "name-chars",
+    "orientation-mark",
+    "sn-digits",
+    "student-num-section",
+    "top-page-num",
+]
 
 
 class Inferencer:
@@ -30,7 +39,13 @@ class Inferencer:
         inference_classes (list, optional): The list of classes that the model can detect. Defaults to ['answer', 'firstname-section', 'lastname-section', 'name-chars', 'orientation-mark', 'sn-digits', 'student-num-section', 'top-page-num'].
     """
 
-    def __init__(self, model_path=MODEL_PATH, conf_threshold=0.5, iou_threshold=0.95, inference_classes=INFERENCE_CLASSES):
+    def __init__(
+        self,
+        model_path=MODEL_PATH,
+        conf_threshold=0.5,
+        iou_threshold=0.95,
+        inference_classes=INFERENCE_CLASSES,
+    ):
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
         self.inference_classes = inference_classes

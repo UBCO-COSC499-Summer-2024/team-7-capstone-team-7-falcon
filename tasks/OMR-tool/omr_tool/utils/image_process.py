@@ -3,7 +3,11 @@ import numpy as np
 import sys
 from pathlib import Path
 
-ALIGNMENT_TEMPLATE = cv2.imread(Path(__file__).resolve().parents[2] / "fixtures" / "template" / "alignment.png", cv2.COLOR_BGR2GRAY)
+ALIGNMENT_TEMPLATE = cv2.imread(
+    Path(__file__).resolve().parents[2] / "fixtures" / "template" / "alignment.png",
+    cv2.COLOR_BGR2GRAY,
+)
+
 
 def prepare_img(image):
     """
@@ -19,6 +23,7 @@ def prepare_img(image):
     grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     portrait_img = align_img(grayscale_img)
     return portrait_img
+
 
 def edge_detect_img(image):
     """
@@ -36,6 +41,7 @@ def edge_detect_img(image):
     edged_img = cv2.Canny(blurred_img, 75, 200)
     return edged_img
 
+
 def align_img(image):
     """
     Function to align an image.
@@ -48,7 +54,7 @@ def align_img(image):
 
     """
     ogH, ogW = image.shape[:2]
-    
+
     if ogW > ogH:
         image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
     # grayscale_img = threshold_img(image, blur=False)
@@ -67,8 +73,6 @@ def align_img(image):
     #     cv2.rectangle(image, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
     # image = cv2.resize(image, (ogH, ogW))
     return image
-
-
 
 
 def threshold_img(image, blur=True, grayscale=True):
@@ -90,9 +94,9 @@ def threshold_img(image, blur=True, grayscale=True):
         blur_image = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
     else:
         blur_image = grayscale_img
-    thresh = cv2.threshold(
-        blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU
-    )[1]
+    thresh = cv2.threshold(blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[
+        1
+    ]
     return thresh
 
 
@@ -110,7 +114,7 @@ def generate_bubble_contours(image):
 
     # Threshold the image
     thresh = threshold_img(image, grayscale=False)
-    
+
     # Find contours
     all_contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
         0
@@ -124,14 +128,12 @@ def generate_bubble_contours(image):
         if cv2.isContourConvex(approx):
             (x, y, w, h) = cv2.boundingRect(cnt)
             aspect_ratio1 = w / float(h)
-            if (
-                aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2
-            ): 
+            if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2:
                 bubble_contours.append(cnt)
-    
-    #Sort Contours by x value
+
+    # Sort Contours by x value
     sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
-    
+
     sorted_contours = sorted(sorted_contours, key=lambda cnt: cv2.boundingRect(cnt)[1])
 
     return sorted_contours
@@ -251,8 +253,12 @@ def identify_bubbled(img, cnts):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Please provide an image path as an argument, falling back to placeholder.")
-        image_path = Path(__file__).resolve().parents[2] / "fixtures" / "submission_2-page_1.jpg"
+        print(
+            "Please provide an image path as an argument, falling back to placeholder."
+        )
+        image_path = (
+            Path(__file__).resolve().parents[2] / "fixtures" / "submission_2-page_1.jpg"
+        )
     else:
         image_path = sys.argv[1]
     image = cv2.imread(image_path)

@@ -1,3 +1,38 @@
+## Friday (7/19- 7/23)
+
+### Timesheet
+Clockify report
+![time for 07.19_- 07.23](07.19_07.23.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Add a page to view submissions for the instructor [S]
+
+### Progress Update (since 7/19/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Add a page to view submissions for the instructor #374
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have completed the instructor page that lets instructors view student submissions. Overall all frontend and backend
+tasks are completed or in progress now and we are close to finishing.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle I will work on refactoring the student join course page and implement frontend functionality for adding multiple answers to
+a bubble sheet
+
 ## Friday (7/17- 7/18)
 
 ### Timesheet

@@ -1,5 +1,67 @@
 # Individual Logs
 
+## Wednesday (7/19 - 7/23)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07192024-07232024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Working on a feature requested by Scott to allow students to dispute their submission grades in case if OMR did not grade them correctly. This involves new backend endpoints and frontend pages.
+
+### Progress Update (since 7/19/2024)
+
+![GitHub Board](./images/github_07192024-07232024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #351
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #369
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #363
+        </td>
+        <!-- Status -->
+        <td>Completed (Part of tasks that are assigned to me)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #364
+        </td>
+        <!-- Status -->
+        <td>In progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle I was addressing issues / suggestions provided by peers. A large amount of suggestions were resolved in one day. However, the larger feature such as allowing students to report an issue with their submission is taking a bit of time due to the amount of work that needs to be done. I think I made a solid progress during this cycle, but I was hopping to be almost done with this feature sooner.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Complete submission disputes feature
+  * Work on a feature that allows custom bubble sheet generator worker to create an exam with multiple answers in it. This will required backend and python script changes. Bennett will focus on frontend while I am finishing the first feature
+
 ## Friday (7/17 - 7/18)
 
 ### Timesheet

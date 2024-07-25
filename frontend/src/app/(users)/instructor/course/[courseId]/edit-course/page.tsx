@@ -1,16 +1,17 @@
 import React from "react";
+import CourseEditForm from "../../../../../components/editCourseForm";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
+import { redirect } from "next/navigation";
+import EditCourseButton from "../../../components/editCourseButton";
 import CourseHeader from "../../../components/courseHeader";
-import CreateExamForm from "../../../components/createExamForm";
 import Link from "next/link";
-import { Edit } from "flowbite-react-icons/solid";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 
-const CreateExam = async ({ params }: { params: { courseId: string } }) => {
+const EditCourse = async ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
   const course: Course = await coursesAPI.getCourse(cid);
 
@@ -22,18 +23,12 @@ const CreateExam = async ({ params }: { params: { courseId: string } }) => {
             course_code={course.course_code}
             course_desc={course.course_name}
             course_id={course.id}
-            selected={SelectedButton.Create_Exam}
+            selected={SelectedButton.Edit_Course}
           />
         </div>
-        <div className="justify-self-end space-y-4">
-          <button type="button" className="btn-primary">
-            <Link href={""} className="space-x-4 flex items-center">
-              <Edit />
-              Course Settings
-            </Link>
-          </button>
+        <div className="justify-self-end">
           <Link
-            href={`../${course.id}/exam`}
+            href={`../${course.id}/`}
             className="space-x-4 flex items-center btn-primary"
           >
             <ArrowLeft />
@@ -41,14 +36,10 @@ const CreateExam = async ({ params }: { params: { courseId: string } }) => {
           </Link>
         </div>
       </div>
-      <h1 className="text-xl font-bold">Create Exam:</h1>
-      <CreateExamForm
-        courseId={course.id}
-        courseCode={course.course_code}
-        courseName={course.course_name}
-      />
+      <h1 className="text-xl font-bold">Edit Course Information:</h1>
+      <CourseEditForm courseId={course.id} />
     </div>
   );
 };
 
-export default CreateExam;
+export default EditCourse;

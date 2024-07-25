@@ -5,10 +5,13 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  MaxLength,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { IBubbleSheetPayload } from '../../../common/interfaces';
 import 'reflect-metadata';
+import { ERROR_MESSAGES } from '../../../common';
 
 /**
  * Data transfer object for the BubbleSheetPayload
@@ -24,7 +27,15 @@ class BubbleSheetPayloadDto implements IBubbleSheetPayload {
   numberOfAnswers!: number;
 
   @IsString()
-  instructions!: string;
+  courseName!: string;
+
+  @IsString()
+  courseCode!: string;
+
+  @IsString()
+  @MinLength(1)
+  @MaxLength(46, { message: ERROR_MESSAGES.examController.examNameTooLong })
+  examName!: string;
 
   @IsArray()
   @IsNumber({}, { each: true })

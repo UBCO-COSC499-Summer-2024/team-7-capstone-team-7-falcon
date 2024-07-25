@@ -127,7 +127,8 @@ def test_generate_bubble_sheet(generated_pdf):
         text_content += page.extract_text()
 
     expected_strings = [
-        "EXAM ANSWER SHEET",
+        "Default exam\n",
+        "Default course\n",
         "Student Name:",
         "Please follow the directions",
         "Please fill in marks like this:",

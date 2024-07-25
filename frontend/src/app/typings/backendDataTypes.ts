@@ -5,6 +5,12 @@ export interface CourseData {
   section_name: string;
   semester_id: number;
 }
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
 
 export interface CourseAdminDetails {
   courseId: number;
@@ -133,7 +139,9 @@ export interface BubbleSheetPayload {
     numberOfQuestions: number;
     defaultPointsPerQuestion: number;
     numberOfAnswers: number;
-    instructions: string;
+    courseCode: string;
+    courseName: string;
+    examName: string;
     answers: number[];
   };
 }
@@ -215,6 +223,7 @@ export enum SelectedButton {
   People = "PEOPLE",
   Analytics = "ANALYTICS",
   None = "NONE",
+  Edit_Course = "COURSE SETTINGS",
 }
 
 export interface SemesterData {

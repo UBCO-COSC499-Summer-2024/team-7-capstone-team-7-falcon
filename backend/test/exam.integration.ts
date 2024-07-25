@@ -417,6 +417,7 @@ describe('Exam Integration', () => {
       expect(response.body).toEqual({
         error: 'Bad Request',
         message: [
+          'Exam name is too long',
           'exam_name must be longer than or equal to 2 characters',
           'exam_name must be a string',
           'exam_date must be an integer number',

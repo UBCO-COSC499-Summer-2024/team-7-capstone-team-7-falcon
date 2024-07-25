@@ -5,30 +5,35 @@ from omr_tool.utils.image_process import threshold_img
 
 def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     if question_num < len(answer_key):
+        correct_answer_indices = answer_key[question_num]['correct_answer_indices']
         isCorrect, filled_index = check_answer(
-            roi_cropped, bubble_contours, answer_key[question_num]
+            roi_cropped, bubble_contours, correct_answer_indices
         )
         color = (0, 255, 0) if isCorrect else (0, 0, 255)
-        correct_answer_indices = answer_key[question_num]
-        result = {"expected": answer_key[question_num], "answered": filled_index}
+        result = {"question_num": question_num, "expected": correct_answer_indices, "answered": filled_index}
+        return color, correct_answer_indices, result
     else:
-        color = (255, 0, 0)
-        correct_answer_indices = [0]
-    return color, correct_answer_indices, result
+        raise ValueError("Question number exceeds answer key length.")
 
+def add_to_key(roi_cropped, bubble_contours, question_num):
+    bubbled = find_filled_bubbles(roi_cropped, bubble_contours)
+    return {"question_num": question_num, "correct_answer_indices": bubbled}
+    
 
-def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
-    bubbled = []
-    bubbled_amount = 0
+def find_filled_bubbles(mask, bubble_contours, threshold=450):
+    filled_index = []
     thresh = threshold_img(mask, grayscale=False)
-    for i, cnt in enumerate(sorted_bubble_contours):
+    for i, cnt in enumerate(bubble_contours):
         mask = np.zeros(thresh.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-        if total > min_threshold:
-            bubbled.append(i)
-            bubbled_amount += 1
+        if total > threshold:
+            filled_index.append(i)
+    return filled_index
+
+def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
+    bubbled = find_filled_bubbles(mask, sorted_bubble_contours, min_threshold)
     if bubbled == []:
         return False, None
     if bubbled == expected_answer:
@@ -36,9 +41,6 @@ def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=45
     else:
         return False, bubbled
 
-
-def populate_answer_key(answer_key_img):
-    pass
 
 
 def order_questions(box, answer_list):

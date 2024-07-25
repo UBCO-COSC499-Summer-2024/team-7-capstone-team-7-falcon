@@ -83,11 +83,10 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
   };
 
   const submitJob = async () => {
-    setIsCreateDisabled(true);
     setIsDownloadAvailable(false);
     const keys = Object.keys(selectedOptions);
 
-    // verifies that all boxes are filled in
+    // Verifies a key exists for each row (a key can exist but have no answer)
     if (keys.length != Number(questionCount)) {
       setValidationError(true);
       return;
@@ -95,6 +94,17 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
       setValidationError(false);
     }
 
+    // Verifies that each array of keys that exists has at least 1 element
+    for (const key of keys) {
+      if (!selectedOptions[key] || selectedOptions[key].length === 0) {
+        setValidationError(true);
+        return;
+      } else {
+        setValidationError(false);
+      }
+    }
+
+    setIsCreateDisabled(true);
     const answerIndexes: number[][] = keys.map((key) => selectedOptions[key]);
     const payload: BubbleSheetPayload = {
       payload: {

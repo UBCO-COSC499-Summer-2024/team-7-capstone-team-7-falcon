@@ -10,9 +10,17 @@ import { saveAs } from "file-saver";
 
 interface BubbleSheetModalProps {
   onClose?(): void;
+  courseCode: string;
+  courseName: string;
+  examName: string;
 }
 
-const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
+const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
+  onClose,
+  courseCode,
+  courseName,
+  examName,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [isCreateDisabled, setIsCreateDisabled] = useState<boolean>(false);
   const [isDownloadAvailable, setIsDownloadAvailable] =
@@ -80,7 +88,9 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
         numberOfQuestions: Number(questionCount),
         defaultPointsPerQuestion: 1,
         numberOfAnswers: 5,
-        instructions: "x",
+        courseName,
+        courseCode,
+        examName,
         answers: answerIndexes,
       },
     };
@@ -93,6 +103,10 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
     const response = await examsAPI.postBubbleSheet(payload);
 
     if (response.status === 202) {
+      toast.success("Bubble sheet job has been submitted to the server", {
+        duration: 5_000,
+      });
+
       let fileIdReceived = false;
       while (true) {
         await new Promise((resolve) => setTimeout(resolve, 1_500));
@@ -120,13 +134,16 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
           break;
         }
       }
+    } else {
+      toast.error("Failed to create bubble sheet");
+      setIsCreateDisabled(false);
     }
   };
 
   const options = ["A", "B", "C", "D", "E"];
 
   return (
-    <Modal show={isModalOpen} size="7xl" onClose={() => handleClose()}>
+    <Modal show={isModalOpen} size="8xl" onClose={() => handleClose()}>
       <Modal.Body>
         <div className="grid grid-cols-1 space-x-4">
           <div className="col-span-1 space-y-3">
@@ -135,7 +152,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
                 htmlFor="number-input"
                 className="block text-gray-700 mb-2"
               >
-                Number of questions to be created on the bubble sheet
+                Number of questions to be created
               </label>
               <input
                 type="number"

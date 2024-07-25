@@ -27,7 +27,6 @@ export interface IBubbleSheetPayload {
   numberOfQuestions: number;
   defaultPointsPerQuestion: number;
   numberOfAnswers: number;
-  instructions: string;
 }
 
 /**

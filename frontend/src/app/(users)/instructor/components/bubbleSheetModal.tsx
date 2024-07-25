@@ -28,7 +28,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
   const [questionCount, setQuestionCount] = useState<string>("");
   const [fileId, setFileId] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: number;
+    [key: string]: number[];
   }>({});
   const [validationError, setValidationError] = useState(false);
   const questionsPerColumn = 35;
@@ -49,10 +49,23 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
   };
 
   const handleSelectedOptionChange = (row: number, index: number) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [row]: index,
-    }));
+    setSelectedOptions((prev) => {
+      // Gets the existing row info if it exists, otherwise return empty []
+      const selected = prev[row] || [];
+
+      // Unchecks the box if the index already exists, otherwise adds it to the selection
+      if (selected.includes(index)) {
+        return {
+          ...prev,
+          [row]: selected.filter((i) => i !== index),
+        };
+      } else {
+        return {
+          ...prev,
+          [row]: [...selected, index],
+        };
+      }
+    });
   };
 
   const downloadBubbleSheetFile = async () => {
@@ -82,7 +95,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
       setValidationError(false);
     }
 
-    const answerIndexes: number[] = keys.map((key) => selectedOptions[key]);
+    const answerIndexes: number[][] = keys.map((key) => selectedOptions[key]);
     const payload: BubbleSheetPayload = {
       payload: {
         numberOfQuestions: Number(questionCount),
@@ -183,17 +196,17 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
                     {options.map((option, index) => (
                       <label
                         key={index}
-                        htmlFor={`radio-${questionIndex}-${index}`}
+                        htmlFor={`checkbox-${questionIndex}-${index}`}
                         className="flex items-center cursor-pointer text-gray-700"
                       >
                         <input
-                          type="radio"
-                          id={`radio-${questionIndex}-${index}`}
+                          type="checkbox"
+                          id={`checkbox-${questionIndex}-${index}`}
                           name={`option-group-${questionIndex}`}
                           value={option}
-                          checked={
-                            selectedOptions[questionIndex] === Number(index)
-                          }
+                          checked={selectedOptions[questionIndex]?.includes(
+                            index,
+                          )}
                           onChange={() =>
                             handleSelectedOptionChange(questionIndex, index)
                           }

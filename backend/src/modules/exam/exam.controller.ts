@@ -302,6 +302,7 @@ export class ExamController {
   /**
    * Get all exams for the course
    * @param res {Response} - Response object
+   * @param cid {number} - Course id
    * @param eid {number} - Exam id
    * @returns {Promise<Response>} - Response object
    */

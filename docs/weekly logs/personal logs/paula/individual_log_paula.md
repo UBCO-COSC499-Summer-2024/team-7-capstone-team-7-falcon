@@ -1,5 +1,30 @@
 # Individual Logs for Paula
 
+## Friday (7/24 - 7/25)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.24_07.25"](images/clockify_07.24_07.25.png)
+
+### Current Tasks
+
+!["current_tasks_07.24_07.25"](images/current_tasks_07.24_07.25.png)
+
+* #1: Repo clean up and documentation updates
+
+### Progress Update (since 7/24/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle,
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Repo clean up and documentation updates
+
 ## Wednesday (7/19 - 7/23)
 
 ### Timesheet

@@ -10,6 +10,9 @@ import QueueModule from './modules/queue/queue.module';
 import { ExamModule } from './modules/exam/exam.module';
 import { TokenModule } from './modules/token/token.module';
 import { MailModule } from './modules/mail/mail.module';
+import { FileModule } from './modules/file/file.module';
+import { TasksModule } from './modules/tasks/tasks.module';
+import { SeedModule } from './modules/seed/seed.module';
 
 @Module({
   imports: [
@@ -27,6 +30,9 @@ import { MailModule } from './modules/mail/mail.module';
     ExamModule,
     TokenModule,
     MailModule,
+    FileModule,
+    TasksModule,
+    SeedModule,
   ],
 })
 export class AppModule {}

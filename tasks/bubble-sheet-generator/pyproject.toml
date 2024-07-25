@@ -11,6 +11,7 @@ requests = "^2.32.3"
 reportlab = "^4.2.0"
 pillow = "^10.3.0"
 pypdf = "^4.2.0"
+python-dotenv = "^1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -1,13 +1,30 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+import requests
+import time
+import uuid
+import logging
 
+load_dotenv()
+logging.basicConfig(
+    format="%(asctime)s >> %(message)s",
+    datefmt="%m-%d-%Y %I:%M:%S %p",
+    level=logging.INFO,
+)
 
 FONT_BOLD = "Helvetica-Bold"
 FONT_NORMAL = "Helvetica"
 CANVAS_OFFSET = 200
 FONT_SIZE_HEADER = 12
 FONT_SIZE_TEXT = 8
+REQUEST_DELAY = 3  # 3 seconds
+UPLOAD_PATH = (
+    Path(__file__).resolve().parents[3] / "backend" / "uploads" / "bubble_sheets"
+)
 
 
 def draw_bubble(canvas, x, y, radius=6, fill=0):
@@ -159,7 +176,11 @@ def draw_student_identification(c, current_x, current_y, width):
 
 
 def generate_bubble_sheet(
-    filename, num_questions=100, choices_per_question=5, questions_per_column=25
+    filename,
+    num_questions=100,
+    choices_per_question=5,
+    questions_per_column=25,
+    answers=[],
 ):
     """Generate a bubble sheet PDF file
 
@@ -168,7 +189,14 @@ def generate_bubble_sheet(
         num_questions (int, optional): number of questions in the exam. Defaults to 100.
         choices_per_question (int, optional): number of choices per question. Defaults to 5.
         questions_per_column (int, optional): number of questions per column. Defaults to 25.
+        answers (list, optional): list of answers to the questions. Defaults to [].
     """
+
+    # Ensure the directory for saving exists
+    try:
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+    except OSError:
+        return
 
     # Create a canvas to draw the bubble sheet
     c = canvas.Canvas(filename, pagesize=letter)
@@ -198,7 +226,10 @@ def generate_bubble_sheet(
         c.setFont(FONT_NORMAL, FONT_SIZE_TEXT)
         for choice in range(choices_per_question):
             bubble_x = current_x + (choice + 1) * bubble_spacing
-            draw_bubble(c, bubble_x, current_y + 7)
+            if len(answers) > 0 and choice == answers[question - 1]:
+                draw_bubble(c, bubble_x, current_y + 7, fill=1)
+            else:
+                draw_bubble(c, bubble_x, current_y + 7)
             c.drawString(bubble_x - 2.5, current_y + 4, chr(65 + choice))
         current_y -= question_spacing_y
 
@@ -213,6 +244,89 @@ def generate_bubble_sheet(
     c.save()
 
 
+def request_job(backend_url, queue_name):
+    """Request a job from the backend by sending a GET request
+
+    Args:
+        backend_url (str): URL of the backend
+        queue_name (str): name of the queue
+
+    Returns:
+        tuple: job_id, payload
+    """
+    request = requests.get(
+        f"{backend_url}/{queue_name}/pick",
+        headers={"x-queue-auth-token": os.getenv("API_TOKEN")},
+    )
+
+    if request.status_code == 401:
+        logging.critical("Invalid API token")
+        return None, None
+
+    if request.status_code == 404:
+        logging.info("No jobs available")
+        return None, None
+
+    job = request.json()
+
+    job_id = job.get("id")
+
+    payload = job.get("data").get("payload")
+    logging.info(f"Received job #{job_id}. Payload: {payload}")
+
+    return job_id, payload
+
+
+def complete_job(backend_url, queue_name, job_id, unique_id):
+    """Complete a job by sending a PATCH request to the backend
+
+    Args:
+        backend_url (str): URL of the backend
+        queue_name (str): name of the queue
+        job_id (int): ID of the job to complete
+        unique_id (str): unique identifier to store the file in folder
+    """
+    requests.patch(
+        f"{backend_url}/{queue_name}/{job_id}/complete",
+        headers={"x-queue-auth-token": os.getenv("API_TOKEN")},
+        json={"payload": {"filePath": f"{unique_id}"}},
+    )
+
+    logging.info(f"Job #{job_id} completed. Releasing it from queue")
+
+
 if __name__ == "__main__":
-    # TODO: Function needs to be wrapped with a method that makes requests to backend server and saves the file to correct location
-    generate_bubble_sheet("bubble_sheet.pdf")
+    backend_url = os.getenv("BACKEND_URL")
+    queue_name = os.getenv("QUEUE_NAME")
+
+    while True:
+        try:
+            time.sleep(REQUEST_DELAY)
+
+            job_id, payload = request_job(backend_url, queue_name)
+
+            if not job_id or not payload:
+                continue
+
+            unique_id = uuid.uuid4()
+            # Generates a bubble sheet with the answer key
+            generate_bubble_sheet(
+                os.path.join(f"{UPLOAD_PATH}/{unique_id}", f"answer.pdf"),
+                num_questions=int(payload.get("numberOfQuestions")),
+                choices_per_question=payload.get("numberOfAnswers"),
+                answers=payload.get("answers"),
+            )
+            # Generates a blank bubble sheet that students will fill out
+            generate_bubble_sheet(
+                os.path.join(f"{UPLOAD_PATH}/{unique_id}", f"sheet.pdf"),
+                num_questions=int(payload.get("numberOfQuestions")),
+                choices_per_question=payload.get("numberOfAnswers"),
+            )
+
+            complete_job(backend_url, queue_name, job_id, unique_id)
+        except requests.exceptions.RequestException:
+            logging.critical("Cannot connect to the backend")
+            continue
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+            continue

@@ -1,13 +1,16 @@
 "use client";
 
-import { Label, TextInput, FileInput } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 import { Datepicker } from "flowbite-react";
 import { ExamData } from "../../../typings/backendDataTypes";
 import { useState } from "react";
 import { examsAPI } from "../../../api/examAPI";
 import { Status } from "../../../typings/backendDataTypes";
-import ModalMessage from "../../student/components/modalMessage";
 import { redirect } from "next/navigation";
+import { Plus } from "flowbite-react-icons/outline";
+import BubbleSheetModal from "./bubbleSheetModal";
+import toast, { Toaster } from "react-hot-toast";
+import { datePickerTheme } from "@/app/components/datePickerTheme";
 
 interface CreateExamFormProps {
   course_id: number;
@@ -15,6 +18,7 @@ interface CreateExamFormProps {
 
 const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
   const [status, setStatus] = useState(Status.Pending);
+  const [isBubbleSheetOpen, setBubbleSheetOpen] = useState(false);
   const [examData, setData] = useState<ExamData>({
     exam_name: "",
     exam_date: -1,
@@ -32,31 +36,46 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
     setStatus(Status.Pending);
   };
 
+  const resetBubbleSheetModal = () => {
+    setBubbleSheetOpen(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (examData.exam_name.trim().length === 0) {
+      toast.error("Exam name cannot be empty!");
+      return;
+    }
     if (examData.exam_date < Date.now()) {
-      setStatus(Status.InvalidDate);
+      toast.error("Exam date must be in the future");
       return;
     }
     const result = await examsAPI.createExam(examData, course_id);
     if (result.status == 200) {
       setStatus(Status.Success);
     } else {
-      setStatus(Status.Failure);
+      toast.error("Failed to create exam");
+      resetStatus();
     }
+  };
+
+  const setDateToTomorrow = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    return tomorrow;
   };
 
   return (
     <>
-      {status === Status.Success && redirect(`../${course_id}`)}
-      {status === Status.Failure && (
-        <ModalMessage message={"Error creating exam"} onClose={resetStatus} />
+      {isBubbleSheetOpen && (
+        <BubbleSheetModal onClose={resetBubbleSheetModal} />
       )}
-      {status === Status.InvalidDate && (
-        <ModalMessage message={"Invalid date entered"} onClose={resetStatus} />
-      )}
+      {status === Status.Success && redirect(`../${course_id}/exam`)}
       <form onSubmit={handleSubmit}>
-        <div className="space-y-5 p-4 ring ring-gray-300 rounded-md">
+        <Toaster />
+        <div className="space-y-5 p-4 ring ring-gray-300 rounded-md flex flex-col">
           <Label className="block" htmlFor="exam_name" value="Exam Name" />
           <TextInput
             className="w-1/4"
@@ -71,50 +90,28 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
             className="w-1/4"
             onSelectedDateChanged={handleDate}
             id="exam_date"
+            minDate={setDateToTomorrow()}
+            showTodayButton={false}
+            theme={datePickerTheme}
           />
-
-          <Label className="block" htmlFor="pdf" value="Exam paper" />
-          <div className="flex w-1/6 h-1/8 items-center justify-center">
-            <Label
-              htmlFor="pdf"
-              className="flex w-full cursor-pointer flex-col items-center 
-                    justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 
-                    dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          <Label
+            className="justify-center my-4"
+            htmlFor="pdf"
+            value="Generate a custom bubble sheet exam"
+          />
+          <div className="w-1/12">
+            <div
+              className="flex flex-col justify-start w-5/6 rounded-md border-2 py-4 cursor-pointer"
+              onClick={() => setBubbleSheetOpen(true)}
             >
-              <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                <svg
-                  className="mb-4 w-8 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 
-                        5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 
-                        0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 text-center text-sm text-gray-500 dark:text-gray-400 ">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
-                </p>
-                <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                  PDF ONLY
-                </p>
-              </div>
-              <FileInput id="pdf" onChange={handleInput} className="hidden" />
-            </Label>
+              <Plus className="ml-8 text-purple-700 justify-center" />
+            </div>
           </div>
           <button
             type="submit"
-            className="text-white bg-purple-700 hover:bg-purple-800 
-                focus:ring-4 focus:outline-none focus:ring-purple-300 
-                font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            className="text-white bg-purple-700 hover:bg-purple-800
+                focus:ring-4 focus:outline-none focus:ring-purple-300
+                font-medium rounded-lg text-sm px-5 py-2.5 text-center w-1/4"
           >
             Publish
           </button>

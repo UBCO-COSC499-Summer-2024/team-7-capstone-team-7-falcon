@@ -31,6 +31,8 @@ describe('User Integration', () => {
     await CourseUserModel.delete({});
     await CourseModel.delete({});
     await UserModel.delete({});
+    await StudentUserModel.delete({});
+    await EmployeeUserModel.delete({});
 
     await CourseModel.query(
       'ALTER SEQUENCE course_model_id_seq RESTART WITH 1',
@@ -40,15 +42,21 @@ describe('User Integration', () => {
       'ALTER SEQUENCE course_user_model_id_seq RESTART WITH 1',
     );
     await TokenModel.query('ALTER SEQUENCE token_model_id_seq RESTART WITH 1');
+    await StudentUserModel.query(
+      'ALTER SEQUENCE student_user_model_id_seq RESTART WITH 1',
+    );
+    await EmployeeUserModel.query(
+      'ALTER SEQUENCE employee_user_model_id_seq RESTART WITH 1',
+    );
   });
 
   describe('GET /user', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest().get('/user').expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 200 and user object', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -57,6 +65,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const response = await supertest()
         .get('/user')
@@ -67,12 +88,12 @@ describe('User Integration', () => {
   });
 
   describe('GET /user/:uid', () => {
-    it('should return status 401 when no token is provided', () => {
+    it('should return status 401 when user not authenticated', () => {
       return supertest().get('/user/1').expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('should return status 401 when user is not an admin', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -82,6 +103,19 @@ describe('User Integration', () => {
         email_verified: true,
       }).save();
 
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
+
       return supertest()
         .get('/user/1')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
@@ -89,7 +123,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 400 when uid is not a number', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -99,6 +133,19 @@ describe('User Integration', () => {
         email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       return supertest()
         .get('/user/abc')
@@ -112,7 +159,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 200 and user object', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -122,6 +169,19 @@ describe('User Integration', () => {
         email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const response = await supertest()
         .get(`/user/${user.id}`)
@@ -132,7 +192,7 @@ describe('User Integration', () => {
     });
 
     it("should return status 404 when user id doesn't exist", async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -142,6 +202,19 @@ describe('User Integration', () => {
         email_verified: true,
         role: UserRoleEnum.ADMIN,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       return supertest()
         .get('/user/100')
@@ -169,39 +242,17 @@ describe('User Integration', () => {
         email_verified: true,
       }).save();
 
+      await StudentUserModel.create({
+        user,
+        student_id: 123,
+      }).save();
+
       return supertest()
         .patch('/user/abc')
         .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
         .expect(HttpStatus.BAD_REQUEST)
         .expect({
           message: 'Validation failed (numeric string is expected)',
-          error: 'Bad Request',
-          statusCode: HttpStatus.BAD_REQUEST,
-        });
-    });
-
-    it('should return status 400 when first_name is not provided', async () => {
-      const user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        email_verified: true,
-      }).save();
-
-      return supertest()
-        .patch(`/user/${user.id}`)
-        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .send({})
-        .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          message: [
-            'First name must be between 2 and 15 characters',
-            'First name is required',
-            'First name must be a string',
-          ],
           error: 'Bad Request',
           statusCode: HttpStatus.BAD_REQUEST,
         });
@@ -299,6 +350,11 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         role: UserRoleEnum.ADMIN,
         email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user,
+        employee_id: 123,
       }).save();
 
       return supertest()
@@ -409,25 +465,6 @@ describe('User Integration', () => {
           message: 'ok',
         });
     });
-
-    it('should return status 500 when an error occurs', async () => {
-      const user = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@test.com',
-        password: 'password',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        email_verified: true,
-      }).save();
-
-      // Relies on the fact that previous test case creates a student_id record
-      return supertest()
-        .patch(`/user/${user.id}`)
-        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
-        .send({ first_name: 'Jane', employee_id: 1, student_id: 1 })
-        .expect(HttpStatus.INTERNAL_SERVER_ERROR);
-    });
   });
 
   describe('GET /user/courses', () => {
@@ -436,7 +473,7 @@ describe('User Integration', () => {
     });
 
     it('should return status 404 when there are no courses', async () => {
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -445,6 +482,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       const response = await supertest()
         .get('/user/courses')
@@ -463,7 +513,7 @@ describe('User Integration', () => {
         invite_code: '123',
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -472,6 +522,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       await CourseUserModel.create({
         course_role: CourseRoleEnum.STUDENT,
@@ -498,7 +561,7 @@ describe('User Integration', () => {
         is_archived: true,
       }).save();
 
-      const user = await UserModel.create({
+      let user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
@@ -507,6 +570,19 @@ describe('User Integration', () => {
         updated_at: 1_000_000_000,
         email_verified: true,
       }).save();
+
+      const studentUser = await StudentUserModel.create({
+        student_id: 123,
+        user: user,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['student_user'],
+      });
+
+      user.student_user = studentUser;
+      await user.save();
 
       await CourseUserModel.create({
         course_role: CourseRoleEnum.STUDENT,
@@ -710,6 +786,484 @@ describe('User Integration', () => {
           expect(err).toBe(null);
         }
       });
+    });
+  });
+
+  describe('GET /user/all', () => {
+    it('should return status 401 if user not authenticated', () => {
+      return supertest().get('/user/all').expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 401 if user is not an admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .get('/user/all')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 200 if user is admin and query is empty', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john+${i}@mail.com`,
+          email_verified: true,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      return supertest()
+        .get('/user/all')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.OK)
+        .expect((response) => {
+          expect(response.body).toMatchSnapshot();
+        });
+    });
+
+    it('should return 200 if user is admin and query provided only takes two users', async () => {
+      let user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      user = await UserModel.findOne({
+        where: { id: user.id },
+        relations: ['employee_user'],
+      });
+
+      const employeeUser = await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      user.employee_user = employeeUser;
+      await user.save();
+
+      for (let i = 0; i < 10; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john+${i}@mail.com`,
+          email_verified: true,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      return supertest()
+        .get('/user/all?take=2&page=1')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.OK)
+        .expect((response) => {
+          expect(response.body).toMatchSnapshot();
+        });
+    });
+  });
+
+  describe('PATCH /user/:uid/change_role', () => {
+    it('should return status 401 if user not authenticated', () => {
+      return supertest()
+        .patch('/user/1/change_role')
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 401 if user is not an admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .patch('/user/1/change_role')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 400 if uid is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .patch('/user/abc/change_role')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          message: 'Validation failed (numeric string is expected)',
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+    });
+
+    it('should return status 400 if userRole is not provided', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .patch('/user/1/change_role')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          message: ['User role is required', 'User role is invalid'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+    });
+
+    it('should return status 400 if userRole is invalid', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .patch('/user/1/change_role')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({ userRole: 'INVALID_ROLE' })
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          message: ['User role is invalid'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+    });
+
+    it('should return status 404 if user not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .patch('/user/100/change_role')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({ userRole: UserRoleEnum.ADMIN })
+        .expect(HttpStatus.NOT_FOUND)
+        .expect({
+          message: 'User not found',
+        });
+    });
+
+    it('should return status 204 if user role is changed', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      const userToChange = await UserModel.create({
+        first_name: 'Jane',
+        last_name: 'Doe',
+        email: 'jane.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      return supertest()
+        .patch(`/user/${userToChange.id}/change_role`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({ userRole: UserRoleEnum.ADMIN })
+        .expect(HttpStatus.NO_CONTENT);
+    });
+  });
+
+  describe('DELETE /user/:uid/delete_profile_picture', () => {
+    it('should return status 401 if user not authenticated', () => {
+      return supertest()
+        .delete('/user/1/delete_profile_picture')
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 401 if user is not an admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .delete('/user/1/delete_profile_picture')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 400 if uid is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .delete('/user/abc/delete_profile_picture')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          message: 'Validation failed (numeric string is expected)',
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+    });
+
+    it('should return status 404 if user not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .delete('/user/100/delete_profile_picture')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.NOT_FOUND)
+        .expect({
+          message: 'User not found',
+        });
+    });
+
+    it('should return status 204 if profile picture is deleted', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+        avatar_url: 'profile_picture.jpg',
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      expect(user.avatar_url).toBe('profile_picture.jpg');
+
+      await supertest()
+        .delete(`/user/${user.id}/delete_profile_picture`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.NO_CONTENT);
+
+      const updatedUser = await UserModel.findOne({ where: { id: user.id } });
+      expect(updatedUser.avatar_url).toBe(null);
+    });
+  });
+
+  describe('GET /user/all/count', () => {
+    it('should return status 401 if user not authenticated', () => {
+      return supertest().get('/user/all/count').expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return status 401 if user is not an admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .get('/user/all/count')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 200 if user is admin', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      for (let i = 0; i < 10; i++) {
+        await UserModel.create({
+          first_name: 'John',
+          last_name: 'Doe',
+          email: `john.doe+${i}@mail.com`,
+          email_verified: true,
+          created_at: 1_000_000_000,
+          updated_at: 1_000_000_000,
+        }).save();
+      }
+
+      return supertest()
+        .get('/user/all/count')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.OK)
+        .expect((response) => {
+          expect(response.body).toMatchSnapshot();
+        });
+    });
+
+    it('should return 200 and only one role', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        email_verified: true,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        role: UserRoleEnum.ADMIN,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .get('/user/all/count')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(HttpStatus.OK)
+        .expect((response) => {
+          expect(response.body).toStrictEqual([
+            {
+              role: UserRoleEnum.ADMIN,
+              count: '1',
+            },
+          ]);
+        });
     });
   });
 });

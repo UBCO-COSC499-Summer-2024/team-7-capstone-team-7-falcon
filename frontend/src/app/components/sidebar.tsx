@@ -5,8 +5,11 @@ import { Role, useUserInfo } from "../contexts/userContext";
 import { usersAPI } from "@/app/api/usersAPI";
 import StudentNavigation from "../(users)/student/components/navigation";
 import { ArrowRightToBracket } from "flowbite-react-icons/outline";
+import { useRouter } from "next/navigation";
+import { Button } from "flowbite-react";
 import Link from "next/link";
 import InstructorNavigation from "../(users)/instructor/components/navigation";
+import AdminNavigation from "../admin/components/navigation";
 import Avatar from "./avatar";
 import OwlLogo from "./owlLogo";
 
@@ -17,13 +20,17 @@ import OwlLogo from "./owlLogo";
  * @returns TSX Element
  */
 const PageSidebar: React.FC = () => {
+  const router = useRouter();
   const { userInfo, setUserInfo } = useUserInfo();
+
+  const handleLogout = async () => {
+    router.push(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout/`);
+  };
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const userDetails = await usersAPI.getUserDetails();
-
         let userRole;
         if (userDetails.role === "professor") {
           userRole = Role.INSTRUCTOR;
@@ -82,14 +89,15 @@ const PageSidebar: React.FC = () => {
           <Sidebar.Items className="mt-10 flex items-center flex-col">
             {userInfo.role === "student" && <StudentNavigation />}
             {userInfo.role === "instructor" && <InstructorNavigation />}
+            {userInfo.role === "admin" && <AdminNavigation />}
           </Sidebar.Items>
         </div>
 
         <div className="flex justify-center">
-          <Link href="/logout" className="flex items-center space-x-2 text-sm">
-            <ArrowRightToBracket />
-            <span>Sign out</span>
-          </Link>
+          <Button color="border-transparent" onClick={handleLogout}>
+            <ArrowRightToBracket className="h-5" />
+            Sign out
+          </Button>
         </div>
       </div>
     </Sidebar>

@@ -1,12 +1,13 @@
-import React, { useEffect, useState, FormEvent } from "react";
-import { Select, Button, TextInput, Modal, Label, Alert } from "flowbite-react";
+import React, { FormEvent } from "react";
+import { Button, TextInput, Label } from "flowbite-react";
 
 import { coursesAPI } from "@/app/api/coursesAPI";
-import SemesterSelect from "./semesterSelect";
+import SemesterSelect from "@/app/components/semesterSelect";
 import toast from "react-hot-toast";
 
 interface CourseCreatorProps {
   onSubmission: () => void; // Function to call when the course is created
+  onExit: () => void; // Function to call when the form is exited
 }
 
 /**
@@ -15,7 +16,10 @@ interface CourseCreatorProps {
  * @param {CourseCreatorProps} props - The component props
  * @returns {React.JSX.Element} - Course creator component
  */
-const CourseCreator: React.FC<CourseCreatorProps> = ({ onSubmission }) => {
+const CourseCreator: React.FC<CourseCreatorProps> = ({
+  onExit,
+  onSubmission,
+}) => {
   /**
    * Handles the form submission to create a new course.
    * @async
@@ -85,7 +89,7 @@ const CourseCreator: React.FC<CourseCreatorProps> = ({ onSubmission }) => {
         <Button type="submit" color="purple">
           Create Course
         </Button>
-        <Button color="red" onClick={() => onSubmission()}>
+        <Button color="red" onClick={() => onExit()}>
           Cancel
         </Button>
       </div>

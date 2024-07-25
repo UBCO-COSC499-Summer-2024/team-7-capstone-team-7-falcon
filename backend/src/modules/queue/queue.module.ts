@@ -5,6 +5,8 @@ import { QueueController } from './queue.controller';
 import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
 import { MailService } from '../mail/mail.service';
+import { FileService } from '../file/file.service';
+import { SubmissionsProcessingService } from './jobs/submissions-processing.service';
 
 @Module({
   imports: [
@@ -17,13 +19,18 @@ import { MailService } from '../mail/mail.service';
     BullModule.registerQueue({
       name: 'bubble-sheet-creation',
     }),
+    BullModule.registerQueue({
+      name: 'omr-submissions-processing',
+    }),
   ],
   controllers: [QueueController],
   providers: [
+    SubmissionsProcessingService,
     BubbleSheetCreationService,
     UserService,
     TokenService,
     MailService,
+    FileService,
   ],
 })
 export default class QueueModule {}

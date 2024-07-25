@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
  */
 const InstructorCourses: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [shouldReload, setShouldReload] = useState(false);
 
   /**
    * Closes the course creation modal.
@@ -22,6 +23,11 @@ const InstructorCourses: React.FC = () => {
   function closeModal() {
     setModalOpen(false);
   }
+
+  const handleCourseCreated = () => {
+    setShouldReload((prev) => !prev); // Toggle the state to force re-render
+    closeModal();
+  };
 
   return (
     <>
@@ -44,11 +50,14 @@ const InstructorCourses: React.FC = () => {
         >
           <Modal.Header className="pl-2 pt-2">Create a new Course</Modal.Header>
           <Modal.Body className="mt-2">
-            <CourseCreator onSubmission={() => closeModal()} />
+            <CourseCreator
+              onExit={() => closeModal()}
+              onSubmission={() => handleCourseCreated()}
+            />
           </Modal.Body>
         </Modal>
       </div>
-      <CourseGrid />
+      <CourseGrid reload={shouldReload} />
     </>
   );
 };

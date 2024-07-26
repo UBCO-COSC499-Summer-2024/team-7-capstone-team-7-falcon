@@ -15,10 +15,6 @@ def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     else:
         raise ValueError("Question number exceeds answer key length.")
 
-def add_to_key(roi_cropped, bubble_contours, question_num):
-    bubbled = find_filled_bubbles(roi_cropped, bubble_contours)
-    return {"question_num": question_num, "correct_answer_indices": bubbled}
-    
 
 def find_filled_bubbles(mask, bubble_contours, threshold=450):
     filled_index = []
@@ -40,8 +36,6 @@ def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=45
         return True, bubbled
     else:
         return False, bubbled
-
-
 
 def order_questions(box, answer_list):
     """

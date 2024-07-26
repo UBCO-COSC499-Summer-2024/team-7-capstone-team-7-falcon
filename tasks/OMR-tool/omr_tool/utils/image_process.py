@@ -250,6 +250,45 @@ def identify_bubbled(img, cnts):
             filled_in.append(cnts[bubbled[1]])
     return filled_in
 
+def draw_bubble_contours(image, bubble_contour, question_bounds, color):
+    """
+    Draw the bubble contours on the image.
+
+    Args:
+        image (numpy.ndarray): The input image.
+        bubble_contours (list): The list of bubble contours.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The image with the bubble contours drawn.
+
+    """
+    output_image = image.copy()
+    x1, y1, x2, y2 = question_bounds
+    repositioned_cnt = bubble_contour + [x1, y1]
+    cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2)
+    return output_image
+
+
+def extract_roi(image, question_bounds):
+    """
+    Extracts the region of interest (ROI) from the given image based on the provided question bounds.
+
+    Parameters:
+        image (numpy.ndarray): The input image from which the ROI needs to be extracted.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The cropped ROI image.
+
+    """
+    mask = np.zeros(image.shape[:2], dtype="uint8")
+    x1, y1, x2, y2 = question_bounds
+    cv2.fillPoly(mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
+    roi = cv2.bitwise_and(image, image, mask=mask)
+    roi_cropped = roi[y1:y2, x1:x2]
+    return roi_cropped
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

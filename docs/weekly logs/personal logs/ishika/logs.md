@@ -1,3 +1,26 @@
+## Wednesday(7/19-7/23)
+
+<img width="1064" alt="image" src="https://github.com/user-attachments/assets/f92e39ac-b266-4f01-853b-512f0fa71364">
+
+### Project Board
+
+<img width="1255" alt="image" src="https://github.com/user-attachments/assets/7a6d7282-3f67-4950-bbcb-4c436e3cb1a0">
+
+## Current Tasks
+
+1. Finish remove students from course page
+
+## Progress update since (7/19)
+
+I addressed all the comments I had on both my PRs which has been merged into development. I have started working on a feature that removes students from the course. 
+
+## Cycle goal review
+
+I am happy that my PRs has been merged into development. Overall, it was a slow cycle with less tasks and not much has been done in this cycle. 
+
+## Next Cycle Goal
+
+I am going to try my best to get my upcoming PR merged into development.
 
 ## Friday(7/17-7/18)
 

@@ -1,3 +1,28 @@
+## Friday (7/24-7/25)
+
+<img width="1065" alt="image" src="https://github.com/user-attachments/assets/3a3e1627-6dc5-4d45-a68b-fad38ec426de">
+
+### Project Board
+
+<img width="393" alt="image" src="https://github.com/user-attachments/assets/bbaa21b5-e902-467e-966d-e3ed819dc20f">
+
+## Current Tasks
+
+1. Add Remove Student form for instructors and hook it with the endpoint
+
+## Progress update since (7/24)
+
+I added the Delete User form and wrote the API call for the endpoint. I do need to fix minor issues and put up a PR for this feature.
+
+### Cycle Goal Review
+
+I only had this task assigned so I didn't spend a lot of time coding for this cycle. 
+
+## Next Cycle Goal
+
+I will take up more features from the unofficial rubric that is yet to be negotiated with Scott, if required.
+
+
 ## Wednesday(7/19-7/23)
 
 <img width="1064" alt="image" src="https://github.com/user-attachments/assets/f92e39ac-b266-4f01-853b-512f0fa71364">

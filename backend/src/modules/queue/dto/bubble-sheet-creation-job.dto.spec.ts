@@ -19,7 +19,11 @@ describe('BubbleSheetCreationJobDto', () => {
         examName: 'Exam name',
         courseCode: 'Course code',
         courseName: 'Course name',
-        answers: [1, 2, 3, 4, 5],
+        answers: [
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+        ],
       },
     };
 

@@ -63,7 +63,11 @@ describe('QueueValidationPipe', () => {
         courseName: 'Course name',
         courseCode: 'Course code',
         examName: 'Exam name',
-        answers: [1, 2, 3, 4, 5],
+        answers: [
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+        ],
       },
     };
     const queueValidationPipe = createQueueValidationPipe(queueName);
@@ -76,6 +80,10 @@ describe('QueueValidationPipe', () => {
     expect(dto.payload.courseName).toBe('Course name');
     expect(dto.payload.courseCode).toBe('Course code');
     expect(dto.payload.examName).toBe('Exam name');
-    expect(dto.payload.answers).toEqual([1, 2, 3, 4, 5]);
+    expect(dto.payload.answers).toStrictEqual([
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+    ]);
   });
 });

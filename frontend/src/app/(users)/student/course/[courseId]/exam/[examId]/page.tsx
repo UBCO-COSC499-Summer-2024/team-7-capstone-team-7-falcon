@@ -13,6 +13,7 @@ import { mean, median, quantile } from "d3-array";
 import PdfViewer from "../../../../components/pdfViewer";
 import { usersAPI } from "../../../../../../api/usersAPI";
 import ReportSubmissionIssue from "../../../../components/reportSubmissionIssue";
+import { Toaster } from "react-hot-toast";
 
 const StudentExamPage = async ({
   params,
@@ -57,6 +58,7 @@ const StudentExamPage = async ({
 
   return (
     <div className="p-2">
+      <Toaster />
       <div className="grid grid-cols-2">
         <div className="col-span-1">
           <h1 className="text-4xl font-bold p-1">{course.course_code}</h1>
@@ -107,8 +109,8 @@ const StudentExamPage = async ({
             <p>Median: {stats.medianValue}</p>
           </div>
           <ReportSubmissionIssue
-            examId={submission.exam.id}
             submissionId={submission.studentSubmission.id}
+            courseId={cid}
           />
         </div>
       </div>

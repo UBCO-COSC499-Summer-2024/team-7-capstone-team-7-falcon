@@ -1,23 +1,50 @@
+import { examsAPI } from "@/app/api/examAPI";
 import { Alert, Label, Modal, Textarea } from "flowbite-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface ReportSubmissionIssueModalProps {
   onClose?(): void;
-  examId: number;
   submissionId: number;
+  courseId: number;
 }
 
 const ReportSubmissionIssueModal: React.FC<ReportSubmissionIssueModalProps> = ({
   onClose,
-  examId,
   submissionId,
+  courseId,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [disputeDescription, setDisputeDescription] = useState<string>("");
 
   const handleClose = () => {
     setIsModalOpen(false);
     if (onClose) {
       onClose();
+    }
+  };
+
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+
+    if (disputeDescription.trim().length === 0) {
+      toast.error("Description cannot be empty!");
+      return;
+    }
+
+    const result = await examsAPI.createSubmissionDispute(
+      submissionId,
+      courseId,
+      disputeDescription,
+    );
+
+    if (result.status === 200) {
+      toast.success("Dispute submitted successfully");
+      handleClose();
+    } else {
+      toast.error(result.response.data.message);
     }
   };
 
@@ -47,12 +74,15 @@ const ReportSubmissionIssueModal: React.FC<ReportSubmissionIssueModalProps> = ({
             placeholder="Provide details about your issue with the grade submission. You are limited to 1,000 characters (or ~145 words)."
             rows={7}
             maxLength={1_000}
+            onChange={(e) => setDisputeDescription(e.target.value)}
             className="focus:border-none dark:focus:border-none focus:ring-purple-700 dark:focus:ring-purple-700 resize-none"
           />
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn-primary w-full">Submit</button>
+        <button className="btn-primary w-full" onClick={handleSubmit}>
+          Submit
+        </button>
       </Modal.Footer>
     </Modal>
   );

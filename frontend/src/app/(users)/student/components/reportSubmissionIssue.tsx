@@ -5,13 +5,13 @@ import React, { useState } from "react";
 import ReportIssueModal from "./reportIssueModal";
 
 interface ReportSubmissionIssueProps {
-  examId: number;
   submissionId: number;
+  courseId: number;
 }
 
 const ReportSubmissionIssue: React.FC<ReportSubmissionIssueProps> = ({
-  examId,
   submissionId,
+  courseId,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -24,7 +24,7 @@ const ReportSubmissionIssue: React.FC<ReportSubmissionIssueProps> = ({
       {modalOpen && (
         <ReportIssueModal
           onClose={handleModal}
-          examId={examId}
+          courseId={courseId}
           submissionId={submissionId}
         />
       )}

@@ -21,7 +21,6 @@ import { MoreThan, Not } from 'typeorm';
 import { CourseUserModel } from '../course/entities/course-user.entity';
 import { UserModel } from '../user/entities/user.entity';
 import {
-  ExamSubmissionsDisputesInterface,
   GradedSubmissionsInterface,
   UpcomingExamsInterface,
   UserSubmissionExamInterface,
@@ -607,47 +606,6 @@ export class ExamService {
   }
 
   /**
-   * Get exams with submissions disputes by course id
-   * @param cid {number} - Course id
-   * @returns {Promise<ExamSubmissionsDisputesInterface[]>} - List of exams with submissions disputes
-   */
-  async getExamsWithSubmissionsDisputesByCourseId(
-    cid: number,
-  ): Promise<ExamSubmissionsDisputesInterface[]> {
-    const result = await ExamModel.createQueryBuilder('exam')
-      .select('exam.id', 'examId')
-      .addSelect('exam.name', 'examName')
-      .addSelect('COUNT(dispute.id)', 'numberOfDisputes')
-      .innerJoin(
-        'exam.course',
-        'course',
-        'course.id = :cid AND course.is_archived = false',
-        { cid },
-      )
-      .leftJoin('exam.submissions', 'submission')
-      .leftJoin(
-        'submission.dispute',
-        'dispute',
-        'dispute.status NOT IN (:...statuses)',
-        { statuses: [DisputeStatusEnum.RESOLVED, DisputeStatusEnum.REJECTED] },
-      )
-      .groupBy('exam.id')
-      .addGroupBy('exam.name')
-      .orderBy('COUNT(dispute.id)', 'DESC')
-      .getRawMany();
-
-    const filteredResult = result
-      .map((exam) => ({
-        examId: exam.examId,
-        examName: exam.examName,
-        numberOfDisputes: parseInt(exam.numberOfDisputes, 10),
-      }))
-      .filter((exam) => exam.numberOfDisputes > 0);
-
-    return filteredResult;
-  }
-
-  /**
    * Create submission dispute by submission id
    * @param submissionId {number} - Submission id
    * @param description {string} - Description
@@ -669,7 +627,7 @@ export class ExamService {
       throw new SubmissionNotFoundException();
     }
 
-    if (submission.student.user.id !== userId) {
+    if (submission.student?.user?.id !== userId) {
       throw new DisputeSubmissionException(
         ERROR_MESSAGES.examController.submissionDoesNotBelongToUser,
       );
@@ -711,7 +669,15 @@ export class ExamService {
       );
     }
 
+    const currentTime: number = parseInt(new Date().getTime().toString());
+
     submissionDispute.status = status;
+
+    if (status !== DisputeStatusEnum.CREATED) {
+      submissionDispute.resolved_at = currentTime;
+    }
+
+    submissionDispute.updated_at = currentTime;
 
     await submissionDispute.save();
   }
@@ -735,6 +701,9 @@ export class ExamService {
           },
         },
       },
+      order: {
+        created_at: 'DESC',
+      },
       relations: ['submission', 'submission.exam', 'submission.exam.course'],
     });
 
@@ -744,24 +713,29 @@ export class ExamService {
       );
     }
 
-    return exam;
+    const modifiedResponse: SubmissionDisputeModel[] = exam.map(
+      (submissionDispute) =>
+        ({
+          id: submissionDispute.id,
+          status: submissionDispute.status,
+          created_at: submissionDispute.created_at,
+        }) as SubmissionDisputeModel,
+    );
+    return modifiedResponse;
   }
 
   /**
-   * Get submission dispute by submission id
-   * @param submissionId {number} - Submission id
+   * Get submission dispute by disputeId
    * @param disputeId {number} - Dispute id
    * @returns {Promise<SubmissionDisputeModel>} - Submission dispute model
    */
-  async getSubmissionDisputeBySubmissionIdAndDisputeId(
-    submissionId: number,
+  async getSubmissionDisputeByDisputeId(
     disputeId: number,
   ): Promise<SubmissionDisputeModel> {
     const submissionDispute = await SubmissionDisputeModel.findOne({
       where: {
         id: disputeId,
         submission: {
-          id: submissionId,
           exam: {
             course: {
               is_archived: false,
@@ -784,6 +758,32 @@ export class ExamService {
       );
     }
 
-    return submissionDispute;
+    const modifiedResponse: SubmissionDisputeModel = {
+      id: submissionDispute.id,
+      status: submissionDispute.status,
+      description: submissionDispute.description,
+      created_at: submissionDispute.created_at,
+      updated_at: submissionDispute.updated_at,
+      resolved_at: submissionDispute.resolved_at,
+      submission: {
+        created_at: submissionDispute.submission.created_at,
+        score: submissionDispute.submission.score,
+        updated_at: submissionDispute.submission.updated_at,
+        answers: submissionDispute.submission.answers,
+        document_path: submissionDispute.submission.document_path,
+        id: submissionDispute.submission.id,
+        student: {
+          student_id: submissionDispute.submission.student?.student_id,
+          id: submissionDispute.submission.student?.id,
+          user: {
+            id: submissionDispute.submission.student?.user?.id,
+            first_name: submissionDispute.submission.student?.user?.first_name,
+            last_name: submissionDispute.submission.student?.user?.last_name,
+          } as UserModel,
+        } as StudentUserModel,
+      } as SubmissionModel,
+    } as SubmissionDisputeModel;
+
+    return modifiedResponse;
   }
 }

@@ -1987,135 +1987,6 @@ describe('ExamService', () => {
     });
   });
 
-  describe('getExamsWithSubmissionsDisputesByCourseId', () => {
-    it('should return all exams with number of disputes and exam details', async () => {
-      let course = await CourseModel.create({
-        course_code: 'CS101',
-        course_name: 'Introduction to Computer Science',
-        section_name: '001',
-        invite_code: '123',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-      }).save();
-
-      course = await CourseModel.findOne({
-        where: { id: course.id },
-        relations: ['exams'],
-      });
-
-      for (let i = 0; i < 10; i++) {
-        const exam = await ExamModel.create({
-          name: `Exam ${i}`,
-          exam_date: 1_000_000_000,
-          created_at: 1_000_000_000,
-          updated_at: 1_000_000_000,
-          questions: {},
-        }).save();
-
-        course.exams.push(exam);
-      }
-      await course.save();
-
-      const disputes = [1, 2, 1, 2, 3, 2, 0, 2, 1, 0];
-
-      for (let i = 0; i < 10; i++) {
-        const exam = await ExamModel.findOne({
-          where: { id: i + 1 },
-          relations: ['submissions'],
-        });
-
-        for (let j = 0; j < disputes[i]; j++) {
-          let submission = await SubmissionModel.create({
-            exam,
-            student: null,
-            answers: {},
-            score: 23,
-            document_path: 'path',
-            created_at: 1_000_000_000,
-            updated_at: 1_000_000_000,
-          }).save();
-
-          exam.submissions.push(submission);
-          await exam.save();
-
-          submission = await SubmissionModel.findOne({
-            where: { id: submission.id },
-            relations: ['dispute'],
-          });
-
-          const dispute = await SubmissionDisputeModel.create({
-            submission,
-            description: 'Dispute',
-            created_at: 1_000_000_000,
-            updated_at: 1_000_000_000,
-          }).save();
-
-          submission.dispute = dispute;
-
-          await submission.save();
-        }
-      }
-
-      const result =
-        await examService.getExamsWithSubmissionsDisputesByCourseId(course.id);
-
-      expect(result).toBeDefined();
-
-      expect(result).toMatchSnapshot();
-    });
-
-    it('should return an empty array if course is archived', async () => {
-      const course = await CourseModel.create({
-        course_code: 'CS101',
-        course_name: 'Introduction to Computer Science',
-        section_name: '001',
-        invite_code: '123',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        is_archived: true,
-      }).save();
-
-      const result =
-        await examService.getExamsWithSubmissionsDisputesByCourseId(course.id);
-
-      expect(result).toEqual([]);
-    });
-
-    it('should return an empty array if exams submissions have no disputes', async () => {
-      let course = await CourseModel.create({
-        course_code: 'CS101',
-        course_name: 'Introduction to Computer Science',
-        section_name: '001',
-        invite_code: '123',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-      }).save();
-
-      course = await CourseModel.findOne({
-        where: { id: course.id },
-        relations: ['exams'],
-      });
-
-      for (let i = 0; i < 10; i++) {
-        const exam = await ExamModel.create({
-          name: `Exam ${i}`,
-          exam_date: 1_000_000_000,
-          created_at: 1_000_000_000,
-          updated_at: 1_000_000_000,
-          questions: {},
-        }).save();
-
-        course.exams.push(exam);
-      }
-      await course.save();
-
-      const result =
-        await examService.getExamsWithSubmissionsDisputesByCourseId(course.id);
-
-      expect(result).toEqual([]);
-    });
-  });
-
   describe('createSubmissionDisputeBySubmissionId', () => {
     it('should throw an error if the submission is not found', async () => {
       await expect(
@@ -2390,10 +2261,10 @@ describe('ExamService', () => {
     });
   });
 
-  describe('getSubmissionDisputeBySubmissionIdAndDisputeId', () => {
+  describe('getSubmissionDisputeByDisputeId', () => {
     it('should throw an error if the submission dispute is not found', async () => {
       await expect(
-        examService.getSubmissionDisputeBySubmissionIdAndDisputeId(1, 1),
+        examService.getSubmissionDisputeByDisputeId(1),
       ).rejects.toThrow('Dispute not found');
     });
 
@@ -2433,11 +2304,9 @@ describe('ExamService', () => {
         updated_at: 1_000_000_000,
       }).save();
 
-      const result =
-        await examService.getSubmissionDisputeBySubmissionIdAndDisputeId(
-          submission.id,
-          dispute.id,
-        );
+      const result = await examService.getSubmissionDisputeByDisputeId(
+        dispute.id,
+      );
 
       expect(result).toBeDefined();
       expect(result).toMatchSnapshot();

@@ -31,6 +31,7 @@ import {
   FileNotFoundException,
   SubmissionNotFoundException,
   ExamUploadException,
+  DisputeSubmissionException,
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
@@ -48,6 +49,8 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { SubmissionsProcessingService } from '../queue/jobs/submissions-processing.service';
 import { SubmissionCreationDto } from './dto/submission-creation.dto';
 import { WorkerAuthGuard } from '../../guards/worker.guard';
+import { DisputeSubmissionDto } from './dto/dispute-submission.dto';
+import { DisputeStatusEnum } from 'src/enums/exam-dispute.enum';
 
 @Controller('exam')
 export class ExamController {
@@ -121,6 +124,70 @@ export class ExamController {
   }
 
   /**
+   * Update dispute status
+   * @param res {Response} - Response object
+   * @param disputeId {number} - Dispute id
+   * @param body {Object} - Dispute data
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Patch('/:cid/:disputeId/update_dispute_status')
+  async updateDisputeStatus(
+    @Res() res: Response,
+    @Param('disputeId', ParseIntPipe) disputeId: number,
+    @Body(new ValidationPipe()) body: { status: DisputeStatusEnum },
+  ): Promise<Response> {
+    try {
+      await this.examService.updateSubmissionDisputeStatus(
+        disputeId,
+        body.status,
+      );
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof DisputeSubmissionException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Get exam submission dispute
+   * @param res {Response} - Response object
+   * @param disputeId {number} - Dispute id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:cid/:disputeId/exam_submission_dispute')
+  async getExamSubmissionDispute(
+    @Res() res: Response,
+    @Param('disputeId', ParseIntPipe) disputeId: number,
+  ): Promise<Response> {
+    try {
+      const dispute =
+        await this.examService.getSubmissionDisputeByDisputeId(disputeId);
+      return res.status(HttpStatus.OK).send(dispute);
+    } catch (e) {
+      if (e instanceof DisputeSubmissionException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
    * Get exam by id
    * @param res {Response} response object
    * @param eid {number} exam id
@@ -131,13 +198,43 @@ export class ExamController {
   @Get('/:cid/exam/:eid')
   async getExamById(
     @Res() res: Response,
-    @Param('eid', new ValidationPipe()) eid: number,
+    @Param('eid', ParseIntPipe) eid: number,
   ): Promise<Response> {
     try {
       const exam = await this.examService.getExamById(eid);
       return res.status(HttpStatus.OK).send(exam);
     } catch (e) {
       if (e instanceof ExamNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Get exam submissions disputes
+   * @param res {Response} - Response object
+   * @param eid {number} - Exam id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:eid/:cid/submissions_disputes')
+  async getExamSubmissionsDisputes(
+    @Res() res: Response,
+    @Param('eid', ParseIntPipe) eid: number,
+  ): Promise<Response> {
+    try {
+      const disputes =
+        await this.examService.getExamSubmissionsDisputesByExamId(eid);
+      return res.status(HttpStatus.OK).send(disputes);
+    } catch (e) {
+      if (e instanceof DisputeSubmissionException) {
         return res.status(HttpStatus.NOT_FOUND).send({
           message: e.message,
         });
@@ -190,7 +287,7 @@ export class ExamController {
   @Post('/:cid/create')
   async createExam(
     @Res() res: Response,
-    @Param('cid', new ValidationPipe()) cid: number,
+    @Param('cid', ParseIntPipe) cid: number,
     @Body(new ValidationPipe()) examData: ExamCreateDto,
   ): Promise<Response> {
     try {
@@ -221,8 +318,8 @@ export class ExamController {
   @Post(':eid/:studentId')
   async createSubmission(
     @Res() res: Response,
-    @Param('eid', new ValidationPipe()) eid: number,
-    @Param('studentId', new ValidationPipe()) studentId: number,
+    @Param('eid', ParseIntPipe) eid: number,
+    @Param('studentId', ParseIntPipe) studentId: number,
     @Body(new ValidationPipe()) body: SubmissionCreationDto,
   ): Promise<Response> {
     try {
@@ -263,8 +360,8 @@ export class ExamController {
       answerKey: Express.Multer.File[];
       submissions: Express.Multer.File[];
     },
-    @Param('eid', new ValidationPipe()) eid: number,
-    @Param('cid', new ValidationPipe()) cid: number,
+    @Param('eid', ParseIntPipe) eid: number,
+    @Param('cid', ParseIntPipe) cid: number,
   ): Promise<Response> {
     try {
       const examFolder = await this.examService.uploadExamSubmissions(
@@ -310,7 +407,7 @@ export class ExamController {
   @Get('/:cid/:eid/submissions')
   async getExam(
     @Res() res: Response,
-    @Param('eid', new ValidationPipe()) eid: number,
+    @Param('eid', ParseIntPipe) eid: number,
   ): Promise<Response> {
     try {
       const exam = await this.examService.getSubmissionsByExamId(eid);
@@ -392,9 +489,9 @@ export class ExamController {
   @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
   async getSubmissionGradeByUser(
     @Res() res: Response,
-    @Param('uid', new ValidationPipe()) uid: number,
-    @Param('eid', new ValidationPipe()) eid: number,
-    @Param('cid', new ValidationPipe()) cid: number,
+    @Param('uid', ParseIntPipe) uid: number,
+    @Param('eid', ParseIntPipe) eid: number,
+    @Param('cid', ParseIntPipe) cid: number,
     @User() user: UserModel,
   ): Promise<Response> {
     try {
@@ -462,9 +559,9 @@ export class ExamController {
   @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA, CourseRoleEnum.STUDENT)
   async getSubmissionByUser(
     @Res({ passthrough: true }) res: Response,
-    @Param('sid', new ValidationPipe()) sid: number,
-    @Param('uid', new ValidationPipe()) uid: number,
-    @Param('cid', new ValidationPipe()) cid: number,
+    @Param('sid', ParseIntPipe) sid: number,
+    @Param('uid', ParseIntPipe) uid: number,
+    @Param('cid', ParseIntPipe) cid: number,
     @User() user: UserModel,
   ): Promise<StreamableFile | void> {
     try {
@@ -548,9 +645,9 @@ export class ExamController {
   @Patch('/:eid/course/:cid/submission/:sid/grade')
   async updateGrade(
     @Res() res: Response,
-    @Param('eid', new ValidationPipe()) eid: number,
-    @Param('cid', new ValidationPipe()) cid: number,
-    @Param('sid', new ValidationPipe()) sid: number,
+    @Param('eid', ParseIntPipe) eid: number,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Param('sid', ParseIntPipe) sid: number,
     @Body(new ValidationPipe()) body: SubmissionGradeDto,
   ): Promise<Response> {
     try {
@@ -615,6 +712,49 @@ export class ExamController {
         });
       } else {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Create dispute for the submission
+   * @param res {Response} - Response object
+   * @param _cid {number} - Course id
+   * @param sid {number} - Submission id
+   * @param body {Object} - Dispute data
+   * @param user {UserModel} - User object
+   * @returns {Promise<Response>} - Response object
+   */
+  @Post('/:cid/submission/:sid/dispute')
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.STUDENT)
+  async createDispute(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) _cid: number,
+    @Param('sid', ParseIntPipe) sid: number,
+    @Body(new ValidationPipe()) body: DisputeSubmissionDto,
+    @User() user: UserModel,
+  ): Promise<Response> {
+    try {
+      await this.examService.createSubmissionDisputeBySubmissionId(
+        sid,
+        body.description,
+        user.id,
+      );
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof SubmissionNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof DisputeSubmissionException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
           message: e.message,
         });
       }

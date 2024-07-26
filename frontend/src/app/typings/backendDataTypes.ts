@@ -214,6 +214,7 @@ export enum SelectedButton {
   People = "PEOPLE",
   Analytics = "ANALYTICS",
   None = "NONE",
+  Submissions_Disputes = "SUBMISSIONS DISPUTES",
 }
 
 export interface SemesterData {
@@ -271,4 +272,41 @@ export interface CourseAnalytics {
   courseExamsCount: number;
   examSubmissionsCount: number;
   examSubmissions: AnalyticsSubmission[];
+}
+
+export interface ExamsSubmissionsDisputes {
+  examId: number;
+  examName: string;
+  numberOfDisputes: number;
+}
+
+export interface ExamSubmissionsDisputes {
+  id: number;
+  status: string;
+  created_at: number;
+}
+
+export interface ExamSubmissionDispute {
+  created_at: number;
+  description: string;
+  id: number;
+  resolved_at: number | null;
+  status: string;
+  submission: {
+    created_at: number;
+    document_path: string;
+    id: number;
+    score: number;
+    student: {
+      id: number;
+      student_id: number;
+      user: {
+        first_name: string;
+        id: number;
+        last_name: string;
+      };
+    };
+    updated_at: number;
+  };
+  updated_at: number;
 }

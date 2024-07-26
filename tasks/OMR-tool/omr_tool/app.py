@@ -1,7 +1,7 @@
 from PIL.Image import Image
 from omr_tool.omr_pipeline.omr_tasks import create_answer_key, mark_submission_group
-from utils.pdf_to_images import convert_to_images
-from utils.images_to_pdf import convert_to_pdf
+from omr_tool.utils.pdf_to_images import convert_to_images
+from omr_tool.utils.images_to_pdf import convert_to_pdf
 from pathlib import Path
 import requests
 import os

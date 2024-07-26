@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from utils.image_process import threshold_img
+from omr_tool.utils.image_process import threshold_img
 
 
 def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):

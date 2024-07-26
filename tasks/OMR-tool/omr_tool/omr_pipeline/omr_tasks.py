@@ -4,7 +4,7 @@ from omr_tool.omr_pipeline.read_bubbles import (
     order_questions,
     evaluate_answer,
 )
-from utils.image_process import (
+from omr_tool.utils.image_process import (
     generate_bubble_contours,
     prepare_img,
     extract_roi,
@@ -166,7 +166,7 @@ def identify_page_details(inference_tool, boxes, classes):
 
 if __name__ == "__main__":
     from pathlib import Path
-    from utils.pdf_to_images import convert_to_images
+    from omr_tool.utils.pdf_to_images import convert_to_images
 
     sheet_path = (
         Path(__file__).resolve().parents[2] / "fixtures" / "submission_2-page_1.jpg"

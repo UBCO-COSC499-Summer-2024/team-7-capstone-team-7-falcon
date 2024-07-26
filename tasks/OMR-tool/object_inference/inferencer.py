@@ -9,7 +9,7 @@ Class for running inference on an image using our pre-trained object detection m
 """
 
 MODEL_PATH = (
-    Path(__file__).resolve().parents[2]
+    Path(__file__).resolve().parents[1]
     / "model_training"
     / "trained_model_onnx"
     / "weights"

@@ -1,16 +1,20 @@
 import cv2
 import numpy as np
-from omr_tool.utils.image_process import threshold_img
+from utils.image_process import threshold_img
 
 
 def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     if question_num < len(answer_key):
-        correct_answer_indices = answer_key[question_num]['correct_answer_indices']
+        correct_answer_indices = answer_key[question_num]["correct_answer_indices"]
         isCorrect, filled_index = check_answer(
             roi_cropped, bubble_contours, correct_answer_indices
         )
         color = (0, 255, 0) if isCorrect else (0, 0, 255)
-        result = {"question_num": question_num, "expected": correct_answer_indices, "answered": filled_index}
+        result = {
+            "question_num": question_num,
+            "expected": correct_answer_indices,
+            "answered": filled_index,
+        }
         return color, correct_answer_indices, result
     else:
         raise ValueError("Question number exceeds answer key length.")
@@ -28,6 +32,7 @@ def find_filled_bubbles(mask, bubble_contours, threshold=450):
             filled_index.append(i)
     return filled_index
 
+
 def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
     bubbled = find_filled_bubbles(mask, sorted_bubble_contours, min_threshold)
     if bubbled == []:
@@ -36,6 +41,7 @@ def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=45
         return True, bubbled
     else:
         return False, bubbled
+
 
 def order_questions(box, answer_list):
     """

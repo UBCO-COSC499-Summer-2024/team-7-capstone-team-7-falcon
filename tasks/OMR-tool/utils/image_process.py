@@ -130,11 +130,9 @@ def generate_bubble_contours(image):
             aspect_ratio1 = w / float(h)
             if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2:
                 bubble_contours.append(cnt)
-    
 
-    #Sort Contours by x value
+    # Sort Contours by x value
     sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
-    
 
     return sorted_contours
 
@@ -249,6 +247,7 @@ def identify_bubbled(img, cnts):
             bubbled = (total, cnt)
             filled_in.append(cnts[bubbled[1]])
     return filled_in
+
 
 def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     """

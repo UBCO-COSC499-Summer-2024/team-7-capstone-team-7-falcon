@@ -1,3 +1,48 @@
+## Friday (7/24- 7/25)
+
+### Timesheet
+Clockify report
+![time for 07.24_- 07.25](07.24_07.25.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Update the student join course page [XS]
+  * #2: Frontend Bubble Sheet multiple answers [S]
+
+
+### Progress Update (since 7/24/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update the student join course page #375
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td>Frontend Bubble Sheet multiple answers #389
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have updated the student join course page to work like most of our other pages (using toaster + redirects). I also
+completed a feature for frontend that lets you select multiple answers instead of just one. I also fixed bugs for this bubble sheet
+creation form. Overall I completed everything I planned to do. Our process is going good overall.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle I will work on completing some of the front end tasks that we decide are going to be part of the final. (Scott added extra features that were not part of our MVP so we need to clarify what is required)
+
 ## Wednesday (7/19- 7/23)
 
 ### Timesheet

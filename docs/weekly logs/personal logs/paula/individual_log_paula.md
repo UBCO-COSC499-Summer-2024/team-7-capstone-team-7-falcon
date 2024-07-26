@@ -19,11 +19,12 @@ See the image in the previous section.
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-This cycle,
+This cycle has been slow for me since I am away. I started to clean up the documentation for the repo. I will catch up the next cycle.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 
 * Repo clean up and documentation updates
+* Prep for test-o-rama
 
 ## Wednesday (7/19 - 7/23)
 

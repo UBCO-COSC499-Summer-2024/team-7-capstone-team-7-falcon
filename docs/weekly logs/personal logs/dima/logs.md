@@ -1,5 +1,66 @@
 # Individual Logs
 
+## Friday (7/24 - 7/25)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_07242024-07252024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Working on a feature that allows custom bubble sheet generator worker to create an exam with multiple answers in it.
+
+### Progress Update (since 7/24/2024)
+
+![GitHub Board](./images/github_07192024-07232024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #369
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #363
+        </td>
+        <!-- Status -->
+        <td>Completed (Part of tasks that are assigned to me)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #364
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #367
+        </td>
+        <!-- Status -->
+        <td>In progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle I was mainly focused on the feature that allows students to contest their grade submission. It ended up being a complicated feature as I was constantly circling back and forth between backend and frontend to make some changes based on the experience as professor and a student. Overall, I am happy with an outcome of this feature, but regret that it took me a while.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Finish feature that allows custom bubble sheet generator worker to create an exam with multiple answers in it.
+
 ## Wednesday (7/19 - 7/23)
 
 ### Timesheet

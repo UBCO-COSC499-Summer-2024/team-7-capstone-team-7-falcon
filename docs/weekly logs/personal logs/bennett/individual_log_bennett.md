@@ -43,7 +43,7 @@ creation form. Overall I completed everything I planned to do. Our process is go
 
 Next cycle I will work on completing some of the front end tasks that we decide are going to be part of the final. (Scott added extra features that were not part of our MVP so we need to clarify what is required)
 
-## Friday (7/19- 7/23)
+## Wednesday (7/19- 7/23)
 
 ### Timesheet
 Clockify report

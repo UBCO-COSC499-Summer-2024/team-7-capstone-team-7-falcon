@@ -22,7 +22,6 @@ I only had this task assigned so I didn't spend a lot of time coding for this cy
 
 I will take up more features from the unofficial rubric that is yet to be negotiated with Scott, if required.
 
-
 ## Wednesday(7/19-7/23)
 
 <img width="1064" alt="image" src="https://github.com/user-attachments/assets/f92e39ac-b266-4f01-853b-512f0fa71364">

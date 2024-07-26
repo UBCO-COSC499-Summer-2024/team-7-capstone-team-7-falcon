@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { examsAPI } from "../../../api/examAPI";
 
 interface ChangeGradeProps {
@@ -17,11 +17,11 @@ const ChangeGrade: React.FC<ChangeGradeProps> = ({
 }) => {
   const [grade, setGrade] = useState(currentGrade);
 
-  const handleInputChange = (e: FormEvent<HTMLFormElement) => {
-    setGrade(e.target.value);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setGrade(Number(e.target.value));
   };
 
-  const handleKeyPress = async (e: KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyPress = async (e: any) => {
     if (e.key === "Enter") {
       examsAPI.updateGrade(examId, courseId, submissionId, grade);
       setTimeout(() => {

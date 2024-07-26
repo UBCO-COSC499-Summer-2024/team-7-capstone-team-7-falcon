@@ -3,6 +3,7 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from dotenv import load_dotenv
 from pathlib import Path
+from typing import List, Optional
 import os
 import requests
 import time
@@ -186,13 +187,13 @@ def draw_student_identification(c, current_x, current_y, width):
 
 
 def generate_bubble_sheet(
-    filename,
-    num_questions=100,
-    choices_per_question=5,
-    questions_per_column=25,
-    course_name="Default course",
-    exam_name="Default exam",
-    answers=[],
+    filename: str,
+    num_questions: int = 100,
+    choices_per_question: int = 5,
+    questions_per_column: int = 25,
+    course_name: str = "Default course",
+    exam_name: str = "Default exam",
+    answers: Optional[List[List[int]]] = [],
 ):
     """Generate a bubble sheet PDF file
 
@@ -203,7 +204,7 @@ def generate_bubble_sheet(
         questions_per_column (int, optional): number of questions per column. Defaults to 25.
         course_name (string, optional): name of the course. Defaults to "Default course".
         exam_name (string, optional): name of the exam. Defaults to "Default exam".
-        answers (list, optional): list of answers to the questions. Defaults to [].
+        answers (list of list of int, optional): List of lists of answers to the questions. Defaults to None.
     """
 
     # Ensure the directory for saving exists
@@ -245,15 +246,22 @@ def generate_bubble_sheet(
         c.setFont(FONT_BOLD, FONT_SIZE_TEXT)
         c.drawString(current_x - 1, current_y + 5, f"{question}")
         c.setFont(FONT_NORMAL, FONT_SIZE_TEXT)
+
+        question_answers = answers[question - 1] if question - 1 < len(answers) else []
+
         for choice in range(choices_per_question):
             bubble_x = current_x + (choice + 1) * bubble_spacing
-            if len(answers) > 0 and choice == answers[question - 1]:
+
+            if choice in question_answers:  # Check if the current choice is selected
                 draw_bubble(c, bubble_x, current_y + 7, fill=1)
             else:
                 draw_bubble(c, bubble_x, current_y + 7)
+
             c.drawString(bubble_x - 2.5, current_y + 4, chr(65 + choice))
+
         current_y -= question_spacing_y
 
+        # Check if we need to move to a new column or page
         if question % questions_per_column == 0:
             current_y = height - margin if page > 1 else start_y
             current_x += question_spacing_x * 1

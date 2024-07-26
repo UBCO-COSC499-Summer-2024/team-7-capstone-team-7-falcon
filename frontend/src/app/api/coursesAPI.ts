@@ -140,7 +140,7 @@ export const coursesAPI = {
     } catch (error: any) {
       //always axios error
       console.error("Failed to enroll in course: ", error);
-      return error;
+      throw error;
     }
   },
 

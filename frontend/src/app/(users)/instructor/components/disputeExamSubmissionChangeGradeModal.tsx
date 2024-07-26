@@ -2,17 +2,18 @@ import { examsAPI } from "@/app/api/examAPI";
 import { ExamSubmissionDispute } from "@/app/typings/backendDataTypes";
 import { Label, Modal, TextInput } from "flowbite-react";
 import { useState } from "react";
-import toast from "react-hot-toast";
 
 interface DisputeExamSubmissionChangeGradeModalProps {
   setShowModal: (showModal: boolean) => void;
   refreshDispute: () => void;
   dispute: ExamSubmissionDispute;
+  examId: number;
+  courseId: number;
 }
 
 const DisputeExamSubmissionChangeGradeModal: React.FC<
   DisputeExamSubmissionChangeGradeModalProps
-> = ({ setShowModal, refreshDispute, dispute }) => {
+> = ({ setShowModal, refreshDispute, dispute, examId, courseId }) => {
   const [grade, setGrade] = useState(`${dispute.submission.score}`);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,18 +22,20 @@ const DisputeExamSubmissionChangeGradeModal: React.FC<
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await examsAPI.updateExamSubmissionGrade(
+
+    const response = await examsAPI.updateGrade(
+      examId,
       courseId,
       dispute.submission.id,
-      dispute.submission.score,
+      +grade,
     );
-    if (response.status === 200) {
-      toast.success("Grade updated successfully");
+
+    if (response && response.status === 200) {
       refreshDispute();
-    } else {
-      toast.error("Failed to update grade");
+      setShowModal(false);
     }
   };
+
   return (
     <Modal title="Change Grade" show={true} onClose={() => setShowModal(false)}>
       <Modal.Header>

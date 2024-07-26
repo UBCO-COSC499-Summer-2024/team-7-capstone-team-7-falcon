@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 const DisputeExamSubmissionPage = ({
   params,
 }: {
-  params: { disputeId: string; courseId: number };
+  params: { disputeId: string; courseId: number; examId: number };
 }) => {
   const disputeId = Number(params.disputeId);
   const courseId = Number(params.courseId);
@@ -48,6 +48,7 @@ const DisputeExamSubmissionPage = ({
         showSubmission={showSubmission}
         setShowSubmission={setShowSubmission}
         refreshDispute={fetchDispute}
+        examId={params.examId}
       />
       <div className="mb-10" />
       {showSubmission && (

@@ -5,6 +5,12 @@ export interface CourseData {
   section_name: string;
   semester_id: number;
 }
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
 
 export interface CourseAdminDetails {
   courseId: number;
@@ -92,12 +98,15 @@ export interface Exam {
 export interface Submission {
   student_id: string;
   user: {
+    id: string;
     avatar_url: string;
     first_name: string;
     last_name: string;
   };
   score: number;
   updated_at: number;
+  submission_id: string;
+  exam_id: string;
 }
 
 export interface CourseRole {
@@ -215,6 +224,7 @@ export enum SelectedButton {
   Analytics = "ANALYTICS",
   None = "NONE",
   Submissions_Disputes = "SUBMISSIONS DISPUTES",
+  Edit_Course = "COURSE SETTINGS",
 }
 
 export interface SemesterData {
@@ -309,4 +319,11 @@ export interface ExamSubmissionDispute {
     updated_at: number;
   };
   updated_at: number;
+}
+
+export interface UserEditData {
+  first_name: string;
+  last_name: string;
+  student_id: number;
+  employee_id: number;
 }

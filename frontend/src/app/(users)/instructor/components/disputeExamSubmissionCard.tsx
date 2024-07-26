@@ -13,6 +13,7 @@ interface DisputeExamSubmissionCardProps {
   showSubmission: boolean;
   setShowSubmission: (showSubmission: boolean) => void;
   refreshDispute: () => void;
+  examId: number;
 }
 
 const DisputeExamSubmissionCard: React.FC<DisputeExamSubmissionCardProps> = ({
@@ -21,6 +22,7 @@ const DisputeExamSubmissionCard: React.FC<DisputeExamSubmissionCardProps> = ({
   showSubmission,
   setShowSubmission,
   refreshDispute,
+  examId,
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -67,6 +69,8 @@ const DisputeExamSubmissionCard: React.FC<DisputeExamSubmissionCardProps> = ({
           setShowModal={setShowModal}
           refreshDispute={refreshDispute}
           dispute={dispute}
+          courseId={courseId}
+          examId={examId}
         />
       )}
       <div className="space-y-3">

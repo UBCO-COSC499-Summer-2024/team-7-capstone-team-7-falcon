@@ -50,7 +50,7 @@ import { SubmissionsProcessingService } from '../queue/jobs/submissions-processi
 import { SubmissionCreationDto } from './dto/submission-creation.dto';
 import { WorkerAuthGuard } from '../../guards/worker.guard';
 import { DisputeSubmissionDto } from './dto/dispute-submission.dto';
-import { DisputeStatusEnum } from 'src/enums/exam-dispute.enum';
+import { DisputeStatusDto } from './dto/dispute-status.dto';
 
 @Controller('exam')
 export class ExamController {
@@ -136,7 +136,7 @@ export class ExamController {
   async updateDisputeStatus(
     @Res() res: Response,
     @Param('disputeId', ParseIntPipe) disputeId: number,
-    @Body(new ValidationPipe()) body: { status: DisputeStatusEnum },
+    @Body(new ValidationPipe()) body: DisputeStatusDto,
   ): Promise<Response> {
     try {
       await this.examService.updateSubmissionDisputeStatus(
@@ -399,6 +399,7 @@ export class ExamController {
   /**
    * Get all exams for the course
    * @param res {Response} - Response object
+   * @param cid {number} - Course id
    * @param eid {number} - Exam id
    * @returns {Promise<Response>} - Response object
    */

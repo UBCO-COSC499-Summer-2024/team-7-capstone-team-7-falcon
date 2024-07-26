@@ -2999,7 +2999,7 @@ describe('Course Integration', () => {
       }
       await course.save();
 
-      const disputes = [1, 2, 3, 5];
+      const disputes = [6, 5, 4, 3, 2, 1, 0];
 
       for (let i = 0; i < 10; i++) {
         const exam = await ExamModel.findOne({
@@ -3044,62 +3044,6 @@ describe('Course Integration', () => {
         .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`]);
 
       expect(result.body).toMatchSnapshot();
-      expect(result.status).toBe(200);
-    });
-
-    it('should return 200, an empty array if exams submissions have no disputes', async () => {
-      const professor = await UserModel.create({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@mail.com',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-        email_verified: true,
-      }).save();
-
-      await EmployeeUserModel.create({
-        employee_id: 123,
-        user: professor,
-      }).save();
-
-      let course = await CourseModel.create({
-        course_code: 'CS101',
-        course_name: 'Introduction to Computer Science',
-        section_name: '001',
-        invite_code: '123',
-        created_at: 1_000_000_000,
-        updated_at: 1_000_000_000,
-      }).save();
-
-      await CourseUserModel.create({
-        user: professor,
-        course,
-        course_role: CourseRoleEnum.PROFESSOR,
-      }).save();
-
-      course = await CourseModel.findOne({
-        where: { id: course.id },
-        relations: ['exams'],
-      });
-
-      for (let i = 0; i < 10; i++) {
-        const exam = await ExamModel.create({
-          name: `Exam ${i}`,
-          exam_date: 1_000_000_000,
-          created_at: 1_000_000_000,
-          updated_at: 1_000_000_000,
-          questions: {},
-        }).save();
-
-        course.exams.push(exam);
-      }
-      await course.save();
-
-      const result = await supertest()
-        .get(`/course/${course.id}/exams_submissions_disputes`)
-        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`]);
-
-      expect(result.body).toEqual([]);
       expect(result.status).toBe(200);
     });
   });

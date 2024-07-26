@@ -209,4 +209,47 @@ export const usersAPI = {
       toast.error("Failed to change user role");
     }
   },
+  editUser: async (userId: number, userData: UserEditData) => {
+    try {
+      const auth_token = await fetchAuthToken();
+
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.patch(
+        `${BACKEND_URL}/api/v1/user/${userId}`,
+        userData,
+      );
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to edit user: ", error);
+
+      return error;
+    }
+  },
+  deleteProfilePicture: async (userId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      await axios.delete(
+        `${BACKEND_URL}/api/v1/user/${userId}/delete_profile_picture`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: auth_token,
+          },
+        },
+      );
+      return true;
+    } catch (error) {
+      console.error("Failed to delete profile picture: ", error);
+      return false;
+    }
+  },
 };

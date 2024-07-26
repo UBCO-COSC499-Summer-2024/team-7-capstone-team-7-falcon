@@ -34,10 +34,12 @@ const ViewExam = async ({
   const submissionData: Submission[] = res.data.map((item: any) => ({
     student_id: item.student.id,
     user: {
+      id: item.student.user.id,
       avatar_url: item.student.user.avatar_url,
       first_name: item.student.user.first_name,
       last_name: item.student.user.last_name,
     },
+    submission_id: item.id,
     score: item.score,
     updated_at: new Date(Number(item.updated_at)).toLocaleString(),
   }));
@@ -72,8 +74,8 @@ const ViewExam = async ({
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-24 mt-4 border-t-2 border-black">
-          <div className="col-span-3 p-4">
+        <div className="grid grid-cols-5 mt-4 border-t-2 border-black">
+          <div className="col-span-3 py-4">
             <p className="">{}</p>
             {exam.exam_folder && exam.exam_folder?.length !== 0 ? (
               <Alert color="purple" rounded className="my-4">
@@ -88,7 +90,7 @@ const ViewExam = async ({
             ) : (
               <></>
             )}
-            <SubmissionTable course_id={cid} exam_id={examId} />
+            <SubmissionTable exam_id={examId} />
           </div>
           <div className="space-y-4 col-span-2 pr-8 p-4">
             <ExamSettings

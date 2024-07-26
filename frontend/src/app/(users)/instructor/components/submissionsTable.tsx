@@ -6,6 +6,7 @@ import { Submission } from "../../../typings/backendDataTypes";
 import { useSubmissionContext } from "../../../contexts/submissionContext";
 import Avatar from "../../../components/avatar";
 import TableComponent from "../../../components/tableComponent";
+import Link from "next/link";
 
 const exam_columns: Column[] = [
   { label: "Id", renderCell: (item) => item.student_id },
@@ -23,7 +24,7 @@ const exam_columns: Column[] = [
           imageTextWidth={`w-12`}
           textSize={1}
         />
-        <span className="mt-1">
+        <span className="mt-1 truncate flex-1 ">
           {item.user.first_name} {item.user.last_name ?? ""}
         </span>
       </div>
@@ -41,14 +42,25 @@ const exam_columns: Column[] = [
     label: "Exam Graded",
     renderCell: (item) => <div className="font-bold">{item.updated_at}</div>,
   },
+  {
+    label: "Actions",
+    renderCell: (item) => (
+      <Link
+        href={`../exam/${item.exam_id}/submissions/${item.submission_id}/${item.user.id}`}
+      >
+        <button type="button" className="btn-primary flex p-1 px-4">
+          View
+        </button>
+      </Link>
+    ),
+  },
 ];
 
 type ExamTableProps = {
-  course_id: number;
   exam_id: number;
 };
 
-const SubmissionTable: React.FC<ExamTableProps> = () => {
+const SubmissionTable: React.FC<ExamTableProps> = ({ exam_id }) => {
   const [data, setData] = useState<DataItem<Submission>[]>([]);
   const { submissions } = useSubmissionContext();
 
@@ -62,12 +74,15 @@ const SubmissionTable: React.FC<ExamTableProps> = () => {
           data: {
             student_id: item.student_id,
             user: {
+              id: item.user.id,
               avatar_url: item.user.avatar_url,
               first_name: item.user.first_name,
               last_name: item.user?.last_name,
             },
+            submission_id: item.submission_id,
             score: item.score,
             updated_at: item.updated_at,
+            exam_id: String(exam_id),
           },
         }),
       );

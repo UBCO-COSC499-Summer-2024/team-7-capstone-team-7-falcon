@@ -13,6 +13,7 @@ import { EmployeeUserModel } from '../src/modules/user/entities/employee-user.en
 import * as sinon from 'sinon';
 import * as fs from 'fs';
 import { SubmissionDisputeModel } from '../src/modules/exam/entities/submission-dispute.entity';
+import { DisputeStatusEnum } from '../src/enums/exam-dispute.enum';
 
 describe('Exam Integration', () => {
   const supertest = setUpIntegrationTests(ExamModule);
@@ -3600,6 +3601,218 @@ describe('Exam Integration', () => {
 
       expect(result.status).toBe(200);
       expect(result.body).toMatchSnapshot();
+    });
+  });
+
+  describe('PATCH /exam/:cid/:disputeId/update_dispute_status', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().patch('/exam/1/1/update_dispute_status').expect(401);
+    });
+
+    it('should return 401 if user not professor or ta', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        user,
+        student_id: 123,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+      }).save();
+
+      return supertest()
+        .patch(`/exam/1/${course.id}/update_dispute_status`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 400 if dispute id is not a number', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user,
+        employee_id: 123,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return supertest()
+        .patch(`/exam/${course.id}/a/update_dispute_status`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(400);
+    });
+
+    it('should return 404 if dispute not found', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user,
+        employee_id: 123,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const result = await supertest()
+        .patch(`/exam/${course.id}/1/update_dispute_status`)
+        .send({ status: DisputeStatusEnum.CREATED })
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`]);
+
+      expect(result.status).toBe(404);
+      expect(result.body).toStrictEqual({
+        message: 'Dispute not found',
+      });
+    });
+
+    it('should return 400 if request body is invalid', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user,
+        employee_id: 123,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return supertest()
+        .patch(`/exam/${course.id}/1/update_dispute_status`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({})
+        .expect(400);
+    });
+
+    it('should return 200 if dispute status is updated successfully', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        user,
+        employee_id: 123,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        section_name: '001',
+        invite_code: '123',
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const dispute = await SubmissionDisputeModel.create({
+        submission: null,
+        description: 'Dispute message',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const result = await supertest()
+        .patch(`/exam/${course.id}/${dispute.id}/update_dispute_status`)
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .send({ status: DisputeStatusEnum.RESOLVED });
+
+      expect(result.status).toBe(200);
+      expect(result.body).toStrictEqual({ message: 'ok' });
+
+      const updatedDispute = await SubmissionDisputeModel.findOne({
+        where: { id: dispute.id },
+      });
+
+      expect(updatedDispute.status).toBe(DisputeStatusEnum.RESOLVED);
     });
   });
 });

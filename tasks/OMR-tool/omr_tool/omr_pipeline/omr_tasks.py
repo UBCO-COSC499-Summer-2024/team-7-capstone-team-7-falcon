@@ -24,7 +24,7 @@ def create_answer_key(key_imgs: list[Image]) -> list[dict]:
     Returns:
         list[dict]: A list of dictionaries containing the answer key.
     """
-    return [omr_on_image(img, student_id="key") for img in key_imgs]
+    return [omr_on_key_image(img, student_id="key") for img in key_imgs]
 
 
 def process_submission_group(
@@ -52,14 +52,17 @@ def process_submission_group(
         "student_id": None,
         "document_path": None,
         "score": None,
-        "answers": {"answer_list": []},
+        "answers": {"errorFlag": False, "answer_list": []},
     }
+
+    if answer_key == []:
+        raise ValueError("Answer key is required for grading.")
+
     graded_images: list[Image] = []
     for submission_img in group_images:
-        student_id, score, answers, graded_img = omr_on_image(
+        student_id, score, answers, graded_img, flagRaised = omr_on_submission_image(
             submission_img, answer_key
         )
-
         if student_id != "":
             submission_results["student_id"] = student_id
         submission_results["answers"]["answer_list"].append(answers)
@@ -69,39 +72,45 @@ def process_submission_group(
 
     return submission_results, graded_images
 
-
-def omr_on_image(input_image: Image, answer_key=[], student_id=""):
-    prepped_image = prepare_img(input_image)
-    output_image = input_image.copy()
+def infer_bubble_objects(prepped_image):
     inference_tool = Inferencer()
-    results = []
-    total_score = 0
-
-    if answer_key == [] and student_id != "key":
-        raise ValueError("Answer key is required for grading.")
-
     boxes, scores, classes = inference_tool.infer(prepped_image)
-
     student_num_section, question_2d_list = identify_page_details(
         inference_tool, boxes, classes
     )
-    
 
-    flat_list = [
+    flat_question_list = [
         question_bounds for column in question_2d_list for question_bounds in column
     ]
 
-    if len(answer_key) == 0 and student_id == "key":
-        generated_key = populate_answer_key(prepped_image, flat_list)
-        return generated_key
+    return flat_question_list, student_num_section
+
+def omr_on_key_image(input_image: Image):
+    prepped_image = prepare_img(input_image)
+    question_list, _ = infer_bubble_objects(prepped_image)
+    generated_key = populate_answer_key(prepped_image, question_list)
+    return generated_key
+
+def omr_on_submission_image(input_image: Image, answer_key=[], student_id="", errorFlag=False):
+    prepped_image = prepare_img(input_image)
+    output_image = input_image.copy()
+    results = []
+    total_score = 0    
+
+    question_list, student_num_section  = infer_bubble_objects(prepped_image)
     
     if student_num_section is not None:
-        student_id, id_cnts = extract_student_num(prepped_image, student_num_section)
-        for cnt in id_cnts:
+        student_id, id_filled, sid_issue = extract_student_num(prepped_image, student_num_section)
+        if student_id == "invalid":
+            errorFlag = True
+            x1, y1, x2, y2 = map(int, student_num_section)
+            cv2.rectangle(output_image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            cv2.putText(output_image, sid_issue, (x1, y1 + 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        for cnt in id_filled:
             output_image = draw_bubble_contours(
-                output_image, cnt, map(int, student_num_section), (255, 0, 0)
+                output_image, cnt["cnt"], map(int, student_num_section), cnt["col"]
             )
-    for question_num, question_bounds in enumerate(flat_list):
+    for question_num, question_bounds in enumerate(question_list):
         roi_cropped = extract_roi(prepped_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
         color, correct_answers, question_result = evaluate_answer(
@@ -115,7 +124,7 @@ def omr_on_image(input_image: Image, answer_key=[], student_id=""):
             total_score += 1
         results.append(question_result)
 
-    return student_id, total_score, results, output_image
+    return student_id, total_score, results, output_image, errorFlag
 
 
 def populate_answer_key(image, flat_list):
@@ -170,26 +179,38 @@ def identify_page_details(inference_tool, boxes, classes):
 def extract_student_num(image, section):
     x1, y1, x2, y2 = map(int, section)
     student_id = ""
+
     sid_roi = extract_roi(image, (x1, y1, x2, y2))
     bubble_contours = generate_bubble_contours(sid_roi)
     sorted_sid_cnts = extract_sid_rows(bubble_contours)
     thresh = threshold_img(sid_roi, grayscale=False)
     id_num = 0
     bubbled = []
+    issue_flag = ""
+    row_marked = False
     for cnt in sorted_sid_cnts:
         mask = np.zeros(thresh.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
         if total > 500:
+            if row_marked:
+                bubbled.append({"cnt": cnt, "col": (0, 255, 0)})
+                issue_flag = "multiple fills on row"   
+            row_marked = True
             student_id += str(id_num)
-            bubbled.append(cnt)
+            bubbled.append({"cnt": cnt, "col": (255, 0, 0)})
         if id_num == 9:
+            if not row_marked:
+                issue_flag = "no fill on row"
             id_num = 0
+            row_marked = False
         else:
             id_num += 1
+    if issue_flag:
+        student_id = "invalid"
 
-    return student_id, bubbled
+    return student_id, bubbled, issue_flag
 
 def extract_sid_rows(bubble_contours):
     sorted_cnts= sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[1])
@@ -227,8 +248,8 @@ if __name__ == "__main__":
     )
     print(sheet_path)
     images = convert_to_images(sheet_path)
-    answer_key = omr_on_image(images[0], student_id="key")
-    student_id, score, grades, graded_image = omr_on_image(images[0], answer_key)
+    answer_key = omr_on_key_image(images[0])
+    student_id, score, grades, graded_image, errorFlag = omr_on_submission_image(images[0], answer_key)
     print(student_id)
     print(score)
     cv2.imshow("graded", cv2.resize(graded_image, (800, 1000)))

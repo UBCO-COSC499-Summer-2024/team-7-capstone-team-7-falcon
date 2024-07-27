@@ -18,7 +18,10 @@ import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
 import { ERROR_MESSAGES } from '../../common';
 import { CourseEditDto } from './dto/course-edit.dto';
-import { CourseDetailsInterface } from 'src/common/interfaces';
+import {
+  CourseDetailsInterface,
+  ExamSubmissionsDisputesInterface,
+} from 'src/common/interfaces';
 import { SubmissionModel } from '../exam/entities/submission.entity';
 import { ExamModel } from '../exam/entities/exam.entity';
 import { CourseAnalyticsResponseInterface } from '../../common/interfaces';
@@ -436,5 +439,47 @@ export class CourseService {
     );
 
     return courses;
+  }
+
+  /**
+   * Get exams with submissions disputes by course id
+   * @param cid {number} - Course id
+   * @returns {Promise<ExamSubmissionsDisputesInterface[]>} - List of exams with submissions disputes
+   */
+  async getExamsWithSubmissionsDisputesByCourseId(
+    cid: number,
+  ): Promise<ExamSubmissionsDisputesInterface[]> {
+    const result = await ExamModel.createQueryBuilder('exam')
+      .select('exam.id', 'examId')
+      .addSelect('exam.name', 'examName')
+      .addSelect(
+        "COUNT(CASE WHEN dispute.status NOT IN ('REJECTED', 'RESOLVED') THEN 1 END)",
+        'num_of_disputes',
+      )
+      .innerJoin(
+        'exam.course',
+        'course',
+        'course.id = :cid AND course.is_archived = false',
+        { cid },
+      )
+      .leftJoin('exam.submissions', 'submission')
+      .leftJoin('submission.dispute', 'dispute')
+      .groupBy('exam.id')
+      .addGroupBy('exam.name')
+      .orderBy('num_of_disputes', 'DESC')
+      .getRawMany();
+
+    const modifiedResult: ExamSubmissionsDisputesInterface[] = result.map(
+      (exam) => {
+        const result: ExamSubmissionsDisputesInterface = {
+          examId: exam.examId,
+          examName: exam.examName,
+          numberOfDisputes: parseInt(exam.num_of_disputes),
+        };
+        return result;
+      },
+    );
+
+    return modifiedResult;
   }
 }

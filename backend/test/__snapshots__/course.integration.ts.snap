@@ -549,6 +549,61 @@ exports[`Course Integration GET /course/:cid/exams/upcoming should return 200 an
 ]
 `;
 
+exports[`Course Integration GET /course/:cid/exams_submissions_disputes should return 200, all exams with number of disputes and exam details 1`] = `
+[
+  {
+    "examId": 1,
+    "examName": "Exam 0",
+    "numberOfDisputes": 6,
+  },
+  {
+    "examId": 2,
+    "examName": "Exam 1",
+    "numberOfDisputes": 5,
+  },
+  {
+    "examId": 3,
+    "examName": "Exam 2",
+    "numberOfDisputes": 4,
+  },
+  {
+    "examId": 4,
+    "examName": "Exam 3",
+    "numberOfDisputes": 3,
+  },
+  {
+    "examId": 5,
+    "examName": "Exam 4",
+    "numberOfDisputes": 2,
+  },
+  {
+    "examId": 6,
+    "examName": "Exam 5",
+    "numberOfDisputes": 1,
+  },
+  {
+    "examId": 7,
+    "examName": "Exam 6",
+    "numberOfDisputes": 0,
+  },
+  {
+    "examId": 8,
+    "examName": "Exam 7",
+    "numberOfDisputes": 0,
+  },
+  {
+    "examId": 9,
+    "examName": "Exam 8",
+    "numberOfDisputes": 0,
+  },
+  {
+    "examId": 10,
+    "examName": "Exam 9",
+    "numberOfDisputes": 0,
+  },
+]
+`;
+
 exports[`Course Integration GET /course/:cid/members should return 200 if user is professor with 2 members 1`] = `
 {
   "data": [

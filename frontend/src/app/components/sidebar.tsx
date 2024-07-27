@@ -7,7 +7,6 @@ import StudentNavigation from "../(users)/student/components/navigation";
 import { ArrowRightToBracket } from "flowbite-react-icons/outline";
 import { useRouter } from "next/navigation";
 import { Button } from "flowbite-react";
-import Link from "next/link";
 import InstructorNavigation from "../(users)/instructor/components/navigation";
 import AdminNavigation from "../admin/components/navigation";
 import Avatar from "./avatar";
@@ -32,9 +31,9 @@ const PageSidebar: React.FC = () => {
       try {
         const userDetails = await usersAPI.getUserDetails();
         let userRole;
-        if (userDetails.role === "professor") {
+        if (userDetails?.role === "professor") {
           userRole = Role.INSTRUCTOR;
-        } else if (userDetails.role === "admin") {
+        } else if (userDetails?.role === "admin") {
           userRole = Role.ADMIN;
         } else {
           userRole = Role.STUDENT;
@@ -42,11 +41,11 @@ const PageSidebar: React.FC = () => {
 
         setUserInfo({
           ...userInfo,
-          firstName: userDetails.first_name,
-          lastName: userDetails.last_name,
-          email: userDetails.email,
+          firstName: userDetails?.first_name ?? "",
+          lastName: userDetails?.last_name ?? null,
+          email: userDetails?.email ?? "",
           role: userRole,
-          avatarUrl: userDetails.avatar_url,
+          avatarUrl: userDetails?.avatar_url ?? null,
         });
       } catch (error) {
         console.error("Failed to fetch user details:", error);

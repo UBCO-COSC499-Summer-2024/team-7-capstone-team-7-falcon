@@ -166,3 +166,12 @@ export interface CourseDetailsInterface {
     lastName: string;
   };
 }
+
+/**
+ * Exam submissions with disputes count interface
+ */
+export interface ExamSubmissionsDisputesInterface {
+  examId: number;
+  examName: string;
+  numberOfDisputes: number;
+}

@@ -2,7 +2,7 @@
 import { coursesAPI } from "@/app/api/coursesAPI";
 import TableComponent from "@/app/components/tableComponent";
 import { Column, DataItem } from "@/app/components/type";
-import { ExamsSubmissionsDisputes } from "@/app/typings/backendDataTypes";
+import { ExamDisputes } from "@/app/typings/backendDataTypes";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -32,16 +32,14 @@ const dispute_columns: Column[] = [
 const ExamsSubmissionsDisputesTable: React.FC<ExamDisputesTableProps> = ({
   courseId,
 }) => {
-  const [data, setData] = useState<DataItem<ExamsSubmissionsDisputes>[] | null>(
-    null,
-  );
+  const [data, setData] = useState<DataItem<ExamDisputes>[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await coursesAPI.getExamSubmissionsDisputes(courseId);
 
-      const disputes: DataItem<ExamsSubmissionsDisputes>[] = result.data.map(
-        (item: ExamsSubmissionsDisputes) => ({
+      const disputes: DataItem<ExamDisputes>[] = result.data.map(
+        (item: ExamDisputes) => ({
           id: item.examId,
           name: item.examName,
           data: {
@@ -61,7 +59,7 @@ const ExamsSubmissionsDisputesTable: React.FC<ExamDisputesTableProps> = ({
   }
 
   return (
-    <TableComponent<ExamsSubmissionsDisputes>
+    <TableComponent<ExamDisputes>
       data={data}
       columns={dispute_columns}
       showPagination={false}

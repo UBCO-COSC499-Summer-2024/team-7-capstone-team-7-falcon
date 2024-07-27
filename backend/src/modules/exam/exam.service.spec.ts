@@ -1994,7 +1994,7 @@ describe('ExamService', () => {
       ).rejects.toThrow('Submission not found');
     });
 
-    it('should throw an error if submission does not belong to the student requesting despute', async () => {
+    it('should throw an error if submission does not belong to the student requesting dispute', async () => {
       const user = await UserModel.create({
         first_name: 'John',
         last_name: 'Doe',
@@ -2111,7 +2111,7 @@ describe('ExamService', () => {
   });
 
   describe('updateSubmissionDisputeStatus', () => {
-    it('should throw an error if the submission not found the given dispute', async () => {
+    it('should throw an error if the submission dispute is not found', async () => {
       await expect(
         examService.updateSubmissionDisputeStatus(
           1,

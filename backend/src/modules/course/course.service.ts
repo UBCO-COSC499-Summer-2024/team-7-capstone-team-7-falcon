@@ -469,7 +469,7 @@ export class CourseService {
       .orderBy('num_of_disputes', 'DESC')
       .getRawMany();
 
-    const modiledResult: ExamSubmissionsDisputesInterface[] = result.map(
+    const modifiedResult: ExamSubmissionsDisputesInterface[] = result.map(
       (exam) => {
         const result: ExamSubmissionsDisputesInterface = {
           examId: exam.examId,
@@ -480,6 +480,6 @@ export class CourseService {
       },
     );
 
-    return modiledResult;
+    return modifiedResult;
   }
 }

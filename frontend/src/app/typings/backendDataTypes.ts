@@ -284,7 +284,7 @@ export interface CourseAnalytics {
   examSubmissions: AnalyticsSubmission[];
 }
 
-export interface ExamsSubmissionsDisputes {
+export interface ExamDisputes {
   examId: number;
   examName: string;
   numberOfDisputes: number;

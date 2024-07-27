@@ -3,7 +3,6 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   MaxLength,
   MinLength,
@@ -12,6 +11,7 @@ import {
 import { IBubbleSheetPayload } from '../../../common/interfaces';
 import 'reflect-metadata';
 import { ERROR_MESSAGES } from '../../../common';
+import { Is2DNumberArray } from '../../../decorators/is-2d-number-array';
 
 /**
  * Data transfer object for the BubbleSheetPayload
@@ -38,8 +38,8 @@ class BubbleSheetPayloadDto implements IBubbleSheetPayload {
   examName!: string;
 
   @IsArray()
-  @IsNumber({}, { each: true })
-  answers!: number[];
+  @Is2DNumberArray({ message: ERROR_MESSAGES.common.invalid2DArray })
+  answers!: number[][];
 }
 
 /**

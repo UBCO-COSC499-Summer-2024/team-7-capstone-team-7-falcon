@@ -11,6 +11,7 @@ export const ERROR_MESSAGES = {
     emailRequired: 'Email is required',
     emailInvalid: 'Email is invalid',
     fileNotFound: 'File not found',
+    invalid2DArray: 'Answers array must be a 2D array of numbers',
   },
   userRoleDto: {
     userRoleInvalid: 'User role is invalid',

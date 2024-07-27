@@ -142,7 +142,7 @@ export interface BubbleSheetPayload {
     courseCode: string;
     courseName: string;
     examName: string;
-    answers: number[];
+    answers: number[][];
   };
 }
 

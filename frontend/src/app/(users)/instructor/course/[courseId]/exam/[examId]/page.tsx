@@ -97,6 +97,7 @@ const ViewExam = async ({
               courseId={cid}
               examId={examId}
               examFolder={exam.exam_folder}
+              gradesReleasedAt={exam.grades_released_at}
             />
             <ExamPerformance />
             <DangerZone courseId={cid} examId={examId} />

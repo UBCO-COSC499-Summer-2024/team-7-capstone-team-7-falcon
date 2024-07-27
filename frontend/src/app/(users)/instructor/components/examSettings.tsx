@@ -12,13 +12,32 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
   examId,
   courseId,
   examFolder,
+  gradesReleasedAt = 0,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [gradesReleased, setGradesReleased] = useState<boolean>(
+    gradesReleasedAt > 0,
+  );
 
   const releaseGrades = async () => {
-    const result = await examsAPI.releaseExamGrades(examId, courseId);
+    let result;
+
+    if (gradesReleased) {
+      result = await examsAPI.hideExamGrades(examId, courseId);
+
+      if (result && result.status === 200) {
+        toast.success("Grades hidden successfully");
+        setGradesReleased(false);
+      } else {
+        toast.error(result.response.data.message);
+      }
+      return;
+    }
+
+    result = await examsAPI.releaseExamGrades(examId, courseId);
 
     if (result && result.status === 200) {
+      setGradesReleased(true);
       toast.success("Grades released successfully");
     } else {
       toast.error(result.response.data.message);
@@ -79,7 +98,7 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       >
         <div className="space-x-4 flex items-center">
           <CheckPlusCircle />
-          <span>Release Grades</span>
+          <span>{gradesReleased ? "Hide Grades" : "Release Grades"}</span>
         </div>
       </button>
     </div>

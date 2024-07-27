@@ -121,6 +121,35 @@ export class ExamController {
   }
 
   /**
+   * Hide grades for the exam
+   * @param res {Response} - Response object
+   * @param eid {number} - Exam id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Patch('/:eid/:cid/hide_grades')
+  async hideGrades(
+    @Res() res: Response,
+    @Param('eid', new ValidationPipe()) eid: number,
+  ): Promise<Response> {
+    try {
+      await this.examService.hideGrades(eid);
+      return res.status(HttpStatus.OK).send({ message: 'ok' });
+    } catch (e) {
+      if (e instanceof ExamNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
    * Get exam by id
    * @param res {Response} response object
    * @param eid {number} exam id

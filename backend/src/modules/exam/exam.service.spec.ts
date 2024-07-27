@@ -1984,4 +1984,46 @@ describe('ExamService', () => {
       }
     });
   });
+
+  describe('hideGrades', () => {
+    it('should hide grades for an exam', async () => {
+      let course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        invite_code: '123',
+        section_name: '001',
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        grades_released_at: 1_000_000_000,
+      }).save();
+
+      course = await CourseModel.findOne({
+        where: { id: course.id },
+        relations: ['exams'],
+      });
+
+      course.exams.push(exam);
+      await course.save();
+
+      await examService.hideGrades(exam.id);
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+      });
+
+      expect(exam.grades_released_at).toBe('-1');
+    });
+
+    it('should throw an error if the exam is not found', async () => {
+      await expect(examService.hideGrades(1)).rejects.toThrow('Exam not found');
+    });
+  });
 });

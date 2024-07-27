@@ -99,10 +99,10 @@ export interface Submission {
   student_id: string;
   user: {
     id: string;
-    avatar_url: string;
     first_name: string;
     last_name: string;
   };
+  answers: JSON;
   score: number;
   updated_at: number;
   submission_id: string;
@@ -249,6 +249,7 @@ export interface StudentSubmission {
   studentSubmission: {
     id: number;
     score: number;
+    hasStudent?: boolean;
   };
   course: {
     id: number;
@@ -256,6 +257,10 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
+  answers: {
+    isFlagged: boolean;
+    answer_list: JSON[];
+  };
 }
 
 export interface AnalyticsExamSubmission {

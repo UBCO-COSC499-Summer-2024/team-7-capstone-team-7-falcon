@@ -4,22 +4,24 @@ import { CSSProperties } from "react";
 import { mean, median, quantile } from "d3-array";
 import {
   Course,
+  SelectedButton,
   StudentSubmission,
-} from "../../../../../../../../../typings/backendDataTypes";
-import { coursesAPI } from "../../../../../../../../../api/coursesAPI";
-import { examsAPI } from "../../../../../../../../../api/examAPI";
-import PdfViewer from "../../../../../../../../student/components/pdfViewer";
-import GradeDisplay from "../../../../../../../../components/gradeDisplay";
-import ChangeGrade from "../../../../../../../components/changeGrade";
+} from "../../../../../../../../typings/backendDataTypes";
+import { coursesAPI } from "../../../../../../../../api/coursesAPI";
+import { examsAPI } from "../../../../../../../../api/examAPI";
+import PdfViewer from "../../../../../../../student/components/pdfViewer";
+import GradeDisplay from "../../../../../../../components/gradeDisplay";
 import { Toaster } from "react-hot-toast";
+import { Alert } from "flowbite-react";
+import CourseHeader from "../../../../../../components/courseHeader";
 
 const InstructorSubmissionPage = async ({
   params,
 }: {
-  params: { courseId: string; examId: string; userId: string };
+  params: { courseId: string; submissionId: string };
 }) => {
   const cid = Number(params.courseId);
-  const eid = Number(params.examId);
+  const submissionId = Number(params.submissionId);
   const course: Course = await coursesAPI.getCourse(cid);
 
   const calculateStats = (arr: number[]) => {
@@ -33,10 +35,9 @@ const InstructorSubmissionPage = async ({
     return { lowerQuartile, upperQuartile, meanValue, medianValue, min, max };
   };
 
-  const submissionResponse = await examsAPI.getStudentSubmission(
-    eid,
+  const submissionResponse = await examsAPI.getSubmissionById(
     cid,
-    Number(params.userId),
+    submissionId,
   );
   const submission: StudentSubmission = submissionResponse.data;
   if (!submissionResponse || !submission) {
@@ -53,8 +54,12 @@ const InstructorSubmissionPage = async ({
       <Toaster />
       <div className="grid grid-cols-2">
         <div className="col-span-1">
-          <h1 className="text-4xl font-bold p-1">{course.course_code}</h1>
-          <h2 className="text-xl p-1">{course.course_name}</h2>
+          <CourseHeader
+            course_code={course.course_code}
+            course_desc={course.course_name}
+            course_id={course.id}
+            selected={SelectedButton.None}
+          />
         </div>
         <div className="justify-self-end space-y-4">
           <Link
@@ -64,19 +69,20 @@ const InstructorSubmissionPage = async ({
             <ArrowLeft /> Back
           </Link>
         </div>
-        <h3 className="text-xl p-1 mt-10 border-b-2 border-gray-300 col-span-2">
+        <h3 className="text-xl p-1 mt-5 border-b-2 border-gray-300 col-span-2">
           Submission Details
         </h3>
         <div></div>
       </div>
-      <div className="grid grid-cols-5">
+      <div className="grid grid-cols-5 space-x-4">
         <div className="col-span-4">
           <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
-          <PdfViewer
-            courseId={cid}
-            submissionId={submission.exam.id}
-            userId={Number(params.userId)}
-          />
+          {!submission.studentSubmission.hasStudent && (
+            <Alert color="red" className="w-full mb-3">
+              This submission does not have a student associated with it.
+            </Alert>
+          )}
+          <PdfViewer courseId={cid} submissionId={submission.exam.id} />
         </div>
         <div className="col-span-1 text-xl">
           <p className="mt-4 mb-8 font-bold">Grade Overview</p>
@@ -91,12 +97,6 @@ const InstructorSubmissionPage = async ({
               } as CSSProperties
             }
             textStyle={"font-normal text-normal"}
-          />
-          <ChangeGrade
-            examId={eid}
-            courseId={cid}
-            submissionId={submission.studentSubmission.id}
-            currentGrade={submission.studentSubmission.score}
           />
           <div className="text-normal mt-8 space-y-2">
             <p>Mean: {stats.meanValue}</p>

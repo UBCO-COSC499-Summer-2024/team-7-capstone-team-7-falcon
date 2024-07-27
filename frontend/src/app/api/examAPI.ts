@@ -485,4 +485,60 @@ export const examsAPI = {
       console.error("Failed to update grade: ", error);
     }
   },
+
+  /**
+   * Get submission by id
+   * @param courseId {number}
+   * @param submissionId {number}
+   */
+  getSubmissionById: async (courseId: number, submissionId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(`/${courseId}/${submissionId}/grade`);
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to retrieve exam info: ", error);
+      return error;
+    }
+  },
+
+  /**
+   * Get submission PDF by submission id
+   * @param courseId {number} - course id
+   * @param submissionId {number} - submission id
+   */
+  getSubmissionPDFbySubmissionId: async (
+    courseId: number,
+    submissionId: number,
+  ) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `/${courseId}/submission/${submissionId}/graded_submission`,
+        { responseType: "arraybuffer" },
+      );
+      return response;
+    } catch (error: any) {
+      //always axios error
+      console.error("Failed to post bubble sheet data: ", error);
+      return error;
+    }
+  },
 };

@@ -13,6 +13,7 @@ import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';
 import { CourseRoleEnum, UserRoleEnum } from '../../enums/user.enum';
 import { EnvironmentGuard } from '../../guards/environment.guard';
+import { DeepPartial } from 'typeorm';
 
 @UseGuards(EnvironmentGuard)
 @Controller('seed')
@@ -154,12 +155,26 @@ export class SeedController {
 
     await SubmissionModel.create({
       exam,
-      student: studentUser,
-      answers: {},
+      student: null,
+      answers: {
+        isFlagged: true,
+      } as DeepPartial<SubmissionModel['answers']>,
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
       document_path: 'seed/submission.pdf',
       score: 32.32,
+    }).save();
+
+    await SubmissionModel.create({
+      exam,
+      student: studentUser,
+      answers: {
+        isFlagged: false,
+      } as DeepPartial<SubmissionModel['answers']>,
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      document_path: 'seed/submission.pdf',
+      score: 50,
     }).save();
 
     return res.status(HttpStatus.OK).send({ message: 'Database seeded' });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Table,
   Header,
@@ -17,7 +17,7 @@ import { useState } from "react";
 import { Column } from "./type";
 import { DataItem } from "./type";
 import { MdOutlineSearch } from "react-icons/md";
-import { Label, TextInput, Button } from "flowbite-react";
+import { TextInput } from "flowbite-react";
 
 type TableComponentProps<T> = {
   data: DataItem<T>[];

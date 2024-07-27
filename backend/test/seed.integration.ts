@@ -75,7 +75,7 @@ describe('Seed Integration', () => {
       expect(employeeUsers).toHaveLength(2);
 
       const submissions = await SubmissionModel.find();
-      expect(submissions).toHaveLength(1);
+      expect(submissions).toHaveLength(2);
     });
 
     it('should return 404 when application is running in production mode', async () => {
@@ -113,7 +113,7 @@ describe('Seed Integration', () => {
       expect(employeeUsers).toHaveLength(2);
 
       let submissions = await SubmissionModel.find();
-      expect(submissions).toHaveLength(1);
+      expect(submissions).toHaveLength(2);
 
       const response = await supertest().get('/seed/reset').expect(200);
 

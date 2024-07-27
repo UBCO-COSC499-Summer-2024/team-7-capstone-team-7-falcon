@@ -90,6 +90,7 @@ interface UserSubmissionExamCourseDetailsInterface {
 interface UserSubmissionExamStudentSubmissionInterface {
   id: number;
   score: number;
+  hasStudent?: boolean;
 }
 
 /**
@@ -107,8 +108,9 @@ interface UserSubmissionExamDetailsInterface {
 export interface UserSubmissionExamInterface {
   exam: UserSubmissionExamDetailsInterface;
   course: UserSubmissionExamCourseDetailsInterface;
-  grades: number[];
+  grades?: number[];
   studentSubmission: UserSubmissionExamStudentSubmissionInterface;
+  answers?: JSON;
 }
 
 /**

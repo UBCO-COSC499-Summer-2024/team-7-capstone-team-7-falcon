@@ -14,6 +14,7 @@ import GradeDisplay from "../../../../../../../components/gradeDisplay";
 import { Toaster } from "react-hot-toast";
 import { Alert } from "flowbite-react";
 import CourseHeader from "../../../../../../components/courseHeader";
+import UpdateSubmissionUser from "../../../../../../components/updateSubmissionUser";
 
 const InstructorSubmissionPage = async ({
   params,
@@ -69,11 +70,10 @@ const InstructorSubmissionPage = async ({
             <ArrowLeft /> Back
           </Link>
         </div>
-        <h3 className="text-xl p-1 mt-5 border-b-2 border-gray-300 col-span-2">
-          Submission Details
-        </h3>
-        <div></div>
       </div>
+      <h3 className="text-xl p-1 mt-5 border-b-2 border-gray-300 col-span-2">
+        Submission Details
+      </h3>
       <div className="grid grid-cols-5 space-x-4">
         <div className="col-span-4">
           <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
@@ -106,6 +106,10 @@ const InstructorSubmissionPage = async ({
             <p>Lower Quartile: {stats.lowerQuartile}</p>
             <p>Median: {stats.medianValue}</p>
           </div>
+          <UpdateSubmissionUser
+            courseId={submission.course.id}
+            submissionId={submission.studentSubmission.id}
+          />
         </div>
       </div>
     </div>

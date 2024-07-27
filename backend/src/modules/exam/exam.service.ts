@@ -7,6 +7,8 @@ import {
   ExamNotFoundException,
   ExamUploadException,
   SubmissionNotFoundException,
+  UpdateSubmissionException,
+  UserNotFoundException,
   UserSubmissionNotFound,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
@@ -853,5 +855,83 @@ export class ExamService {
     };
 
     return modifiedResponse;
+  }
+
+  /**
+   * Update submission user by user id
+   * @param submissionId {number} - Submission id
+   * @param studentUserId {number} - Student user id
+   * @param courseId {number} - Course id
+   * @returns {Promise<void>} - Promise of void
+   */
+  async updateSubmissionUserByUserId(
+    submissionId: number,
+    studentUserId: number,
+    courseId: number,
+  ): Promise<void> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: submissionId,
+      },
+      relations: ['student', 'student.user', 'exam'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    if (Number(submission.student?.student_id) === studentUserId) {
+      throw new UpdateSubmissionException(
+        ERROR_MESSAGES.examController.userAlreadyAssignedToThisSubmission,
+      );
+    }
+
+    const isStudentAlreadyAssignedToSubmission = await ExamModel.findOne({
+      where: {
+        id: submission.exam?.id,
+        submissions: {
+          student: {
+            student_id: studentUserId,
+          },
+        },
+      },
+      relations: ['submissions', 'submissions.student'],
+    });
+
+    if (isStudentAlreadyAssignedToSubmission) {
+      throw new UpdateSubmissionException(
+        ERROR_MESSAGES.examController.userAlreadyAssignedToSubmission,
+      );
+    }
+
+    const student = await StudentUserModel.findOne({
+      where: {
+        student_id: studentUserId,
+        user: {
+          courses: {
+            course: {
+              id: courseId,
+              is_archived: false,
+              exams: {
+                id: submission.exam?.id,
+              },
+            },
+          },
+        },
+      },
+      relations: [
+        'user',
+        'user.courses',
+        'user.courses.course',
+        'user.courses.course.exams',
+      ],
+    });
+
+    if (!student) {
+      throw new UserNotFoundException();
+    }
+
+    submission.student = student;
+    await submission.save();
   }
 }

@@ -7,7 +7,7 @@ import { Spinner } from "flowbite-react";
 const PdfViewer: React.FC<{
   courseId: number;
   submissionId: number;
-  userId: number;
+  userId?: number;
   width?: string;
 }> = ({ courseId, submissionId, userId, width = "90%" }) => {
   const [pdfUrl, setPdfUrl] = useState<string>("");

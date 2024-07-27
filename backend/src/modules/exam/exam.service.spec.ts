@@ -21,6 +21,7 @@ import * as sinon from 'sinon';
 import * as fs from 'fs';
 import { SubmissionDisputeModel } from './entities/submission-dispute.entity';
 import { DisputeStatusEnum } from '../../enums/exam-dispute.enum';
+import { CourseRoleEnum } from '../../enums/user.enum';
 
 describe('ExamService', () => {
   let examService: ExamService;
@@ -2425,6 +2426,202 @@ describe('ExamService', () => {
 
       expect(submissions).toBeDefined();
       expect(submissions).toMatchSnapshot();
+    });
+  });
+
+  describe('updateSubmissionUserByUserId', () => {
+    it('should throw an error if the submission is not found', async () => {
+      await expect(
+        examService.updateSubmissionUserByUserId(1, 1, 1),
+      ).rejects.toThrow('Submission not found');
+    });
+
+    it('should throw an error if the submission is assigned to the student already', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user,
+        student_id: 1,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam: null,
+        student: studentUser,
+        answers: {},
+        score: 23,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        examService.updateSubmissionUserByUserId(submission.id, 1, 1),
+      ).rejects.toThrow('User is already assigned to this submission');
+    });
+
+    it('should throw an error if the student not found in the course', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await StudentUserModel.create({
+        user,
+        student_id: 1234,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam: null,
+        student: null,
+        answers: {},
+        score: 23,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        examService.updateSubmissionUserByUserId(submission.id, 1, 1),
+      ).rejects.toThrow('User not found');
+    });
+
+    it('should throw an error if the student has already been assigned to another submission', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user,
+        student_id: 1234,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.STUDENT,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        course,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam: exam,
+        student: null,
+        answers: {},
+        score: 23,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await SubmissionModel.create({
+        exam: exam,
+        student: studentUser,
+        answers: {},
+        score: 23,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await expect(
+        examService.updateSubmissionUserByUserId(
+          submission.id,
+          1234,
+          course.id,
+        ),
+      ).rejects.toThrow('User is already assigned to a submission');
+    });
+
+    it('should update the submission with the student', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user,
+        student_id: 1234,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user,
+        course_role: CourseRoleEnum.STUDENT,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        course,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam: exam,
+        student: null,
+        answers: {},
+        score: 23,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await examService.updateSubmissionUserByUserId(
+        submission.id,
+        studentUser.student_id,
+        course.id,
+      );
+
+      const updatedSubmission = await SubmissionModel.findOne({
+        where: { id: submission.id },
+        relations: ['student', 'exam'],
+      });
+
+      expect(updatedSubmission.student).toBeDefined();
+      expect(updatedSubmission).toMatchSnapshot();
     });
   });
 });

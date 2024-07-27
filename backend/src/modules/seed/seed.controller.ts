@@ -78,6 +78,16 @@ export class SeedController {
       password: hashedPassword,
     }).save();
 
+    const studentTwo = await UserModel.create({
+      email: 'student2@owlmark.com',
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      email_verified: true,
+      password: hashedPassword,
+    }).save();
+
     const professor = await UserModel.create({
       email: 'professor@owlmark.com',
       first_name: faker.person.firstName(),
@@ -107,6 +117,11 @@ export class SeedController {
 
     const studentUser = await StudentUserModel.create({
       user: student,
+      student_id: faker.number.int({ min: 1_000, max: 9_999 }),
+    }).save();
+
+    await StudentUserModel.create({
+      user: studentTwo,
       student_id: faker.number.int({ min: 1_000, max: 9_999 }),
     }).save();
 
@@ -142,6 +157,12 @@ export class SeedController {
     }).save();
 
     await CourseUserModel.create({
+      user: studentTwo,
+      course,
+      course_role: CourseRoleEnum.STUDENT,
+    }).save();
+
+    await CourseUserModel.create({
       user: professor,
       course,
       course_role: CourseRoleEnum.PROFESSOR,
@@ -156,6 +177,16 @@ export class SeedController {
       updated_at: parseInt(new Date().getTime().toString()),
       questions: {},
       grades_released_at: parseInt(new Date().getTime().toString()),
+    }).save();
+
+    await ExamModel.create({
+      course,
+      name: 'Midterm Exam',
+      exam_date: parseInt(new Date().getTime().toString()) + 10_000,
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      questions: {},
+      grades_released_at: -1,
     }).save();
 
     await SubmissionModel.create({

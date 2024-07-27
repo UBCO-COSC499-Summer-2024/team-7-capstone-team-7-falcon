@@ -667,4 +667,40 @@ export const examsAPI = {
       return error;
     }
   },
+
+  /**
+   * Update submission student
+   * @param courseId {number} - course id
+   * @param submissionId {number} - submission id
+   * @param studentId {number} - student id
+   * @returns {Promise<any | Error>} - response
+   */
+  updateSubmissionStudent: async (
+    courseId: number,
+    submissionId: number,
+    studentId: number,
+  ): Promise<any | Error> => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.patch(
+        `/${courseId}/${submissionId}/update_submission_user`,
+        {
+          studentId,
+        },
+      );
+      return response;
+    } catch (error: any) {
+      console.error("Failed to update submission: ", error);
+      return error;
+    }
+  },
 };

@@ -32,6 +32,7 @@ import {
   SubmissionNotFoundException,
   ExamUploadException,
   DisputeSubmissionException,
+  UpdateSubmissionException,
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
@@ -51,6 +52,7 @@ import { SubmissionCreationDto } from './dto/submission-creation.dto';
 import { WorkerAuthGuard } from '../../guards/worker.guard';
 import { DisputeSubmissionDto } from './dto/dispute-submission.dto';
 import { DisputeStatusDto } from './dto/dispute-status.dto';
+import { UpdateSubmissionUserDto } from './dto/update-submission-user.dto';
 
 @Controller('exam')
 export class ExamController {
@@ -147,6 +149,50 @@ export class ExamController {
         });
       } else {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Update submission user
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param submissionId {number} - Submission id
+   * @param body {UpdateSubmissionUserDto} - Submission user data
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Patch('/:cid/:submissionId/update_submission_user')
+  async updateSubmissionUser(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Param('submissionId', ParseIntPipe) submissionId: number,
+    @Body(new ValidationPipe()) body: UpdateSubmissionUserDto,
+  ): Promise<Response> {
+    try {
+      await this.examService.updateSubmissionUserByUserId(
+        submissionId,
+        body.studentId,
+        cid,
+      );
+      return res.status(HttpStatus.NO_CONTENT).send();
+    } catch (e) {
+      if (
+        e instanceof SubmissionNotFoundException ||
+        e instanceof UserNotFoundException
+      ) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof UpdateSubmissionException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
           message: e.message,
         });
       }

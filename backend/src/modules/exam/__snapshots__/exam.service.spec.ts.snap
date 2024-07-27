@@ -952,3 +952,28 @@ exports[`ExamService retrieveSubmissionsByExamId should return submissions for a
 1010,10
 "
 `;
+
+exports[`ExamService updateSubmissionUserByUserId should update the submission with the student 1`] = `
+SubmissionModel {
+  "answers": {},
+  "created_at": "1000000000",
+  "document_path": "path",
+  "exam": ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 1,
+    "name": "Exam",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  "id": 1,
+  "score": 23,
+  "student": StudentUserModel {
+    "id": 1,
+    "student_id": "1234",
+  },
+  "updated_at": "1000000000",
+}
+`;

@@ -102,6 +102,10 @@ export const ERROR_MESSAGES = {
     examFilesAlreadyUploaded: 'Exam files have already been uploaded',
     examFilesInvalid: 'Exam files are invalid, make sure they are PDFs',
     examFilesMissing: 'Answer key and submission file are required',
+    disputeAlreadyExists: 'Dispute already exists for this submission',
+    submissionDoesNotBelongToUser: 'Submission does not belong to user',
+    disputesNotFound: 'Disputes not found',
+    disputeNotFound: 'Dispute not found',
   },
   submissionController: {
     submissionNotFound: 'Submission not found',

@@ -1,5 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Exam Integration GET /exam/:cid/:disputeId/exam_submission_dispute should return dispute for the exam submission 1`] = `
+{
+  "created_at": "1000000000",
+  "description": "Dispute message",
+  "id": 1,
+  "resolved_at": null,
+  "status": "CREATED",
+  "submission": {
+    "answers": {},
+    "created_at": "1000000000",
+    "document_path": "path",
+    "id": 1,
+    "score": 0,
+    "student": {
+      "id": 1,
+      "student_id": "123",
+      "user": {
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  "updated_at": "1000000000",
+}
+`;
+
 exports[`Exam Integration GET /exam/:cid/:eid/download_grades should return CSV file with studentId and grades 1`] = `
 "studentId,grade
 1001,1
@@ -230,6 +258,61 @@ exports[`Exam Integration GET /exam/:cid/exam/:eid should return 200 if exam is 
   "questions": {},
   "updated_at": "1000000000",
 }
+`;
+
+exports[`Exam Integration GET /exam/:eid/:cid/submissions_disputes should return disputes for the exam 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "id": 1,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 2,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 3,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 4,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 5,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 6,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 7,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 8,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 9,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 10,
+    "status": "CREATED",
+  },
+]
 `;
 
 exports[`Exam Integration GET /exam/:eid/:cid/user/:uid/grade should return 200 if exam submission is found for the user 1`] = `

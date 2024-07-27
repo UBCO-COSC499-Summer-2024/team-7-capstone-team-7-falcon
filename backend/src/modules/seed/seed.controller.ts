@@ -14,6 +14,7 @@ import * as bcrypt from 'bcrypt';
 import { CourseRoleEnum, UserRoleEnum } from '../../enums/user.enum';
 import { EnvironmentGuard } from '../../guards/environment.guard';
 import { DeepPartial } from 'typeorm';
+import { SubmissionDisputeModel } from '../exam/entities/submission-dispute.entity';
 
 @UseGuards(EnvironmentGuard)
 @Controller('seed')
@@ -31,7 +32,11 @@ export class SeedController {
     await StudentUserModel.delete({});
     await EmployeeUserModel.delete({});
     await SemesterModel.delete({});
+    await SubmissionDisputeModel.delete({});
 
+    await SubmissionDisputeModel.query(
+      'ALTER SEQUENCE submission_dispute_model_id_seq RESTART WITH 1',
+    );
     await SemesterModel.query(
       'ALTER SEQUENCE semester_model_id_seq RESTART WITH 1',
     );

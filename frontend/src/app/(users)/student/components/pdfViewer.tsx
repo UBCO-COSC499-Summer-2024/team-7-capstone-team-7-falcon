@@ -7,8 +7,9 @@ import { Spinner } from "flowbite-react";
 const PdfViewer: React.FC<{
   courseId: number;
   submissionId: number;
-  userId?: number;
-}> = ({ courseId, submissionId, userId }) => {
+  userId: number;
+  width?: string;
+}> = ({ courseId, submissionId, userId, width = "90%" }) => {
   const [pdfUrl, setPdfUrl] = useState<string>("");
   useEffect(() => {
     const fetchPdf = async () => {
@@ -41,7 +42,7 @@ const PdfViewer: React.FC<{
     <div>
       {pdfUrl ? (
         // TODO: Change height from pixels to relative units
-        <iframe src={pdfUrl} width="90%" height="1000px" title="PDF Viewer" />
+        <iframe src={pdfUrl} width={width} height="1000px" title="PDF Viewer" />
       ) : (
         <Spinner className="mx-auto w-full" />
       )}

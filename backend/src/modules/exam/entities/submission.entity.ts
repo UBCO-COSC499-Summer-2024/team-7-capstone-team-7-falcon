@@ -5,9 +5,11 @@ import {
   BaseEntity,
   ManyToOne,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { ExamModel } from './exam.entity';
 import { StudentUserModel } from '../../../modules/user/entities/student-user.entity';
+import { SubmissionDisputeModel } from './submission-dispute.entity';
 
 @Entity('submission_model')
 export class SubmissionModel extends BaseEntity {
@@ -36,4 +38,10 @@ export class SubmissionModel extends BaseEntity {
   @ManyToOne(() => StudentUserModel, (user) => user.submissions)
   @JoinColumn({ name: 'student_id' })
   student: StudentUserModel;
+
+  @OneToOne(() => SubmissionDisputeModel, (dispute) => dispute.submission, {
+    cascade: true,
+  })
+  @JoinColumn({ name: 'dispute_id' })
+  dispute: SubmissionDisputeModel;
 }

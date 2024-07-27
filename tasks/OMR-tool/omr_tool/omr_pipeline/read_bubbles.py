@@ -4,20 +4,24 @@ from omr_tool.utils.image_process import threshold_img
 
 
 def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
-    if question_num < len(answer_key):
-        correct_answer_indices = answer_key[question_num]["correct_answer_indices"]
-        isCorrect, filled_index = check_answer(
-            roi_cropped, bubble_contours, correct_answer_indices
-        )
-        color = (0, 255, 0) if isCorrect else (0, 0, 255)
-        result = {
-            "question_num": question_num,
-            "expected": correct_answer_indices,
-            "answered": filled_index,
-        }
-        return color, correct_answer_indices, result
-    else:
+    if question_num > len(answer_key):
         raise ValueError("Question number exceeds answer key length.")
+    correct_answer_indices = answer_key[question_num]["correct_answer_indices"]
+    isCorrect, filled_index = check_answer(
+        roi_cropped, bubble_contours, correct_answer_indices
+    )
+    color = (0, 255, 0) if isCorrect else (0, 0, 255)
+    score = 0
+    if correct_answer_indices == filled_index:
+        score = 1
+    result = {
+        "question_num": question_num,
+        "score": score,
+        "expected": correct_answer_indices,
+        "answered": filled_index,
+    }
+    return color, correct_answer_indices, result
+        
 
 
 def find_filled_bubbles(mask, bubble_contours, threshold=450):

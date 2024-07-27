@@ -33,7 +33,6 @@ def create_answer_key(key_imgs: list[Image]) -> list[dict]:
     first_question_in_page = 1
     for img in key_imgs:
         answer_key.extend(omr_on_key_image(img, first_question_in_page))
-        print(answer_key)
         first_question_in_page = answer_key[-1]["question_num"]
 
     return answer_key
@@ -134,7 +133,8 @@ def omr_on_submission_image(
                 output_image, bubble_contours[idx], question_bounds, color
             )
         if question_result["expected"] == question_result["answered"]:
-            total_score += 1
+            question_result["score"] = 1
+            total_score += question_result["score"]
         results.append(question_result)
 
     return student_id, total_score, results, output_image, errorFlag
@@ -179,5 +179,6 @@ if __name__ == "__main__":
     )
     print(student_id)
     print(score)
+    print
     cv2.imshow("graded", cv2.resize(graded_image, (800, 1000)))
     cv2.waitKey(0)

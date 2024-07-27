@@ -65,7 +65,7 @@ def convert_to_images(pdf_path: str) -> list:
     """
     try:
         if not check_is_pdf(pdf_path):
-            logger.warning(f"File is already an image: {pdf_path}")
+            # logger.warning(f"File is already an image: {pdf_path}")
             return [imread(pdf_path)]  # Return Code 0 if already an image
         images = convert_from_path(pdf_path)
         logger.info(f"PDF converted to image successfully")

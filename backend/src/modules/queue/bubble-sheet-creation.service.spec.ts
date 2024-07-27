@@ -16,6 +16,13 @@ describe('BubbleSheetCreationService', () => {
   let redis: Redis;
   let queue: Queue;
   let moduleRef: TestingModule;
+  const answers: number[][] = [
+    [1, 2],
+    [1, 2],
+    [1, 2],
+    [1, 2],
+    [1, 2],
+  ];
 
   beforeAll(async () => {
     redis = new Redis();
@@ -63,7 +70,7 @@ describe('BubbleSheetCreationService', () => {
           courseCode: 'Course code',
           courseName: 'Course name',
           examName: 'Exam name',
-          answers: [1, 2, 3, 4, 5],
+          answers,
         },
       };
 
@@ -83,7 +90,7 @@ describe('BubbleSheetCreationService', () => {
           courseCode: 'Course code',
           courseName: 'Course name',
           examName: 'Exam name',
-          answers: [1, 2, 3, 4, 5],
+          answers,
         },
       };
 
@@ -105,7 +112,7 @@ describe('BubbleSheetCreationService', () => {
           courseCode: 'Course code',
           courseName: 'Course name',
           examName: 'Exam name',
-          answers: [1, 2, 3, 4, 5],
+          answers,
         },
       };
 
@@ -133,7 +140,7 @@ describe('BubbleSheetCreationService', () => {
           courseCode: 'Course code',
           courseName: 'Course name',
           examName: 'Exam name',
-          answers: [1, 2, 3, 4, 5],
+          answers,
         },
       };
 
@@ -161,7 +168,7 @@ describe('BubbleSheetCreationService', () => {
           courseCode: 'Course code',
           courseName: 'Course name',
           examName: 'Exam name',
-          answers: [1, 2, 3, 4, 5],
+          answers,
         },
       };
 
@@ -193,7 +200,7 @@ describe('BubbleSheetCreationService', () => {
           courseCode: 'Course code',
           courseName: 'Course name',
           examName: 'Exam name',
-          answers: [1, 2, 3, 4, 5],
+          answers,
         },
       };
 

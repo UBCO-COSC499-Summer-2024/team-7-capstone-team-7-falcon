@@ -234,6 +234,7 @@ exports[`Exam Integration GET /exam/:cid/exam/:eid should return 200 if exam is 
 
 exports[`Exam Integration GET /exam/:eid/:cid/user/:uid/grade should return 200 if exam submission is found for the user 1`] = `
 {
+  "answers": {},
   "course": {
     "courseCode": "CS101",
     "courseName": "Introduction to Computer Science",

@@ -83,6 +83,7 @@ ExamModel {
 
 exports[`ExamService getExamGradedSubmissionByUser should return graded submission for user 1`] = `
 {
+  "answers": {},
   "course": {
     "courseCode": "CS101",
     "courseName": "Introduction to Computer Science",

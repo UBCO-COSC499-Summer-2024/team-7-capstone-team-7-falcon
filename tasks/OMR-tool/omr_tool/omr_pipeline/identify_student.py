@@ -29,7 +29,7 @@ def extract_student_num(sid_roi):
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(thresh, thresh, mask=mask)
         total = cv2.countNonZero(mask)
-        if total > 500:
+        if total > 400:
             if row_marked:
                 bubbled.append({"cnt": cnt, "col": (0, 255, 0)})
                 issue_flag = "multiple fills on row"   

@@ -193,7 +193,7 @@ export class SeedController {
       exam,
       student: null,
       answers: {
-        isFlagged: true,
+        errorFlag: true,
       } as DeepPartial<SubmissionModel['answers']>,
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
@@ -205,7 +205,7 @@ export class SeedController {
       exam,
       student: studentUser,
       answers: {
-        isFlagged: false,
+        errorFlag: false,
       } as DeepPartial<SubmissionModel['answers']>,
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),

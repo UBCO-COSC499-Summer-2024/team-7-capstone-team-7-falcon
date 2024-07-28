@@ -260,7 +260,7 @@ export interface StudentSubmission {
   };
   grades: number[];
   answers: {
-    isFlagged: boolean;
+    errorFlag: boolean;
     answer_list: JSON[];
   };
 }

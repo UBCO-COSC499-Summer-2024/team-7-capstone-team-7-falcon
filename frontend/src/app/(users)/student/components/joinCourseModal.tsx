@@ -2,51 +2,51 @@
 import { useState } from "react";
 import { CourseData } from "../../../typings/backendDataTypes";
 import { Modal } from "flowbite-react";
-import { Status } from "../../../typings/backendDataTypes";
 import { coursesAPI } from "../../../api/coursesAPI";
-import ModalMessage from "../../components/modalMessage";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const JoinCourseModal: React.FC<{
   courseData: CourseData;
   inviteCode: string;
 }> = ({ courseData, inviteCode }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [status, setStatus] = useState(Status.Pending);
+  const router = useRouter();
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const redirectOnClose = () => {
+    setIsModalOpen(false);
+    setTimeout(() => {
+      router.push("/student");
+    }, 500);
   };
 
   const enroll = () => {
     coursesAPI
       .enrollCourse(courseData.id as number, inviteCode)
       .then((response) => {
-        if (!response || response.status != 200) {
-          setStatus(Status.WrongCode);
-        } else {
-          setStatus(Status.Success);
-        }
-        toggleModal();
+        toast.success("You have been enrolled!");
+        setTimeout(() => {
+          router.push("/student");
+        }, 1000);
         return response;
       })
       .catch((error) => {
-        setStatus(Status.Failure);
-        toggleModal();
+        if (error.response.status == 400) {
+          toast.error("Invalid invite code");
+        } else {
+          toast.error("Error joining class");
+        }
+
+        setTimeout(() => {
+          router.push("/student");
+        }, 1000);
         return error;
       });
   };
 
   return (
     <>
-      {status === Status.Success && (
-        <ModalMessage message={"You have been enrolled."} />
-      )}
-      {status === Status.Failure && (
-        <ModalMessage message={"Error joining class"} />
-      )}
-      {status === Status.WrongCode && (
-        <ModalMessage message={"Invalid invite code"} />
-      )}
+      <Toaster />
       <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Modal.Header>
           <div className="flex items-center justify-between p-2 rounded-t dark:border-gray-600">
@@ -74,7 +74,7 @@ const JoinCourseModal: React.FC<{
               Join Course
             </button>
             <button
-              onClick={toggleModal}
+              onClick={redirectOnClose}
               type="button"
               className="btn-secondary"
             >

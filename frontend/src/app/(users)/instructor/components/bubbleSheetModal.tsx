@@ -10,9 +10,17 @@ import { saveAs } from "file-saver";
 
 interface BubbleSheetModalProps {
   onClose?(): void;
+  courseCode: string;
+  courseName: string;
+  examName: string;
 }
 
-const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
+const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
+  onClose,
+  courseCode,
+  courseName,
+  examName,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [isCreateDisabled, setIsCreateDisabled] = useState<boolean>(false);
   const [isDownloadAvailable, setIsDownloadAvailable] =
@@ -20,7 +28,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   const [questionCount, setQuestionCount] = useState<string>("");
   const [fileId, setFileId] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: number;
+    [key: string]: number[];
   }>({});
   const [validationError, setValidationError] = useState(false);
   const questionsPerColumn = 35;
@@ -41,10 +49,23 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   };
 
   const handleSelectedOptionChange = (row: number, index: number) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [row]: index,
-    }));
+    setSelectedOptions((prev) => {
+      // Gets the existing row info if it exists, otherwise return empty []
+      const selected = prev[row] || [];
+
+      // Unchecks the box if the index already exists, otherwise adds it to the selection
+      if (selected.includes(index)) {
+        return {
+          ...prev,
+          [row]: selected.filter((i) => i !== index),
+        };
+      } else {
+        return {
+          ...prev,
+          [row]: [...selected, index],
+        };
+      }
+    });
   };
 
   const downloadBubbleSheetFile = async () => {
@@ -62,11 +83,10 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
   };
 
   const submitJob = async () => {
-    setIsCreateDisabled(true);
     setIsDownloadAvailable(false);
     const keys = Object.keys(selectedOptions);
 
-    // verifies that all boxes are filled in
+    // Verifies a key exists for each row (a key can exist but have no answer)
     if (keys.length != Number(questionCount)) {
       setValidationError(true);
       return;
@@ -74,25 +94,38 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
       setValidationError(false);
     }
 
-    const answerIndexes: number[] = keys.map((key) => selectedOptions[key]);
+    // Verifies that each array of keys that exists has at least 1 element
+    for (const key of keys) {
+      if (!selectedOptions[key] || selectedOptions[key].length === 0) {
+        setValidationError(true);
+        return;
+      } else {
+        setValidationError(false);
+      }
+    }
+
+    setIsCreateDisabled(true);
+    const answerIndexes: number[][] = keys.map((key) => selectedOptions[key]);
     const payload: BubbleSheetPayload = {
       payload: {
         numberOfQuestions: Number(questionCount),
         defaultPointsPerQuestion: 1,
         numberOfAnswers: 5,
-        instructions: "x",
+        courseName,
+        courseCode,
+        examName,
         answers: answerIndexes,
       },
     };
-
-    toast.success("Bubble sheet job has been submitted to the server", {
-      duration: 5_000,
-    });
 
     // make a request to create the job
     const response = await examsAPI.postBubbleSheet(payload);
 
     if (response.status === 202) {
+      toast.success("Bubble sheet job has been submitted to the server", {
+        duration: 5_000,
+      });
+
       let fileIdReceived = false;
       while (true) {
         await new Promise((resolve) => setTimeout(resolve, 1_500));
@@ -120,13 +153,16 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
           break;
         }
       }
+    } else {
+      toast.error("Failed to create bubble sheet");
+      setIsCreateDisabled(false);
     }
   };
 
   const options = ["A", "B", "C", "D", "E"];
 
   return (
-    <Modal show={isModalOpen} size="7xl" onClose={() => handleClose()}>
+    <Modal show={isModalOpen} size="8xl" onClose={() => handleClose()}>
       <Modal.Body>
         <div className="grid grid-cols-1 space-x-4">
           <div className="col-span-1 space-y-3">
@@ -135,7 +171,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
                 htmlFor="number-input"
                 className="block text-gray-700 mb-2"
               >
-                Number of questions to be created on the bubble sheet
+                Number of questions to be created
               </label>
               <input
                 type="number"
@@ -166,17 +202,17 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({ onClose }) => {
                     {options.map((option, index) => (
                       <label
                         key={index}
-                        htmlFor={`radio-${questionIndex}-${index}`}
+                        htmlFor={`checkbox-${questionIndex}-${index}`}
                         className="flex items-center cursor-pointer text-gray-700"
                       >
                         <input
-                          type="radio"
-                          id={`radio-${questionIndex}-${index}`}
+                          type="checkbox"
+                          id={`checkbox-${questionIndex}-${index}`}
                           name={`option-group-${questionIndex}`}
                           value={option}
-                          checked={
-                            selectedOptions[questionIndex] === Number(index)
-                          }
+                          checked={selectedOptions[questionIndex]?.includes(
+                            index,
+                          )}
                           onChange={() =>
                             handleSelectedOptionChange(questionIndex, index)
                           }

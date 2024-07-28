@@ -13,15 +13,21 @@ import toast, { Toaster } from "react-hot-toast";
 import { datePickerTheme } from "@/app/components/datePickerTheme";
 
 interface CreateExamFormProps {
-  course_id: number;
+  courseId: number;
+  courseName: string;
+  courseCode: string;
 }
 
-const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
+const CreateExamForm: React.FC<CreateExamFormProps> = ({
+  courseId,
+  courseCode,
+  courseName,
+}) => {
   const [status, setStatus] = useState(Status.Pending);
   const [isBubbleSheetOpen, setBubbleSheetOpen] = useState(false);
   const [examData, setData] = useState<ExamData>({
     exam_name: "",
-    exam_date: -1,
+    exam_date: parseInt(new Date().getTime().toString()) + 86_400_000,
   });
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,11 +52,20 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
       toast.error("Exam name cannot be empty!");
       return;
     }
+
+    if (examData.exam_name.length >= 46) {
+      toast.error(
+        "Exam name is too long, it can not be longer than 46 characters!",
+      );
+      return;
+    }
+
     if (examData.exam_date < Date.now()) {
       toast.error("Exam date must be in the future");
       return;
     }
-    const result = await examsAPI.createExam(examData, course_id);
+
+    const result = await examsAPI.createExam(examData, courseId);
     if (result.status == 200) {
       setStatus(Status.Success);
     } else {
@@ -59,20 +74,40 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
     }
   };
 
+  const handleBubbleSheetModal = () => {
+    if (examData.exam_name.trim().length === 0) {
+      toast.error("Exam name must not be empty!");
+      return;
+    }
+
+    if (examData.exam_name.length >= 46) {
+      toast.error(
+        "Exam name is too long, it can not be longer than 46 characters!",
+      );
+      return;
+    }
+
+    setBubbleSheetOpen(true);
+  };
+
   const setDateToTomorrow = () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-
     return tomorrow;
   };
 
   return (
     <>
       {isBubbleSheetOpen && (
-        <BubbleSheetModal onClose={resetBubbleSheetModal} />
+        <BubbleSheetModal
+          onClose={resetBubbleSheetModal}
+          courseCode={courseCode}
+          courseName={courseName}
+          examName={examData.exam_name}
+        />
       )}
-      {status === Status.Success && redirect(`../${course_id}/exam`)}
+      {status === Status.Success && redirect(`../${courseId}/exam`)}
       <form onSubmit={handleSubmit}>
         <Toaster />
         <div className="space-y-5 p-4 ring ring-gray-300 rounded-md flex flex-col">
@@ -102,7 +137,7 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
           <div className="w-1/12">
             <div
               className="flex flex-col justify-start w-5/6 rounded-md border-2 py-4 cursor-pointer"
-              onClick={() => setBubbleSheetOpen(true)}
+              onClick={() => handleBubbleSheetModal()}
             >
               <Plus className="ml-8 text-purple-700 justify-center" />
             </div>

@@ -16,8 +16,14 @@ describe('BubbleSheetCreationJobDto', () => {
         numberOfQuestions: 50,
         defaultPointsPerQuestion: 1,
         numberOfAnswers: 5,
-        instructions: 'Default instructions',
-        answers: [1, 2, 3, 4, 5],
+        examName: 'Exam name',
+        courseCode: 'Course code',
+        courseName: 'Course name',
+        answers: [
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+        ],
       },
     };
 
@@ -26,7 +32,9 @@ describe('BubbleSheetCreationJobDto', () => {
     expect(dto.payload.numberOfQuestions).toBe(50);
     expect(dto.payload.defaultPointsPerQuestion).toBe(1);
     expect(dto.payload.numberOfAnswers).toBe(5);
-    expect(dto.payload.instructions).toBe('Default instructions');
+    expect(dto.payload.examName).toBe('Exam name');
+    expect(dto.payload.courseCode).toBe('Course code');
+    expect(dto.payload.courseName).toBe('Course name');
     const errors = validate(dto);
 
     expect(errors).resolves.toHaveLength(0);

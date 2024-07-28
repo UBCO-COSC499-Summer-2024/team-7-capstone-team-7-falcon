@@ -35,6 +35,7 @@ import { mkdirSync, writeFileSync } from 'fs';
 import { SubmissionCreationDto } from './dto/submission-creation.dto';
 import { DisputeStatusEnum } from '../../enums/exam-dispute.enum';
 import { SubmissionDisputeModel } from './entities/submission-dispute.entity';
+import { SubmissionGradeDto } from './dto/submission-grade.dto';
 
 @Injectable()
 export class ExamService {
@@ -421,13 +422,13 @@ export class ExamService {
    * @param eid {number} - Exam id
    * @param cid {number} - Course id
    * @param sid {number} - Submission id
-   * @param grade {number} - Grade
+   * @param body {SubmissionGradeDto} - Request body
    */
   async updateGrade(
     eid: number,
     cid: number,
     sid: number,
-    grade: number,
+    body: SubmissionGradeDto,
   ): Promise<void> {
     const submission = await SubmissionModel.findOne({
       where: {
@@ -441,7 +442,21 @@ export class ExamService {
       throw new SubmissionNotFoundException();
     }
 
-    submission.score = grade;
+    const totalScore = body.answers.answer_list.length;
+
+    const totalMarks = body.answers.answer_list.reduce(
+      (total, answer) => total + answer.score,
+      0,
+    );
+
+    const grade = Math.round((totalMarks / totalScore) * 1000) / 1000;
+
+    submission.answers = {
+      errorFlag: body.answers.errorFlag,
+      answer_list: body.answers.answer_list,
+    } as unknown as JSON;
+
+    submission.score = grade * 100;
     await submission.save();
   }
 

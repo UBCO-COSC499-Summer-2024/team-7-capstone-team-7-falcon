@@ -786,7 +786,7 @@ export class ExamController {
     @Body(new ValidationPipe()) body: SubmissionGradeDto,
   ): Promise<Response> {
     try {
-      await this.examService.updateGrade(eid, cid, sid, body.grade);
+      await this.examService.updateGrade(eid, cid, sid, body);
       return res.status(HttpStatus.OK).send({ message: 'ok' });
     } catch (e) {
       if (e instanceof SubmissionNotFoundException) {

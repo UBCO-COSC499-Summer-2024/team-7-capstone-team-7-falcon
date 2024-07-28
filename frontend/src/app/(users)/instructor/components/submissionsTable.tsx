@@ -43,12 +43,12 @@ const exam_columns: Column[] = [
     label: "Status",
     renderCell: (item) => (
       <>
-        {item.answers.isFlagged && (
+        {item.answers.errorFlag && (
           <Badge className="p-2" color="red">
             Requires attention
           </Badge>
         )}
-        {!item.answers.isFlagged && (
+        {!item.answers.errorFlag && (
           <Badge className="p-2" color="green">
             Completed
           </Badge>

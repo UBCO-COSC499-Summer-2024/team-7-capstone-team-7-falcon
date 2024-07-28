@@ -228,6 +228,7 @@ export enum SelectedButton {
 }
 
 export interface SemesterData {
+  id?: number;
   name: string;
   starts_at: number;
   ends_at: number;

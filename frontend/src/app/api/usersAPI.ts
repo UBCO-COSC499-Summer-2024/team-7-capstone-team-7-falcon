@@ -1,6 +1,6 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { User } from "@/app/typings/backendDataTypes";
+import { User, UserEditData } from "@/app/typings/backendDataTypes";
 import { UpdatedUser } from "../typings/backendDataTypes";
 import { Toast } from "flowbite-react";
 import toast from "react-hot-toast";
@@ -70,6 +70,7 @@ export const usersAPI = {
         throw new Error("User not found");
       } else {
         console.error("Failed to fetch user details:", error);
+        throw error;
       }
     }
   },

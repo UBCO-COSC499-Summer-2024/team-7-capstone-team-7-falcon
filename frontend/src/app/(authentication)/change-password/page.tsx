@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Button, Label, TextInput, Alert } from "flowbite-react";
+import { Button, Label, TextInput, Alert, Spinner } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import RedirectModal from "../components/redirectModal";
 import {
@@ -12,7 +12,7 @@ import {
 } from "../../typings/backendDataTypes";
 import { authAPI } from "@/app/api/authAPI";
 
-export default function ChangePasswordPage() {
+function ChangePasswordForm() {
   const [status, setStatus] = useState(Status.Pending);
   const [formValid, setFormValid] = useState(FormValid.Invalid);
   const searchParams = useSearchParams();
@@ -52,7 +52,6 @@ export default function ChangePasswordPage() {
   }, [reset_token]);
 
   const onPasswordUpdate = async () => {
-    event.preventDefault();
     setStatus(Status.Pending);
 
     if (resetPassword.password !== resetPassword.confirm_password) {
@@ -169,5 +168,13 @@ export default function ChangePasswordPage() {
         </form>
       </div>
     </>
+  );
+}
+
+export default function ChangePasswordPage() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <ChangePasswordForm />
+    </Suspense>
   );
 }

@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = async ({ children, params }) => {
           />
         </div>
         <div className="col-span-1 justify-self-end space-y-4">
-          <EditCourseButton />
+          <EditCourseButton courseId={cid} />
         </div>
       </div>
       <div className="w-full mt-5">

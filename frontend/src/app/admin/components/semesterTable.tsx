@@ -32,7 +32,7 @@ const user_columns: Column[] = [
   },
 ];
 
-const SemesterTable: React.FC<> = () => {
+const SemesterTable: React.FC = () => {
   const [data, setData] = useState<DataItem<SemesterData>[] | null>(null);
 
   // gets the data once on mount

@@ -90,6 +90,7 @@ interface UserSubmissionExamCourseDetailsInterface {
 interface UserSubmissionExamStudentSubmissionInterface {
   id: number;
   score: number;
+  hasStudent?: boolean;
 }
 
 /**
@@ -107,8 +108,9 @@ interface UserSubmissionExamDetailsInterface {
 export interface UserSubmissionExamInterface {
   exam: UserSubmissionExamDetailsInterface;
   course: UserSubmissionExamCourseDetailsInterface;
-  grades: number[];
+  grades?: number[];
   studentSubmission: UserSubmissionExamStudentSubmissionInterface;
+  answers?: JSON;
 }
 
 /**
@@ -165,4 +167,13 @@ export interface CourseDetailsInterface {
     firstName: string;
     lastName: string;
   };
+}
+
+/**
+ * Exam submissions with disputes count interface
+ */
+export interface ExamSubmissionsDisputesInterface {
+  examId: number;
+  examName: string;
+  numberOfDisputes: number;
 }

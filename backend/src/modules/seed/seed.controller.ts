@@ -13,6 +13,8 @@ import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';
 import { CourseRoleEnum, UserRoleEnum } from '../../enums/user.enum';
 import { EnvironmentGuard } from '../../guards/environment.guard';
+import { DeepPartial } from 'typeorm';
+import { SubmissionDisputeModel } from '../exam/entities/submission-dispute.entity';
 
 @UseGuards(EnvironmentGuard)
 @Controller('seed')
@@ -30,7 +32,11 @@ export class SeedController {
     await StudentUserModel.delete({});
     await EmployeeUserModel.delete({});
     await SemesterModel.delete({});
+    await SubmissionDisputeModel.delete({});
 
+    await SubmissionDisputeModel.query(
+      'ALTER SEQUENCE submission_dispute_model_id_seq RESTART WITH 1',
+    );
     await SemesterModel.query(
       'ALTER SEQUENCE semester_model_id_seq RESTART WITH 1',
     );
@@ -72,6 +78,16 @@ export class SeedController {
       password: hashedPassword,
     }).save();
 
+    const studentTwo = await UserModel.create({
+      email: 'student2@owlmark.com',
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      email_verified: true,
+      password: hashedPassword,
+    }).save();
+
     const professor = await UserModel.create({
       email: 'professor@owlmark.com',
       first_name: faker.person.firstName(),
@@ -101,6 +117,11 @@ export class SeedController {
 
     const studentUser = await StudentUserModel.create({
       user: student,
+      student_id: faker.number.int({ min: 1_000, max: 9_999 }),
+    }).save();
+
+    await StudentUserModel.create({
+      user: studentTwo,
       student_id: faker.number.int({ min: 1_000, max: 9_999 }),
     }).save();
 
@@ -136,6 +157,12 @@ export class SeedController {
     }).save();
 
     await CourseUserModel.create({
+      user: studentTwo,
+      course,
+      course_role: CourseRoleEnum.STUDENT,
+    }).save();
+
+    await CourseUserModel.create({
       user: professor,
       course,
       course_role: CourseRoleEnum.PROFESSOR,
@@ -152,14 +179,38 @@ export class SeedController {
       grades_released_at: parseInt(new Date().getTime().toString()),
     }).save();
 
+    await ExamModel.create({
+      course,
+      name: 'Midterm Exam',
+      exam_date: parseInt(new Date().getTime().toString()) + 10_000,
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      questions: {},
+      grades_released_at: -1,
+    }).save();
+
     await SubmissionModel.create({
       exam,
-      student: studentUser,
-      answers: {},
+      student: null,
+      answers: {
+        errorFlag: true,
+      } as DeepPartial<SubmissionModel['answers']>,
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
       document_path: 'seed/submission.pdf',
       score: 32.32,
+    }).save();
+
+    await SubmissionModel.create({
+      exam,
+      student: studentUser,
+      answers: {
+        errorFlag: false,
+      } as DeepPartial<SubmissionModel['answers']>,
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      document_path: 'seed/submission.pdf',
+      score: 50,
     }).save();
 
     return res.status(HttpStatus.OK).send({ message: 'Database seeded' });

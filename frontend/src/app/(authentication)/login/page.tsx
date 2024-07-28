@@ -1,9 +1,15 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState, FormEvent, KeyboardEvent } from "react";
+import React, {
+  useEffect,
+  useState,
+  FormEvent,
+  KeyboardEvent,
+  Suspense,
+} from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { Button, Label, TextInput, Alert } from "flowbite-react";
+import { Button, Label, TextInput, Alert, Spinner } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import {
   Status,
@@ -15,7 +21,7 @@ import { setAuthToken } from "@/app/api/cookieAPI";
 import RedirectModal from "../components/redirectModal";
 import { authAPI } from "@/app/api/authAPI";
 
-export default function LoginPage() {
+function LoginPageForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState(Status.Pending);
@@ -231,5 +237,13 @@ export default function LoginPage() {
         </div>
       </>
     )
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <LoginPageForm />
+    </Suspense>
   );
 }

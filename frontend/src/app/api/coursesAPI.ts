@@ -283,4 +283,29 @@ export const coursesAPI = {
       throw error;
     }
   },
+
+  /**
+   * Gets all disputes for a course
+   * @param courseId {number} - The id of the course to get disputes for
+   */
+  getExamSubmissionsDisputes: async (courseId: number) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL_SERVER}/api/v1/course/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `${courseId}/exams_submissions_disputes`,
+      );
+      return response;
+    } catch (error: any) {
+      console.error("Failed to get exam disputes:", error);
+      throw error;
+    }
+  },
 };

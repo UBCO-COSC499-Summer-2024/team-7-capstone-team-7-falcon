@@ -99,10 +99,10 @@ export interface Submission {
   student_id: string;
   user: {
     id: string;
-    avatar_url: string;
     first_name: string;
     last_name: string;
   };
+  answers: JSON;
   score: number;
   updated_at: number;
   submission_id: string;
@@ -223,10 +223,12 @@ export enum SelectedButton {
   People = "PEOPLE",
   Analytics = "ANALYTICS",
   None = "NONE",
+  Submissions_Disputes = "SUBMISSIONS DISPUTES",
   Edit_Course = "COURSE SETTINGS",
 }
 
 export interface SemesterData {
+  id?: number;
   name: string;
   starts_at: number;
   ends_at: number;
@@ -249,6 +251,7 @@ export interface StudentSubmission {
   studentSubmission: {
     id: number;
     score: number;
+    hasStudent?: boolean;
   };
   course: {
     id: number;
@@ -256,6 +259,10 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
+  answers: {
+    errorFlag: boolean;
+    answer_list: JSON[];
+  };
 }
 
 export interface AnalyticsExamSubmission {
@@ -282,6 +289,44 @@ export interface CourseAnalytics {
   examSubmissionsCount: number;
   examSubmissions: AnalyticsSubmission[];
 }
+
+export interface ExamDisputes {
+  examId: number;
+  examName: string;
+  numberOfDisputes: number;
+}
+
+export interface ExamSubmissionsDisputes {
+  id: number;
+  status: string;
+  created_at: number;
+}
+
+export interface ExamSubmissionDispute {
+  created_at: number;
+  description: string;
+  id: number;
+  resolved_at: number | null;
+  status: string;
+  submission: {
+    created_at: number;
+    document_path: string;
+    id: number;
+    score: number;
+    student: {
+      id: number;
+      student_id: number;
+      user: {
+        first_name: string;
+        id: number;
+        last_name: string;
+      };
+    };
+    updated_at: number;
+  };
+  updated_at: number;
+}
+
 export interface UserEditData {
   first_name: string;
   last_name: string;

@@ -92,12 +92,6 @@ const InstructorSubmissionPage = async ({
             }
             textStyle={"font-normal text-normal"}
           />
-          <ChangeGrade
-            examId={eid}
-            courseId={cid}
-            submissionId={submission.studentSubmission.id}
-            currentGrade={submission.studentSubmission.score}
-          />
           <div className="text-normal mt-8 space-y-2">
             <p>Mean: {stats.meanValue}</p>
             <p>High: {stats.max}</p>

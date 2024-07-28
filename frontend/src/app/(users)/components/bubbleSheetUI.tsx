@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { DetailedSubmission } from "../../typings/backendDataTypes";
 import { examsAPI } from "../../api/examAPI";
+import toast from "react-hot-toast";
 
 interface BubbleSheetUIProps {
   submissionId: number;
@@ -14,12 +15,9 @@ enum BubbleStyle {
 }
 
 const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
-  const [isCreateDisabled, setIsCreateDisabled] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: number[];
   }>({});
-  const [validationError, setValidationError] = useState(false);
   const [detailedSubmission, setDetailedSubmission] =
     useState<DetailedSubmission>({
       errorFlag: false,
@@ -37,16 +35,27 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
 
   //useeffect that updates whenever the data is updated too that is making a patch request
 
-  const questionsPerColumn = 35;
+  const questionsPerColumn = 75;
   const questionCount = detailedSubmission.answerList.length;
   const options = ["A", "B", "C", "D", "E"];
+
+  const [grade, setGrade] = useState<number[]>();
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setGrade(Number(e.target.value));
+  };
+
+  const handleKeyPress = async (e: any) => {
+    if (e.key === "Enter") {
+      examsAPI.updateGrade(examId, courseId, submissionId, grade);
+    }
+  };
 
   // Computes the styles used for each circle in the bubble sheet
   const preComputeAnswers = () => {
     const questionStyleMap: BubbleStyle[][] = [];
     detailedSubmission.answerList.map((question, index) => {
       const { answered, expected } = question;
-      console.log("question:", question, answered, expected);
       const questionStyle: BubbleStyle[] = [];
       for (let i = 0; i < options.length; i++) {
         if (expected.includes(i)) {
@@ -57,14 +66,12 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
           questionStyle[i] = BubbleStyle.None;
         }
       }
-      console.log("questionStyle:", questionStyle);
       questionStyleMap.push(questionStyle);
     });
     return questionStyleMap;
   };
 
   const questionStyleMap: BubbleStyle[][] = preComputeAnswers();
-  console.log("styles:", questionStyleMap);
 
   const handleSelectedOptionChange = (row: number, index: number) => {
     setSelectedOptions((prev) => {
@@ -93,49 +100,18 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
     return false;
   }
 
-  // const submitJob = async () => {
-  //     const keys = Object.keys(selectedOptions);
+  const submitJob = async () => {
+    const payload = {};
 
-  //     if (keys.length !== questionCount) {
-  //         setValidationError(true);
-  //         return;
-  //     } else {
-  //         setValidationError(false);
-  //     }
-
-  //     for (const key of keys) {
-  //         if (!selectedOptions[key] || selectedOptions[key].length === 0) {
-  //         setValidationError(true);
-  //         return;
-  //         } else {
-  //         setValidationError(false);
-  //         }
-  //     }
-
-  //     setIsCreateDisabled(true);
-  //     const answerIndexes: number[][] = keys.map((key) => selectedOptions[key]);
-  //     // const payload: BubbleSheetPayload = {
-  //     //     payload: {
-  //     //     numberOfQuestions: questionCount,
-  //     //     defaultPointsPerQuestion: 1,
-  //     //     numberOfAnswers: 5,
-  //     //     courseName,
-  //     //     courseCode,
-  //     //     examName,
-  //     //     answers: answerIndexes,
-  //     //     },
-  //     // };
-  //     // const response = await examsAPI.postBubbleSheet(payload);
-
-  //     // if (response.status === 202) {
-  //     //   toast.success("Bubble sheet job has been submitted to the server", {
-  //     //     duration: 5_000,
-  //     //   });
-  //     // } else {
-  //     //   toast.error("Failed to create bubble sheet");
-  //     //   setIsCreateDisabled(false);
-  //     // }
-  // };
+    const response = await examsAPI.postBubbleSheet(payload);
+    if (response.status === 202) {
+      toast.success("Answers updated", {
+        duration: 5_000,
+      });
+    } else {
+      toast.error("Error updating answers");
+    }
+  };
 
   return (
     <div className="flex flex-row mt-4">
@@ -145,9 +121,8 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
             {[...Array(questionsPerColumn)].map((_, rowIndex) => {
               const questionIndex = columnIndex * questionsPerColumn + rowIndex;
               if (questionIndex >= Number(questionCount)) return null;
-
               return (
-                <div className="flex mt-4 mx-1" key={questionIndex}>
+                <div className="flex mt-4 mx-1 justify" key={questionIndex}>
                   <p className="pr-2">{questionIndex + 1}</p>
                   {options.map((option, index) => {
                     const status = questionStyleMap[questionIndex][index];
@@ -177,6 +152,7 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
                             handleSelectedOptionChange(questionIndex, index)
                           }
                           className="hidden peer"
+                          disabled={true}
                         />
                         <span
                           className={`relative w-6 h-6 inline-block mr-2 rounded-full bg-white peer-checked:bg-black transition duration-200 ${borderClass}`}
@@ -188,6 +164,13 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
                       </label>
                     );
                   })}
+                  <input
+                    type="text"
+                    value={detailedSubmission.answerList[questionIndex].score}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyPress}
+                    className="mx-1 p-0 w-2/12 justify-end"
+                  />
                 </div>
               );
             })}

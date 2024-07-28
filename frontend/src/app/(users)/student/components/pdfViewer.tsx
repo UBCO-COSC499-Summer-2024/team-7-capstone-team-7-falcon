@@ -47,45 +47,13 @@ const PdfViewer: React.FC<{
   };
 
   return (
-    <div className="relative">
-      <div className="z-10 my-4 flex rounded-md">
-        <Edit
-          width={50}
-          height={50}
-          onClick={toggleBubbleSheetUI}
-          className={`p-1 rounded ${
-            !bubbleSheetUI
-              ? "bg-purple-700 hover:bg-purple-800 text-white"
-              : "border border-gray-200 hover:bg-gray-100"
-          }`}
-        />
-        <FilePdf
-          width={50}
-          height={50}
-          onClick={toggleBubbleSheetUI}
-          className={`p-1 rounded ${
-            bubbleSheetUI
-              ? "bg-purple-700 hover:bg-purple-800 text-white"
-              : "border border-gray-200 hover:bg-gray-100"
-          }`}
-        />
-      </div>
-      {bubbleSheetUI && (
-        <div>
-          {pdfUrl ? (
-            // TODO: Change height from pixels to relative units
-            <iframe
-              src={pdfUrl}
-              width={width}
-              height="1000px"
-              title="PDF Viewer"
-            />
-          ) : (
-            <Spinner className="mx-auto w-full" />
-          )}
-        </div>
+    <div>
+      {pdfUrl ? (
+        // TODO: Change height from pixels to relative units
+        <iframe src={pdfUrl} width={width} height="1000px" title="PDF Viewer" />
+      ) : (
+        <Spinner className="mx-auto w-full" />
       )}
-      {!bubbleSheetUI && <BubbleSheetUI submissionId={submissionId} />}
     </div>
   );
 };

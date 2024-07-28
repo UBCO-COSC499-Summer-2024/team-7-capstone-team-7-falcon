@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
 import { Alert } from "flowbite-react";
 import CourseHeader from "../../../../../../components/courseHeader";
 import UpdateSubmissionUser from "../../../../../../components/updateSubmissionUser";
+import ToggleBubbleSheet from "../../../../../../../components/toggleBubbleSheet";
 
 const InstructorSubmissionPage = async ({
   params,
@@ -82,7 +83,7 @@ const InstructorSubmissionPage = async ({
               This submission does not have a student associated with it.
             </Alert>
           )}
-          <PdfViewer courseId={cid} submissionId={submission.exam.id} />
+          <ToggleBubbleSheet courseId={cid} submissionId={submission.exam.id} />
         </div>
         <div className="col-span-1 text-xl">
           <p className="mt-4 mb-8 font-bold">Grade Overview</p>

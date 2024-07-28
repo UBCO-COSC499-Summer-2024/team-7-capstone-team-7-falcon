@@ -37,18 +37,26 @@ const PdfViewer: React.FC<{
 
   return (
     <div className="relative">
-      <div className="absolute top-0 right-0 z-10 flex m-2 bg-purple-700 rounded-md">
+      <div className="z-10 my-4 flex rounded-md">
         <Edit
           width={50}
           height={50}
           onClick={toggleBubbleSheetUI}
-          className={`p-1 ${bubbleSheetUI ? "btn-primary" : "btn-secondary"}`}
+          className={`p-1 rounded ${
+            !bubbleSheetUI
+              ? "bg-purple-700 hover:bg-purple-800 text-white"
+              : "border border-gray-200 hover:bg-gray-100"
+          }`}
         />
         <FilePdf
           width={50}
           height={50}
           onClick={toggleBubbleSheetUI}
-          className={`p-1 ${!bubbleSheetUI ? "btn-primary" : "btn-secondary"}`}
+          className={`p-1 rounded ${
+            bubbleSheetUI
+              ? "bg-purple-700 hover:bg-purple-800 text-white"
+              : "border border-gray-200 hover:bg-gray-100"
+          }`}
         />
       </div>
       {bubbleSheetUI && (
@@ -57,7 +65,7 @@ const PdfViewer: React.FC<{
             // TODO: Change height from pixels to relative units
             <iframe
               src={pdfUrl}
-              width="100%"
+              width="90%"
               height="1000px"
               title="PDF Viewer"
             />

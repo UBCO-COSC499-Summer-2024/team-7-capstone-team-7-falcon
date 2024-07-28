@@ -288,3 +288,15 @@ export interface UserEditData {
   student_id: number;
   employee_id: number;
 }
+
+export interface DetailedSubmission {
+  errorFlag: boolean;
+  answerList: Question[];
+}
+
+export interface Question {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}

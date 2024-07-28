@@ -2,6 +2,7 @@ import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import {
   BubbleSheetPayload,
+  DetailedSubmission,
   Exam,
   ExamData,
   StudentSubmission,
@@ -484,5 +485,47 @@ export const examsAPI = {
       toast.error("Failed to update grade");
       console.error("Failed to update grade: ", error);
     }
+  },
+
+  /**
+   * Updates the grade for a user submission
+   * @param examId
+   * @param courseId
+   * @param submissionId
+   * @param newGrade
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getSubmissionByQuestion: async (submissionId: number) => {
+    const data: DetailedSubmission = {
+      errorFlag: false,
+      answerList: [
+        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
+        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
+        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
+        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
+        { question_num: 4, expected: [1, 2], answered: [4, 3], score: 0 },
+      ],
+    };
+    return data;
+
+    // try {
+    //   const auth_token = await fetchAuthToken();
+    //   const instance = axios.create({
+    //     baseURL: `${BACKEND_URL}/api/v1/exam`,
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: auth_token,
+    //     },
+    //     withCredentials: true,
+    //   });
+
+    //   const response = await instance.get<DetailedSubmission>();
+    //   toast.success("Grade updated!");
+    //   return response;
+    // } catch (error: any) {
+    //   //always axios error
+    //   toast.error("Failed to update grade");
+    //   console.error("Failed to update grade: ", error);
+    // }
   },
 };

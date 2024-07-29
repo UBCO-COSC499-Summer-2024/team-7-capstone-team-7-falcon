@@ -29,6 +29,8 @@ def extract_student_num(sid_roi):
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(sid_roi, sid_roi, mask=mask)
         total = cv2.countNonZero(mask)
+        cv2.imshow("mask", mask)
+        cv2.waitKey(0)
         if total > 500:
             if row_marked:
                 bubbled.append({"cnt": cnt, "col": (0, 255, 0)})

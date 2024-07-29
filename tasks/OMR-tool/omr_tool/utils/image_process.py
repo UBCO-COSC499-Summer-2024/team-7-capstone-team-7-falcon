@@ -119,7 +119,7 @@ def generate_bubble_contours(image):
         if cv2.isContourConvex(approx):
             (x, y, w, h) = cv2.boundingRect(cnt)
             aspect_ratio1 = w / float(h)
-            if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2:
+            if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2 and w > 10:
                 bubble_contours.append(cnt)
 
     # Sort Contours by x value

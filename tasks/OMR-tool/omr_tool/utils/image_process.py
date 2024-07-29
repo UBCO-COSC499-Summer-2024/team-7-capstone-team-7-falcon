@@ -22,12 +22,8 @@ def prepare_img(image):
     """
     grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     portrait_img = align_img(grayscale_img)
-    contrasted_img = contrast_img(portrait_img)
-    return contrasted_img
+    return portrait_img
 
-def contrast_img(image):
-    contrasted = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)[1]
-    return contrasted
 
 def edge_detect_img(image):
     """
@@ -90,7 +86,8 @@ def threshold_img(image):
         PIL.Image: The thresholded image.
 
     """
-    blur_image = cv2.GaussianBlur(image, (5, 5), 0)
+    initial_thresh = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)[1]
+    blur_image = cv2.GaussianBlur(initial_thresh, (5, 5), 0)
     thresh = cv2.threshold(blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[
         1
     ]
@@ -150,14 +147,14 @@ def sort_contours(cnts):
 
 def identify_object_contours(generated_contours):
     """
+    CURRENTLY UNUSED
     Function to identify objects in an image without using machine learning.
-
+    
     Args:
         contours (list): A list of contours to identify objects in.
 
     Returns:
         list: A list of objects identified in the image.
-
     """
     objects = []
     questionCnts = sort_contours(generated_contours)

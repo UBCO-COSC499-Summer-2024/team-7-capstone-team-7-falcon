@@ -283,9 +283,10 @@ export const coursesAPI = {
       throw error;
     }
   },
-  removeStudentFromCourse: async (course_id: number, user_id: number) => {
+  removeStudentFromCourse: async (courseId: number, userId: number) => {
     try {
       const auth_token = await fetchAuthToken();
+
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/course/`,
         headers: {
@@ -294,10 +295,13 @@ export const coursesAPI = {
         },
         withCredentials: true,
       });
-      const response = await instance.delete(`/${course_id}/member/${user_id}`);
+
+      const response = await instance.delete(`/${courseId}/member/${userId}`);
       return response;
     } catch (error: any) {
-      console.error("Failed to remove student from course: ", error);
+      // always axios error
+      console.error("Failed to remove user from course: ", error);
+
       return error;
     }
   },

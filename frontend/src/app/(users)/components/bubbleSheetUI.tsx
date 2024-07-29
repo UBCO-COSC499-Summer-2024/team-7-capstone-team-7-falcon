@@ -57,7 +57,7 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
 
   const handleKeyPress = async (e: any) => {
     if (e.key === "Enter") {
-      const response = await examsAPI.updateGradeWithAnswers(
+      const response = await examsAPI.updateGrade(
         examId,
         courseId,
         submissionId,

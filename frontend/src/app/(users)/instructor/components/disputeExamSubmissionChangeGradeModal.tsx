@@ -20,29 +20,13 @@ const DisputeExamSubmissionChangeGradeModal: React.FC<
     setGrade(event.target.value);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const response = await examsAPI.updateGrade(
-      examId,
-      courseId,
-      dispute.submission.id,
-      +grade,
-    );
-
-    if (response && response.status === 200) {
-      refreshDispute();
-      setShowModal(false);
-    }
-  };
-
   return (
     <Modal title="Change Grade" show={true} onClose={() => setShowModal(false)}>
       <Modal.Header>
         <h2>Change Submission Grade</h2>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={handleSubmit}>
+        <form>
           <div className="space-y-2">
             <Label className="text-1xl">Grade:</Label>
             <TextInput

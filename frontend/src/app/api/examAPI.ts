@@ -576,52 +576,10 @@ export const examsAPI = {
    * @param examId
    * @param courseId
    * @param submissionId
-   * @param newGrade
-   * @returns {Promise<AxiosResponse<any>>}
-   */
-  updateGrade: async (
-    examId: number,
-    courseId: number,
-    submissionId: number,
-    newGrade: number,
-  ) => {
-    try {
-      const auth_token = await fetchAuthToken();
-      const instance = axios.create({
-        baseURL: `${BACKEND_URL}/api/v1/exam`,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth_token,
-        },
-        withCredentials: true,
-      });
-
-      const payload = {
-        grade: newGrade,
-      };
-
-      const response = await instance.patch(
-        `${examId}/course/${courseId}/submission/${submissionId}/grade`,
-        payload,
-      );
-      toast.success("Grade updated!");
-      return response;
-    } catch (error: any) {
-      //always axios error
-      toast.error("Failed to update grade");
-      console.error("Failed to update grade: ", error);
-    }
-  },
-
-  /**
-   * Updates the grade for a user submission
-   * @param examId
-   * @param courseId
-   * @param submissionId
    * @param answers
    * @returns {Promise<AxiosResponse<any>>}
    */
-  updateGradeWithAnswers: async (
+  updateGrade: async (
     examId: number,
     courseId: number,
     submissionId: number,

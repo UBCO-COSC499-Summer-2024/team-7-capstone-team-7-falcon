@@ -102,7 +102,7 @@ export interface Submission {
     first_name: string;
     last_name: string;
   };
-  answers: JSON;
+  answers: Question[];
   score: number;
   updated_at: number;
   submission_id: string;
@@ -261,7 +261,7 @@ export interface StudentSubmission {
   grades: number[];
   answers: {
     errorFlag: boolean;
-    answer_list: JSON[];
+    answer_list: Question[];
   };
 }
 
@@ -334,14 +334,14 @@ export interface UserEditData {
   employee_id: number;
 }
 
-export interface DetailedSubmission {
-  errorFlag: boolean;
-  answerList: Question[];
-}
-
 export interface Question {
   question_num: number;
   expected: number[];
   answered: number[];
   score: number;
+}
+
+export interface Answers {
+  errorFlag: boolean;
+  answer_list: Question[];
 }

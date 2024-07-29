@@ -20,7 +20,7 @@ import ToggleBubbleSheet from "../../../../../../../components/toggleBubbleSheet
 const InstructorSubmissionPage = async ({
   params,
 }: {
-  params: { courseId: string; submissionId: string };
+  params: { courseId: string; submissionId: string; examId: number };
 }) => {
   const cid = Number(params.courseId);
   const submissionId = Number(params.submissionId);
@@ -83,7 +83,12 @@ const InstructorSubmissionPage = async ({
               This submission does not have a student associated with it.
             </Alert>
           )}
-          <ToggleBubbleSheet courseId={cid} submissionId={submission.exam.id} />
+          <ToggleBubbleSheet
+            courseId={cid}
+            submissionId={submission.exam.id}
+            examId={params.examId}
+            submission={submission}
+          />
         </div>
         <div className="col-span-1 text-xl">
           <p className="mt-4 mb-8 font-bold">Grade Overview</p>

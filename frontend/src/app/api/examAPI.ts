@@ -1,10 +1,12 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import {
+  Answers,
   BubbleSheetPayload,
   DetailedSubmission,
   Exam,
   ExamData,
+  Question,
   StudentSubmission,
 } from "../typings/backendDataTypes";
 import toast from "react-hot-toast";
@@ -618,176 +620,38 @@ export const examsAPI = {
    * @param examId
    * @param courseId
    * @param submissionId
-   * @param newGrade
+   * @param answers
    * @returns {Promise<AxiosResponse<any>>}
    */
-  getSubmissionByQuestion: async (submissionId: number) => {
-    const data: DetailedSubmission = {
-      errorFlag: false,
-      answerList: [
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 4, expected: [1, 2], answered: [4, 3], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 4, expected: [1, 2], answered: [4, 3], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-        { question_num: 3, expected: [1, 2], answered: [4, 2], score: 0 },
-        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
-        { question_num: 1, expected: [2, 1], answered: [0, 1], score: 1 },
-        { question_num: 2, expected: [1, 2], answered: [4, 1], score: 0 },
-      ],
-    };
-    return data;
+  updateGrade2: async (
+    examId: number,
+    courseId: number,
+    submissionId: number,
+    answers: Answers,
+  ) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const payload = {
+        answers: answers,
+      };
+
+      const response = await instance.patch(
+        `${examId}/course/${courseId}/submission/${submissionId}/grade`,
+        payload,
+      );
+      return response;
+    } catch (error: any) {
+      return error;
+    }
   },
   /*
    * Get submission by id
@@ -840,7 +704,7 @@ export const examsAPI = {
       return response;
     } catch (error: any) {
       //always axios error
-      console.error("Failed to post bubble sheet data: ", error);
+      console.error("Failed to retrieve PDF: ", error);
       return error;
     }
   },

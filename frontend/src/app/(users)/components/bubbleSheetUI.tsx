@@ -1,10 +1,13 @@
 "use client";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { DetailedSubmission } from "../../typings/backendDataTypes";
+import React, { ChangeEvent, useState } from "react";
+import { StudentSubmission } from "../../typings/backendDataTypes";
 import { examsAPI } from "../../api/examAPI";
 import toast from "react-hot-toast";
 
 interface BubbleSheetUIProps {
+  submission: StudentSubmission;
+  examId: number;
+  courseId: number;
   submissionId: number;
 }
 
@@ -14,47 +17,64 @@ enum BubbleStyle {
   Correct = "correct",
 }
 
-const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
+const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
+  submission,
+  examId,
+  courseId,
+  submissionId,
+}) => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: number[];
   }>({});
-  const [detailedSubmission, setDetailedSubmission] =
-    useState<DetailedSubmission>({
-      errorFlag: false,
-      answerList: [],
-    });
 
-  useEffect(() => {
-    const getSubmission = async () => {
-      const detailedSubmission: DetailedSubmission =
-        await examsAPI.getSubmissionByQuestion(submissionId);
-      setDetailedSubmission(detailedSubmission);
-    };
-    getSubmission();
-  }, []);
+  const [detailedSubmission, setDetailedSubmission] = useState(
+    submission.answers,
+  );
 
   //useeffect that updates whenever the data is updated too that is making a patch request
 
   const questionsPerColumn = 75;
-  const questionCount = detailedSubmission.answerList.length;
+  const questionCount = detailedSubmission.answer_list.length;
   const options = ["A", "B", "C", "D", "E"];
 
-  const [grade, setGrade] = useState<number[]>();
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    questionIndex: number,
+  ) => {
+    const value = Number(e.target.value);
+    const score = value === 0 || value === 1 ? value : 0;
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setGrade(Number(e.target.value));
+    const updatedAnswerList = { ...detailedSubmission };
+    updatedAnswerList.answer_list[questionIndex] = {
+      ...updatedAnswerList.answer_list[questionIndex],
+      score: score,
+    };
+
+    setDetailedSubmission(updatedAnswerList);
   };
 
   const handleKeyPress = async (e: any) => {
     if (e.key === "Enter") {
-      examsAPI.updateGrade(examId, courseId, submissionId, grade);
+      const response = await examsAPI.updateGrade2(
+        examId,
+        courseId,
+        submissionId,
+        detailedSubmission,
+      );
+      if (response && response.status === 200) {
+        toast.success("Answers updated", {
+          duration: 5_000,
+        });
+      } else {
+        toast.error("Error updating answers");
+      }
     }
   };
 
   // Computes the styles used for each circle in the bubble sheet
   const preComputeAnswers = () => {
     const questionStyleMap: BubbleStyle[][] = [];
-    detailedSubmission.answerList.map((question, index) => {
+    detailedSubmission.answer_list.map((question, index) => {
       const { answered, expected } = question;
       const questionStyle: BubbleStyle[] = [];
       for (let i = 0; i < options.length; i++) {
@@ -93,25 +113,12 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
 
   // Returns true if the question and option were filled out by the student in the submission
   function isCheckedByDefault(questionIndex: number, index: any) {
-    const { answered } = detailedSubmission.answerList[questionIndex];
+    const { answered } = detailedSubmission.answer_list[questionIndex];
     if (answered.includes(index)) {
       return true;
     }
     return false;
   }
-
-  const submitJob = async () => {
-    const payload = {};
-
-    const response = await examsAPI.postBubbleSheet(payload);
-    if (response.status === 202) {
-      toast.success("Answers updated", {
-        duration: 5_000,
-      });
-    } else {
-      toast.error("Error updating answers");
-    }
-  };
 
   return (
     <div className="flex flex-row mt-4">
@@ -166,10 +173,12 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({ submissionId }) => {
                   })}
                   <input
                     type="text"
-                    value={detailedSubmission.answerList[questionIndex].score}
-                    onChange={handleInputChange}
+                    defaultValue={
+                      detailedSubmission.answer_list[questionIndex].score
+                    }
+                    onChange={(e) => handleInputChange(e, questionIndex)}
                     onKeyDown={handleKeyPress}
-                    className="mx-1 p-0 w-2/12 justify-end"
+                    className="mx-1 p-0 w-2/12 justify-right"
                   />
                 </div>
               );

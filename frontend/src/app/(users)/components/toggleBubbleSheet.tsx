@@ -3,11 +3,14 @@ import React, { useState } from "react";
 import { Edit, FilePdf } from "flowbite-react-icons/solid";
 import PdfViewer from "../student/components/pdfViewer";
 import BubbleSheetUI from "./bubbleSheetUI";
+import { StudentSubmission } from "../../typings/backendDataTypes";
 
 const ToggleBubbleSheet: React.FC<{
   courseId: number;
   submissionId: number;
-}> = ({ courseId, submissionId }) => {
+  examId: number;
+  submission: StudentSubmission;
+}> = ({ courseId, submissionId, submission, examId }) => {
   const [bubbleSheetUI, setBubbleSheetUI] = useState<boolean>(true);
 
   const toggleBubbleSheetUI = () => {
@@ -41,7 +44,14 @@ const ToggleBubbleSheet: React.FC<{
       {bubbleSheetUI && (
         <PdfViewer courseId={courseId} submissionId={submissionId} />
       )}
-      {!bubbleSheetUI && <BubbleSheetUI submissionId={submissionId} />}
+      {!bubbleSheetUI && (
+        <BubbleSheetUI
+          submission={submission}
+          courseId={courseId}
+          examId={examId}
+          submissionId={submissionId}
+        />
+      )}
     </div>
   );
 };

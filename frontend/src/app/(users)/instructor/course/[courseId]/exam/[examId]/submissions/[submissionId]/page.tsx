@@ -9,7 +9,6 @@ import {
 } from "../../../../../../../../typings/backendDataTypes";
 import { coursesAPI } from "../../../../../../../../api/coursesAPI";
 import { examsAPI } from "../../../../../../../../api/examAPI";
-import PdfViewer from "../../../../../../../student/components/pdfViewer";
 import GradeDisplay from "../../../../../../../components/gradeDisplay";
 import { Toaster } from "react-hot-toast";
 import { Alert } from "flowbite-react";

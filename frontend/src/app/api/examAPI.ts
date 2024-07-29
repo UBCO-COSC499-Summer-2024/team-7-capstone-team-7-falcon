@@ -3,10 +3,8 @@ import { fetchAuthToken } from "./cookieAPI";
 import {
   Answers,
   BubbleSheetPayload,
-  DetailedSubmission,
   Exam,
   ExamData,
-  Question,
   StudentSubmission,
 } from "../typings/backendDataTypes";
 import toast from "react-hot-toast";
@@ -623,7 +621,7 @@ export const examsAPI = {
    * @param answers
    * @returns {Promise<AxiosResponse<any>>}
    */
-  updateGrade2: async (
+  updateGradeWithAnswers: async (
     examId: number,
     courseId: number,
     submissionId: number,

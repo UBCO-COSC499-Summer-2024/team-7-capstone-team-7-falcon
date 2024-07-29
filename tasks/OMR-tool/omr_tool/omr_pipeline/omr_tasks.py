@@ -93,7 +93,7 @@ def mark_submission_group(
     return submission_results, graded_images
 
 
-def infer_bubble_objects(prepped_image):
+def infer_bubble_objects(prepped_image: Image) -> tuple[list, list]:
     """
     Infers bubble objects from a prepped image using an inference tool.
 
@@ -116,7 +116,7 @@ def infer_bubble_objects(prepped_image):
     return flat_question_list, student_num_section
 
 
-def omr_on_key_image(input_image: Image, first_q_in_page):
+def omr_on_key_image(input_image: Image, first_q_in_page: int) -> list[dict]:
     """
     Processes an image of the answer key to generate a list of answer key entries.
 
@@ -136,7 +136,7 @@ def omr_on_key_image(input_image: Image, first_q_in_page):
 
 def omr_on_submission_image(
     input_image: Image, answer_key=[], student_id="", errorFlag=False, first_q_in_page=1
-):
+) -> tuple[str, int, list[dict], Image, bool]:
     """
     Processes a submission image to extract and evaluate answers, and grade the submission.
 
@@ -182,7 +182,7 @@ def omr_on_submission_image(
     return student_id, total_score, results, output_image, errorFlag, 
 
 
-def populate_answer_key(image, flat_list, first_q_in_page):
+def populate_answer_key(image: Image, flat_list: list[dict], first_q_in_page: int):
     """
     Populates the answer key from the list of question bounds.
 
@@ -206,7 +206,7 @@ def populate_answer_key(image, flat_list, first_q_in_page):
     return answer_key
 
 
-def identify_page_details(inference_tool: Inferencer, boxes: np.ndarray, classes):
+def identify_page_details(inference_tool: Inferencer, boxes: np.ndarray, classes: list[str]) -> tuple:
     """
     Identifies the details of the page, including the student number section and question bounds.
 

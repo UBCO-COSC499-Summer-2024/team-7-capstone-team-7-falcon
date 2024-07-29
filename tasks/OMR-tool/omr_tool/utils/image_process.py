@@ -2,14 +2,15 @@ import cv2
 import numpy as np
 import sys
 from pathlib import Path
+from PIL import Image
 
-ALIGNMENT_TEMPLATE = cv2.imread(
-    Path(__file__).resolve().parents[2] / "fixtures" / "template" / "alignment.png",
-    cv2.COLOR_BGR2GRAY,
-)
+# ALIGNMENT_TEMPLATE = cv2.imread(
+#     Path(__file__).resolve().parents[2] / "fixtures" / "template" / "alignment.png",
+#     cv2.COLOR_BGR2GRAY,
+# )
 
 
-def prepare_img(image):
+def prepare_img(image: Image) -> Image:
     """
     Function to preprocess an image for processing.
 
@@ -25,26 +26,11 @@ def prepare_img(image):
     return portrait_img
 
 
-def edge_detect_img(image):
-    """
-    Function to preprocess an image for processing.
-
-    Args:
-        image (PIL.Image): The image to be prepared.
-
-    Returns:
-        PIL.Image: The prepared image.
-
-    """
-    grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blurred_img = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
-    edged_img = cv2.Canny(blurred_img, 75, 200)
-    return edged_img
-
-
-def align_img(image):
+def align_img(image: Image) -> Image:
     """
     Function to align an image.
+
+    TODO: Implement a more robust alignment method.
 
     Args:
         image (PIL.Image): The image to be aligned.
@@ -221,7 +207,16 @@ def identify_object_contours(generated_contours):
 
 
 def identify_bubbled(img, cnts):
+    """
+    Identifies the filled-in bubbles in an image.
 
+    Args:
+        img (numpy.ndarray): The input image.
+        cnts (list): List of contours representing the bubbles.
+
+    Returns:
+        list: List of contours representing the filled-in bubbles.
+    """
     bubbled = None
     filled_in = []
 

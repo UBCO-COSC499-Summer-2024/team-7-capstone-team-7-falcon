@@ -5,6 +5,12 @@ export interface CourseData {
   section_name: string;
   semester_id: number;
 }
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
 
 export interface CourseAdminDetails {
   courseId: number;

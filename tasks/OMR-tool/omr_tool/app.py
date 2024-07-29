@@ -7,6 +7,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import logging
+import cv2
 
 load_dotenv()
 logging.basicConfig(

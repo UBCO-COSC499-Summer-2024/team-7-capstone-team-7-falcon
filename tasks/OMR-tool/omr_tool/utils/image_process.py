@@ -22,8 +22,12 @@ def prepare_img(image):
     """
     grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     portrait_img = align_img(grayscale_img)
-    return portrait_img
+    contrasted_img = contrast_img(portrait_img)
+    return contrasted_img
 
+def contrast_img(image):
+    contrasted = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)[1]
+    return contrasted
 
 def edge_detect_img(image):
     """
@@ -75,7 +79,7 @@ def align_img(image):
     return image
 
 
-def threshold_img(image, blur=True, grayscale=True):
+def threshold_img(image):
     """
     Function to threshold an image.
 
@@ -86,14 +90,7 @@ def threshold_img(image, blur=True, grayscale=True):
         PIL.Image: The thresholded image.
 
     """
-    if grayscale:
-        grayscale_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    else:
-        grayscale_img = image
-    if blur:
-        blur_image = cv2.GaussianBlur(grayscale_img, (5, 5), 0)
-    else:
-        blur_image = grayscale_img
+    blur_image = cv2.GaussianBlur(image, (5, 5), 0)
     thresh = cv2.threshold(blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[
         1
     ]
@@ -112,11 +109,8 @@ def generate_bubble_contours(image):
 
     """
 
-    # Threshold the image
-    thresh = threshold_img(image, grayscale=False)
-
     # Find contours
-    all_contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
+    all_contours = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
         0
     ]
 
@@ -231,16 +225,14 @@ def identify_object_contours(generated_contours):
 
 def identify_bubbled(img, cnts):
 
-    thresh = threshold_img(img)
     bubbled = None
     filled_in = []
-    # image_with_bubble = img.copy()
 
     for cnt, i in enumerate(cnts):
-        mask = np.zeros(thresh.shape, dtype="uint8")
+        mask = np.zeros(img.shape, dtype="uint8")
         cv2.drawContours(mask, [i], -1, 255, -1)
 
-        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
+        mask = cv2.bitwise_and(img, img, mask=mask)
         total = cv2.countNonZero(mask)
 
         if bubbled is None or total > 400:

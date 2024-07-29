@@ -24,13 +24,12 @@ def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
         
 
 
-def find_filled_bubbles(mask, bubble_contours, threshold=450):
+def find_filled_bubbles(img, bubble_contours, threshold=450):
     filled_index = []
-    thresh = threshold_img(mask, grayscale=False)
     for i, cnt in enumerate(bubble_contours):
-        mask = np.zeros(thresh.shape, dtype="uint8")
+        mask = np.zeros(img.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
-        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
+        mask = cv2.bitwise_and(img, img, mask=mask)
         total = cv2.countNonZero(mask)
         if total > threshold:
             filled_index.append(i)
@@ -39,8 +38,6 @@ def find_filled_bubbles(mask, bubble_contours, threshold=450):
 
 def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
     bubbled = find_filled_bubbles(mask, sorted_bubble_contours, min_threshold)
-    if bubbled == []:
-        return False, None
     if bubbled == expected_answer:
         return True, bubbled
     else:

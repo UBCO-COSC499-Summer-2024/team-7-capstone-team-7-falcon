@@ -19,17 +19,17 @@ def extract_student_num(sid_roi):
     student_id = ""
     bubble_contours = generate_bubble_contours(sid_roi)
     sorted_sid_cnts = extract_sid_rows(bubble_contours)
-    thresh = threshold_img(sid_roi, grayscale=False)
+    sid_roi
     id_num = 0
     bubbled = []
     issue_flag = ""
     row_marked = False
     for cnt in sorted_sid_cnts:
-        mask = zeros(thresh.shape, dtype="uint8")
+        mask = zeros(sid_roi.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
-        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
+        mask = cv2.bitwise_and(sid_roi, sid_roi, mask=mask)
         total = cv2.countNonZero(mask)
-        if total > 400:
+        if total > 500:
             if row_marked:
                 bubbled.append({"cnt": cnt, "col": (0, 255, 0)})
                 issue_flag = "multiple fills on row"   

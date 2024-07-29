@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { examsAPI } from "../../../api/examAPI";
-import { Edit, FilePdf } from "flowbite-react-icons/solid";
-import BubbleSheetUI from "../../components/bubbleSheetUI";
+import { examsAPI } from "../../api/examAPI";
 import toast from "react-hot-toast";
 import { Spinner } from "flowbite-react";
 

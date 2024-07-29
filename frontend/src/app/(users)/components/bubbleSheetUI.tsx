@@ -9,6 +9,7 @@ interface BubbleSheetUIProps {
   examId: number;
   courseId: number;
   submissionId: number;
+  disableEdit?: boolean;
 }
 
 enum BubbleStyle {
@@ -22,6 +23,7 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
   examId,
   courseId,
   submissionId,
+  disableEdit,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: number[];
@@ -179,6 +181,7 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
                     onChange={(e) => handleInputChange(e, questionIndex)}
                     onKeyDown={handleKeyPress}
                     className="mx-1 p-0 w-2/12 justify-right"
+                    disabled={disableEdit}
                   />
                 </div>
               );

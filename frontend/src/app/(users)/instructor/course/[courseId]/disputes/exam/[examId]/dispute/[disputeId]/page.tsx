@@ -1,13 +1,13 @@
 "use client";
 
 import DisputeExamSubmissionCard from "@/app/(users)/instructor/components/disputeExamSubmissionCard";
-import PdfViewer from "@/app/(users)/student/components/pdfViewer";
 import { examsAPI } from "@/app/api/examAPI";
 import { ExamSubmissionDispute } from "@/app/typings/backendDataTypes";
 import { Spinner } from "flowbite-react";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import PdfViewer from "../../../../../../../../components/pdfViewer";
 
 const DisputeExamSubmissionPage = ({
   params,

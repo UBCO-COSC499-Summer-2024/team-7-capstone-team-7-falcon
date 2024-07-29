@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Edit, FilePdf } from "flowbite-react-icons/solid";
-import PdfViewer from "../student/components/pdfViewer";
+import PdfViewer from "./pdfViewer";
 import BubbleSheetUI from "./bubbleSheetUI";
 import { StudentSubmission } from "../../typings/backendDataTypes";
 
@@ -10,7 +10,8 @@ const ToggleBubbleSheet: React.FC<{
   submissionId: number;
   examId: number;
   submission: StudentSubmission;
-}> = ({ courseId, submissionId, submission, examId }) => {
+  disableEdit?: boolean;
+}> = ({ courseId, submissionId, submission, examId, disableEdit }) => {
   const [bubbleSheetUI, setBubbleSheetUI] = useState<boolean>(true);
 
   const toggleBubbleSheetUI = () => {
@@ -50,6 +51,7 @@ const ToggleBubbleSheet: React.FC<{
           courseId={courseId}
           examId={examId}
           submissionId={submissionId}
+          disableEdit={disableEdit}
         />
       )}
     </div>

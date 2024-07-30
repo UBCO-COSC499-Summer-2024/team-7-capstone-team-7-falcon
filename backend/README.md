@@ -3,8 +3,8 @@
 - [Tools](#tools)
 - [Setup and Installation](#setup-and-installation)
 - [Running locally](#running-locally)
-  - [Running backend application outside of container](#running-backend-application-outside-of-container)
-  - [Running backend application within a container](#running-backend-application-within-a-container)
+  - [Running the backend application outside of a container](#running-the-backend-application-outside-of-a-container)
+  - [Running the backend application within a container](#running-the-backend-application-within-a-container)
 - [Development](#development)
   - [Database Changes](#database-changes)
     - [Migrations](#migrations)
@@ -35,16 +35,16 @@ cp .env.example .env
 nvm use 20
 ```
 
-2. Install NPM packages:
+3. Install NPM packages:
 
 ```bash
 npm install
 ```
 
-3. Create an `.env.docker` file from `.env.example`:
+4. Create an `.env.docker` file from `.env.docker.example`:
 
 ```bash
-cp .env.example .env.docker && \
+cp .env.docker.example .env.docker && \
 echo "DB_HOST=postgres" >> .env.docker && \
 echo "REDIS_HOST=redis" >> .env.docker
 ```
@@ -87,7 +87,7 @@ NOTE: This might take a moment to start. Wait until you see
 [Nest] 29  - **/**/2024, **:**:** **     LOG [NestFactory] Starting Nest application...
 ```
 
-in the terminal logs to verify that the application is running by visiting `http://localhost:3001/api/v1/health`.
+in the terminal logs before verifying that the application is running by visiting `http://localhost:3001/api/v1/health`.
 
 ## Development
 

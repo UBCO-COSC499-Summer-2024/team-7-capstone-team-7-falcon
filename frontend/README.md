@@ -1,42 +1,77 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Developing Guidelines
 
-## Getting Started
+- [Tools](#tools)
+- [Setup and Installation](#setup-and-installation)
+- [Running locally](#running-locally)
+  - [Running the frontend application outside of a container](#running-the-frontend-application-outside-of-a-container)
+  - [Running the frontend application within a container](#running-the-frontend-application-within-a-container)
 
-First, run the development server:
+## Tools
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+You will need to install the following command line tools and applications to run the application:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [nvm](https://github.com/nvm-sh/nvm)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup and Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-## Setup and Installation (WIP)
-
-1. In the root folder of the project, create a `.env.local` file from `.env.local.example`:
+1. In the root of the `frontend` folder, create a `.env.local` file from `.env.local.example`:
 
 ```bash
 cp .env.local.example .env.local
 ```
 
-2. Install NPM packages:
+2. Set the Node version to 20 via nvm:
+
+```bash
+nvm use 20
+```
+
+3. Install NPM packages:
 
 ```bash
 npm install
 ```
+
+4. Create an `.env.docker` file from `.env.docker.example`:
+
+```bash
+cp .env.docker.example .env.docker
+```
+
+## Running locally
+
+### Running the frontend application outside of a container
+
+Note: For the frontend to function correctly, the backend must be running.
+
+To run the frontend application in development mode:
+
+```bash
+npm run dev
+```
+
+To run the application in production mode:
+
+```bash
+npm run build && npm run start
+```
+
+After running one of these commands, you can visit [http://localhost:3000](http://localhost:3000) to verify that the application is running.
+
+### Running the frontend application within a container
+
+To run the frontend application in development mode:
+
+```bash
+docker-compose up frontend
+```
+
+NOTE: This might take a moment to start. Wait until you see something similar to
+
+```
+team-7-capstone-team-7-falcon-frontend-1  |  ✓ Starting...
+team-7-capstone-team-7-falcon-frontend-1  |  ✓ Ready in *.*s
+```
+
+in the terminal logs before verifying that the application is running by visiting [http://localhost:3000](http://localhost:3000).

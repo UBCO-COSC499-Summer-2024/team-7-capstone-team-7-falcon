@@ -156,7 +156,7 @@ def app():
 
         # ---
 
-    # complete_job(backend_url, queue_name, job_id, unique_id)
+    complete_job(backend_url, queue_name, job_id, unique_id)
 
 
 if __name__ == "__main__":

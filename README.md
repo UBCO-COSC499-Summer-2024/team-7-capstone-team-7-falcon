@@ -51,3 +51,15 @@ You can find additional information on folder structure convetions [here](https:
 Also, update your README.md file with the team and client/project information.
 
 You can find details on writing GitHub Markdown [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) as well as a [handy cheatsheet](https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf).
+
+## Installation and Setup
+
+(Will clean this section up later)
+
+In order to run `docker-compose up`, the following must be satisfied:
+
+1. `/backend` needs to have a `.env.docker` file. See backend readme for instructions.
+
+2. `/frontend` needs to have a `.env.docker` file. See frontend readme for instructions.
+
+3. In root, have `.env` file.

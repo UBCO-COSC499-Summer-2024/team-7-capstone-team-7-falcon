@@ -51,6 +51,8 @@ echo "REDIS_HOST=redis" >> .env.docker
 
 Note about database credentials: You do not have to modify the default values provided in `.env` unless the root [.env](../.env) values do not match.
 
+In addition, make sure that you replace the values marked with asterisks with valid credentials in `.env` and `.env.docker`.
+
 ## Running locally
 
 ### Running the backend application outside of a container

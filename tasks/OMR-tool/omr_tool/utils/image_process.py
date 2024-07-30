@@ -105,12 +105,11 @@ def generate_bubble_contours(image):
         if cv2.isContourConvex(approx):
             (x, y, w, h) = cv2.boundingRect(cnt)
             aspect_ratio1 = w / float(h)
-            if aspect_ratio1 >= 0.8 and aspect_ratio1 <= 1.2 and w > 10:
-                bubble_contours.append(cnt)
+            if aspect_ratio1 >= 0.7 and aspect_ratio1 <= 1.3 and w > 10:
+                bubble_contours.append(cnt)  
 
     # Sort Contours by x value
     sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
-
     return sorted_contours
 
 
@@ -257,7 +256,7 @@ def highlight_error_region(image, question_bounds, message=""):
     x1, y1, x2, y2 = question_bounds
     cv2.rectangle(output_image, (x1, y1), (x2, y2), (0, 0, 255), 2)
     if message:
-        cv2.putText(output_image, message, (x1, y1 - 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(output_image, message, (x1, y1 +20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     return output_image
     
 

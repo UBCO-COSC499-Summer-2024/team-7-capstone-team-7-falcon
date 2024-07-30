@@ -1,14 +1,16 @@
 import cv2
 from numpy import arange, zeros
 from omr_tool.utils.image_process import extract_roi, draw_bubble_contours, generate_bubble_contours, highlight_error_region
-
+import logging
 def extract_and_highlight_student_id(prepped_image, student_num_section, output_image):
     x1, y1, x2, y2 = map(int, student_num_section)
     sid_roi = extract_roi(prepped_image, (x1, y1, x2, y2))
     student_id, id_filled, sid_issue = extract_student_num(sid_roi)
     if student_id == "invalid":
-        cv2.rectangle(output_image, (x1, y1), (x2, y2), (0, 0, 255), 2)
-        cv2.putText(output_image, sid_issue, (x1, y1 + 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        logging.warning(f"Invalid student ID detected in image.")
+        output_image = highlight_error_region(
+            output_image, map(int, student_num_section), sid_issue
+        )
     for cnt in id_filled:
         output_image = draw_bubble_contours(
             output_image, cnt["cnt"], map(int, student_num_section), cnt["col"]
@@ -29,7 +31,7 @@ def extract_student_num(sid_roi):
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(sid_roi, sid_roi, mask=mask)
         total = cv2.countNonZero(mask)
-        if total > 500:
+        if total > 450:
             if row_marked:
                 bubbled.append({"cnt": cnt, "col": (0, 255, 0)})
                 issue_flag = "multiple fills on row"   

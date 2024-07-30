@@ -192,6 +192,8 @@ def omr_on_submission_image(
                     )
                 except Exception as e:
                     logging.error(f"Error drawing bubble contours: {e}, {idx}")
+                    output_image = highlight_error_region(image=output_image, question_bounds=question_bounds)
+                    errorFlag = True
         if question_result["expected"] == question_result["answered"]:
             question_result["score"] = 1
             total_score += question_result["score"]

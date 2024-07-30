@@ -16,8 +16,8 @@ const CreateSemesterForm: React.FC<CreateSemesterFormProps> = ({ onClose }) => {
 
   const [semesterData, setSemesterData] = useState<SemesterData>({
     name: "",
-    starts_at: -1,
-    ends_at: -1,
+    starts_at: parseInt(new Date().getTime().toString()) + 86_400_000,
+    ends_at: parseInt(new Date().getTime().toString()) + 86_400_000 * 2,
   });
 
   const handleClose = () => {
@@ -25,8 +25,9 @@ const CreateSemesterForm: React.FC<CreateSemesterFormProps> = ({ onClose }) => {
     onClose();
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // setRedirect(true);
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     e.preventDefault();
 
     if (semesterData.name.trim().length === 0) {
@@ -153,7 +154,12 @@ const CreateSemesterForm: React.FC<CreateSemesterFormProps> = ({ onClose }) => {
             </div>
           </div>
           <div className="flex justify-center">
-            <Button color="purple" onClick={handleSubmit}>
+            <Button
+              color="purple"
+              onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+                handleSubmit(e)
+              }
+            >
               Create Semester
             </Button>
           </div>

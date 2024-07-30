@@ -98,12 +98,15 @@ export interface Exam {
 export interface Submission {
   student_id: string;
   user: {
+    id: string;
     avatar_url: string;
     first_name: string;
     last_name: string;
   };
   score: number;
   updated_at: number;
+  submission_id: string;
+  exam_id: string;
 }
 
 export interface CourseRole {
@@ -136,8 +139,10 @@ export interface BubbleSheetPayload {
     numberOfQuestions: number;
     defaultPointsPerQuestion: number;
     numberOfAnswers: number;
-    instructions: string;
-    answers: number[];
+    courseCode: string;
+    courseName: string;
+    examName: string;
+    answers: number[][];
   };
 }
 
@@ -218,6 +223,7 @@ export enum SelectedButton {
   People = "PEOPLE",
   Analytics = "ANALYTICS",
   None = "NONE",
+  Submissions_Disputes = "SUBMISSIONS DISPUTES",
   Edit_Course = "COURSE SETTINGS",
 }
 
@@ -277,6 +283,44 @@ export interface CourseAnalytics {
   examSubmissionsCount: number;
   examSubmissions: AnalyticsSubmission[];
 }
+
+export interface ExamDisputes {
+  examId: number;
+  examName: string;
+  numberOfDisputes: number;
+}
+
+export interface ExamSubmissionsDisputes {
+  id: number;
+  status: string;
+  created_at: number;
+}
+
+export interface ExamSubmissionDispute {
+  created_at: number;
+  description: string;
+  id: number;
+  resolved_at: number | null;
+  status: string;
+  submission: {
+    created_at: number;
+    document_path: string;
+    id: number;
+    score: number;
+    student: {
+      id: number;
+      student_id: number;
+      user: {
+        first_name: string;
+        id: number;
+        last_name: string;
+      };
+    };
+    updated_at: number;
+  };
+  updated_at: number;
+}
+
 export interface UserEditData {
   first_name: string;
   last_name: string;

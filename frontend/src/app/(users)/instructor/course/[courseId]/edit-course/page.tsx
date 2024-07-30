@@ -14,7 +14,6 @@ import { ArrowLeft } from "flowbite-react-icons/outline";
 const EditCourse = async ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
   const course: Course = await coursesAPI.getCourse(cid);
- 
 
   return (
     <div className="space-y-5 p-0 m-0">

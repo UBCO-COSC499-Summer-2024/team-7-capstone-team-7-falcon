@@ -3,6 +3,7 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from dotenv import load_dotenv
 from pathlib import Path
+from typing import List, Optional
 import os
 import requests
 import time
@@ -20,6 +21,7 @@ FONT_BOLD = "Helvetica-Bold"
 FONT_NORMAL = "Helvetica"
 CANVAS_OFFSET = 200
 FONT_SIZE_HEADER = 12
+FONT_SIZE_SUBHEADER = 9
 FONT_SIZE_TEXT = 8
 REQUEST_DELAY = 3  # 3 seconds
 UPLOAD_PATH = (
@@ -67,7 +69,9 @@ def wrap_text(text, width, canvas, font, font_size):
     return lines
 
 
-def draw_exam_information(c, current_x, current_y, margin=0.5 * inch):
+def draw_exam_information(
+    c, current_x, current_y, margin=0.5 * inch, course_name="", exam_name=""
+):
     """Draw the exam information on the canvas
 
     Args:
@@ -75,13 +79,20 @@ def draw_exam_information(c, current_x, current_y, margin=0.5 * inch):
         current_x (int): horizontal position to start drawing
         current_y (int): vertical position to start drawing
         margin (int, optional): left margin of the canvas
+        course_name (string): name of the course (including course code and course name)
+        exam_name (string): name of the exam
     """
     c.setFont(FONT_BOLD, FONT_SIZE_HEADER)
-    c.drawString(current_x, current_y + CANVAS_OFFSET, "EXAM ANSWER SHEET")
+    c.drawString(current_x, current_y + CANVAS_OFFSET, exam_name)
+
+    c.setFont(FONT_BOLD, FONT_SIZE_SUBHEADER)
+    c.drawString(current_x, current_y + CANVAS_OFFSET - 18, course_name)
+
     c.setFont(FONT_NORMAL, FONT_SIZE_TEXT)
-    c.drawString(current_x, current_y + CANVAS_OFFSET - 30, f"Student Name: {'_' * 30}")
+    c.drawString(current_x, current_y + CANVAS_OFFSET - 50, f"Student Name: {'_' * 30}")
+
     c.setFont(FONT_BOLD, FONT_SIZE_TEXT)
-    c.drawString(current_x, current_y + CANVAS_OFFSET - 60, "Instructions:")
+    c.drawString(current_x, current_y + CANVAS_OFFSET - 125, "Instructions:")
 
     text = """
   Please follow the directions on the exam question sheet. Fill in the entire circle that corresponds to your answer for each question on the exam.
@@ -96,9 +107,9 @@ def draw_exam_information(c, current_x, current_y, margin=0.5 * inch):
 
     c.setFont(FONT_BOLD, FONT_SIZE_TEXT)
     c.drawString(
-        current_x, current_y + CANVAS_OFFSET - 130, "Please fill in marks like this:"
+        current_x, current_y + CANVAS_OFFSET - 140, "Please fill in marks like this:"
     )
-    draw_bubble(c, current_x + 120, current_y + CANVAS_OFFSET - 128, fill=1)
+    draw_bubble(c, current_x + 120, current_y + CANVAS_OFFSET - 138, fill=1)
 
 
 def draw_student_identification(c, current_x, current_y, width):
@@ -176,11 +187,13 @@ def draw_student_identification(c, current_x, current_y, width):
 
 
 def generate_bubble_sheet(
-    filename,
-    num_questions=100,
-    choices_per_question=5,
-    questions_per_column=25,
-    answers=[],
+    filename: str,
+    num_questions: int = 100,
+    choices_per_question: int = 5,
+    questions_per_column: int = 25,
+    course_name: str = "Default course",
+    exam_name: str = "Default exam",
+    answers: Optional[List[List[int]]] = [],
 ):
     """Generate a bubble sheet PDF file
 
@@ -189,7 +202,9 @@ def generate_bubble_sheet(
         num_questions (int, optional): number of questions in the exam. Defaults to 100.
         choices_per_question (int, optional): number of choices per question. Defaults to 5.
         questions_per_column (int, optional): number of questions per column. Defaults to 25.
-        answers (list, optional): list of answers to the questions. Defaults to [].
+        course_name (string, optional): name of the course. Defaults to "Default course".
+        exam_name (string, optional): name of the exam. Defaults to "Default exam".
+        answers (list of list of int, optional): List of lists of answers to the questions. Defaults to None.
     """
 
     # Ensure the directory for saving exists
@@ -214,7 +229,14 @@ def generate_bubble_sheet(
     current_y = start_y
 
     # Draw the exam information
-    draw_exam_information(c, current_x, current_y, margin=margin)
+    draw_exam_information(
+        c,
+        current_x,
+        current_y,
+        margin=margin,
+        course_name=course_name,
+        exam_name=exam_name,
+    )
 
     # Draw student identification section
     draw_student_identification(c, current_x, current_y, width)
@@ -224,15 +246,22 @@ def generate_bubble_sheet(
         c.setFont(FONT_BOLD, FONT_SIZE_TEXT)
         c.drawString(current_x - 1, current_y + 5, f"{question}")
         c.setFont(FONT_NORMAL, FONT_SIZE_TEXT)
+
+        question_answers = answers[question - 1] if question - 1 < len(answers) else []
+
         for choice in range(choices_per_question):
             bubble_x = current_x + (choice + 1) * bubble_spacing
-            if len(answers) > 0 and choice == answers[question - 1]:
+
+            if choice in question_answers:  # Check if the current choice is selected
                 draw_bubble(c, bubble_x, current_y + 7, fill=1)
             else:
                 draw_bubble(c, bubble_x, current_y + 7)
+
             c.drawString(bubble_x - 2.5, current_y + 4, chr(65 + choice))
+
         current_y -= question_spacing_y
 
+        # Check if we need to move to a new column or page
         if question % questions_per_column == 0:
             current_y = height - margin if page > 1 else start_y
             current_x += question_spacing_x * 1
@@ -314,6 +343,8 @@ if __name__ == "__main__":
                 os.path.join(f"{UPLOAD_PATH}/{unique_id}", f"answer.pdf"),
                 num_questions=int(payload.get("numberOfQuestions")),
                 choices_per_question=payload.get("numberOfAnswers"),
+                course_name=f"{payload.get('courseCode')} {payload.get('courseName')}",
+                exam_name=payload.get("examName"),
                 answers=payload.get("answers"),
             )
             # Generates a blank bubble sheet that students will fill out
@@ -321,6 +352,8 @@ if __name__ == "__main__":
                 os.path.join(f"{UPLOAD_PATH}/{unique_id}", f"sheet.pdf"),
                 num_questions=int(payload.get("numberOfQuestions")),
                 choices_per_question=payload.get("numberOfAnswers"),
+                course_name=f"{payload.get('courseCode')} {payload.get('courseName')}",
+                exam_name=payload.get("examName"),
             )
 
             complete_job(backend_url, queue_name, job_id, unique_id)

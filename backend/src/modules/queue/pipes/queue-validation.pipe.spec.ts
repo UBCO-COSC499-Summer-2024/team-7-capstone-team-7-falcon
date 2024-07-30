@@ -1,3 +1,4 @@
+import { BubbleSheetCreationJobDto } from '../dto/bubble-sheet-creation-job.dto';
 import { createQueueValidationPipe } from './queue-validation.pipe';
 
 describe('QueueValidationPipe', () => {
@@ -54,13 +55,19 @@ describe('QueueValidationPipe', () => {
 
   it('should validate a valid payload for bubble-sheet-creation queue', async () => {
     const queueName = 'bubble-sheet-creation';
-    const payload = {
+    const payload: BubbleSheetCreationJobDto = {
       payload: {
         numberOfQuestions: 50,
         defaultPointsPerQuestion: 1,
         numberOfAnswers: 5,
-        instructions: 'Test instructions',
-        answers: [1, 2, 3, 4, 5],
+        courseName: 'Course name',
+        courseCode: 'Course code',
+        examName: 'Exam name',
+        answers: [
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+          [1, 2, 3, 4, 5],
+        ],
       },
     };
     const queueValidationPipe = createQueueValidationPipe(queueName);
@@ -70,7 +77,13 @@ describe('QueueValidationPipe', () => {
     expect(dto.payload.numberOfQuestions).toBe(50);
     expect(dto.payload.defaultPointsPerQuestion).toBe(1);
     expect(dto.payload.numberOfAnswers).toBe(5);
-    expect(dto.payload.instructions).toBe('Test instructions');
-    expect(dto.payload.answers).toEqual([1, 2, 3, 4, 5]);
+    expect(dto.payload.courseName).toBe('Course name');
+    expect(dto.payload.courseCode).toBe('Course code');
+    expect(dto.payload.examName).toBe('Exam name');
+    expect(dto.payload.answers).toStrictEqual([
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+    ]);
   });
 });

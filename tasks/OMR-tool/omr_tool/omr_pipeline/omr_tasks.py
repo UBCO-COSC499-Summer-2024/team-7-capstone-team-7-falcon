@@ -15,6 +15,7 @@ from omr_tool.omr_pipeline.identify_student import extract_and_highlight_student
 from object_inference.inferencer import Inferencer
 import cv2
 import numpy as np
+import logging
 
 """
 The primary sequence for OMR grading
@@ -31,13 +32,16 @@ def create_answer_key(key_imgs: list[Image]) -> list[dict]:
     Returns:
         list[dict]: A list of dictionaries containing the answer key.
     """
-    key_imgs = to_np_images(key_imgs)
     answer_key = []
-    first_question_in_page = 1
-    for img in key_imgs:
-        answer_key.extend(omr_on_key_image(img, first_question_in_page))
-        if answer_key != []:
-            first_question_in_page = answer_key[-1]["question_num"]+1
+    try:
+        key_imgs = to_np_images(key_imgs)
+        first_question_in_page = 1
+        for img in key_imgs:
+            answer_key.extend(omr_on_key_image(img, first_question_in_page))
+            if answer_key != []:
+                first_question_in_page = answer_key[-1]["question_num"]+1
+    except Exception as e:
+        logging.error(f"Error creating answer key: {e}")
     return answer_key
 
 
@@ -62,6 +66,9 @@ def mark_submission_group(
             - graded_img (PIL.Image): The graded image.
 
     """
+    if answer_key == []:
+        raise ValueError("Valid answer key is required for grading.")
+    
     submission_results: dict = {
         "student_id": "",
         "document_path": "",
@@ -71,8 +78,6 @@ def mark_submission_group(
 
     group_images = to_np_images(group_images)
 
-    if answer_key == []:
-        raise ValueError("Answer key is required for grading.")
 
     graded_images: list[Image] = []
     first_question_in_page = 1
@@ -103,11 +108,15 @@ def infer_bubble_objects(prepped_image: Image) -> tuple[list, list]:
     Returns:
         A tuple containing the flat list of question bounds and the student number section.
     """
-    inference_tool = Inferencer()
-    boxes, scores, classes = inference_tool.infer(prepped_image)
-    student_num_section, question_2d_list = identify_page_details(
-        inference_tool, boxes, classes
-    )
+    try:
+        inference_tool = Inferencer()
+        boxes, scores, classes = inference_tool.infer(prepped_image)
+        student_num_section, question_2d_list = identify_page_details(
+            inference_tool, boxes, classes
+        )
+    except Exception as e:
+        logging.error(f"Error during inference: {e}")
+        return [], None
 
     flat_question_list = [
         question_bounds for column in question_2d_list for question_bounds in column
@@ -157,12 +166,12 @@ def omr_on_submission_image(
     threshed_image = threshold_img(prepped_image)
 
     question_list, student_num_section = infer_bubble_objects(prepped_image)
-
+    logging.warning("Question List: %s", question_list)
     if student_num_section is not None:
         student_id, output_image = extract_and_highlight_student_id(
             threshed_image, student_num_section, output_image
         )
-
+    logging.warning("Student ID: %s", student_id)
     for i, question_bounds in enumerate(question_list):
         question_num = first_q_in_page + i
         roi_cropped = extract_roi(threshed_image, question_bounds)
@@ -237,10 +246,13 @@ def to_np_images(images: list[Image]) -> list[np.ndarray]:
     Returns:
         list: A list of NumPy arrays.
     """
-    if isinstance(images[0], np.ndarray):
-        np_images = images
-    else:
-        np_images = [np.array(img) for img in images]
+    try: 
+        if isinstance(images[0], np.ndarray):
+            np_images = images
+        else:
+            np_images = [np.array(img) for img in images]
+    except Exception as e:
+        logging.error(f"Error converting images to NumPy arrays: {e}")
     return np_images
 
 

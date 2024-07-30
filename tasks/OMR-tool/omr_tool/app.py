@@ -11,13 +11,18 @@ import logging
 
 load_dotenv()
 logging.basicConfig(
-    format="%(asctime)s >> %(message)s",
+    format="(%(funcName)s)[%(lineno)d] %(asctime)s >> %(message)s",
     datefmt="%m-%d-%Y %I:%M:%S %p",
     level=logging.INFO,
 )
 
 REQUEST_DELAY = 3
-
+RAW_FILE_PATH = (
+    Path(__file__).resolve().parents[3] / "backend" / "uploads" / "exams" / "raw"
+)
+PROCESSED_FILE_PATH = (
+    Path(__file__).resolve().parents[3] / "backend" / "uploads" / "exams" / "processed_submissions"
+)
 
 def request_job(backend_url, queue_name):
     # TODO: Consider moving to a shared module
@@ -122,17 +127,8 @@ def app():
 
             exam_id: str = payload.get("examId")
             course_id: str = payload.get("courseId")
-            answer_key_path: str = payload.get("folderName") + "/answer_key.pdf"
-            submission_path: str = payload.get("folderName") + "/submissions.pdf"
-
-            # output path where graded submission PDFs will be saved
-            sub_out_dir: str = (
-                Path(__file__).resolve().parents[3]
-                / "backend"
-                / "uploads"
-                / "exams"
-                / "processed_submissions"
-            )
+            answer_key_path: str = os.path.join(RAW_FILE_PATH, payload.get("folderName") + "/answer_key.pdf")
+            submission_path: str = os.path.join(RAW_FILE_PATH, payload.get("folderName") + "/submissions.pdf")
 
             # Generate an answer key from the answer key PDF (Should return a dict of answers)
             # Convert the answer key PDF to list of images
@@ -148,24 +144,29 @@ def app():
 
             for i in range(0, len(all_submission_images), num_pages_in_exam):
                 # for each student
-                group_images = all_submission_images[i : i + num_pages_in_exam]
+                try:
+                    group_images = all_submission_images[i : i + (num_pages_in_exam)]
+                except IndexError as e:
+                    logging.error(f"Number of submission pages not commensurate to the expected length of each submission: {e}")
+                    continue
                 submission_results, graded_imgs = mark_submission_group(
                     group_images, answer_key
                 )
-
                 # convert graded images to PDF and send "courseId_examId_studentId" file to backend (manually)
                 student_id = submission_results["student_id"]
                 output_pdf_path = convert_to_pdf(
-                    graded_imgs, sub_out_dir, f"{course_id}_{exam_id}_{student_id}"
+                    graded_imgs, PROCESSED_FILE_PATH, f"{course_id}_{exam_id}_{student_id}"
                 )
                 submission_results["document_path"] = output_pdf_path
+
+
 
                 # send grades to backend
                 send_grades(backend_url, exam_id, submission_results)
 
                 # ---
 
-            complete_job(backend_url, queue_name, job_id, unique_id)
+            complete_job(backend_url, queue_name, job_id, unique_id) #TODO: what is unique ID?
         except requests.exceptions.RequestException:
             logging.critical("Cannot connect to the backend")
             continue
@@ -174,4 +175,8 @@ def app():
             continue
 
 if __name__ == "__main__":
-    app()
+    try: 
+        app()
+    except KeyboardInterrupt:
+        logging.info("Exited Manually via KeyboardInterrupt...")
+        exit(0)

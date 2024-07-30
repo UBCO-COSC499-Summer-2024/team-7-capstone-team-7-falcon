@@ -10,6 +10,7 @@ from omr_tool.utils.image_process import (
     extract_roi,
     draw_bubble_contours,
     threshold_img,
+    highlight_error_region
 )
 from omr_tool.omr_pipeline.identify_student import extract_and_highlight_student_id
 from object_inference.inferencer import Inferencer
@@ -144,7 +145,7 @@ def omr_on_key_image(input_image: Image, first_q_in_page: int) -> list[dict]:
 
 
 def omr_on_submission_image(
-    input_image: Image, answer_key=[], student_id="", errorFlag=False, first_q_in_page=1
+    input_image: Image, answer_key=[], student_id="", errorFlag=False, first_q_in_page=1, bubbles_per_q=5
 ) -> tuple[str, int, list[dict], Image, bool]:
     """
     Processes a submission image to extract and evaluate answers, and grade the submission.
@@ -166,23 +167,31 @@ def omr_on_submission_image(
     threshed_image = threshold_img(prepped_image)
 
     question_list, student_num_section = infer_bubble_objects(prepped_image)
-    logging.warning("Question List: %s", question_list)
     if student_num_section is not None:
         student_id, output_image = extract_and_highlight_student_id(
             threshed_image, student_num_section, output_image
         )
-    logging.warning("Student ID: %s", student_id)
     for i, question_bounds in enumerate(question_list):
         question_num = first_q_in_page + i
         roi_cropped = extract_roi(threshed_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
+        
         color, correct_answers, question_result = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )
-        for idx in correct_answers:
-            output_image = draw_bubble_contours(
-                output_image, bubble_contours[idx], question_bounds, color
-            )
+        if len(bubble_contours) != bubbles_per_q:
+            logging.error(f"Error: Incorrect number of bubble contours: {len(bubble_contours)}")
+            output_image = highlight_error_region(image=output_image, question_bounds=question_bounds)
+            errorFlag = True
+        else:
+            for idx in correct_answers:
+                logging.info(f"Correct answer: {idx}, {correct_answers}, {question_num}, bubble_contours: {len(bubble_contours)}")
+                try:
+                    output_image = draw_bubble_contours(
+                        output_image, bubble_contours[idx], question_bounds, color
+                    )
+                except Exception as e:
+                    logging.error(f"Error drawing bubble contours: {e}, {idx}")
         if question_result["expected"] == question_result["answered"]:
             question_result["score"] = 1
             total_score += question_result["score"]
@@ -261,7 +270,7 @@ if __name__ == "__main__":
     from omr_tool.utils.pdf_to_images import convert_to_images
 
     sheet_path = (
-        Path(__file__).resolve().parents[2] / "fixtures" / "ubc_submission_200.pdf"
+        Path(__file__).resolve().parents[2] / "fixtures" / "submission_14-page_1.jpg"
     )
 
     images = convert_to_images(sheet_path)

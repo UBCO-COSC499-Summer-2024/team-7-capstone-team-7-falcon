@@ -252,6 +252,14 @@ def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2)
     return output_image
 
+def highlight_error_region(image, question_bounds, message=""):
+    output_image = image.copy()
+    x1, y1, x2, y2 = question_bounds
+    cv2.rectangle(output_image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+    if message:
+        cv2.putText(output_image, message, (x1, y1 - 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    return output_image
+    
 
 def extract_roi(image, question_bounds):
     """

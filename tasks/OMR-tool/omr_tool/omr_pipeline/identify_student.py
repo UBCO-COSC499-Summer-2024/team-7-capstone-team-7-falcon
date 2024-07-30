@@ -1,6 +1,6 @@
 import cv2
 from numpy import arange, zeros
-from omr_tool.utils.image_process import threshold_img, extract_roi, draw_bubble_contours, generate_bubble_contours
+from omr_tool.utils.image_process import extract_roi, draw_bubble_contours, generate_bubble_contours, highlight_error_region
 
 def extract_and_highlight_student_id(prepped_image, student_num_section, output_image):
     x1, y1, x2, y2 = map(int, student_num_section)

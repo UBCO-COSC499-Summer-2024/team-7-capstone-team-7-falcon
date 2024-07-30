@@ -167,7 +167,7 @@ describe('ExamService', () => {
 
         exam.submissions.push(submission);
       }
-      exam.save();
+      await exam.save();
 
       const submissions = await examService.getSubmissionsByExamId(exam.id);
 
@@ -2314,7 +2314,7 @@ describe('ExamService', () => {
       }).save();
 
       exam.submissions.push(submission);
-      exam.save();
+      await exam.save();
 
       const submissions = await examService.getSubmissionById(
         course.id,
@@ -2375,7 +2375,7 @@ describe('ExamService', () => {
       }).save();
 
       exam.submissions.push(submission);
-      exam.save();
+      await exam.save();
 
       const submissions = await examService.getSubmissionById(
         course.id,

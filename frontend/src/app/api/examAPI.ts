@@ -6,6 +6,7 @@ import {
   ExamData,
   StudentSubmission,
 } from "../typings/backendDataTypes";
+import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -440,6 +441,174 @@ export const examsAPI = {
       return response;
     } catch (error: any) {
       return error;
+    }
+  },
+
+  /**
+   * Create a dispute for a submission
+   * @param submissionId {number} - submission id
+   * @param courseId {number} - course id
+   * @param description {string} - description of dispute
+   * @returns {Promise<any | Error>}
+   */
+  async createSubmissionDispute(
+    submissionId: number,
+    courseId: number,
+    description: string,
+  ): Promise<any | Error> {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.post(
+        `/${courseId}/submission/${submissionId}/dispute`,
+        {
+          description,
+        },
+      );
+      return response;
+    } catch (error: any) {
+      return error;
+    }
+  },
+
+  /**
+   * Get all disputes submissions for an exam
+   * @param courseId {number} - course id
+   * @param examId {number} - exam id
+   * @returns {Promise<any | Error>}
+   */
+  async getExamSubmissionsDisputes(
+    courseId: number,
+    examId: number,
+  ): Promise<any | Error> {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `/${examId}/${courseId}/submissions_disputes`,
+      );
+      return response;
+    } catch (error: any) {
+      return error;
+    }
+  },
+
+  /**
+   * Get a submission dispute for an exam
+   * @param courseId {number} - course id
+   * @param disputeId {number} - dispute id
+   * @returns {Promise<any | Error>} - response
+   */
+  async getExamSubmissionDispute(
+    courseId: number,
+    disputeId: number,
+  ): Promise<any | Error> {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.get(
+        `/${courseId}/${disputeId}/exam_submission_dispute`,
+      );
+      return response;
+    } catch (error: any) {
+      return error;
+    }
+  },
+
+  /**
+   * Update the status of a dispute
+   * @param courseId {number} - course id
+   * @param disputeId {number} - dispute id
+   * @param status {string} - status
+   * @returns {Promise<any | Error>} - response
+   */
+  async updateExamSubmissionDisputeStatus(
+    courseId: number,
+    disputeId: number,
+    status: string,
+  ): Promise<any | Error> {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.patch(
+        `/${courseId}/${disputeId}/update_dispute_status`,
+        {
+          status,
+        },
+      );
+      return response;
+    } catch (error: any) {
+      return error;
+    }
+  },
+
+  /**
+   * Updates the grade for a user submission
+   * @param examId
+   * @param courseId
+   * @param submissionId
+   * @param newGrade
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  updateGrade: async (
+    examId: number,
+    courseId: number,
+    submissionId: number,
+    newGrade: number,
+  ) => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const payload = {
+        grade: newGrade,
+      };
+
+      const response = await instance.patch(
+        `${examId}/course/${courseId}/submission/${submissionId}/grade`,
+        payload,
+      );
+      toast.success("Grade updated!");
+      return response;
+    } catch (error: any) {
+      //always axios error
+      toast.error("Failed to update grade");
+      console.error("Failed to update grade: ", error);
     }
   },
 };

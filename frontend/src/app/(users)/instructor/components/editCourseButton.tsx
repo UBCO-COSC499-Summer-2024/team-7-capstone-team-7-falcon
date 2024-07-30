@@ -1,10 +1,19 @@
+"use client";
 import { Edit } from "flowbite-react-icons/solid";
 import Link from "next/link";
+import React from "react";
 
-const EditCourseButton: React.FC = () => {
+interface EditCourseButtonProps {
+  courseId: number;
+}
+
+const EditCourseButton: React.FC<EditCourseButtonProps> = ({ courseId }) => {
   return (
     <button type="button" className="btn-primary">
-      <Link href={""} className="space-x-4 flex items-center">
+      <Link
+        href={`/instructor/course/${courseId}/edit-course`}
+        className="space-x-4 flex items-center"
+      >
         <Edit />
         Course Settings
       </Link>

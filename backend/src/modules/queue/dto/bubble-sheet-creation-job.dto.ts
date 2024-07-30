@@ -3,12 +3,15 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
+  MaxLength,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { IBubbleSheetPayload } from '../../../common/interfaces';
 import 'reflect-metadata';
+import { ERROR_MESSAGES } from '../../../common';
+import { Is2DNumberArray } from '../../../decorators/is-2d-number-array';
 
 /**
  * Data transfer object for the BubbleSheetPayload
@@ -24,11 +27,19 @@ class BubbleSheetPayloadDto implements IBubbleSheetPayload {
   numberOfAnswers!: number;
 
   @IsString()
-  instructions!: string;
+  courseName!: string;
+
+  @IsString()
+  courseCode!: string;
+
+  @IsString()
+  @MinLength(1)
+  @MaxLength(46, { message: ERROR_MESSAGES.examController.examNameTooLong })
+  examName!: string;
 
   @IsArray()
-  @IsNumber({}, { each: true })
-  answers!: number[];
+  @Is2DNumberArray({ message: ERROR_MESSAGES.common.invalid2DArray })
+  answers!: number[][];
 }
 
 /**

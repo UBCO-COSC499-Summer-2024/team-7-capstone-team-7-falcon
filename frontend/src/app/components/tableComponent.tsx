@@ -17,18 +17,22 @@ import { useState } from "react";
 import { Column } from "./type";
 import { DataItem } from "./type";
 import { MdOutlineSearch } from "react-icons/md";
-import { Label, TextInput, Button } from "flowbite-react";
+import { TextInput } from "flowbite-react";
 
 type TableComponentProps<T> = {
   data: DataItem<T>[];
   columns: Column[];
   showSearch?: boolean;
+  showPagination?: boolean;
+  inputPlaceholderText?: string;
 };
 
 const TableComponent = <T,>({
   data,
   columns,
   showSearch = true,
+  showPagination = true,
+  inputPlaceholderText = "Search by name",
 }: TableComponentProps<T>) => {
   const theme = useTheme(getTheme());
   const [search, setSearch] = React.useState("");
@@ -38,7 +42,12 @@ const TableComponent = <T,>({
   const onPageChange = (page: number) => setCurrentPage(page);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
     setSearch(event.target.value);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
   };
 
   const filteredData = data.filter(
@@ -54,7 +63,10 @@ const TableComponent = <T,>({
   return (
     <div className="container flex flex-col">
       {showSearch && (
-        <form className="flex max-w-full flex-col">
+        <form
+          className="flex max-w-full flex-col"
+          onSubmit={(event) => handleSubmit(event)}
+        >
           <div className="grid grid-cols-2 gap-4">
             <TextInput
               id="search"
@@ -62,7 +74,7 @@ const TableComponent = <T,>({
               value={search}
               icon={MdOutlineSearch}
               onChange={handleSearch}
-              placeholder="Search by name"
+              placeholder={inputPlaceholderText}
             />
           </div>
         </form>
@@ -96,14 +108,16 @@ const TableComponent = <T,>({
           )}
         </Table>
       </div>
-      <div className="flex overflow-x-auto sm:justify-center">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-          showIcons
-        />
-      </div>
+      {showPagination && (
+        <div className="flex overflow-x-auto sm:justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            showIcons
+          />
+        </div>
+      )}
     </div>
   );
 };

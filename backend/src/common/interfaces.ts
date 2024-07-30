@@ -27,7 +27,6 @@ export interface IBubbleSheetPayload {
   numberOfQuestions: number;
   defaultPointsPerQuestion: number;
   numberOfAnswers: number;
-  instructions: string;
 }
 
 /**
@@ -166,4 +165,13 @@ export interface CourseDetailsInterface {
     firstName: string;
     lastName: string;
   };
+}
+
+/**
+ * Exam submissions with disputes count interface
+ */
+export interface ExamSubmissionsDisputesInterface {
+  examId: number;
+  examName: string;
+  numberOfDisputes: number;
 }

@@ -68,6 +68,23 @@ ExamModel {
 }
 `;
 
+exports[`ExamService createSubmissionDisputeBySubmissionId should create a submission dispute 1`] = `
+SubmissionDisputeModel {
+  "description": "Dispute",
+  "id": 1,
+  "resolved_at": null,
+  "status": "CREATED",
+  "submission": SubmissionModel {
+    "answers": {},
+    "created_at": "1000000000",
+    "document_path": "path",
+    "id": 1,
+    "score": 23,
+    "updated_at": "1000000000",
+  },
+}
+`;
+
 exports[`ExamService getExamById should return an exam by id 1`] = `
 ExamModel {
   "created_at": "1000000000",
@@ -109,6 +126,61 @@ exports[`ExamService getExamGradedSubmissionByUser should return graded submissi
     "score": 10,
   },
 }
+`;
+
+exports[`ExamService getExamSubmissionsDisputesByExamId should return all disputes for an exam 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "id": 1,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 2,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 3,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 4,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 5,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 6,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 7,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 8,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 9,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 10,
+    "status": "CREATED",
+  },
+]
 `;
 
 exports[`ExamService getExamsByCourseId should return course exams from first page 1`] = `
@@ -413,6 +485,34 @@ exports[`ExamService getGradedSubmissionsByUser should return graded submissions
     ],
   },
 ]
+`;
+
+exports[`ExamService getSubmissionDisputeByDisputeId should return the submission dispute 1`] = `
+{
+  "created_at": "1000000000",
+  "description": "Dispute",
+  "id": 1,
+  "resolved_at": null,
+  "status": "CREATED",
+  "submission": {
+    "answers": {},
+    "created_at": "1000000000",
+    "document_path": "path",
+    "id": 1,
+    "score": 23,
+    "student": {
+      "id": undefined,
+      "student_id": undefined,
+      "user": {
+        "first_name": undefined,
+        "id": undefined,
+        "last_name": undefined,
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  "updated_at": "1000000000",
+}
 `;
 
 exports[`ExamService getSubmissionsByExamId should return submissions by exam id 1`] = `

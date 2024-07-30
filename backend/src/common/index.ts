@@ -11,6 +11,7 @@ export const ERROR_MESSAGES = {
     emailRequired: 'Email is required',
     emailInvalid: 'Email is invalid',
     fileNotFound: 'File not found',
+    invalid2DArray: 'Answers array must be a 2D array of numbers',
   },
   userRoleDto: {
     userRoleInvalid: 'User role is invalid',
@@ -91,6 +92,7 @@ export const ERROR_MESSAGES = {
   },
   examController: {
     examDateError: 'Exam date must be in the future',
+    examNameTooLong: 'Exam name is too long',
     noUpcomingExamsFound: 'No upcoming exams found',
     noGradedExamsFound: 'No graded exams found',
     examNotFound: 'Exam not found',
@@ -100,6 +102,10 @@ export const ERROR_MESSAGES = {
     examFilesAlreadyUploaded: 'Exam files have already been uploaded',
     examFilesInvalid: 'Exam files are invalid, make sure they are PDFs',
     examFilesMissing: 'Answer key and submission file are required',
+    disputeAlreadyExists: 'Dispute already exists for this submission',
+    submissionDoesNotBelongToUser: 'Submission does not belong to user',
+    disputesNotFound: 'Disputes not found',
+    disputeNotFound: 'Dispute not found',
   },
   submissionController: {
     submissionNotFound: 'Submission not found',

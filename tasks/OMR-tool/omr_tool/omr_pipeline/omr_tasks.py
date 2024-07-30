@@ -182,12 +182,10 @@ def omr_on_submission_image(
             roi_cropped, bubble_contours, answer_key, question_num
         )
         if len(bubble_contours) != bubbles_per_q:
-            logging.error(f"Error: Incorrect number of bubble contours: {len(bubble_contours)}")
             output_image = highlight_error_region(image=output_image, question_bounds=question_bounds)
             errorFlag = True
         else:
             for idx in correct_answers:
-                logging.info(f"Correct answer: {idx}, {correct_answers}, {question_num}, bubble_contours: {len(bubble_contours)}")
                 try:
                     output_image = draw_bubble_contours(
                         output_image, bubble_contours[idx], question_bounds, color
@@ -303,6 +301,7 @@ if __name__ == "__main__":
     answer_key = create_answer_key(images)
     submission_results, graded_images = mark_submission_group(images, answer_key)
     print(submission_results)
+    graded_images = to_np_images(graded_images)
     for img in graded_images:
         cv2.imshow("graded", cv2.resize(img, (800, 1000)))
         cv2.waitKey(0)

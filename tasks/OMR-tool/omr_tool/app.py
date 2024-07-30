@@ -1,3 +1,4 @@
+import time
 from PIL.Image import Image
 from omr_tool.omr_pipeline.omr_tasks import create_answer_key, mark_submission_group
 from omr_tool.utils.pdf_to_images import convert_to_images
@@ -7,7 +8,6 @@ import requests
 import os
 from dotenv import load_dotenv
 import logging
-import cv2
 
 load_dotenv()
 logging.basicConfig(
@@ -15,6 +15,8 @@ logging.basicConfig(
     datefmt="%m-%d-%Y %I:%M:%S %p",
     level=logging.INFO,
 )
+
+REQUEST_DELAY = 3
 
 
 def request_job(backend_url, queue_name):
@@ -51,7 +53,7 @@ def request_job(backend_url, queue_name):
     return job_id, payload
 
 
-def complete_job(backend_url, queue_name, job_id, unique_id):
+def complete_job(backend_url, queue_name, job_id, unique_id):   
     # TODO: Consider moving to a shared module
     """Complete a job by sending a PATCH request to the backend
 
@@ -107,57 +109,69 @@ def app():
 
     backend_url = os.getenv("BACKEND_URL")
     queue_name = os.getenv("QUEUE_NAME")
+    while True:
+        try:
+            time.sleep(REQUEST_DELAY)
 
-    # Receive files and exam info from the backend
-    # The answer sheet and submissions will be saved in the same folder
-    job_id, payload = request_job(backend_url, queue_name)
-    exam_id: str = payload.get("examId")
-    course_id: str = payload.get("courseId")
-    answer_key_path: str = payload.get("folderName")
-    submission_path: str = payload.get("folderName")
+            # Receive files and exam info from the backend
+            # The answer sheet and submissions will be saved in the same folder
+            job_id, payload = request_job(backend_url, queue_name)
 
-    # output path where graded submission PDFs will be saved
-    sub_out_dir: str = (
-        Path(__file__).resolve().parents[3]
-        / "backend"
-        / "uploads"
-        / "exams"
-        / "processed_submissions"
-    )
+            if not job_id or not payload:
+                continue
 
-    # Generate an answer key from the answer key PDF (Should return a dict of answers)
-    # Convert the answer key PDF to list of images
-    # Process each image in the list with the OMR pipeline. Should return a dict of answers
-    answer_key_imgs: list[Image] = convert_to_images(answer_key_path)
-    answer_key: dict = create_answer_key(answer_key_imgs)
-    num_pages_in_exam: int = len(answer_key_imgs)
+            exam_id: str = payload.get("examId")
+            course_id: str = payload.get("courseId")
+            answer_key_path: str = payload.get("folderName") + "/answer_key.pdf"
+            submission_path: str = payload.get("folderName") + "/submissions.pdf"
 
-    # Process the submissions
-    # Process each image in the list with the OMR pipeline. Should return a dict of grades and a list of combined images per user
-    # (e.g. 2 pages spliced into one img per user)
-    all_submission_images: list[Image] = convert_to_images(submission_path)
+            # output path where graded submission PDFs will be saved
+            sub_out_dir: str = (
+                Path(__file__).resolve().parents[3]
+                / "backend"
+                / "uploads"
+                / "exams"
+                / "processed_submissions"
+            )
 
-    for i in range(0, len(all_submission_images), num_pages_in_exam):
-        # for each student
-        group_images = all_submission_images[i : i + num_pages_in_exam]
-        submission_results, graded_imgs = mark_submission_group(
-            group_images, answer_key
-        )
+            # Generate an answer key from the answer key PDF (Should return a dict of answers)
+            # Convert the answer key PDF to list of images
+            # Process each image in the list with the OMR pipeline. Should return a dict of answers
+            answer_key_imgs: list[Image] = convert_to_images(answer_key_path)
+            answer_key: dict = create_answer_key(answer_key_imgs)
+            num_pages_in_exam: int = len(answer_key_imgs)
 
-        # convert graded images to PDF and send "courseId_examId_studentId" file to backend (manually)
-        student_id = submission_results["student_id"]
-        output_pdf_path = convert_to_pdf(
-            graded_imgs, sub_out_dir, f"{course_id}_{exam_id}_{student_id}"
-        )
-        submission_results["document_path"] = output_pdf_path
+            # Process the submissions
+            # Process each image in the list with the OMR pipeline. Should return a dict of grades and a list of combined images per user
+            # (e.g. 2 pages spliced into one img per user)
+            all_submission_images: list[Image] = convert_to_images(submission_path)
 
-        # send grades to backend
-        send_grades(backend_url, exam_id, submission_results)
+            for i in range(0, len(all_submission_images), num_pages_in_exam):
+                # for each student
+                group_images = all_submission_images[i : i + num_pages_in_exam]
+                submission_results, graded_imgs = mark_submission_group(
+                    group_images, answer_key
+                )
 
-        # ---
+                # convert graded images to PDF and send "courseId_examId_studentId" file to backend (manually)
+                student_id = submission_results["student_id"]
+                output_pdf_path = convert_to_pdf(
+                    graded_imgs, sub_out_dir, f"{course_id}_{exam_id}_{student_id}"
+                )
+                submission_results["document_path"] = output_pdf_path
 
-    complete_job(backend_url, queue_name, job_id, unique_id)
+                # send grades to backend
+                send_grades(backend_url, exam_id, submission_results)
 
+                # ---
+
+            complete_job(backend_url, queue_name, job_id, unique_id)
+        except requests.exceptions.RequestException:
+            logging.critical("Cannot connect to the backend")
+            continue
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+            continue
 
 if __name__ == "__main__":
     app()

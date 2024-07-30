@@ -1,4 +1,4 @@
-from PIL.Image import Image
+from PIL.Image import Image, fromarray
 from omr_tool.omr_pipeline.read_bubbles import (
     find_filled_bubbles,
     order_questions,
@@ -95,6 +95,8 @@ def mark_submission_group(
         graded_images.append(graded_img)
         if answers != []:
             first_question_in_page = answers[-1]["question_num"]+1
+
+    graded_images = to_PIL_images(graded_images)
 
     return submission_results, graded_images
 
@@ -265,6 +267,27 @@ def to_np_images(images: list[Image]) -> list[np.ndarray]:
     except Exception as e:
         logging.error(f"Error converting images to NumPy arrays: {e}")
     return np_images
+
+def to_PIL_images(images: list[np.ndarray]) -> list[Image]:  
+    """
+    Converts a list of NumPy arrays to a list of PIL.Image objects if necessary
+
+    NOTE: this converts the CV2 BGR color space to RGB as a side effect
+
+    Args:
+        images (list): A list of NumPy arrays.
+
+    Returns:
+        list: A list of PIL.Image objects.
+    """
+    try: 
+        if isinstance(images[0], Image):
+            pil_images = images
+        else:
+            pil_images = [fromarray(img) for img in images]
+    except Exception as e:
+        logging.error(f"Error converting images to PIL.Image objects: {e}")
+    return pil_images
 
 
 if __name__ == "__main__":

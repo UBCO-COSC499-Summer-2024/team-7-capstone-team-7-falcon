@@ -1,3 +1,21 @@
+/**
+ * User submission exam answer interface
+ */
+interface UserSubmissionExamAnswer {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}
+
+/**
+ * User submission exam answers interface
+ */
+interface UserSubmissionExamAnswers {
+  errorFlag: boolean;
+  answer_list: UserSubmissionExamAnswer[];
+}
+
 export interface CourseData {
   id?: number;
   course_code: string;
@@ -102,7 +120,7 @@ export interface Submission {
     first_name: string;
     last_name: string;
   };
-  answers: JSON;
+  answers: UserSubmissionExamAnswers;
   score: number;
   updated_at: number;
   submission_id: string;
@@ -259,10 +277,7 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
-  answers: {
-    errorFlag: boolean;
-    answer_list: JSON[];
-  };
+  answers: UserSubmissionExamAnswers;
 }
 
 export interface AnalyticsExamSubmission {

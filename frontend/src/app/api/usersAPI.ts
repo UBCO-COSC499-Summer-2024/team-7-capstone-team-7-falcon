@@ -215,7 +215,6 @@ export const usersAPI = {
   editUser: async (userId: number, userData: UserEditData) => {
     try {
       const auth_token = await fetchAuthToken();
-
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/user/`,
         headers: {

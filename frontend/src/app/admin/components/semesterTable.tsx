@@ -40,7 +40,9 @@ const SemesterTable: React.FC = () => {
     const fetchData = async () => {
       const result = await semestersAPI.getAllSemesters();
 
-      const semesters: DataItem<SemesterData>[] = result.map(
+      if (result.status === 204) return;
+
+      const semesters: DataItem<SemesterData>[] = result.data.map(
         (item: SemesterData) => ({
           id: item.id,
           name: item.name,

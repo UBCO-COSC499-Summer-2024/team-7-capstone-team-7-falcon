@@ -41,6 +41,13 @@ export interface CourseAdminDetails {
   };
 }
 
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
+
 export interface StudentUser {
   student_id: number;
   id: number;
@@ -49,13 +56,6 @@ export interface StudentUser {
 export interface EmployeeUser {
   employee_id: number;
   id: number;
-}
-
-export interface CourseEditData {
-  courseCode: string;
-  courseName: string;
-  semesterId: number;
-  inviteCode: string;
 }
 
 export interface User {
@@ -280,16 +280,6 @@ export interface StudentSubmission {
   answers: UserSubmissionExamAnswers;
 }
 
-export interface AnalyticsExamSubmission {
-  student: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    submissionScore: number;
-    avatarUrl: string;
-  };
-}
-
 export interface AnalyticsSubmission {
   exam: {
     id: number;
@@ -347,4 +337,21 @@ export interface UserEditData {
   last_name: string;
   student_id: number;
   employee_id: number;
+}
+
+export interface SemesterData {
+  name: string;
+  starts_at: number;
+  ends_at: number;
+  course_count?: number;
+}
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
 }

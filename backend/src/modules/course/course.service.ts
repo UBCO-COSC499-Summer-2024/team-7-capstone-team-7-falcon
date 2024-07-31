@@ -18,10 +18,14 @@ import { PageMetaDto } from '../../dto/page-meta.dto';
 import { PageDto } from '../../dto/page.dto';
 import { ERROR_MESSAGES } from '../../common';
 import { CourseEditDto } from './dto/course-edit.dto';
+<<<<<<< HEAD
 import {
   CourseDetailsInterface,
   ExamSubmissionsDisputesInterface,
 } from 'src/common/interfaces';
+=======
+import { CourseDetailsInterface } from 'src/common/interfaces';
+>>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
 import { SubmissionModel } from '../exam/entities/submission.entity';
 import { ExamModel } from '../exam/entities/exam.entity';
 import { CourseAnalyticsResponseInterface } from '../../common/interfaces';
@@ -440,6 +444,7 @@ export class CourseService {
 
     return courses;
   }
+<<<<<<< HEAD
 
   /**
    * Get exams with submissions disputes by course id
@@ -482,4 +487,6 @@ export class CourseService {
 
     return modifiedResult;
   }
+=======
+>>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
 }

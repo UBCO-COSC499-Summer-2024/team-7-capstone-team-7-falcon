@@ -1,8 +1,10 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { User, UserEditData } from "@/app/typings/backendDataTypes";
-import { UpdatedUser } from "../typings/backendDataTypes";
-import { Toast } from "flowbite-react";
+import {
+  UpdatedUser,
+  User,
+  UserEditData,
+} from "@/app/typings/backendDataTypes";
 import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;

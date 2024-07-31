@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Edit } from "flowbite-react-icons/solid";
 import CreateSemesterForm from "../components/createSemesterForm";
 import { Status } from "../../typings/backendDataTypes";
-import SemesterTable from "../components/semesterTable";
 import { Toaster } from "react-hot-toast";
+import SemesterTable from "../components/semesterTable";
 
 /**
  * Renders the admin semester management page.

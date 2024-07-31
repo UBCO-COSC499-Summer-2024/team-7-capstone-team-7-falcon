@@ -103,6 +103,24 @@ interface UserSubmissionExamDetailsInterface {
 }
 
 /**
+ * User submission exam answer interface
+ */
+interface UserSubmissionExamAnswerInterface {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}
+
+/**
+ * User submission exam answers interface
+ */
+export interface UserSubmissionExamAnswersInterface {
+  errorFlag: boolean;
+  answer_list: UserSubmissionExamAnswerInterface[];
+}
+
+/**
  * User submission exam interface
  */
 export interface UserSubmissionExamInterface {
@@ -110,7 +128,7 @@ export interface UserSubmissionExamInterface {
   course: UserSubmissionExamCourseDetailsInterface;
   grades?: number[];
   studentSubmission: UserSubmissionExamStudentSubmissionInterface;
-  answers?: JSON;
+  answers?: UserSubmissionExamAnswersInterface;
 }
 
 /**

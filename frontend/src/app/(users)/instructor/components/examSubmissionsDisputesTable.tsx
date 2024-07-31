@@ -60,7 +60,7 @@ const ExamSubmissionsDisputesTable: React.FC<ExamDisputesTableProps> = ({
         examId,
       );
 
-      const disputes: DataItem<ExamSubmissionsDisputes>[] = result.data.map(
+      const disputes: DataItem<ExamSubmissionsDisputes>[] = result.data?.map(
         (item: ExamSubmissionsDisputes) => ({
           id: item.id,
           name: `${item.id}`,

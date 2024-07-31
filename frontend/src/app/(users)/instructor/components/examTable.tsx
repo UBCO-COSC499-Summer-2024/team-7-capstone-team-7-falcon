@@ -65,9 +65,11 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
             data: {
               name: item.name,
               exam_date: new Date(Number(item.exam_date)).toLocaleString(),
-              grades_released_at: item.grades_released_at
-                ? new Date(Number(item.grades_released_at)).toLocaleString()
-                : null,
+              grades_released_at:
+                item.grades_released_at &&
+                Number(item.grades_released_at) !== -1
+                  ? new Date(Number(item.grades_released_at)).toLocaleString()
+                  : null,
               id: item.id,
             },
           }),
@@ -83,9 +85,10 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
           data: {
             name: item.name,
             exam_date: new Date(Number(item.exam_date)).toLocaleString(),
-            grades_released_at: item.grades_released_at
-              ? new Date(Number(item.grades_released_at)).toLocaleString()
-              : null,
+            grades_released_at:
+              item.grades_released_at && Number(item.grades_released_at) !== -1
+                ? new Date(Number(item.grades_released_at)).toLocaleString()
+                : null,
             id: item.id,
           },
         }));
@@ -101,9 +104,11 @@ const ExamTable: React.FC<ExamTableProps> = ({ course_id }) => {
             data: {
               name: item.name,
               exam_date: new Date(Number(item.exam_date)).toLocaleString(),
-              grades_released_at: item.grades_released_at
-                ? new Date(Number(item.grades_released_at)).toLocaleString()
-                : null,
+              grades_released_at:
+                item.grades_released_at &&
+                Number(item.grades_released_at) !== -1
+                  ? new Date(Number(item.grades_released_at)).toLocaleString()
+                  : null,
               id: item.id,
             },
           }),

@@ -7,6 +7,7 @@ interface ChangeGradeProps {
   courseId: number;
   submissionId: number;
   currentGrade: number;
+  disabled?: boolean;
 }
 
 const ChangeGrade: React.FC<ChangeGradeProps> = ({
@@ -14,6 +15,7 @@ const ChangeGrade: React.FC<ChangeGradeProps> = ({
   courseId,
   submissionId,
   currentGrade,
+  disabled = false,
 }) => {
   const [grade, setGrade] = useState(currentGrade);
 
@@ -40,7 +42,8 @@ const ChangeGrade: React.FC<ChangeGradeProps> = ({
         value={grade}
         onChange={handleInputChange}
         onKeyDown={handleKeyPress}
-        className="border p-2"
+        className={`border p-2 ${disabled ? "bg-gray-100" : "bg-white"}`}
+        disabled={disabled}
       />
     </>
   );

@@ -7,6 +7,8 @@ import {
   ExamNotFoundException,
   ExamUploadException,
   SubmissionNotFoundException,
+  UpdateSubmissionException,
+  UserNotFoundException,
   UserSubmissionNotFound,
 } from '../../common/errors';
 import { ERROR_MESSAGES } from '../../common';
@@ -147,9 +149,10 @@ export class ExamService {
         score: submission.score,
         created_at: submission.created_at,
         updated_at: submission.updated_at,
+        answers: submission.answers,
         student: {
           ...submission.student,
-          user: pick(submission.student.user, [
+          user: pick(submission.student?.user, [
             'id',
             'first_name',
             'last_name',
@@ -331,7 +334,7 @@ export class ExamService {
     }
 
     const currentStudentSubmission = exam.submissions.filter((submission) => {
-      return submission.student.user.id === user.id;
+      return submission.student?.user?.id === user.id;
     });
 
     if (currentStudentSubmission.length === 0) {
@@ -356,6 +359,7 @@ export class ExamService {
       grades: exam.submissions.map((submission: SubmissionModel) =>
         Number(submission.score),
       ),
+      answers: currentStudentSubmission[0].answers,
     };
 
     return modifiedResponse;
@@ -785,5 +789,149 @@ export class ExamService {
     } as SubmissionDisputeModel;
 
     return modifiedResponse;
+  }
+
+  /**
+   * Get submission by id
+   * @param courseId {number} - Course id
+   * @param submissionId {number} - Submission id
+   * @returns {Promise<UserSubmissionExamInterface>} - User submission exam interface
+   */
+  async getSubmissionById(
+    courseId: number,
+    submissionId: number,
+  ): Promise<UserSubmissionExamInterface> {
+    const exam = await ExamModel.findOne({
+      where: {
+        course: {
+          id: courseId,
+          is_archived: false,
+        },
+        submissions: {
+          id: submissionId,
+        },
+      },
+      order: {
+        submissions: {
+          score: 'ASC',
+        },
+      },
+      relations: [
+        'course',
+        'submissions',
+        'submissions.student',
+        'submissions.student.user',
+      ],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    const currentSubmission = exam.submissions.filter((submission) => {
+      return submission.id === submissionId;
+    });
+
+    const modifiedResponse: UserSubmissionExamInterface = {
+      exam: {
+        id: exam.id,
+        name: exam.name,
+        examDate: exam.exam_date,
+      },
+      studentSubmission: {
+        id: currentSubmission[0].id,
+        score: currentSubmission[0].score,
+        hasStudent: currentSubmission[0].student !== null,
+      },
+      course: {
+        id: exam.course.id,
+        courseName: exam.course.course_name,
+        courseCode: exam.course.course_code,
+      },
+      grades: exam.submissions.map((submission: SubmissionModel) =>
+        Number(submission.score),
+      ),
+      answers: currentSubmission[0].answers,
+    };
+
+    return modifiedResponse;
+  }
+
+  /**
+   * Update submission user by user id
+   * @param submissionId {number} - Submission id
+   * @param studentUserId {number} - Student user id
+   * @param courseId {number} - Course id
+   * @returns {Promise<void>} - Promise of void
+   */
+  async updateSubmissionUserByUserId(
+    submissionId: number,
+    studentUserId: number,
+    courseId: number,
+  ): Promise<void> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: submissionId,
+      },
+      relations: ['student', 'student.user', 'exam'],
+    });
+
+    if (!submission) {
+      throw new SubmissionNotFoundException();
+    }
+
+    if (Number(submission.student?.student_id) === studentUserId) {
+      throw new UpdateSubmissionException(
+        ERROR_MESSAGES.examController.userAlreadyAssignedToThisSubmission,
+      );
+    }
+
+    const isStudentAlreadyAssignedToSubmission = await ExamModel.findOne({
+      where: {
+        id: submission.exam?.id,
+        submissions: {
+          student: {
+            student_id: studentUserId,
+          },
+        },
+      },
+      relations: ['submissions', 'submissions.student'],
+    });
+
+    if (isStudentAlreadyAssignedToSubmission) {
+      throw new UpdateSubmissionException(
+        ERROR_MESSAGES.examController.userAlreadyAssignedToSubmission,
+      );
+    }
+
+    const student = await StudentUserModel.findOne({
+      where: {
+        student_id: studentUserId,
+        user: {
+          courses: {
+            course: {
+              id: courseId,
+              is_archived: false,
+              exams: {
+                id: submission.exam?.id,
+              },
+            },
+          },
+        },
+      },
+      relations: [
+        'user',
+        'user.courses',
+        'user.courses.course',
+        'user.courses.course.exams',
+      ],
+    });
+
+    if (!student) {
+      throw new UserNotFoundException();
+    }
+
+    submission.student = student;
+    await submission.save();
   }
 }

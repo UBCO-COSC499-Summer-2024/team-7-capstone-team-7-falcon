@@ -106,6 +106,9 @@ export const ERROR_MESSAGES = {
     submissionDoesNotBelongToUser: 'Submission does not belong to user',
     disputesNotFound: 'Disputes not found',
     disputeNotFound: 'Dispute not found',
+    userAlreadyAssignedToThisSubmission:
+      'User is already assigned to this submission',
+    userAlreadyAssignedToSubmission: 'User is already assigned to a submission',
   },
   submissionController: {
     submissionNotFound: 'Submission not found',

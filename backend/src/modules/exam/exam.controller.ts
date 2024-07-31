@@ -32,6 +32,7 @@ import {
   SubmissionNotFoundException,
   ExamUploadException,
   DisputeSubmissionException,
+  UpdateSubmissionException,
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
@@ -51,6 +52,7 @@ import { SubmissionCreationDto } from './dto/submission-creation.dto';
 import { WorkerAuthGuard } from '../../guards/worker.guard';
 import { DisputeSubmissionDto } from './dto/dispute-submission.dto';
 import { DisputeStatusDto } from './dto/dispute-status.dto';
+import { UpdateSubmissionUserDto } from './dto/update-submission-user.dto';
 
 @Controller('exam')
 export class ExamController {
@@ -64,6 +66,138 @@ export class ExamController {
     private readonly courseService: CourseService,
     private readonly sumbissionsProcessingService: SubmissionsProcessingService,
   ) {}
+
+  /**
+   * Get submission grade by submission id
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param sid {number} - Submission id
+   * @param user {UserModel} - User object
+   * @returns {Promise<Response>} - Response object
+   */
+  @Get('/:cid/:sid/grade')
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  async getSubmissionGradeBySubmissionId(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Param('sid', ParseIntPipe) sid: number,
+  ): Promise<Response> {
+    try {
+      const submission = await this.examService.getSubmissionById(cid, sid);
+
+      return res.status(HttpStatus.OK).send(submission);
+    } catch (e) {
+      if (e instanceof ExamNotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Get graded submission by submission id
+   * @param res {Response} - Response object
+   * @param sid {number} - Submission id
+   * @returns {Promise<StreamableFile | void>} - StreamableFile or void object
+   */
+  @Get('/:cid/submission/:sid/graded_submission')
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  async getGradedSubmissionFileBySubmissionId(
+    @Res({ passthrough: true }) res: Response,
+    @Param('sid', ParseIntPipe) sid: number,
+  ): Promise<StreamableFile | void> {
+    try {
+      const filePath = join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '..',
+        'uploads',
+        'exams',
+        'processed_submissions',
+        await this.examService.getGradedSubmissionFilePathBySubmissionId(sid),
+      );
+
+      // Check if file exists and is accessible
+      if (!existsSync(filePath)) {
+        throw new FileNotFoundException();
+      }
+
+      const file = createReadStream(filePath);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="submission.pdf"`,
+      });
+
+      return new StreamableFile(file);
+    } catch (e) {
+      if (
+        e instanceof FileNotFoundException ||
+        e instanceof SubmissionNotFoundException
+      ) {
+        res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
+
+  /**
+   * Update submission user
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @param submissionId {number} - Submission id
+   * @param body {UpdateSubmissionUserDto} - Submission user data
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Patch('/:cid/:submissionId/update_submission_user')
+  async updateSubmissionUser(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+    @Param('submissionId', ParseIntPipe) submissionId: number,
+    @Body(new ValidationPipe()) body: UpdateSubmissionUserDto,
+  ): Promise<Response> {
+    try {
+      await this.examService.updateSubmissionUserByUserId(
+        submissionId,
+        body.studentId,
+        cid,
+      );
+      return res.status(HttpStatus.NO_CONTENT).send();
+    } catch (e) {
+      if (
+        e instanceof SubmissionNotFoundException ||
+        e instanceof UserNotFoundException
+      ) {
+        return res.status(HttpStatus.NOT_FOUND).send({
+          message: e.message,
+        });
+      } else if (e instanceof UpdateSubmissionException) {
+        return res.status(HttpStatus.BAD_REQUEST).send({
+          message: e.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+          message: e.message,
+        });
+      }
+    }
+  }
 
   /**
    * Delete exam

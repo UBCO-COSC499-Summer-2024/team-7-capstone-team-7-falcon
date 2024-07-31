@@ -17,13 +17,9 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
     name: "",
     starts_at: -1,
     ends_at: -1,
-  });
+  } as SemesterData);
   const router = useRouter();
   const [savingChanges, setSavingChanges] = useState(false);
-
-  const resetStatus = () => {
-    setStatus(Status.Pending);
-  };
 
   useEffect(() => {
     fetchData();
@@ -36,7 +32,7 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
         name: semester.name,
         starts_at: semester.starts_at,
         ends_at: semester.ends_at,
-      });
+      } as SemesterData);
     } catch (error) {
       toast.error("Failed to load semester data");
     }
@@ -72,7 +68,7 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
           name: updatedSemester.name,
           starts_at: updatedSemester.starts_at,
           ends_at: updatedSemester.ends_at,
-        });
+        } as SemesterData);
         toast.success("Semester successfully updated.");
 
         fetchData();

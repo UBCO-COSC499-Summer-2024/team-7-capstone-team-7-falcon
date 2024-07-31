@@ -40,7 +40,9 @@ const DisputeExamSubmissionPage = ({
           <ArrowLeft />
           Back
         </Link>
-        <h1 className="block text-xl font-bold">Exam's Submission Dispute</h1>
+        <h1 className="block text-xl font-bold">
+          Exam&apos;s Submission Dispute
+        </h1>
       </div>
       <DisputeExamSubmissionCard
         courseId={courseId}

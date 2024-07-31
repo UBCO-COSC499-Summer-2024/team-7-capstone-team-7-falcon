@@ -3815,4 +3815,542 @@ describe('Exam Integration', () => {
       expect(updatedDispute.status).toBe(DisputeStatusEnum.RESOLVED);
     });
   });
+
+  describe('GET /exam/:cid/:sid/grade', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().get('/exam/1/1/grade').expect(401);
+    });
+
+    it('should return 401 if user not professor or ta', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'student@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .get('/exam/1/1/grade')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 404 if submission not found for the exam and student id', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'student@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return supertest()
+        .get('/exam/1/1/grade')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(404);
+    });
+
+    it('should return 200 if submission is found for the exam and student id', async () => {
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'professor@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: professor,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        course,
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      const student = await UserModel.create({
+        first_name: 'Jane',
+        last_name: 'Doe',
+        email: 'student@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user: student,
+        student_id: 123,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam,
+        student: studentUser,
+        answers: {},
+        score: 32,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      exam.submissions.push(submission);
+
+      await exam.save();
+
+      const result = await supertest()
+        .get(`/exam/${course.id}/${submission.id}/grade`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`]);
+
+      expect(result.status).toBe(200);
+      expect(result.body).toMatchSnapshot();
+    });
+  });
+
+  describe('GET /exam/:cid/submission/:sid/graded_submission', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest()
+        .get('/exam/1/submission/1/graded_submission')
+        .expect(401);
+    });
+
+    it('should return 401 if user not professor or ta', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'studen@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .get('/exam/1/submission/1/graded_submission')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 404 if submission not found for the student id and course id', async () => {
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'professor@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: professor,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return supertest()
+        .get('/exam/1/submission/1/graded_submission')
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`])
+        .expect(404);
+    });
+
+    it('should return 200 if submission is found for the submission id and course id', async () => {
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'professor@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: professor,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      let exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        course,
+      }).save();
+
+      exam = await ExamModel.findOne({
+        where: { id: exam.id },
+        relations: ['submissions'],
+      });
+
+      const submission = await SubmissionModel.create({
+        exam,
+        answers: {},
+        score: 32,
+        document_path: 'submission.pdf',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const tempFilePath = path.join(
+        __dirname,
+        '..',
+        '..',
+        'uploads',
+        'exams',
+        'processed_submissions',
+        `submission.pdf`,
+      );
+      await fsExtra.ensureDir(path.dirname(tempFilePath));
+      await fsExtra.writeFile(
+        tempFilePath,
+        'Temporary file content for testing',
+      );
+
+      exam.submissions.push(submission);
+      await exam.save();
+
+      const result = await supertest()
+        .get(`/exam/${course.id}/submission/${submission.id}/graded_submission`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`]);
+
+      expect(result.status).toBe(200);
+
+      await fsExtra.remove(tempFilePath);
+    });
+  });
+
+  describe('PATCH /exam/:cid/:submissionId/update_submission_user', () => {
+    it('should return 401 if user not authenticated', async () => {
+      await supertest().patch('/exam/1/1/update_submission_user').expect(401);
+    });
+
+    it('should return 401 if user not professor or ta', async () => {
+      const user = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'studen@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await StudentUserModel.create({
+        student_id: 123,
+        user,
+      }).save();
+
+      return supertest()
+        .patch('/exam/1/1/update_submission_user')
+        .set('Cookie', [`auth_token=${signJwtToken(user.id)}`])
+        .expect(401);
+    });
+
+    it('should return 400 if student id is not a number', async () => {
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'studen@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: professor,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return supertest()
+        .patch(`/exam/${course.id}/1/update_submission_user`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`])
+        .send({ student_id: 'a' })
+        .expect(400);
+    });
+
+    it('should return 404 if submission not found for the student id and course id', async () => {
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'studen@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: professor,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      return supertest()
+        .patch(`/exam/${course.id}/1/update_submission_user`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`])
+        .send({ studentId: 123 })
+        .expect(404);
+    });
+
+    it('should return 400 if the submission is assigned to the student already', async () => {
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'studen@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: professor,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const student = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user: student,
+        student_id: 1,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam: null,
+        student: studentUser,
+        answers: {},
+        score: 23,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const result = await supertest()
+        .patch(`/exam/${course.id}/${submission.id}/update_submission_user`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`])
+        .send({ studentId: studentUser.student_id });
+
+      expect(result.status).toBe(400);
+    });
+
+    it('should return 204 and update the submission with student', async () => {
+      const professor = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'studen@mail.com',
+        password: 'password',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        email_verified: true,
+      }).save();
+
+      await EmployeeUserModel.create({
+        employee_id: 123,
+        user: professor,
+      }).save();
+
+      const course = await CourseModel.create({
+        course_code: 'CS101',
+        course_name: 'Introduction to Computer Science',
+        section_name: '001',
+        invite_code: '123',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      await CourseUserModel.create({
+        user: professor,
+        course,
+        course_role: CourseRoleEnum.PROFESSOR,
+      }).save();
+
+      const student = await UserModel.create({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john.doe@mail.com',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const studentUser = await StudentUserModel.create({
+        user: student,
+        student_id: 1234,
+      }).save();
+
+      await CourseUserModel.create({
+        course,
+        user: student,
+        course_role: CourseRoleEnum.STUDENT,
+      }).save();
+
+      const exam = await ExamModel.create({
+        name: 'Exam',
+        exam_date: 1_000_000_000,
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+        questions: {},
+        course,
+      }).save();
+
+      const submission = await SubmissionModel.create({
+        exam: exam,
+        student: null,
+        answers: {},
+        score: 23,
+        document_path: 'path',
+        created_at: 1_000_000_000,
+        updated_at: 1_000_000_000,
+      }).save();
+
+      const result = await supertest()
+        .patch(`/exam/${course.id}/${submission.id}/update_submission_user`)
+        .set('Cookie', [`auth_token=${signJwtToken(professor.id)}`])
+        .send({ studentId: studentUser.student_id });
+
+      expect(result.status).toBe(204);
+    });
+  });
 });

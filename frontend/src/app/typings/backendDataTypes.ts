@@ -1,3 +1,21 @@
+/**
+ * User submission exam answer interface
+ */
+interface UserSubmissionExamAnswer {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}
+
+/**
+ * User submission exam answers interface
+ */
+interface UserSubmissionExamAnswers {
+  errorFlag: boolean;
+  answer_list: UserSubmissionExamAnswer[];
+}
+
 export interface CourseData {
   id?: number;
   course_code: string;
@@ -99,10 +117,10 @@ export interface Submission {
   student_id: string;
   user: {
     id: string;
-    avatar_url: string;
     first_name: string;
     last_name: string;
   };
+  answers: UserSubmissionExamAnswers;
   score: number;
   updated_at: number;
   submission_id: string;
@@ -228,6 +246,7 @@ export enum SelectedButton {
 }
 
 export interface SemesterData {
+  id?: number;
   name: string;
   starts_at: number;
   ends_at: number;
@@ -250,6 +269,7 @@ export interface StudentSubmission {
   studentSubmission: {
     id: number;
     score: number;
+    hasStudent?: boolean;
   };
   course: {
     id: number;
@@ -257,6 +277,7 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
+  answers: UserSubmissionExamAnswers;
 }
 
 export interface AnalyticsExamSubmission {

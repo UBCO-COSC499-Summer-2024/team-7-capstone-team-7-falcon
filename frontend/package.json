@@ -37,6 +37,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-table": "^7.8.0",
+    "sharp": "^0.33.4",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

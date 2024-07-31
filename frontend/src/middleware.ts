@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { usersAPI } from "@/app/api/usersAPI";
 import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
+import { healthAPI } from "./app/api/healthAPI";
 
 const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
 
@@ -16,6 +17,14 @@ const userRoleMap = {
 
 export async function middleware(request: NextRequest) {
   const { url, nextUrl } = request;
+
+  const isBackendAvailable = await healthAPI.isBackendHealthy();
+  if (!isBackendAvailable && request.cookies.has("auth_token")) {
+    const response = NextResponse.redirect(new URL("/login", url));
+    response.cookies.delete("auth_token");
+    return response;
+  }
+
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const hasVerifiedToken = await authAPI.hasVerifiedToken();
 

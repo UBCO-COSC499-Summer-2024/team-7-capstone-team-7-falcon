@@ -27,7 +27,7 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({
   const [isBubbleSheetOpen, setBubbleSheetOpen] = useState(false);
   const [examData, setData] = useState<ExamData>({
     exam_name: "",
-    exam_date: -1,
+    exam_date: parseInt(new Date().getTime().toString()) + 86_400_000,
   });
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +64,7 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({
       toast.error("Exam date must be in the future");
       return;
     }
+
     const result = await examsAPI.createExam(examData, courseId);
     if (result.status == 200) {
       setStatus(Status.Success);
@@ -93,7 +94,6 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-
     return tomorrow;
   };
 

@@ -41,6 +41,7 @@ const ViewExam = async ({
     },
     submission_id: item.id,
     score: item.score,
+    answers: item.answers,
     updated_at: new Date(Number(item.updated_at)).toLocaleString(),
   }));
 
@@ -74,8 +75,8 @@ const ViewExam = async ({
           </div>
         </div>
 
-        <div className="grid grid-cols-5 mt-4 border-t-2 border-black">
-          <div className="col-span-3 py-4">
+        <div className="grid grid-cols-12 mt-4 border-t-2 border-black">
+          <div className="col-span-9 py-4">
             <p className="">{}</p>
             {exam.exam_folder && exam.exam_folder?.length !== 0 ? (
               <Alert color="purple" rounded className="my-4">
@@ -92,7 +93,7 @@ const ViewExam = async ({
             )}
             <SubmissionTable exam_id={examId} />
           </div>
-          <div className="space-y-4 col-span-2 pr-8 p-4">
+          <div className="space-y-4 col-span-3 pr-0 p-4">
             <ExamSettings
               courseId={cid}
               examId={examId}

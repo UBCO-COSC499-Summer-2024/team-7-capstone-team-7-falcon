@@ -31,11 +31,8 @@ import {
   FileNotFoundException,
   SubmissionNotFoundException,
   ExamUploadException,
-<<<<<<< HEAD
   DisputeSubmissionException,
   UpdateSubmissionException,
-=======
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
 } from '../../common/errors';
 import { User } from '../../decorators/user.decorator';
 import { UserModel } from '../user/entities/user.entity';
@@ -53,12 +50,9 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { SubmissionsProcessingService } from '../queue/jobs/submissions-processing.service';
 import { SubmissionCreationDto } from './dto/submission-creation.dto';
 import { WorkerAuthGuard } from '../../guards/worker.guard';
-<<<<<<< HEAD
 import { DisputeSubmissionDto } from './dto/dispute-submission.dto';
 import { DisputeStatusDto } from './dto/dispute-status.dto';
 import { UpdateSubmissionUserDto } from './dto/update-submission-user.dto';
-=======
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
 
 @Controller('exam')
 export class ExamController {
@@ -74,7 +68,6 @@ export class ExamController {
   ) {}
 
   /**
-<<<<<<< HEAD
    * Get submission grade by submission id
    * @param res {Response} - Response object
    * @param cid {number} - Course id
@@ -207,8 +200,6 @@ export class ExamController {
   }
 
   /**
-=======
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
    * Delete exam
    * @param res {Response} - Response object
    * @param eid {number} - Exam id
@@ -360,7 +351,6 @@ export class ExamController {
   }
 
   /**
-<<<<<<< HEAD
    * Get exam submissions disputes
    * @param res {Response} - Response object
    * @param eid {number} - Exam id
@@ -391,8 +381,6 @@ export class ExamController {
   }
 
   /**
-=======
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
    * Retrieve grades for the exam
    * @param res {Response} response object
    * @param eid {number} exam id
@@ -464,13 +452,8 @@ export class ExamController {
   @Post(':eid/:studentId')
   async createSubmission(
     @Res() res: Response,
-<<<<<<< HEAD
     @Param('eid', ParseIntPipe) eid: number,
     @Param('studentId', ParseIntPipe) studentId: number,
-=======
-    @Param('eid', new ValidationPipe()) eid: number,
-    @Param('studentId', new ValidationPipe()) studentId: number,
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
     @Body(new ValidationPipe()) body: SubmissionCreationDto,
   ): Promise<Response> {
     try {
@@ -511,13 +494,8 @@ export class ExamController {
       answerKey: Express.Multer.File[];
       submissions: Express.Multer.File[];
     },
-<<<<<<< HEAD
     @Param('eid', ParseIntPipe) eid: number,
     @Param('cid', ParseIntPipe) cid: number,
-=======
-    @Param('eid', new ValidationPipe()) eid: number,
-    @Param('cid', new ValidationPipe()) cid: number,
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
   ): Promise<Response> {
     try {
       const examFolder = await this.examService.uploadExamSubmissions(
@@ -802,7 +780,6 @@ export class ExamController {
   @Patch('/:eid/course/:cid/submission/:sid/grade')
   async updateGrade(
     @Res() res: Response,
-<<<<<<< HEAD
     @Param('eid', ParseIntPipe) eid: number,
     @Param('cid', ParseIntPipe) cid: number,
     @Param('sid', ParseIntPipe) sid: number,
@@ -810,15 +787,6 @@ export class ExamController {
   ): Promise<Response> {
     try {
       await this.examService.updateGrade(eid, cid, sid, body);
-=======
-    @Param('eid', new ValidationPipe()) eid: number,
-    @Param('cid', new ValidationPipe()) cid: number,
-    @Param('sid', new ValidationPipe()) sid: number,
-    @Body(new ValidationPipe()) body: SubmissionGradeDto,
-  ): Promise<Response> {
-    try {
-      await this.examService.updateGrade(eid, cid, sid, body.grade);
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
       return res.status(HttpStatus.OK).send({ message: 'ok' });
     } catch (e) {
       if (e instanceof SubmissionNotFoundException) {
@@ -884,7 +852,6 @@ export class ExamController {
       }
     }
   }
-<<<<<<< HEAD
 
   /**
    * Create dispute for the submission
@@ -928,6 +895,4 @@ export class ExamController {
       }
     }
   }
-=======
->>>>>>> 4d91b065a4a27ef7f234c1c1b1279c8911e37d53
 }

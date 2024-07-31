@@ -13,7 +13,7 @@ const instructorLinks = [
   {
     title: "My Exams",
     href: {
-      base: "/instructor/exams",
+      base: "/instructor/exam",
     },
     icon: <Clipboard />,
   },

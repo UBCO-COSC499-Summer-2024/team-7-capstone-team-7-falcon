@@ -136,7 +136,6 @@ export const coursesAPI = {
         invite_code: invite_code,
       };
       const response = await instance.post(`/${courseId}/enroll`, enrollData);
-      console.log(response);
       return response;
     } catch (error: any) {
       //always axios error

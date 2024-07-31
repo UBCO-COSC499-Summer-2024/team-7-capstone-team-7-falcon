@@ -41,32 +41,11 @@ export interface CourseAdminDetails {
   };
 }
 
-export interface StudentUser {
-  student_id: number;
-  id: number;
-}
-
-export interface EmployeeUser {
-  employee_id: number;
-  id: number;
-}
-
 export interface CourseEditData {
   courseCode: string;
   courseName: string;
   semesterId: number;
   inviteCode: string;
-}
-
-export interface CourseAdminDetails {
-  courseId: number;
-  courseCode: string;
-  semesterName: string;
-  members: number;
-  creator: {
-    firstName: string;
-    lastName: string;
-  };
 }
 
 export interface StudentUser {
@@ -77,13 +56,6 @@ export interface StudentUser {
 export interface EmployeeUser {
   employee_id: number;
   id: number;
-}
-
-export interface CourseEditData {
-  courseCode: string;
-  courseName: string;
-  semesterId: number;
-  inviteCode: string;
 }
 
 export interface User {
@@ -308,16 +280,6 @@ export interface StudentSubmission {
   answers: UserSubmissionExamAnswers;
 }
 
-export interface AnalyticsExamSubmission {
-  student: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    submissionScore: number;
-    avatarUrl: string;
-  };
-}
-
 export interface AnalyticsSubmission {
   exam: {
     id: number;
@@ -392,19 +354,4 @@ export interface AnalyticsExamSubmission {
     submissionScore: number;
     avatarUrl: string;
   };
-}
-
-export interface AnalyticsSubmission {
-  exam: {
-    id: number;
-    title: string;
-  };
-  submissions: AnalyticsExamSubmission[];
-}
-
-export interface CourseAnalytics {
-  courseMembersSize: number;
-  courseExamsCount: number;
-  examSubmissionsCount: number;
-  examSubmissions: AnalyticsSubmission[];
 }

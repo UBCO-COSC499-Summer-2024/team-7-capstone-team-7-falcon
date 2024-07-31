@@ -454,7 +454,7 @@ export class ExamService {
     submission.answers = {
       errorFlag: body.answers.errorFlag,
       answer_list: body.answers.answer_list,
-    } as unknown as JSON;
+    };
 
     submission.score = grade * 100;
     await submission.save();

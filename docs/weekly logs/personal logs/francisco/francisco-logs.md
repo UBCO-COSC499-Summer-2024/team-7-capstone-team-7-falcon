@@ -1,5 +1,41 @@
 # Personal Logs
 
+## Friday (7/24-7/25)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.24-07.25/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finish event flagging for answer payload
+  2. writing tests and code cleanup
+  3. Implementing highlighting of flagged quest
+
+### Progress Update (since 7/24/2024)
+
+![ProjectBoard](07.24-07.25/board.png)
+
+  1. Fixed student number detection to properly sort
+  2. Answer payloads completed
+  3. Answer key generation completed including multiple answers
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This was a short cycle but I was able to fix multiple bugs. The overall pipeline is almost done, excepting some polishing. This weekend I'll focus on that.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Integrate endpoints with pipeline
+  2. Clean up and document code.
+  3. Change the payloads to account for the flagged events
+
+---
+---
+---
+
 ## Wednesday (7/19-7/23)
 
 ### Timesheet

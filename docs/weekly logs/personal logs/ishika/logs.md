@@ -1,3 +1,28 @@
+## Wednesday (7/26-7/30)
+
+<img width="1091" alt="image" src="https://github.com/user-attachments/assets/aaf50d19-0efe-42aa-b582-2e30811b189d">
+
+### Project Board
+
+<img width="785" alt="image" src="https://github.com/user-attachments/assets/98398084-523a-4a8a-9e72-adedf0034c52">
+
+## Current Tasks
+1. Address comments on Remove student from course PR
+2. Finish Student edit page
+
+## Progress update since (7/26)
+
+1. I worked on Remove student from course feature.
+2. I started working on student user edit page.
+
+## Cycle goal review
+
+Overall, it was a decent cycle with few tasks that I worked on.
+
+## Next cycle goal
+
+My goal is to complete both the features I am currently working on and get it merged into development. Prepare for Test o Rama. 
+
 ## Friday (7/24-7/25)
 
 <img width="1065" alt="image" src="https://github.com/user-attachments/assets/3a3e1627-6dc5-4d45-a68b-fad38ec426de">

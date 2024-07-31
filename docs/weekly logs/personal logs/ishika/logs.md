@@ -1,3 +1,52 @@
+## Wednesday (7/26-7/30)
+
+<img width="1091" alt="image" src="https://github.com/user-attachments/assets/aaf50d19-0efe-42aa-b582-2e30811b189d">
+
+### Project Board
+
+<img width="785" alt="image" src="https://github.com/user-attachments/assets/98398084-523a-4a8a-9e72-adedf0034c52">
+
+## Current Tasks
+1. Address comments on Remove student from course PR
+2. Finish Student edit page
+
+## Progress update since (7/26)
+
+1. I worked on Remove student from course feature.
+2. I started working on student user edit page.
+
+## Cycle goal review
+
+Overall, it was a decent cycle with few tasks that I worked on.
+
+## Next cycle goal
+
+My goal is to complete both the features I am currently working on and get it merged into development. Prepare for Test o Rama. 
+
+## Friday (7/24-7/25)
+
+<img width="1065" alt="image" src="https://github.com/user-attachments/assets/3a3e1627-6dc5-4d45-a68b-fad38ec426de">
+
+### Project Board
+
+<img width="393" alt="image" src="https://github.com/user-attachments/assets/bbaa21b5-e902-467e-966d-e3ed819dc20f">
+
+## Current Tasks
+
+1. Add Remove Student form for instructors and hook it with the endpoint
+
+## Progress update since (7/24)
+
+I added the Delete User form and wrote the API call for the endpoint. I do need to fix minor issues and put up a PR for this feature.
+
+### Cycle Goal Review
+
+I only had this task assigned so I didn't spend a lot of time coding for this cycle. 
+
+## Next Cycle Goal
+
+I will take up more features from the unofficial rubric that is yet to be negotiated with Scott, if required.
+
 ## Wednesday(7/19-7/23)
 
 <img width="1064" alt="image" src="https://github.com/user-attachments/assets/f92e39ac-b266-4f01-853b-512f0fa71364">

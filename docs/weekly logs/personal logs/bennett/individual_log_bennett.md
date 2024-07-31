@@ -1,3 +1,82 @@
+## Wednesday (7/26- 7/30)
+
+### Timesheet
+Clockify report
+![time for 07.26_- 07.30](07.26_07.30.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Frontend Bubblesheet UI [S]
+
+### Progress Update (since 7/26/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Frontend Bubblesheet UI #403
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have completed the frontend bubblesheet UI feature but since my branch depends on existing features that are still being changed, I will need to resolve the merge conflicts once these features are done. The process is going smoothly.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle we will discuss what we will show in the meeting with Scott and Ramon as well as what we are going to present next week.
+I will also resolve the conflicts with my bubblesheet branch.
+
+## Friday (7/24- 7/25)
+
+### Timesheet
+Clockify report
+![time for 07.24_- 07.25](07.24_07.25.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Update the student join course page [XS]
+  * #2: Frontend Bubble Sheet multiple answers [S]
+
+
+### Progress Update (since 7/24/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update the student join course page #375
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td>Frontend Bubble Sheet multiple answers #389
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have updated the student join course page to work like most of our other pages (using toaster + redirects). I also
+completed a feature for frontend that lets you select multiple answers instead of just one. I also fixed bugs for this bubble sheet
+creation form. Overall I completed everything I planned to do. Our process is going good overall.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle I will work on completing some of the front end tasks that we decide are going to be part of the final. (Scott added extra features that were not part of our MVP so we need to clarify what is required)
+
 ## Wednesday (7/19- 7/23)
 
 ### Timesheet

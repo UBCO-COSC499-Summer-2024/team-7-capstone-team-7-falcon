@@ -29,7 +29,7 @@ Clockify report
 This cycle I have completed the frontend bubblesheet UI feature but since my branch depends on existing features that are still being changed, I will need to resolve the merge conflicts once these features are done. The process is going smoothly.
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
 
-Next cycle we will discuss what we will show in the meeting with Scott and Raymond as well as what we are going to present next week.
+Next cycle we will discuss what we will show in the meeting with Scott and Ramon as well as what we are going to present next week.
 I will also resolve the conflicts with my bubblesheet branch.
 
 ## Friday (7/24- 7/25)

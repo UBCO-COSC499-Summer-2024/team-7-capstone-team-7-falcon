@@ -1,5 +1,83 @@
 # Individual Logs
 
+## Friday (7/26 - 7/30)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_20240726-07302024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Prepare for Test-O-Rama by testing all features that we are planning to ask our users to test
+  * #2: Merge all Pull Requests in review
+
+### Progress Update (since 7/26/2024)
+
+![GitHub Board](./images/github_07262024-07302024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #367
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #364
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #401
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #397
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #404
+        </td>
+        <!-- Status -->
+        <td>In review
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #363
+        </td>
+        <!-- Status -->
+        <td>Completed (pending changes by Ishika)
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle, I was mainly focused on resolving the issue with submission missing Student reference in database as it was crashing frontend page for instructor. It's unfortunate that I didn't take into account this edge case, but I am happy that I have resolved it before project delivery. In addition, I have added additional columns for instructor's exam submission page to identify problematic submissions.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Prepare for Test-O-Rama and find any bugs that we haven't addressed
+
 ## Friday (7/24 - 7/25)
 
 ### Timesheet

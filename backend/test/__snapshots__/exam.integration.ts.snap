@@ -51,6 +51,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/download_grades should return CSV 
 exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if exam submissions are returned 1`] = `
 [
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 10,
     "score": 9,
@@ -67,6 +68,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 9,
     "score": 8,
@@ -83,6 +85,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 8,
     "score": 7,
@@ -99,6 +102,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 7,
     "score": 6,
@@ -115,6 +119,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 6,
     "score": 5,
@@ -131,6 +136,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 5,
     "score": 4,
@@ -147,6 +153,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 4,
     "score": 3,
@@ -163,6 +170,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 3,
     "score": 2,
@@ -179,6 +187,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 2,
     "score": 1,
@@ -195,6 +204,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
   {
+    "answers": {},
     "created_at": "1000000000",
     "id": 1,
     "score": 0,
@@ -211,6 +221,30 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "updated_at": "1000000000",
   },
 ]
+`;
+
+exports[`Exam Integration GET /exam/:cid/:sid/grade should return 200 if submission is found for the exam and student id 1`] = `
+{
+  "answers": {},
+  "course": {
+    "courseCode": "CS101",
+    "courseName": "Introduction to Computer Science",
+    "id": 1,
+  },
+  "exam": {
+    "examDate": "1000000000",
+    "id": 1,
+    "name": "Exam",
+  },
+  "grades": [
+    32,
+  ],
+  "studentSubmission": {
+    "hasStudent": true,
+    "id": 1,
+    "score": 32,
+  },
+}
 `;
 
 exports[`Exam Integration GET /exam/:cid/exam/:eid should return 200 if exam is found 1`] = `
@@ -283,6 +317,7 @@ exports[`Exam Integration GET /exam/:eid/:cid/submissions_disputes should return
 
 exports[`Exam Integration GET /exam/:eid/:cid/user/:uid/grade should return 200 if exam submission is found for the user 1`] = `
 {
+  "answers": {},
   "course": {
     "courseCode": "CS101",
     "courseName": "Introduction to Computer Science",

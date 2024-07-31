@@ -10,7 +10,7 @@ from omr_tool.utils.image_process import (
     extract_roi,
     draw_bubble_contours,
     threshold_img,
-    highlight_error_region
+    highlight_error_region,
 )
 from omr_tool.omr_pipeline.identify_student import extract_and_highlight_student_id
 from object_inference.inferencer import Inferencer
@@ -40,7 +40,7 @@ def create_answer_key(key_imgs: list[Image]) -> list[dict]:
         for img in key_imgs:
             answer_key.extend(omr_on_key_image(img, first_question_in_page))
             if answer_key != []:
-                first_question_in_page = answer_key[-1]["question_num"]+1
+                first_question_in_page = answer_key[-1]["question_num"] + 1
     except Exception as e:
         logging.error(f"Error creating answer key: {e}")
     return answer_key
@@ -69,7 +69,7 @@ def mark_submission_group(
     """
     if answer_key == []:
         raise ValueError("Valid answer key is required for grading.")
-    
+
     submission_results: dict = {
         "student_id": "",
         "document_path": "",
@@ -79,12 +79,15 @@ def mark_submission_group(
 
     group_images = to_np_images(group_images)
 
-
     graded_images: list[Image] = []
     first_question_in_page = 1
     for submission_img in group_images:
         student_id, score, answers, graded_img, flagRaised = omr_on_submission_image(
-            submission_img, answer_key, submission_results["student_id"], submission_results["answers"]["errorFlag"], first_question_in_page
+            submission_img,
+            answer_key,
+            submission_results["student_id"],
+            submission_results["answers"]["errorFlag"],
+            first_question_in_page,
         )
         if student_id != "":
             submission_results["student_id"] = student_id
@@ -94,7 +97,7 @@ def mark_submission_group(
             submission_results["answers"]["errorFlag"] = True
         graded_images.append(graded_img)
         if answers != []:
-            first_question_in_page = answers[-1]["question_num"]+1
+            first_question_in_page = answers[-1]["question_num"] + 1
 
     graded_images = to_PIL_images(graded_images)
 
@@ -147,7 +150,12 @@ def omr_on_key_image(input_image: Image, first_q_in_page: int) -> list[dict]:
 
 
 def omr_on_submission_image(
-    input_image: Image, answer_key=[], student_id="", errorFlag=False, first_q_in_page=1, bubbles_per_q=5
+    input_image: Image,
+    answer_key=[],
+    student_id="",
+    errorFlag=False,
+    first_q_in_page=1,
+    bubbles_per_q=5,
 ) -> tuple[str, int, list[dict], Image, bool]:
     """
     Processes a submission image to extract and evaluate answers, and grade the submission.
@@ -177,12 +185,14 @@ def omr_on_submission_image(
         question_num = first_q_in_page + i
         roi_cropped = extract_roi(threshed_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
-        
+
         color, correct_answers, question_result = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )
         if len(bubble_contours) != bubbles_per_q:
-            output_image = highlight_error_region(image=output_image, question_bounds=question_bounds)
+            output_image = highlight_error_region(
+                image=output_image, question_bounds=question_bounds
+            )
             errorFlag = True
         else:
             for idx in correct_answers:
@@ -192,14 +202,22 @@ def omr_on_submission_image(
                     )
                 except Exception as e:
                     logging.error(f"Error drawing bubble contours: {e}, {idx}")
-                    output_image = highlight_error_region(image=output_image, question_bounds=question_bounds)
+                    output_image = highlight_error_region(
+                        image=output_image, question_bounds=question_bounds
+                    )
                     errorFlag = True
         if question_result["expected"] == question_result["answered"]:
             question_result["score"] = 1
             total_score += question_result["score"]
         results.append(question_result)
 
-    return student_id, total_score, results, output_image, errorFlag, 
+    return (
+        student_id,
+        total_score,
+        results,
+        output_image,
+        errorFlag,
+    )
 
 
 def populate_answer_key(image: Image, flat_list: list[dict], first_q_in_page: int):
@@ -226,7 +244,9 @@ def populate_answer_key(image: Image, flat_list: list[dict], first_q_in_page: in
     return answer_key
 
 
-def identify_page_details(inference_tool: Inferencer, boxes: np.ndarray, classes: list[str]) -> tuple:
+def identify_page_details(
+    inference_tool: Inferencer, boxes: np.ndarray, classes: list[str]
+) -> tuple:
     """
     Identifies the details of the page, including the student number section and question bounds.
 
@@ -247,7 +267,8 @@ def identify_page_details(inference_tool: Inferencer, boxes: np.ndarray, classes
             student_num_section = box
     return student_num_section, question_2d_list
 
-def to_np_images(images: list[Image]) -> list[np.ndarray]:  
+
+def to_np_images(images: list[Image]) -> list[np.ndarray]:
     """
     Converts a list of PIL.Image objects to a list of NumPy arrays if necessary
 
@@ -257,7 +278,7 @@ def to_np_images(images: list[Image]) -> list[np.ndarray]:
     Returns:
         list: A list of NumPy arrays.
     """
-    try: 
+    try:
         if isinstance(images[0], np.ndarray):
             np_images = images
         else:
@@ -266,7 +287,8 @@ def to_np_images(images: list[Image]) -> list[np.ndarray]:
         logging.error(f"Error converting images to NumPy arrays: {e}")
     return np_images
 
-def to_PIL_images(images: list[np.ndarray]) -> list[Image]:  
+
+def to_PIL_images(images: list[np.ndarray]) -> list[Image]:
     """
     Converts a list of NumPy arrays to a list of PIL.Image objects if necessary
 
@@ -278,7 +300,7 @@ def to_PIL_images(images: list[np.ndarray]) -> list[Image]:
     Returns:
         list: A list of PIL.Image objects.
     """
-    try: 
+    try:
         if isinstance(images[0], Image):
             pil_images = images
         else:
@@ -297,7 +319,7 @@ if __name__ == "__main__":
     )
 
     images = convert_to_images(sheet_path)
-       
+
     answer_key = create_answer_key(images)
     submission_results, graded_images = mark_submission_group(images, answer_key)
     print(submission_results)
@@ -305,4 +327,3 @@ if __name__ == "__main__":
     for img in graded_images:
         cv2.imshow("graded", cv2.resize(img, (800, 1000)))
         cv2.waitKey(0)
-    

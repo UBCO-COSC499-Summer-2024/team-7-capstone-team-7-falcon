@@ -2,7 +2,11 @@ import os
 from PIL import Image
 import pytest
 from unittest.mock import patch
-from omr_tool.omr_pipeline.omr_tasks import create_answer_key, mark_submission_group, populate_answer_key
+from omr_tool.omr_pipeline.omr_tasks import (
+    create_answer_key,
+    mark_submission_group,
+    populate_answer_key,
+)
 from omr_tool.utils.pdf_to_images import convert_to_images
 
 
@@ -24,13 +28,13 @@ class TestOMRTasks:
         Fixture that returns a list of images from UBC submission 2.
         """
         return convert_to_images(self.UBC_SUB_200_PATH)
-    
+
     @pytest.fixture(scope="class")
     def mock_images(self):
         """
         Fixture that returns a list of mock PIL.Image objects.
         """
-        return [Image.new('RGB', (100, 100)) for _ in range(3)]
+        return [Image.new("RGB", (100, 100)) for _ in range(3)]
 
     def test_create_answer_key_100(self, ubc_sub_100_images):
         key_images = ubc_sub_100_images
@@ -103,9 +107,14 @@ class TestOMRTasks:
         )
 
     def test_populate_answer_key(self, mock_images):
-        with patch('omr_tool.omr_pipeline.omr_tasks.extract_roi', return_value=mock_images[0]), \
-             patch('omr_tool.omr_pipeline.omr_tasks.generate_bubble_contours', return_value=[(0, 0, 10, 10)]), \
-             patch('omr_tool.omr_pipeline.omr_tasks.find_filled_bubbles', return_value=[0]):
+        with patch(
+            "omr_tool.omr_pipeline.omr_tasks.extract_roi", return_value=mock_images[0]
+        ), patch(
+            "omr_tool.omr_pipeline.omr_tasks.generate_bubble_contours",
+            return_value=[(0, 0, 10, 10)],
+        ), patch(
+            "omr_tool.omr_pipeline.omr_tasks.find_filled_bubbles", return_value=[0]
+        ):
             key = populate_answer_key(mock_images[0], [(0, 0, 10, 10)], 1)
             assert len(key) == 1
             assert key[0]["question_num"] == 1

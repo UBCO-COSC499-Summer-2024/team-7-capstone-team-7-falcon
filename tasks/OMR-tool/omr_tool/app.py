@@ -1,4 +1,5 @@
 import time
+import uuid
 from PIL.Image import Image
 from omr_tool.omr_pipeline.omr_tasks import create_answer_key, mark_submission_group
 from omr_tool.utils.pdf_to_images import convert_to_images
@@ -21,8 +22,13 @@ RAW_FILE_PATH = (
     Path(__file__).resolve().parents[3] / "backend" / "uploads" / "exams" / "raw"
 )
 PROCESSED_FILE_PATH = (
-    Path(__file__).resolve().parents[3] / "backend" / "uploads" / "exams" / "processed_submissions"
+    Path(__file__).resolve().parents[3]
+    / "backend"
+    / "uploads"
+    / "exams"
+    / "processed_submissions"
 )
+
 
 def request_job(backend_url, queue_name):
     # TODO: Consider moving to a shared module
@@ -58,7 +64,7 @@ def request_job(backend_url, queue_name):
     return job_id, payload
 
 
-def complete_job(backend_url, queue_name, job_id, unique_id):   
+def complete_job(backend_url, queue_name, job_id, unique_id):
     # TODO: Consider moving to a shared module
     """Complete a job by sending a PATCH request to the backend
 
@@ -92,22 +98,27 @@ def send_grades(backend_url, exam_id, submission_results):
     """
 
     student_id = submission_results["student_id"]
-
+ 
     request = requests.post(
         f"{backend_url}/exam/{exam_id}/{student_id}",
         headers={"x-worker-auth-token": os.getenv("WORKER_TOKEN")},
         data={
             "answers": submission_results["answers"],
             "score": submission_results["score"],
-            "documentPath": submission_results["document_path"],
+            "documentPath": str(submission_results["document_path"]),
         },
     )
 
+    if request.status_code == 400:
+        logging.critical("400 - Invalid payload")
+        logging.critical(request.json())
+    
     if request.status_code == 401:
-        logging.critical("Invalid WORKER token")
+        logging.critical("401 - Invalid WORKER token")
 
     if request.status_code == 404:
-        logging.info("Exam not found for course")
+        logging.info("404 - Exam not found for course")
+
 
 
 def app():
@@ -127,9 +138,13 @@ def app():
 
             exam_id: str = payload.get("examId")
             course_id: str = payload.get("courseId")
-            answer_key_path: str = os.path.join(RAW_FILE_PATH, payload.get("folderName") + "/answer_key.pdf")
-            submission_path: str = os.path.join(RAW_FILE_PATH, payload.get("folderName") + "/submissions.pdf")
-
+            answer_key_path: str = os.path.join(
+                RAW_FILE_PATH, payload.get("folderName") + "/answer_key.pdf"
+            )
+            submission_path: str = os.path.join(
+                RAW_FILE_PATH, payload.get("folderName") + "/submissions.pdf"
+            )
+            output_path = os.path.join(PROCESSED_FILE_PATH, payload.get("folderName"))
             # Generate an answer key from the answer key PDF (Should return a dict of answers)
             # Convert the answer key PDF to list of images
             # Process each image in the list with the OMR pipeline. Should return a dict of answers
@@ -147,7 +162,9 @@ def app():
                 try:
                     group_images = all_submission_images[i : i + (num_pages_in_exam)]
                 except IndexError as e:
-                    logging.error(f"Number of submission pages not commensurate to the expected length of each submission: {e}")
+                    logging.error(
+                        f"Number of submission pages not commensurate to the expected length of each submission: {e}"
+                    )
                     continue
                 submission_results, graded_imgs = mark_submission_group(
                     group_images, answer_key
@@ -155,18 +172,18 @@ def app():
                 # convert graded images to PDF and send "courseId_examId_studentId" file to backend (manually)
                 student_id = submission_results["student_id"]
                 output_pdf_path = convert_to_pdf(
-                    graded_imgs, PROCESSED_FILE_PATH, f"{course_id}_{exam_id}_{student_id}"
+                    graded_imgs, output_path, f"{course_id}_{exam_id}_{student_id}"
                 )
                 submission_results["document_path"] = output_pdf_path
-
-
 
                 # send grades to backend
                 send_grades(backend_url, exam_id, submission_results)
 
                 # ---
-
-            complete_job(backend_url, queue_name, job_id, unique_id) #TODO: what is unique ID?
+            unique_id = uuid.uuid4()
+            complete_job(
+                backend_url, queue_name, job_id, unique_id
+            )  # TODO: what is unique ID?
         except requests.exceptions.RequestException:
             logging.critical("Cannot connect to the backend")
             continue
@@ -174,8 +191,9 @@ def app():
             logging.error(f"An error occurred: {e}")
             continue
 
+
 if __name__ == "__main__":
-    try: 
+    try:
         app()
     except KeyboardInterrupt:
         logging.info("Exited Manually via KeyboardInterrupt...")

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Edit } from "flowbite-react-icons/solid";
 import CreateSemesterForm from "../components/createSemesterForm";
 import { Status } from "../../typings/backendDataTypes";
+import { Toaster } from "react-hot-toast";
 import SemesterTable from "../components/semesterTable";
 
 /**
@@ -20,6 +21,7 @@ const AdminSemesterManagement: React.FC = () => {
 
   return (
     <>
+      <Toaster />
       {status === Status.Success && (
         <CreateSemesterForm onClose={resetStatus} />
       )}

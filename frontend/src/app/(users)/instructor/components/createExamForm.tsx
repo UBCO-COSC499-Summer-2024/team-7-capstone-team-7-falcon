@@ -6,22 +6,28 @@ import { ExamData } from "../../../typings/backendDataTypes";
 import { useState } from "react";
 import { examsAPI } from "../../../api/examAPI";
 import { Status } from "../../../typings/backendDataTypes";
-import ModalMessage from "../../components/modalMessage";
 import { redirect } from "next/navigation";
 import { Plus } from "flowbite-react-icons/outline";
 import BubbleSheetModal from "./bubbleSheetModal";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import { datePickerTheme } from "@/app/components/datePickerTheme";
 
 interface CreateExamFormProps {
-  course_id: number;
+  courseId: number;
+  courseName: string;
+  courseCode: string;
 }
 
-const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
+const CreateExamForm: React.FC<CreateExamFormProps> = ({
+  courseId,
+  courseCode,
+  courseName,
+}) => {
   const [status, setStatus] = useState(Status.Pending);
   const [isBubbleSheetOpen, setBubbleSheetOpen] = useState(false);
   const [examData, setData] = useState<ExamData>({
     exam_name: "",
-    exam_date: -1,
+    exam_date: parseInt(new Date().getTime().toString()) + 86_400_000,
   });
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,30 +48,66 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (examData.exam_date < Date.now()) {
-      setStatus(Status.InvalidDate);
+    if (examData.exam_name.trim().length === 0) {
+      toast.error("Exam name cannot be empty!");
       return;
     }
-    const result = await examsAPI.createExam(examData, course_id);
+
+    if (examData.exam_name.length >= 46) {
+      toast.error(
+        "Exam name is too long, it can not be longer than 46 characters!",
+      );
+      return;
+    }
+
+    if (examData.exam_date < Date.now()) {
+      toast.error("Exam date must be in the future");
+      return;
+    }
+
+    const result = await examsAPI.createExam(examData, courseId);
     if (result.status == 200) {
       setStatus(Status.Success);
     } else {
-      setStatus(Status.Failure);
+      toast.error("Failed to create exam");
+      resetStatus();
     }
+  };
+
+  const handleBubbleSheetModal = () => {
+    if (examData.exam_name.trim().length === 0) {
+      toast.error("Exam name must not be empty!");
+      return;
+    }
+
+    if (examData.exam_name.length >= 46) {
+      toast.error(
+        "Exam name is too long, it can not be longer than 46 characters!",
+      );
+      return;
+    }
+
+    setBubbleSheetOpen(true);
+  };
+
+  const setDateToTomorrow = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return tomorrow;
   };
 
   return (
     <>
       {isBubbleSheetOpen && (
-        <BubbleSheetModal onClose={resetBubbleSheetModal} />
+        <BubbleSheetModal
+          onClose={resetBubbleSheetModal}
+          courseCode={courseCode}
+          courseName={courseName}
+          examName={examData.exam_name}
+        />
       )}
-      {status === Status.Success && redirect(`../${course_id}/exam`)}
-      {status === Status.Failure && (
-        <ModalMessage message={"Error creating exam"} onClose={resetStatus} />
-      )}
-      {status === Status.InvalidDate && (
-        <ModalMessage message={"Invalid date entered"} onClose={resetStatus} />
-      )}
+      {status === Status.Success && redirect(`../${courseId}/exam`)}
       <form onSubmit={handleSubmit}>
         <Toaster />
         <div className="space-y-5 p-4 ring ring-gray-300 rounded-md flex flex-col">
@@ -83,16 +125,19 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ course_id }) => {
             className="w-1/4"
             onSelectedDateChanged={handleDate}
             id="exam_date"
+            minDate={setDateToTomorrow()}
+            showTodayButton={false}
+            theme={datePickerTheme}
           />
           <Label
             className="justify-center my-4"
             htmlFor="pdf"
-            value="Exam paper"
+            value="Generate a custom bubble sheet exam"
           />
           <div className="w-1/12">
             <div
               className="flex flex-col justify-start w-5/6 rounded-md border-2 py-4 cursor-pointer"
-              onClick={() => setBubbleSheetOpen(true)}
+              onClick={() => handleBubbleSheetModal()}
             >
               <Plus className="ml-8 text-purple-700 justify-center" />
             </div>

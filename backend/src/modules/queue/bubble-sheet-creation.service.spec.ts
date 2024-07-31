@@ -16,6 +16,13 @@ describe('BubbleSheetCreationService', () => {
   let redis: Redis;
   let queue: Queue;
   let moduleRef: TestingModule;
+  const answers: number[][] = [
+    [1, 2],
+    [1, 2],
+    [1, 2],
+    [1, 2],
+    [1, 2],
+  ];
 
   beforeAll(async () => {
     redis = new Redis();
@@ -60,8 +67,10 @@ describe('BubbleSheetCreationService', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          examName: 'Exam name',
+          answers,
         },
       };
 
@@ -78,8 +87,10 @@ describe('BubbleSheetCreationService', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          examName: 'Exam name',
+          answers,
         },
       };
 
@@ -98,8 +109,10 @@ describe('BubbleSheetCreationService', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          examName: 'Exam name',
+          answers,
         },
       };
 
@@ -124,8 +137,10 @@ describe('BubbleSheetCreationService', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          examName: 'Exam name',
+          answers,
         },
       };
 
@@ -150,8 +165,10 @@ describe('BubbleSheetCreationService', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          examName: 'Exam name',
+          answers,
         },
       };
 
@@ -180,8 +197,10 @@ describe('BubbleSheetCreationService', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          examName: 'Exam name',
+          answers,
         },
       };
 

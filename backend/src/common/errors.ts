@@ -253,3 +253,21 @@ export class QueueNotFoundException extends Error {
     super(ERROR_MESSAGES.queueController.queueNotFound);
   }
 }
+
+/**
+ * Exception thrown when there is an error with dispute submission
+ */
+export class DisputeSubmissionException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Exception thrown when there is an error with update submission
+ */
+export class UpdateSubmissionException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}

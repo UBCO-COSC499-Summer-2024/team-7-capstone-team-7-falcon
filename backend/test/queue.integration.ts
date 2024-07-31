@@ -15,6 +15,11 @@ import { SubmissionsProcessingJobDto } from 'src/modules/queue/dto/submissions-p
 
 describe('Queue Integration', () => {
   const supertest = setUpIntegrationTests(QueueModule);
+  const answers = [
+    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5],
+  ];
 
   let redis: Redis;
 
@@ -55,8 +60,10 @@ describe('Queue Integration', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          examName: 'Exam name',
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          answers,
         },
       };
 
@@ -98,8 +105,10 @@ describe('Queue Integration', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          examName: 'Exam name',
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          answers,
         },
       };
 
@@ -243,8 +252,10 @@ describe('Queue Integration', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          examName: 'Exam name',
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          answers,
         },
       };
 
@@ -385,8 +396,10 @@ describe('Queue Integration', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          examName: 'Exam name',
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          answers,
         },
       };
 
@@ -457,8 +470,10 @@ describe('Queue Integration', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          examName: 'Exam name',
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          answers,
         },
       };
 
@@ -521,8 +536,10 @@ describe('Queue Integration', () => {
           numberOfQuestions: 50,
           defaultPointsPerQuestion: 1,
           numberOfAnswers: 5,
-          instructions: 'Default instructions',
-          answers: [1, 2, 3, 4, 5],
+          examName: 'Exam name',
+          courseCode: 'Course code',
+          courseName: 'Course name',
+          answers,
         },
       };
 

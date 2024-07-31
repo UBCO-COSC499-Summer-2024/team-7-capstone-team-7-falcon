@@ -1,9 +1,33 @@
+/**
+ * User submission exam answer interface
+ */
+interface UserSubmissionExamAnswer {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}
+
+/**
+ * User submission exam answers interface
+ */
+interface UserSubmissionExamAnswers {
+  errorFlag: boolean;
+  answer_list: UserSubmissionExamAnswer[];
+}
+
 export interface CourseData {
   id?: number;
   course_code: string;
   course_name: string;
   section_name: string;
   semester_id: number;
+}
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
 }
 
 export interface CourseAdminDetails {
@@ -17,6 +41,13 @@ export interface CourseAdminDetails {
   };
 }
 
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
+
 export interface StudentUser {
   student_id: number;
   id: number;
@@ -25,13 +56,6 @@ export interface StudentUser {
 export interface EmployeeUser {
   employee_id: number;
   id: number;
-}
-
-export interface CourseEditData {
-  courseCode: string;
-  courseName: string;
-  semesterId: number;
-  inviteCode: string;
 }
 
 export interface User {
@@ -50,7 +74,7 @@ export interface User {
 }
 
 export interface UpdatedUser {
-  first_name: string;
+  first_name?: string;
   last_name?: string;
   role?: string;
   email?: string;
@@ -92,12 +116,15 @@ export interface Exam {
 export interface Submission {
   student_id: string;
   user: {
-    avatar_url: string;
+    id: string;
     first_name: string;
     last_name: string;
   };
+  answers: UserSubmissionExamAnswers;
   score: number;
   updated_at: number;
+  submission_id: string;
+  exam_id: string;
 }
 
 export interface CourseRole {
@@ -130,8 +157,10 @@ export interface BubbleSheetPayload {
     numberOfQuestions: number;
     defaultPointsPerQuestion: number;
     numberOfAnswers: number;
-    instructions: string;
-    answers: number[];
+    courseCode: string;
+    courseName: string;
+    examName: string;
+    answers: number[][];
   };
 }
 
@@ -212,9 +241,12 @@ export enum SelectedButton {
   People = "PEOPLE",
   Analytics = "ANALYTICS",
   None = "NONE",
+  Submissions_Disputes = "SUBMISSIONS DISPUTES",
+  Edit_Course = "COURSE SETTINGS",
 }
 
 export interface SemesterData {
+  id?: number;
   name: string;
   starts_at: number;
   ends_at: number;
@@ -237,6 +269,7 @@ export interface StudentSubmission {
   studentSubmission: {
     id: number;
     score: number;
+    hasStudent?: boolean;
   };
   course: {
     id: number;
@@ -244,16 +277,7 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
-}
-
-export interface AnalyticsExamSubmission {
-  student: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    submissionScore: number;
-    avatarUrl: string;
-  };
+  answers: UserSubmissionExamAnswers;
 }
 
 export interface AnalyticsSubmission {
@@ -269,4 +293,65 @@ export interface CourseAnalytics {
   courseExamsCount: number;
   examSubmissionsCount: number;
   examSubmissions: AnalyticsSubmission[];
+}
+
+export interface ExamDisputes {
+  examId: number;
+  examName: string;
+  numberOfDisputes: number;
+}
+
+export interface ExamSubmissionsDisputes {
+  id: number;
+  status: string;
+  created_at: number;
+}
+
+export interface ExamSubmissionDispute {
+  created_at: number;
+  description: string;
+  id: number;
+  resolved_at: number | null;
+  status: string;
+  submission: {
+    created_at: number;
+    document_path: string;
+    id: number;
+    score: number;
+    student: {
+      id: number;
+      student_id: number;
+      user: {
+        first_name: string;
+        id: number;
+        last_name: string;
+      };
+    };
+    updated_at: number;
+  };
+  updated_at: number;
+}
+
+export interface UserEditData {
+  first_name: string;
+  last_name: string;
+  student_id: number;
+  employee_id: number;
+}
+
+export interface SemesterData {
+  name: string;
+  starts_at: number;
+  ends_at: number;
+  course_count?: number;
+}
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
 }

@@ -12,6 +12,7 @@ import { TokenModule } from './modules/token/token.module';
 import { MailModule } from './modules/mail/mail.module';
 import { FileModule } from './modules/file/file.module';
 import { TasksModule } from './modules/tasks/tasks.module';
+import { SeedModule } from './modules/seed/seed.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TasksModule } from './modules/tasks/tasks.module';
     MailModule,
     FileModule,
     TasksModule,
+    SeedModule,
   ],
 })
 export class AppModule {}

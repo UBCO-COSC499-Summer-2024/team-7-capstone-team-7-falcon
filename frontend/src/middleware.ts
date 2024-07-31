@@ -1,9 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { usersAPI } from "@/app/api/usersAPI";
-import { User } from "@/app/typings/backendDataTypes";
-import { fetchAuthToken } from "@/app/api/cookieAPI";
 import { authAPI, verifyIdPresence } from "@/app/api/authAPI";
+import { healthAPI } from "./app/api/healthAPI";
 
 const auth_pages = ["/login", "/signup", "/reset-password", "/change-password"];
 
@@ -18,6 +17,14 @@ const userRoleMap = {
 
 export async function middleware(request: NextRequest) {
   const { url, nextUrl } = request;
+
+  const isBackendAvailable = await healthAPI.isBackendHealthy();
+  if (!isBackendAvailable && request.cookies.has("auth_token")) {
+    const response = NextResponse.redirect(new URL("/login", url));
+    response.cookies.delete("auth_token");
+    return response;
+  }
+
   const isAuthPageRequested = isAuthPages(nextUrl.pathname);
   const hasVerifiedToken = await authAPI.hasVerifiedToken();
 
@@ -43,6 +50,14 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // redirect to login page if user tries to access the root
+  // the next logic block will redirect to the dashboard if the user is authenticated and accesses the login page
+  if (nextUrl.pathname === "/") {
+    const redirectURL = new URL("/login", url);
+    const response = NextResponse.redirect(redirectURL);
+    return response;
+  }
+
   // Redirect to dashboard if user is authenticated and tries to access login/signup page
   if (isAuthPageRequested) {
     if (!hasVerifiedToken) {
@@ -50,6 +65,12 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       return response;
     }
+
+    const hasID = await verifyIdPresence();
+    if (!hasID) {
+      return NextResponse.redirect(new URL("/setup-account", url));
+    }
+
     const userRole = await usersAPI.getUserRole();
     const response = NextResponse.redirect(
       new URL(userRoleMap[userRole as keyof typeof userRoleMap], url),
@@ -65,9 +86,15 @@ export async function middleware(request: NextRequest) {
   }
 
   // if user is authenticated, verify that they have at least one ID set
-  const hasID = await verifyIdPresence();
-  if (!hasID) {
-    return NextResponse.redirect(new URL("/setup-account", url));
+  try {
+    const hasID = await verifyIdPresence();
+    if (!hasID) {
+      return NextResponse.redirect(new URL("/setup-account", url));
+    }
+  } catch (e) {
+    const response = NextResponse.redirect(new URL("/login", url));
+    response.cookies.delete("auth_token");
+    return response;
   }
 
   // Users should not be able to access pages that are not meant for their role

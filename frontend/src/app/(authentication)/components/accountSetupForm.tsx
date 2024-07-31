@@ -1,11 +1,20 @@
 "use client";
-import React, { useState, FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import { Button, Label, TextInput, Radio } from "flowbite-react";
+
+interface User {
+  student_id: string;
+  employee_id: string;
+}
 
 export default function AccountSetupForm({
   userID,
   handleInputChange,
   onSetup,
+}: {
+  userID: User;
+  handleInputChange: (field: string, value: string) => void;
+  onSetup: (event: FormEvent<HTMLFormElement> | any) => void;
 }) {
   const [userRole, setUserRole] = useState({
     role: "student",
@@ -32,7 +41,7 @@ export default function AccountSetupForm({
               id="student-role"
               name="roles"
               value="student"
-              onChange={(e) => setUserRole({ ...userRole, role: "student" })}
+              onChange={(_) => setUserRole({ ...userRole, role: "student" })}
               defaultChecked
             />
             <Label htmlFor="student-role">student</Label>
@@ -43,7 +52,7 @@ export default function AccountSetupForm({
               id="employee-role"
               name="roles"
               value="instructor"
-              onChange={(e) => setUserRole({ ...userRole, role: "instructor" })}
+              onChange={(_) => setUserRole({ ...userRole, role: "instructor" })}
             />
             <Label htmlFor="employee-role">employee</Label>
           </div>
@@ -87,7 +96,7 @@ export default function AccountSetupForm({
         </div>
 
         <Button
-          onClick={onSetup}
+          onClick={(e: any) => onSetup(e)}
           color="purple"
           size="xs"
           className="w-full text-white text-xl purple-700 font-bold py-3 rounded-md transition duration-300"

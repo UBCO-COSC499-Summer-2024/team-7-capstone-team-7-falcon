@@ -28,7 +28,7 @@ const EditCourse = async ({ params }: { params: { courseId: string } }) => {
         </div>
         <div className="justify-self-end">
           <Link
-            href={`../${course.id}/`}
+            href={`../${course.id}/exam`}
             className="space-x-4 flex items-center btn-primary"
           >
             <ArrowLeft />
@@ -37,7 +37,7 @@ const EditCourse = async ({ params }: { params: { courseId: string } }) => {
         </div>
       </div>
       <h1 className="text-xl font-bold">Edit Course Information:</h1>
-      <CourseEditForm courseId={course.id} />
+      <CourseEditForm courseId={course.id} redirectPath="../../" />
     </div>
   );
 };

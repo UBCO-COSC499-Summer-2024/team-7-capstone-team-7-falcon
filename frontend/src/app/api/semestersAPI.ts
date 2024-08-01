@@ -3,7 +3,6 @@ import { fetchAuthToken } from "./cookieAPI";
 import { SemesterData } from "../typings/backendDataTypes";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const BACKEND_URL_CLIENT = process.env.NEXT_PUBLIC_BACKEND_URL_CLIENT;
 const BACKEND_URL_SERVER = process.env.NEXT_PUBLIC_BACKEND_URL_SERVER;
 
 export const semestersAPI = {
@@ -58,7 +57,7 @@ export const semestersAPI = {
       });
 
       const response = await instance.get(`${BACKEND_URL}/api/v1/semester/all`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Failed to fetch semesters:", error);
       throw error;

@@ -32,7 +32,7 @@ const user_columns: Column[] = [
   },
 ];
 
-const SemesterTable: React.FC<> = () => {
+const SemesterTable: React.FC = () => {
   const [data, setData] = useState<DataItem<SemesterData>[] | null>(null);
 
   // gets the data once on mount
@@ -40,7 +40,9 @@ const SemesterTable: React.FC<> = () => {
     const fetchData = async () => {
       const result = await semestersAPI.getAllSemesters();
 
-      const semesters: DataItem<SemesterData>[] = result.map(
+      if (result.status === 204) return;
+
+      const semesters: DataItem<SemesterData>[] = result.data.map(
         (item: SemesterData) => ({
           id: item.id,
           name: item.name,

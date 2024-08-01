@@ -6,6 +6,7 @@ import { coursesAPI } from "../../../api/coursesAPI";
 import { CourseUser } from "../../../typings/backendDataTypes";
 import TableComponent from "../../../components/tableComponent";
 import Avatar from "../../../components/avatar";
+import Link from "flowbite-react";
 
 const user_columns: Column[] = [
   { label: "#", renderCell: (item) => item.id },
@@ -32,15 +33,16 @@ const user_columns: Column[] = [
   { label: "Role", renderCell: (item) => item.role },
   {
     label: "Actions",
-    renderCell: (item, onRemoveClick) => (
-      <button
-        type="button"
-        className="btn-primary flex p-1 px-4"
-        onClick={() => onRemoveClick(item.id)}
-      >
-        Remove Student
-      </button>
-    ),
+    renderCell: (item) =>
+      item.role === "student" ? (
+        <Link href={`./course/${item.id}`}>
+          <button type="button" className="btn-primary flex p-1 px-4">
+            Remove Student
+          </button>
+        </Link>
+      ) : (
+        <div>No available actions</div>
+      ),
   },
 ];
 

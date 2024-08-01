@@ -1,8 +1,10 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
-import { User, UserEditData } from "@/app/typings/backendDataTypes";
-import { UpdatedUser } from "../typings/backendDataTypes";
-import { Toast } from "flowbite-react";
+import {
+  UpdatedUser,
+  User,
+  UserEditData,
+} from "@/app/typings/backendDataTypes";
 import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -70,6 +72,44 @@ export const usersAPI = {
         throw new Error("User not found");
       } else {
         console.error("Failed to fetch user details:", error);
+        throw error;
+      }
+    }
+  },
+
+  /**
+   * Fetches the details of a user by their ID from the backend API.
+   * @param userId {number} - The ID of the user to fetch
+   * @returns {Promise<User | null>} - A promise that resolves to the details of the user. Returns null when the user does not have any IDs set.
+   */
+  getUserDetailsById: async (userId: number): Promise<User | null> => {
+    try {
+      const auth_token = await fetchAuthToken();
+
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/user/`,
+        headers: {
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+
+      const response = await instance.get<User>(
+        `${BACKEND_URL}/api/v1/user/${userId}`,
+      );
+      return response.data;
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.status === 403 &&
+        error.response.data.errorCode === "STUDENT_OR_EMPLOYEE_ID_NOT_PRESENT"
+      ) {
+        // handle the case where no IDs are set for the user
+        return null;
+      } else if (error.response && error.response.status === 404) {
+        throw new Error("User not found");
+      } else {
+        throw error;
       }
     }
   },
@@ -136,6 +176,7 @@ export const usersAPI = {
       console.error("Error, failed to update user details", error);
     }
   },
+
   getAllUsersCount: async () => {
     try {
       const auth_token = await fetchAuthToken();
@@ -209,10 +250,10 @@ export const usersAPI = {
       toast.error("Failed to change user role");
     }
   },
+
   editUser: async (userId: number, userData: UserEditData) => {
     try {
       const auth_token = await fetchAuthToken();
-
       const instance = axios.create({
         baseURL: `${BACKEND_URL}/api/v1/user/`,
         headers: {
@@ -234,6 +275,7 @@ export const usersAPI = {
       return error;
     }
   },
+
   deleteProfilePicture: async (userId: number) => {
     try {
       const auth_token = await fetchAuthToken();

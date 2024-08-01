@@ -1,7 +1,7 @@
 import { examsAPI } from "@/app/api/examAPI";
 import { Alert, FileInput, Label, Modal } from "flowbite-react";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 interface UploadExamSubmissionsModalProps {
   examId: number;

@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useState } from "react";
 import CourseGrid from "../components/courseGrid";
 import { Toaster } from "react-hot-toast";
 /**
@@ -17,7 +16,7 @@ const StudentCourses: React.FC = () => {
         <h1 className="text-2xl font-bold">Joined Courses</h1>
       </div>
       <div>
-        <CourseGrid />
+        <CourseGrid reload={false} />
       </div>
     </div>
   );

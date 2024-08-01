@@ -180,9 +180,7 @@ def app():
 
                 # ---
             unique_id = uuid.uuid4()
-            complete_job(
-                backend_url, queue_name, job_id, unique_id
-            )
+            complete_job(backend_url, queue_name, job_id, unique_id)
         except requests.exceptions.RequestException:
             logging.critical("Cannot connect to the backend")
             continue

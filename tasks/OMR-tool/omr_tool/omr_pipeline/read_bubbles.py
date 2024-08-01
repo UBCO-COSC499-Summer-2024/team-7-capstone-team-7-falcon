@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 def generate_bubble_contours(image):
     """
     Function to detect contours for the bubbles in an image.
@@ -27,11 +28,12 @@ def generate_bubble_contours(image):
             (x, y, w, h) = cv2.boundingRect(cnt)
             aspect_ratio1 = w / float(h)
             if aspect_ratio1 >= 0.7 and aspect_ratio1 <= 1.3 and w > 10:
-                bubble_contours.append(cnt)  
+                bubble_contours.append(cnt)
 
     # Sort Contours by x value
     sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
     return sorted_contours
+
 
 def find_filled_bubbles(img, bubble_contours, threshold=450):
     filled_index = []
@@ -43,6 +45,7 @@ def find_filled_bubbles(img, bubble_contours, threshold=450):
         if total > threshold:
             filled_index.append(i)
     return filled_index
+
 
 def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     if question_num > len(answer_key):
@@ -62,7 +65,6 @@ def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
         "answered": filled_index,
     }
     return color, correct_answer_indices, result
-
 
 
 def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):

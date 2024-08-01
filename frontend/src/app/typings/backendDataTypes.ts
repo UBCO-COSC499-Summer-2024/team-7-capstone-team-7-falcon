@@ -1,3 +1,21 @@
+/**
+ * User submission exam answer interface
+ */
+interface UserSubmissionExamAnswer {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}
+
+/**
+ * User submission exam answers interface
+ */
+interface UserSubmissionExamAnswers {
+  errorFlag: boolean;
+  answer_list: UserSubmissionExamAnswer[];
+}
+
 export interface CourseData {
   id?: number;
   course_code: string;
@@ -23,6 +41,13 @@ export interface CourseAdminDetails {
   };
 }
 
+export interface CourseEditData {
+  courseCode: string;
+  courseName: string;
+  semesterId: number;
+  inviteCode: string;
+}
+
 export interface StudentUser {
   student_id: number;
   id: number;
@@ -31,13 +56,6 @@ export interface StudentUser {
 export interface EmployeeUser {
   employee_id: number;
   id: number;
-}
-
-export interface CourseEditData {
-  courseCode: string;
-  courseName: string;
-  semesterId: number;
-  inviteCode: string;
 }
 
 export interface User {
@@ -332,6 +350,23 @@ export interface UserEditData {
   last_name: string;
   student_id: number;
   employee_id: number;
+}
+
+export interface SemesterData {
+  name: string;
+  starts_at: number;
+  ends_at: number;
+  course_count?: number;
+}
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
 }
 
 export interface Question {

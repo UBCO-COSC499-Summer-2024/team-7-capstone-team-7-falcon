@@ -30,7 +30,7 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
 
   const fetchUserData = async () => {
     try {
-      const user = await usersAPI.getUserDetails();
+      const user = await usersAPI.getUserDetailsById(userId); // Pass userId to fetch user details
       setUserData(user);
     } catch (error) {
       console.error("Error fetching user data:", error);

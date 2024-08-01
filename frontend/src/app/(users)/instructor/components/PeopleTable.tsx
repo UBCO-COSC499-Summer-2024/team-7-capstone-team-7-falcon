@@ -6,7 +6,6 @@ import { coursesAPI } from "../../../api/coursesAPI";
 import { CourseUser } from "../../../typings/backendDataTypes";
 import TableComponent from "../../../components/tableComponent";
 import Avatar from "../../../components/avatar";
-import Link from "flowbite-react";
 
 const user_columns: Column[] = [
   { label: "#", renderCell: (item) => item.id },
@@ -33,13 +32,15 @@ const user_columns: Column[] = [
   { label: "Role", renderCell: (item) => item.role },
   {
     label: "Actions",
-    renderCell: (item) =>
+    renderCell: (item, onRemoveClick) =>
       item.role === "student" ? (
-        <Link href={`./course/${item.id}`}>
-          <button type="button" className="btn-primary flex p-1 px-4">
-            Remove Student
-          </button>
-        </Link>
+        <button
+          type="button"
+          className="btn-primary flex p-1 px-4"
+          onClick={() => onRemoveClick(item.data.id)}
+        >
+          Remove Student
+        </button>
       ) : (
         <div>No available actions</div>
       ),
@@ -57,7 +58,6 @@ const PeopleTable: React.FC<PeopleTableProps> = ({
 }) => {
   const [data, setData] = useState<DataItem<CourseUser>[] | null>(null);
 
-  // gets the data once on mount
   useEffect(() => {
     const fetchData = async () => {
       const result = await coursesAPI.getCourseMembers(course_id);
@@ -87,18 +87,14 @@ const PeopleTable: React.FC<PeopleTableProps> = ({
     return <p>Data not found</p>;
   }
 
+  const columnsWithActions = user_columns.map((col) =>
+    col.label === "Actions"
+      ? { ...col, renderCell: (item) => col.renderCell(item, onRemoveClick) }
+      : col,
+  );
+
   return (
-    <TableComponent<CourseUser>
-      data={data}
-      columns={user_columns.map((col) =>
-        col.label === "Actions"
-          ? {
-              ...col,
-              renderCell: (item) => col.renderCell(item, onRemoveClick),
-            }
-          : col,
-      )}
-    />
+    <TableComponent<CourseUser> data={data} columns={columnsWithActions} />
   );
 };
 

@@ -10,7 +10,7 @@ import CourseHeader from "../../../components/courseHeader";
 import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
-import DeleteUserModal from "../../../components/DeleteUserModal";
+import DeleteUserModal from "../../../components/deleteUserModal";
 
 const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
@@ -18,6 +18,7 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
+  // Fetch course data on mount
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -31,11 +32,13 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
     fetchCourse();
   }, [cid]);
 
+  // Open the modal and set selected user ID
   const handleOpenModal = (userId: number) => {
     setSelectedUserId(userId);
     setIsModalOpen(true);
   };
 
+  // Close the modal and clear selected user ID
   const handleCloseModal = () => {
     setSelectedUserId(null);
     setIsModalOpen(false);
@@ -71,6 +74,7 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
           <PeopleTable course_id={cid} onRemoveClick={handleOpenModal} />
         </div>
       </div>
+      {/* Conditionally render the modal */}
       {selectedUserId !== null && (
         <DeleteUserModal
           courseId={cid}

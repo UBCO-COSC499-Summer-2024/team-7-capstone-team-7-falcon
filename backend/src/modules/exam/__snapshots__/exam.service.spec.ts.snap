@@ -13,7 +13,7 @@ ExamModel {
 exports[`ExamService createExamSubmission should create a submission for an exam when student record is found 1`] = `
 StudentUserModel {
   "id": 1,
-  "student_id": "1",
+  "student_id": 1,
   "submissions": [
     SubmissionModel {
       "answers": {},
@@ -573,7 +573,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 9,
     "student": {
       "id": 10,
-      "student_id": "9",
+      "student_id": 9,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -590,7 +590,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 8,
     "student": {
       "id": 9,
-      "student_id": "8",
+      "student_id": 8,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -607,7 +607,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 7,
     "student": {
       "id": 8,
-      "student_id": "7",
+      "student_id": 7,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -624,7 +624,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 6,
     "student": {
       "id": 7,
-      "student_id": "6",
+      "student_id": 6,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -641,7 +641,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 5,
     "student": {
       "id": 6,
-      "student_id": "5",
+      "student_id": 5,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -658,7 +658,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 4,
     "student": {
       "id": 5,
-      "student_id": "4",
+      "student_id": 4,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -675,7 +675,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 3,
     "student": {
       "id": 4,
-      "student_id": "3",
+      "student_id": 3,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -692,7 +692,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 2,
     "student": {
       "id": 3,
-      "student_id": "2",
+      "student_id": 2,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -709,7 +709,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 1,
     "student": {
       "id": 2,
-      "student_id": "1",
+      "student_id": 1,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -726,7 +726,7 @@ exports[`ExamService getSubmissionsByExamId should return submissions by exam id
     "score": 0,
     "student": {
       "id": 1,
-      "student_id": "0",
+      "student_id": 0,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -972,7 +972,7 @@ SubmissionModel {
   "score": 23,
   "student": StudentUserModel {
     "id": 1,
-    "student_id": "1234",
+    "student_id": 1234,
   },
   "updated_at": "1000000000",
 }

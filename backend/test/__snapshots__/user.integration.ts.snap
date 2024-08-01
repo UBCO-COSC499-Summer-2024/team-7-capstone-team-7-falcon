@@ -14,7 +14,7 @@ exports[`User Integration GET /user/:uid should return status 200 and user objec
   "role": "admin",
   "student_user": {
     "id": 1,
-    "student_id": "123",
+    "student_id": 123,
   },
   "updated_at": "1000000000",
 }

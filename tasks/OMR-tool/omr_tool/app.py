@@ -98,11 +98,11 @@ def send_grades(backend_url, exam_id, submission_results):
     """
 
     student_id = submission_results["student_id"]
- 
+
     request = requests.post(
         f"{backend_url}/exam/{exam_id}/{student_id}",
         headers={"x-worker-auth-token": os.getenv("WORKER_TOKEN")},
-        data={
+        json={
             "answers": submission_results["answers"],
             "score": submission_results["score"],
             "documentPath": str(submission_results["document_path"]),
@@ -112,13 +112,12 @@ def send_grades(backend_url, exam_id, submission_results):
     if request.status_code == 400:
         logging.critical("400 - Invalid payload")
         logging.critical(request.json())
-    
+
     if request.status_code == 401:
         logging.critical("401 - Invalid WORKER token")
 
     if request.status_code == 404:
         logging.info("404 - Exam not found for course")
-
 
 
 def app():
@@ -183,7 +182,7 @@ def app():
             unique_id = uuid.uuid4()
             complete_job(
                 backend_url, queue_name, job_id, unique_id
-            )  # TODO: what is unique ID?
+            )
         except requests.exceptions.RequestException:
             logging.critical("Cannot connect to the backend")
             continue

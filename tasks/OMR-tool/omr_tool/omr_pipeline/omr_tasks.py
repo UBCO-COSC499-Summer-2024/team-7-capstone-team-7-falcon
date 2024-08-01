@@ -1,11 +1,11 @@
 from PIL.Image import Image, fromarray
 from omr_tool.omr_pipeline.read_bubbles import (
+    generate_bubble_contours,
     find_filled_bubbles,
     order_questions,
     evaluate_answer,
 )
 from omr_tool.utils.image_process import (
-    generate_bubble_contours,
     prepare_img,
     extract_roi,
     draw_bubble_contours,

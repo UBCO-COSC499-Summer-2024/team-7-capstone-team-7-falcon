@@ -80,39 +80,6 @@ def threshold_img(image):
     return thresh
 
 
-def generate_bubble_contours(image):
-    """
-    Function to detect contours for the bubbles in an image.
-
-    Args:
-        image (PIL.Image): The image to detect contours in.
-
-    Returns:
-        list: A list of contours detected in the image.
-
-    """
-
-    # Find contours
-    all_contours = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
-        0
-    ]
-
-    bubble_contours = []
-
-    for cnt in all_contours:
-        approx = cv2.approxPolyDP(cnt, 0.03 * cv2.arcLength(cnt, True), True)
-
-        if cv2.isContourConvex(approx):
-            (x, y, w, h) = cv2.boundingRect(cnt)
-            aspect_ratio1 = w / float(h)
-            if aspect_ratio1 >= 0.7 and aspect_ratio1 <= 1.3 and w > 10:
-                bubble_contours.append(cnt)  
-
-    # Sort Contours by x value
-    sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
-    return sorted_contours
-
-
 def sort_contours(cnts):
     """
     Function to sort contours from top to bottom and left to right.

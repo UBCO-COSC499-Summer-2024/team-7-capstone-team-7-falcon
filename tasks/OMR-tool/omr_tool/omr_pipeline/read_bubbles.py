@@ -1,7 +1,48 @@
 import cv2
 import numpy as np
-from omr_tool.utils.image_process import threshold_img
 
+def generate_bubble_contours(image):
+    """
+    Function to detect contours for the bubbles in an image.
+
+    Args:
+        image (PIL.Image): The image to detect contours in.
+
+    Returns:
+        list: A list of contours detected in the image.
+
+    """
+
+    # Find contours
+    all_contours = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
+        0
+    ]
+
+    bubble_contours = []
+
+    for cnt in all_contours:
+        approx = cv2.approxPolyDP(cnt, 0.03 * cv2.arcLength(cnt, True), True)
+
+        if cv2.isContourConvex(approx):
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            aspect_ratio1 = w / float(h)
+            if aspect_ratio1 >= 0.7 and aspect_ratio1 <= 1.3 and w > 10:
+                bubble_contours.append(cnt)  
+
+    # Sort Contours by x value
+    sorted_contours = sorted(bubble_contours, key=lambda cnt: cv2.boundingRect(cnt)[0])
+    return sorted_contours
+
+def find_filled_bubbles(img, bubble_contours, threshold=450):
+    filled_index = []
+    for i, cnt in enumerate(bubble_contours):
+        mask = np.zeros(img.shape, dtype="uint8")
+        cv2.drawContours(mask, [cnt], -1, 255, -1)
+        mask = cv2.bitwise_and(img, img, mask=mask)
+        total = cv2.countNonZero(mask)
+        if total > threshold:
+            filled_index.append(i)
+    return filled_index
 
 def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     if question_num > len(answer_key):
@@ -22,17 +63,6 @@ def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     }
     return color, correct_answer_indices, result
 
-
-def find_filled_bubbles(img, bubble_contours, threshold=450):
-    filled_index = []
-    for i, cnt in enumerate(bubble_contours):
-        mask = np.zeros(img.shape, dtype="uint8")
-        cv2.drawContours(mask, [cnt], -1, 255, -1)
-        mask = cv2.bitwise_and(img, img, mask=mask)
-        total = cv2.countNonZero(mask)
-        if total > threshold:
-            filled_index.append(i)
-    return filled_index
 
 
 def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):

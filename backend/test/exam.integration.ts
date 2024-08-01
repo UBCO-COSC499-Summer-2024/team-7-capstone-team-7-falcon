@@ -2591,14 +2591,16 @@ describe('Exam Integration', () => {
       await supertest()
         .post(`/exam/${exam.id}/123`)
         .set('x-worker-auth-token', 'secret_worker_auth_token')
-        .send({ answers: {
-          errorFlag: false,
-          answer_list: [
-            { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
-          ],
-        },
-        documentPath: 'path',
-        score: 2, })
+        .send({
+          answers: {
+            errorFlag: false,
+            answer_list: [
+              { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+            ],
+          },
+          documentPath: 'path',
+          score: 2,
+        })
         .expect(200);
     });
   });

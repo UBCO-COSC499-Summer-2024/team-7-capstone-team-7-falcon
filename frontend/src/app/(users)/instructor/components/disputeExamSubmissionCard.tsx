@@ -3,9 +3,7 @@
 import { examsAPI } from "@/app/api/examAPI";
 import { ExamSubmissionDispute } from "@/app/typings/backendDataTypes";
 import { Card, Label, Badge, Dropdown } from "flowbite-react";
-import { useState } from "react";
 import toast from "react-hot-toast";
-import DisputeExamSubmissionChangeGradeModal from "./disputeExamSubmissionChangeGradeModal";
 
 interface DisputeExamSubmissionCardProps {
   courseId: number;

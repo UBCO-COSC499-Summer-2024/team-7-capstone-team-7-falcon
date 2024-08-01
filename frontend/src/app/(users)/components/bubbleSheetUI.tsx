@@ -65,7 +65,7 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
       );
       if (response && response.status === 200) {
         toast.success("Answers updated", {
-          duration: 5_000,
+          duration: 1_500,
         });
       } else {
         toast.error("Error updating answers");

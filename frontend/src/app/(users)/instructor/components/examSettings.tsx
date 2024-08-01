@@ -20,10 +20,8 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
   );
 
   const releaseGrades = async () => {
-    let result;
-
     if (gradesReleased) {
-      result = await examsAPI.hideExamGrades(examId, courseId);
+      const result = await examsAPI.hideExamGrades(examId, courseId);
 
       if (result && result.status === 200) {
         toast.success("Grades hidden successfully");
@@ -34,7 +32,7 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       return;
     }
 
-    result = await examsAPI.releaseExamGrades(examId, courseId);
+    const result = await examsAPI.releaseExamGrades(examId, courseId);
 
     if (result && result.status === 200) {
       setGradesReleased(true);

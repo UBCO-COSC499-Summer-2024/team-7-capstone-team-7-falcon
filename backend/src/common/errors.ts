@@ -262,3 +262,12 @@ export class DisputeSubmissionException extends Error {
     super(message);
   }
 }
+
+/**
+ * Exception thrown when there is an error with update submission
+ */
+export class UpdateSubmissionException extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}

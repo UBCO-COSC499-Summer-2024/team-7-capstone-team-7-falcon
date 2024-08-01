@@ -1,12 +1,47 @@
-import { IsNumber, Max, Min } from 'class-validator';
-import { ERROR_MESSAGES } from '../../../common';
+import {
+  IsBoolean,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+  IsObject,
+  Min,
+  Max,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import 'reflect-metadata';
+
+class Answer {
+  @IsNumber()
+  @Min(0)
+  question_num!: number;
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  expected!: number[];
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  answered!: number[];
+
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  score!: number;
+}
+
+class Answers {
+  @IsBoolean()
+  errorFlag!: boolean;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Answer)
+  answer_list!: Answer[];
+}
 
 export class SubmissionGradeDto {
-  @IsNumber(
-    { maxDecimalPlaces: 3 },
-    { message: ERROR_MESSAGES.submissionController.invalidGradeError },
-  )
-  @Min(0, { message: ERROR_MESSAGES.submissionController.minGradeError })
-  @Max(100, { message: ERROR_MESSAGES.submissionController.maxGradeError })
-  grade!: number;
+  @IsObject()
+  @ValidateNested()
+  @Type(() => Answers)
+  answers!: Answers;
 }

@@ -52,8 +52,6 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ userId }) => {
     e.preventDefault();
     try {
       setSavingChanges(true);
-      console.log(userData);
-      console.log(formData);
       if (
         formData.first_name === userData?.first_name &&
         formData.last_name === userData?.last_name &&

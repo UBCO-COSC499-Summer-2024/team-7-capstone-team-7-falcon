@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { coursesAPI } from "../../../../../api/coursesAPI";
 import {
   Course,
@@ -8,10 +11,40 @@ import AddStudentButton from "../../../components/AddStudentButton";
 import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
+import DeleteUserModal from "../../../components/DeleteUserModal";
 
-const PeoplePage = async ({ params }: { params: { courseId: string } }) => {
+const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
-  const course: Course = await coursesAPI.getCourse(cid);
+  const [course, setCourse] = useState<Course | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const fetchedCourse = await coursesAPI.getCourse(cid);
+        setCourse(fetchedCourse);
+      } catch (error) {
+        console.error("Error fetching course:", error);
+      }
+    };
+
+    fetchCourse();
+  }, [cid]);
+
+  const handleOpenModal = (userId: number) => {
+    setSelectedUserId(userId);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedUserId(null);
+    setIsModalOpen(false);
+  };
+
+  if (!course) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -39,9 +72,17 @@ const PeoplePage = async ({ params }: { params: { courseId: string } }) => {
           </button>
         </div>
         <div className="mt-4 col-span-2">
-          <PeopleTable course_id={Number(params.courseId)} />
+          <PeopleTable course_id={cid} onRemoveClick={handleOpenModal} />
         </div>
       </div>
+      {selectedUserId !== null && (
+        <DeleteUserModal
+          courseId={cid}
+          userId={selectedUserId}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

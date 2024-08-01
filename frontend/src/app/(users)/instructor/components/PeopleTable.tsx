@@ -1,11 +1,11 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "../../../components/type";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { CourseUser } from "../../../typings/backendDataTypes";
-import Link from "next/link";
-import Avatar from "../../../components/avatar";
 import TableComponent from "../../../components/tableComponent";
+import Avatar from "../../../components/avatar";
 
 const user_columns: Column[] = [
   { label: "#", renderCell: (item) => item.id },
@@ -32,21 +32,27 @@ const user_columns: Column[] = [
   { label: "Role", renderCell: (item) => item.role },
   {
     label: "Actions",
-    renderCell: (item) => (
-      <Link href={`./course/${item.id}`}>
-        <button type="button" className="btn-primary flex p-1 px-4">
-          Remove Student
-        </button>
-      </Link>
+    renderCell: (item, onRemoveClick) => (
+      <button
+        type="button"
+        className="btn-primary flex p-1 px-4"
+        onClick={() => onRemoveClick(item.id)}
+      >
+        Remove Student
+      </button>
     ),
   },
 ];
 
 type PeopleTableProps = {
   course_id: number;
+  onRemoveClick: (userId: number) => void;
 };
 
-const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
+const PeopleTable: React.FC<PeopleTableProps> = ({
+  course_id,
+  onRemoveClick,
+}) => {
   const [data, setData] = useState<DataItem<CourseUser>[] | null>(null);
 
   // gets the data once on mount
@@ -73,13 +79,25 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
       setData(users);
     };
     fetchData();
-  }, []);
+  }, [course_id]);
 
   if (!data) {
     return <p>Data not found</p>;
   }
 
-  return <TableComponent<CourseUser> data={data} columns={user_columns} />;
+  return (
+    <TableComponent<CourseUser>
+      data={data}
+      columns={user_columns.map((col) =>
+        col.label === "Actions"
+          ? {
+              ...col,
+              renderCell: (item) => col.renderCell(item, onRemoveClick),
+            }
+          : col,
+      )}
+    />
+  );
 };
 
 export default PeopleTable;

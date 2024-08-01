@@ -14,7 +14,7 @@ export class StudentUserModel extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'bigint' })
+  @Column()
   student_id: number;
 
   @OneToOne(() => UserModel, (user) => user.student_user)

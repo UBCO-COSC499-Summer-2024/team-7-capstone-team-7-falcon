@@ -4,7 +4,6 @@ import {
   SelectedButton,
 } from "../../../../../typings/backendDataTypes";
 import CourseHeader from "../../../components/courseHeader";
-import AddStudentButton from "../../../components/AddStudentButton";
 import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
@@ -25,9 +24,6 @@ const PeoplePage = async ({ params }: { params: { courseId: string } }) => {
           />
         </div>
         <div className="justify-self-end space-y-4">
-          <div className="col-span-1 justify-self-end space-y-4">
-            <AddStudentButton />
-          </div>
           <button type="button" className="btn-primary block">
             <Link
               href={`../${course.id}/exam`}

@@ -16,7 +16,23 @@ StudentUserModel {
   "student_id": 1,
   "submissions": [
     SubmissionModel {
-      "answers": {},
+      "answers": {
+        "answer_list": [
+          {
+            "answered": [
+              1,
+              2,
+            ],
+            "expected": [
+              1,
+              2,
+            ],
+            "question_num": 0,
+            "score": 1,
+          },
+        ],
+        "errorFlag": false,
+      },
       "document_path": "path",
       "id": 1,
       "score": 2,
@@ -36,7 +52,23 @@ ExamModel {
   "questions": {},
   "submissions": [
     SubmissionModel {
-      "answers": {},
+      "answers": {
+        "answer_list": [
+          {
+            "answered": [
+              1,
+              2,
+            ],
+            "expected": [
+              1,
+              2,
+            ],
+            "question_num": 0,
+            "score": 1,
+          },
+        ],
+        "errorFlag": false,
+      },
       "document_path": "path",
       "id": 1,
       "score": 2,
@@ -57,7 +89,23 @@ ExamModel {
   "questions": {},
   "submissions": [
     SubmissionModel {
-      "answers": {},
+      "answers": {
+        "answer_list": [
+          {
+            "answered": [
+              1,
+              2,
+            ],
+            "expected": [
+              1,
+              2,
+            ],
+            "question_num": 0,
+            "score": 1,
+          },
+        ],
+        "errorFlag": false,
+      },
       "document_path": "path",
       "id": 1,
       "score": 2,

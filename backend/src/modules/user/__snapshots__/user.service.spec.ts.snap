@@ -286,7 +286,7 @@ UserModel {
   "role": "student",
   "student_user": StudentUserModel {
     "id": 1,
-    "student_id": "1",
+    "student_id": 1,
   },
   "updated_at": "1000000000",
 }

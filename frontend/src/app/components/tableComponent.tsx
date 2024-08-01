@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   Header,
@@ -13,11 +13,9 @@ import {
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 import { Pagination } from "flowbite-react";
-import { useState } from "react";
-import { Column } from "./type";
-import { DataItem } from "./type";
 import { MdOutlineSearch } from "react-icons/md";
 import { TextInput } from "flowbite-react";
+import { Column, DataItem } from "./type";
 
 type TableComponentProps<T> = {
   data: DataItem<T>[];
@@ -35,14 +33,16 @@ const TableComponent = <T,>({
   inputPlaceholderText = "Search by name",
 }: TableComponentProps<T>) => {
   const theme = useTheme(getTheme());
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // make this dynamic?
+  const itemsPerPage = 10;
 
-  const onPageChange = (page: number) => setCurrentPage(page);
+  useEffect(() => {
+    // Reset to the first page whenever search term changes
+    setCurrentPage(1);
+  }, [search]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
     setSearch(event.target.value);
   };
 
@@ -54,19 +54,18 @@ const TableComponent = <T,>({
     (item) => item && item.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filteredData.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  let totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   return (
     <div className="container flex flex-col">
       {showSearch && (
-        <form
-          className="flex max-w-full flex-col"
-          onSubmit={(event) => handleSubmit(event)}
-        >
+        <form className="flex max-w-full flex-col" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <TextInput
               id="search"
@@ -92,7 +91,6 @@ const TableComponent = <T,>({
                   ))}
                 </HeaderRow>
               </Header>
-
               <Body>
                 {paginatedData.map((item) => (
                   <Row key={item.name} item={item} className="bg-white">
@@ -109,11 +107,11 @@ const TableComponent = <T,>({
         </Table>
       </div>
       {showPagination && (
-        <div className="flex overflow-x-auto sm:justify-center">
+        <div className="flex overflow-x-auto sm:justify-center mt-4">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={onPageChange}
+            onPageChange={(page) => setCurrentPage(page)}
             showIcons
           />
         </div>

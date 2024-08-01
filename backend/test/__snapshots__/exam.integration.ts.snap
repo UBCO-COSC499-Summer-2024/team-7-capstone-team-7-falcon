@@ -15,7 +15,7 @@ exports[`Exam Integration GET /exam/:cid/:disputeId/exam_submission_dispute shou
     "score": 0,
     "student": {
       "id": 1,
-      "student_id": "123",
+      "student_id": 123,
       "user": {
         "first_name": "John",
         "id": 2,
@@ -57,7 +57,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 9,
     "student": {
       "id": 11,
-      "student_id": "9",
+      "student_id": 9,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -74,7 +74,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 8,
     "student": {
       "id": 10,
-      "student_id": "8",
+      "student_id": 8,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -91,7 +91,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 7,
     "student": {
       "id": 9,
-      "student_id": "7",
+      "student_id": 7,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -108,7 +108,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 6,
     "student": {
       "id": 8,
-      "student_id": "6",
+      "student_id": 6,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -125,7 +125,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 5,
     "student": {
       "id": 7,
-      "student_id": "5",
+      "student_id": 5,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -142,7 +142,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 4,
     "student": {
       "id": 6,
-      "student_id": "4",
+      "student_id": 4,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -159,7 +159,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 3,
     "student": {
       "id": 5,
-      "student_id": "3",
+      "student_id": 3,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -176,7 +176,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 2,
     "student": {
       "id": 4,
-      "student_id": "2",
+      "student_id": 2,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -193,7 +193,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 1,
     "student": {
       "id": 3,
-      "student_id": "1",
+      "student_id": 1,
       "user": {
         "avatar_url": null,
         "first_name": "John",
@@ -210,7 +210,7 @@ exports[`Exam Integration GET /exam/:cid/:eid/submissions should return 200 if e
     "score": 0,
     "student": {
       "id": 2,
-      "student_id": "0",
+      "student_id": 0,
       "user": {
         "avatar_url": null,
         "first_name": "John",

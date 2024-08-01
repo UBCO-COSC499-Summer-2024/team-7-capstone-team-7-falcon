@@ -101,6 +101,9 @@ def mark_submission_group(
 
     graded_images = to_PIL_images(graded_images)
 
+    # Make the score out of 100
+    score = score / len(answer_key) * 100
+
     return submission_results, graded_images
 
 

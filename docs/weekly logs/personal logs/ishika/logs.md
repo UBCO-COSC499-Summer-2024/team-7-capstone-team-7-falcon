@@ -1,3 +1,26 @@
+## Friday (7/31-8/01)
+
+<img width="1060" alt="image" src="https://github.com/user-attachments/assets/fb88108e-1041-4b75-8f30-a397725d5f59">
+
+## Project Board
+<img width="384" alt="image" src="https://github.com/user-attachments/assets/e3b12bf7-976c-4211-bf23-e2b93ff6e144">
+
+## Current Task
+1. Finish Remove Course Modal
+
+## Progress update since (7/27)
+
+I finished the Remove student from course modal and did some fixes on my end since I accidentally pulled new changes without resetting the database so it did cause some server issue.
+
+## Cycle Goal Review
+
+Overall, it was a good cycle since we did finish almost everything for the project. 
+
+## Next Cycle Goal
+
+1. Test o Rama - address any issues if found during testing
+2. Meet the team to discuss on the individual report.
+
 ## Wednesday (7/26-7/30)
 
 <img width="1091" alt="image" src="https://github.com/user-attachments/assets/aaf50d19-0efe-42aa-b582-2e30811b189d">

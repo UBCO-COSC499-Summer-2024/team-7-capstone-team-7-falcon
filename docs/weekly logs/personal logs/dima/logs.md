@@ -65,7 +65,7 @@ Clockify report
 
 ### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
 
-During this cycle, I focused on fixing existing bugs reported by Paula or just testing the system by myself. I did find some critical bugs which could impact the system and OMR pipeline, but I was able to resolve them relative quickly. Overall, I am happy with the current state of the project, and hope that system will work fine once we hand over the project.
+During this cycle, I focused on fixing existing bugs reported by Paula or just testing the system by myself. I did find some critical bugs which could impact the system and OMR pipeline, but I was able to resolve them relatively quickly. Overall, I am happy with the current state of the project, and hope that the system will work fine once we hand over the project.
 
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * Finish individual report

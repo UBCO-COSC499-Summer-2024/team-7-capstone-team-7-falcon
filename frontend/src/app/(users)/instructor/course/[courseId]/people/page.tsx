@@ -11,18 +11,19 @@ import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import DeleteUserModal from "../../../components/deleteUserModal";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 
 const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
   const [course, setCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [studentNameDetails, setStudentNameDetails] = useState<string | null>(
     null,
   );
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0); // State to trigger re-render
 
+  // Fetch course data on mount
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -36,16 +37,22 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
     fetchCourse();
   }, [cid]);
 
+  // Open the modal and set selected user ID
   const handleOpenModal = (userId: number, studentName: string) => {
-    setUserIdToDelete(userId);
+    if (userId == null || userId == undefined) {
+      toast.error("User ID is missing or invalid");
+      return;
+    }
+    setSelectedUserId(userId);
     setStudentNameDetails(studentName);
     setIsModalOpen(true);
   };
 
+  // Close the modal and clear selected user ID
   const handleCloseModal = () => {
+    setSelectedUserId(null);
     setIsModalOpen(false);
-    setUserIdToDelete(null);
-    setRefreshKey((prevKey) => prevKey + 1);
+    setRefreshKey((prevKey) => prevKey + 1); // Update the refresh key to trigger re-render
   };
 
   if (!course) {
@@ -84,10 +91,10 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
         </div>
       </div>
       {/* Conditionally render the modal */}
-      {isModalOpen && userIdToDelete !== null && (
+      {selectedUserId !== null && (
         <DeleteUserModal
           courseId={cid}
-          userId={userIdToDelete}
+          userId={selectedUserId}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           studentNameDetails={studentNameDetails}

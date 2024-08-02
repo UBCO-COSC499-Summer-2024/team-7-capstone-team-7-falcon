@@ -55,12 +55,15 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
     questionIndex: number,
   ) => {
     const value = Number(e.target.value);
-    const score = value === 0 || value === 1 ? value : 0;
+
+    if (value < 0 || value > 1) {
+      toast.error("Score must be 0 or 1");
+    }
 
     const updatedAnswerList = { ...detailedSubmission };
     updatedAnswerList.answer_list[questionIndex] = {
       ...updatedAnswerList.answer_list[questionIndex],
-      score: score,
+      score: value,
     };
 
     setDetailedSubmission(updatedAnswerList);
@@ -68,6 +71,15 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
 
   const handleKeyPress = async (e: any) => {
     if (e.key === "Enter") {
+      if (
+        detailedSubmission.answer_list.find(
+          (question) => question.score < 0 || question.score > 1,
+        )
+      ) {
+        toast.error("Score must be 0 or 1 for all questions");
+        return;
+      }
+
       const response = await examsAPI.updateGrade(
         examId,
         courseId,
@@ -147,7 +159,7 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
               if (questionIndex >= Number(questionCount)) return null;
               return (
                 <div className="flex mt-4 mx-1 justify" key={questionIndex}>
-                  <p className="pr-2">{questionIndex + 1}</p>
+                  <p className="w-8 block">{questionIndex + 1}</p>
                   {options.map((option, index) => {
                     const status = questionStyleMap[questionIndex][index];
                     let borderClass = "border border-gray-400";

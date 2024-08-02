@@ -180,7 +180,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
                 onChange={handleOptionChange}
                 min={0}
                 max={200}
-                placeholder="Min: 0, Max: 200"
+                placeholder="Enter a number between 0 and 200"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>

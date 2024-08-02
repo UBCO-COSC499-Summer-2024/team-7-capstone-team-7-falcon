@@ -30,27 +30,21 @@ const ToggleBubbleSheet: React.FC<{
 
   return (
     <div className="relative">
-      <div className="z-10 my-4 flex rounded-md">
-        <Edit
-          width={50}
-          height={50}
+      <div className="z-10 my-4 flex rounded-md space-x-3">
+        <button
+          className="flex items-center btn-primary"
           onClick={toggleBubbleSheetUI}
-          className={`p-1 rounded ${
-            !bubbleSheetUI
-              ? "bg-purple-700 hover:bg-purple-800 text-white"
-              : "border border-gray-200 hover:bg-gray-100"
-          }`}
-        />
-        <FilePdf
-          width={50}
-          height={50}
+        >
+          <Edit width={20} height={20} />
+          Edit Submission Grades
+        </button>
+        <button
+          className="flex items-center btn-primary"
           onClick={toggleBubbleSheetUI}
-          className={`p-1 rounded ${
-            bubbleSheetUI
-              ? "bg-purple-700 hover:bg-purple-800 text-white"
-              : "border border-gray-200 hover:bg-gray-100"
-          }`}
-        />
+        >
+          <FilePdf width={20} height={20} />
+          View PDF Submission
+        </button>
       </div>
       {bubbleSheetUI && (
         <PdfViewer

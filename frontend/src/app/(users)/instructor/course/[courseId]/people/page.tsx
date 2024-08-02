@@ -7,6 +7,7 @@ import CourseHeader from "../../../components/courseHeader";
 import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
+import EditCourseButton from "../../../components/editCourseButton";
 
 const PeoplePage = async ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
@@ -24,6 +25,9 @@ const PeoplePage = async ({ params }: { params: { courseId: string } }) => {
           />
         </div>
         <div className="justify-self-end space-y-4">
+          <div className="col-span-1 justify-self-end space-y-4">
+            <EditCourseButton courseId={Number(params.courseId)} />
+          </div>
           <button type="button" className="btn-primary block">
             <Link
               href={`../${course.id}/exam`}

@@ -1,5 +1,35 @@
 # Individual Logs for Paula
 
+## Wednesday (7/26 - 7/30)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.26_07.30"](images/clockify_07.26_07.30.png)
+
+### Current Tasks
+
+!["current_tasks_07.26_07.30"](images/current_tasks_07.26_07.30.png)
+
+* #1: Repo clean up and documentation/user guide updates
+* #2: Prepping survey and documents for test-o-rama
+* #3: Testing system for test-o-rama
+* #4: Docker setup for production
+
+### Progress Update (since 7/26/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I worked on updating the user guides/READMEs in the repo. I made the instructions using a fresh installation of WSL so that took a while to get going. At the same time, I have been trying to catch any other bugs we have not identified on the frontend.
+Task #4 is more exploratory since I have never really used Docker in production, but I am hoping to be of some help before Dima starts working on deployment this weekend. Since the test-o-rama exercise follows the same format as the first round of peer testing, the material prepared is reusable, and I am not expecting to spend much time on my side prepping for that.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Repo clean up and documentation updates
+* Prep for test-o-rama
+
 ## Friday (7/24 - 7/25)
 
 ### Timesheet

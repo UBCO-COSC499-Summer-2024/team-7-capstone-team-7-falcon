@@ -231,6 +231,35 @@ export const examsAPI = {
   },
 
   /**
+   * Hide exam grades
+   * @param examId {number} - exam id
+   * @param courseId {number} - course id
+   * @returns {Promise<any | Error>} - response
+   */
+  hideExamGrades: async (
+    examId: number,
+    courseId: number,
+  ): Promise<any | Error> => {
+    try {
+      const auth_token = await fetchAuthToken();
+      const instance = axios.create({
+        baseURL: `${BACKEND_URL}/api/v1/exam/`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth_token,
+        },
+        withCredentials: true,
+      });
+      const response = await instance.patch(
+        `/${examId}/${courseId}/hide_grades`,
+      );
+      return response;
+    } catch (error: any) {
+      return error;
+    }
+  },
+
+  /**
    * Upload exam submissions
    * @param formData {FormData} - form data
    * @param examId {number} - exam id

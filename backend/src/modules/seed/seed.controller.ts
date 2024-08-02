@@ -87,6 +87,16 @@ export class SeedController {
       password: hashedPassword,
     }).save();
 
+    const studentThree = await UserModel.create({
+      email: 'student3@owlmark.com',
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      email_verified: true,
+      password: hashedPassword,
+    }).save();
+
     const professor = await UserModel.create({
       email: 'professor@owlmark.com',
       first_name: faker.person.firstName(),
@@ -121,6 +131,11 @@ export class SeedController {
 
     await StudentUserModel.create({
       user: studentTwo,
+      student_id: faker.number.int({ min: 1_000, max: 9_999 }),
+    }).save();
+
+    await StudentUserModel.create({
+      user: studentThree,
       student_id: faker.number.int({ min: 1_000, max: 9_999 }),
     }).save();
 

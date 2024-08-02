@@ -8,7 +8,6 @@
 
 - Frontend
   - Remove students from a course
-  - Student edit page
 - OMR
   - Integrate OpenCV utilities into the pipeline
   - Structure for recording grades

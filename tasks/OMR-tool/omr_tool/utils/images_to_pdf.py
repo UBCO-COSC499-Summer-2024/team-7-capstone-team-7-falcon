@@ -45,8 +45,7 @@ def convert_to_pdf(graded_images, output_dir, file_name):
         return
 
     try:
-        pdf_path = os.path.join(f"{processed_path}/{output_dir}", f"{file_name}.pdf")
-        logging.info(f"Converting images to PDF: {pdf_path}")   
+        pdf_path = os.path.join(f"{processed_path}/{output_dir}", f"{file_name}.pdf")  
         if not all(is_pil_image(img) for img in graded_images):
             raise ValueError(
                 "All elements in the graded_images must be PIL.Image objects"

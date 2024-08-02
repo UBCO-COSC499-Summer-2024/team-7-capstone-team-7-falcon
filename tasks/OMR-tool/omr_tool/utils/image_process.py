@@ -227,7 +227,7 @@ def highlight_error_region(image, question_bounds, message=""):
         cv2.putText(
             output_image,
             message,
-            (x1, y1 + 20),
+            (x1, y2 + 20),
             cv2.FONT_HERSHEY_SIMPLEX,
             1,
             (0, 0, 255),

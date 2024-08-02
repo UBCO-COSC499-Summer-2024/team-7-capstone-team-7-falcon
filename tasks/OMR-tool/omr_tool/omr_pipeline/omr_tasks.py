@@ -105,7 +105,7 @@ def mark_submission_group(
     submission_results["score"] = round(
         submission_results["score"] / len(answer_key) * 100, 2
     )       
-    
+
     return submission_results, graded_images
 
 
@@ -309,7 +309,7 @@ def to_PIL_images(images: list[np.ndarray]) -> list[Image]:
         if isinstance(images[0], Image):
             pil_images = images
         else:
-            pil_images = [fromarray(img) for img in images]
+            pil_images = [fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)) for img in images]
     except Exception as e:
         logging.error(f"Error converting images to PIL.Image objects: {e}")
     return pil_images
@@ -320,7 +320,7 @@ if __name__ == "__main__":
     from omr_tool.utils.pdf_to_images import convert_to_images
 
     sheet_path = (
-        Path(__file__).resolve().parents[2] / "fixtures" / "submission_14-page_1.jpg"
+        Path(__file__).resolve().parents[2] / "fixtures" / "answer.pdf"
     )
 
     images = convert_to_images(sheet_path)

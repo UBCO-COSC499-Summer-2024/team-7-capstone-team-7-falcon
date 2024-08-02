@@ -1,4 +1,4 @@
-## Friday (7/27-7/28)
+## Friday (7/31-8/01)
 
 <img width="1060" alt="image" src="https://github.com/user-attachments/assets/fb88108e-1041-4b75-8f30-a397725d5f59">
 
@@ -20,7 +20,6 @@ Overall, it was a good cycle since we did finish almost everything for the proje
 
 1. Test o Rama - address any issues if found during testing
 2. Meet the team to discuss on the individual report.
-
 
 ## Wednesday (7/26-7/30)
 

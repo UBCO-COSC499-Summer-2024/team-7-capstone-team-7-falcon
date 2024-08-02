@@ -1,5 +1,41 @@
 # Personal Logs
 
+## Wednesday (7/26-7/30)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.26-07.30/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finishing final endpoint payload emission
+  2. Adding better error handling for graceful termination of omr task in the event of an exception
+  3. Documenting code
+
+### Progress Update (since 7/26/2024)
+
+![ProjectBoard](07.26-07.30/board.png)
+
+  1. Integrated OMR with backend
+  2. Filesystem upload functional
+  3. new error handling done for the endpoints
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle was very productive, the OMR tool is functional with the endpoints barring the formatting of the final payload. This week will be dedicated to having everything ready for peer testing this friday.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Complete full workflow of uploading exams and getting grades back
+  2. Prepare test materials for peer testing
+  3. generate a few more custom bubble sheets for testing.
+
+---
+---
+---
+
 ## Friday (7/24-7/25)
 
 ### Timesheet

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { fetchAuthToken } from "./cookieAPI";
 import {
+  Answers,
   BubbleSheetPayload,
   Exam,
   ExamData,
@@ -604,14 +605,14 @@ export const examsAPI = {
    * @param examId
    * @param courseId
    * @param submissionId
-   * @param newGrade
+   * @param answers
    * @returns {Promise<AxiosResponse<any>>}
    */
   updateGrade: async (
     examId: number,
     courseId: number,
     submissionId: number,
-    newGrade: number,
+    answers: Answers,
   ) => {
     try {
       const auth_token = await fetchAuthToken();
@@ -625,23 +626,19 @@ export const examsAPI = {
       });
 
       const payload = {
-        grade: newGrade,
+        answers: answers,
       };
 
       const response = await instance.patch(
         `${examId}/course/${courseId}/submission/${submissionId}/grade`,
         payload,
       );
-      toast.success("Grade updated!");
       return response;
     } catch (error: any) {
-      //always axios error
-      toast.error("Failed to update grade");
-      console.error("Failed to update grade: ", error);
+      return error;
     }
   },
-
-  /**
+  /*
    * Get submission by id
    * @param courseId {number}
    * @param submissionId {number}
@@ -661,7 +658,6 @@ export const examsAPI = {
       return response;
     } catch (error: any) {
       //always axios error
-      console.error("Failed to retrieve exam info: ", error);
       return error;
     }
   },
@@ -692,7 +688,6 @@ export const examsAPI = {
       return response;
     } catch (error: any) {
       //always axios error
-      console.error("Failed to post bubble sheet data: ", error);
       return error;
     }
   },

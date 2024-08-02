@@ -120,7 +120,7 @@ export interface Submission {
     first_name: string;
     last_name: string;
   };
-  answers: UserSubmissionExamAnswers;
+  answers: AnsweredQuestion[];
   score: number;
   updated_at: number;
   submission_id: string;
@@ -277,7 +277,20 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
-  answers: UserSubmissionExamAnswers;
+  answers: {
+    errorFlag: boolean;
+    answer_list: AnsweredQuestion[];
+  };
+}
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
 }
 
 export interface AnalyticsSubmission {
@@ -354,4 +367,16 @@ export interface AnalyticsExamSubmission {
     submissionScore: number;
     avatarUrl: string;
   };
+}
+
+export interface AnsweredQuestion {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}
+
+export interface Answers {
+  errorFlag: boolean;
+  answer_list: AnsweredQuestion[];
 }

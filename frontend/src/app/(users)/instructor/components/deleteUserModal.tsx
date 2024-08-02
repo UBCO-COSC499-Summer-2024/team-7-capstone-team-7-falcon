@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { usersAPI } from "@/app/api/usersAPI";
+import React, { useState } from "react";
 import { coursesAPI } from "@/app/api/coursesAPI";
 import toast from "react-hot-toast";
 import { Modal, Alert } from "flowbite-react";
@@ -11,6 +10,7 @@ interface DeleteUserModalProps {
   userId: number;
   isOpen: boolean;
   onClose: () => void;
+  studentNameDetails: string | null;
 }
 
 const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
@@ -18,25 +18,9 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
   userId,
   isOpen,
   onClose,
+  studentNameDetails,
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
-  const [userData, setUserData] = useState<any | null>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchUserData();
-    }
-  }, [isOpen]);
-
-  const fetchUserData = async () => {
-    try {
-      const user = await usersAPI.getUserDetailsById(userId); // Pass userId to fetch user details
-      setUserData(user);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      toast.error("Failed to load user data");
-    }
-  };
 
   const handleDeleteUser = async () => {
     try {
@@ -45,30 +29,23 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
       toast.success("User successfully removed from course");
       onClose();
     } catch (error) {
-      console.error("Error:", error);
       toast.error("Failed to remove user from course");
     } finally {
       setIsDeleting(false);
     }
   };
 
-  if (!userData) {
-    return null;
-  }
-
   return (
     <Modal show={isOpen} onClose={onClose}>
       <Modal.Header>
-        <h2 className="text-lg font-bold">Remove User</h2>
+        <div>Remove Student from Course</div>
       </Modal.Header>
       <Modal.Body>
         <Alert color="purple" rounded className="mb-4">
           <p>
             Are you sure you want to remove{" "}
-            <strong>
-              {userData.first_name} {userData.last_name}
-            </strong>{" "}
-            from the course? This action cannot be undone.
+            <strong>{studentNameDetails}</strong> from the course? This action
+            cannot be undone.
           </p>
         </Alert>
       </Modal.Body>
@@ -79,9 +56,6 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
           disabled={isDeleting}
         >
           {isDeleting ? "Removing..." : "Remove User"}
-        </button>
-        <button className="w-full btn-primary" onClick={onClose}>
-          Cancel
         </button>
       </Modal.Footer>
     </Modal>

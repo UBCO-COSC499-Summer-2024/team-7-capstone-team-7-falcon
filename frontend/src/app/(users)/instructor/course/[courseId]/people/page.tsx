@@ -11,12 +11,17 @@ import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import DeleteUserModal from "../../../components/deleteUserModal";
+import { Toaster } from "react-hot-toast";
 
 const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
   const [course, setCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [studentNameDetails, setStudentNameDetails] = useState<string | null>(
+    null,
+  );
+  const [refreshKey, setRefreshKey] = useState(0); // State to trigger re-render
 
   // Fetch course data on mount
   useEffect(() => {
@@ -33,8 +38,9 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   }, [cid]);
 
   // Open the modal and set selected user ID
-  const handleOpenModal = (userId: number) => {
+  const handleOpenModal = (userId: number, studentName: string) => {
     setSelectedUserId(userId);
+    setStudentNameDetails(studentName);
     setIsModalOpen(true);
   };
 
@@ -42,6 +48,7 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   const handleCloseModal = () => {
     setSelectedUserId(null);
     setIsModalOpen(false);
+    setRefreshKey((prevKey) => prevKey + 1); // Update the refresh key to trigger re-render
   };
 
   if (!course) {
@@ -50,6 +57,7 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
 
   return (
     <div>
+      <Toaster />
       <div className="grid grid-cols-2">
         <div className="col-span-1">
           <CourseHeader
@@ -71,7 +79,11 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
           </button>
         </div>
         <div className="mt-4 col-span-2">
-          <PeopleTable course_id={cid} onRemoveClick={handleOpenModal} />
+          <PeopleTable
+            key={refreshKey}
+            course_id={cid}
+            onRemoveClick={handleOpenModal}
+          />
         </div>
       </div>
       {/* Conditionally render the modal */}
@@ -81,6 +93,7 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
           userId={selectedUserId}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+          studentNameDetails={studentNameDetails}
         />
       )}
     </div>

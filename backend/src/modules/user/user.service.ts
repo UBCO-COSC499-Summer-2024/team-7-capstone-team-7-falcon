@@ -222,7 +222,6 @@ export class UserService {
     if (userEditBody.last_name) {
       user.last_name = userEditBody.last_name;
     }
-
     // Create or update employee number
     if (userEditBody.employee_id) {
       const employeeUser: EmployeeUserModel = await this.findEmployeeNumber(

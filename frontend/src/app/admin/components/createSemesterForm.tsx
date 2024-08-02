@@ -2,7 +2,7 @@
 
 import { Button, Modal, Label, TextInput, Datepicker } from "flowbite-react";
 import { useState } from "react";
-import { SemesterData, Status } from "../../typings/backendDataTypes";
+import { SemesterData } from "../../typings/backendDataTypes";
 import { semestersAPI } from "../../api/semestersAPI";
 import toast from "react-hot-toast";
 import { datePickerTheme } from "@/app/components/datePickerTheme";
@@ -53,7 +53,7 @@ const CreateSemesterForm: React.FC<CreateSemesterFormProps> = ({ onClose }) => {
     const result = await semestersAPI.createSemester(semesterData);
 
     if (result.status == 201) {
-      toast.success(Status.Success);
+      toast.success("Semester created successfully");
       handleClose();
     } else {
       toast.error("Failed to create semester");

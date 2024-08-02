@@ -98,6 +98,7 @@ const SubmissionTable: React.FC<ExamTableProps> = ({ exam_id }) => {
           },
         }),
       );
+
       setData(submissionTableData);
     }
   }, [submissions]);
@@ -106,7 +107,13 @@ const SubmissionTable: React.FC<ExamTableProps> = ({ exam_id }) => {
     return <p>Loading...</p>;
   }
 
-  return <TableComponent<Submission> data={data} columns={exam_columns} />;
+  return (
+    <TableComponent<Submission>
+      data={data}
+      columns={exam_columns}
+      showSearch={false}
+    />
+  );
 };
 
 export default SubmissionTable;

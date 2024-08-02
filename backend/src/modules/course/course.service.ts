@@ -390,11 +390,11 @@ export class CourseService {
         submissions: exam.submissions.map((submission) => {
           return {
             student: {
-              id: submission.student.user.id,
-              firstName: submission.student.user.first_name,
-              lastName: submission.student.user.last_name,
+              id: submission.student?.user.id,
+              firstName: submission.student?.user.first_name,
+              lastName: submission.student?.user.last_name,
               submissionScore: submission.score,
-              avatarUrl: submission.student.user.avatar_url,
+              avatarUrl: submission.student?.user.avatar_url,
             },
           };
         }),

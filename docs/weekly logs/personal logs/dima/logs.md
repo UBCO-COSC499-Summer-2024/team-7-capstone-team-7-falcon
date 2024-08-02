@@ -1,5 +1,76 @@
 # Individual Logs
 
+## Friday (7/31 - 8/01)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_20240731-20240801.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Prepare for Test-O-Rama
+  * #2: Setup production server
+
+### Progress Update (since 7/31/2024)
+
+![GitHub Board](./images/github_07312024-08012024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #363
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #417
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #418
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #409
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #404
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle, I focused on fixing existing bugs reported by Paula or just testing the system by myself. I did find some critical bugs which could impact the system and OMR pipeline, but I was able to resolve them relatively quickly. Overall, I am happy with the current state of the project, and hope that the system will work fine once we hand over the project.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Finish individual report
+  * Prepare for demo
+
 ## Wednesday (7/26 - 7/30)
 
 ### Timesheet

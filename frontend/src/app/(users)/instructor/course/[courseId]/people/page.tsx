@@ -17,13 +17,12 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
   const cid = Number(params.courseId);
   const [course, setCourse] = useState<Course | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [studentNameDetails, setStudentNameDetails] = useState<string | null>(
     null,
   );
-  const [refreshKey, setRefreshKey] = useState(0); // State to trigger re-render
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
 
-  // Fetch course data on mount
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -37,18 +36,16 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
     fetchCourse();
   }, [cid]);
 
-  // Open the modal and set selected user ID
   const handleOpenModal = (userId: number, studentName: string) => {
-    setSelectedUserId(userId);
+    setUserIdToDelete(userId);
     setStudentNameDetails(studentName);
     setIsModalOpen(true);
   };
 
-  // Close the modal and clear selected user ID
   const handleCloseModal = () => {
-    setSelectedUserId(null);
     setIsModalOpen(false);
-    setRefreshKey((prevKey) => prevKey + 1); // Update the refresh key to trigger re-render
+    setUserIdToDelete(null);
+    setRefreshKey((prevKey) => prevKey + 1);
   };
 
   if (!course) {
@@ -87,10 +84,10 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
         </div>
       </div>
       {/* Conditionally render the modal */}
-      {selectedUserId !== null && (
+      {isModalOpen && userIdToDelete !== null && (
         <DeleteUserModal
           courseId={cid}
-          userId={selectedUserId}
+          userId={userIdToDelete}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           studentNameDetails={studentNameDetails}

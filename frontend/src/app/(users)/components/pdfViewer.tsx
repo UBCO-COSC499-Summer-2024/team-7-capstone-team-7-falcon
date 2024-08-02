@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { examsAPI } from "../../../api/examAPI";
+import { examsAPI } from "../../api/examAPI";
 import toast from "react-hot-toast";
 import { Spinner } from "flowbite-react";
 
@@ -11,6 +11,8 @@ const PdfViewer: React.FC<{
   width?: string;
 }> = ({ courseId, submissionId, userId, width = "90%" }) => {
   const [pdfUrl, setPdfUrl] = useState<string>("");
+  const [bubbleSheetUI, setBubbleSheetUI] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchPdf = async () => {
       try {
@@ -37,6 +39,10 @@ const PdfViewer: React.FC<{
 
     fetchPdf();
   }, []);
+
+  const toggleBubbleSheetUI = () => {
+    setBubbleSheetUI(!bubbleSheetUI);
+  };
 
   return (
     <div>

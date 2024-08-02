@@ -10,10 +10,11 @@ import { examsAPI } from "../../../../../../api/examAPI";
 import GradeDisplay from "../../../../../components/gradeDisplay";
 import { CSSProperties } from "react";
 import { mean, median, quantile } from "d3-array";
-import PdfViewer from "../../../../components/pdfViewer";
 import { usersAPI } from "../../../../../../api/usersAPI";
 import ReportSubmissionIssue from "../../../../components/reportSubmissionIssue";
 import { Toaster } from "react-hot-toast";
+import PdfViewer from "../../../../../components/pdfViewer";
+import ToggleBubbleSheet from "../../../../../components/toggleBubbleSheet";
 
 const StudentExamPage = async ({
   params,
@@ -80,10 +81,12 @@ const StudentExamPage = async ({
       <div className="grid grid-cols-5">
         <div className="col-span-4">
           <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
-          <PdfViewer
+          <ToggleBubbleSheet
             courseId={cid}
             submissionId={submission.exam.id}
-            userId={user.id}
+            examId={Number(params.examId)}
+            submission={submission}
+            disableEdit={true}
           />
         </div>
         <div className="col-span-1 text-xl">

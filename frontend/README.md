@@ -43,7 +43,7 @@ cp .env.docker.example .env.docker
 
 ### Running the frontend application outside of a container
 
-Note: For the frontend to function correctly, the backend must be running.
+Note: For the frontend to function correctly, the backend, bubble sheet generator, and OMR tool must be running.
 
 To run the frontend application in development mode:
 

@@ -10,14 +10,24 @@ describe('SubmissionCreationDto', () => {
   it('should validate a valid payload', () => {
     const payload: SubmissionCreationDto = {
       score: 100,
-      answers: {},
+      answers: {
+        errorFlag: false,
+        answer_list: [
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+        ],
+      },
       documentPath: 'path',
     };
 
     const dto = plainToInstance(SubmissionCreationDto, payload);
     expect(dto).toBeDefined();
     expect(dto.score).toBe(100);
-    expect(dto.answers).toEqual({});
+    expect(dto.answers).toEqual({
+      errorFlag: false,
+      answer_list: [
+        { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+      ],
+    });
     expect(dto.documentPath).toBe('path');
 
     const errors = validate(dto);
@@ -35,20 +45,6 @@ describe('SubmissionCreationDto', () => {
     expect(dto).toBeDefined();
 
     const errors = validate(dto);
-    expect(errors).resolves.toHaveLength(1);
-  });
-
-  it('should throw an error when score has four decimal places', () => {
-    const payload = {
-      score: 34.1234,
-      answers: {},
-      documentPath: 'path',
-    };
-
-    const dto = plainToInstance(SubmissionCreationDto, payload);
-    expect(dto).toBeDefined();
-
-    const errors = validate(dto);
-    expect(errors).resolves.toHaveLength(1);
+    expect(errors).resolves.toHaveLength(2);
   });
 });

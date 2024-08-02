@@ -102,6 +102,7 @@ export class CourseController {
         await this.courseService.getCourseAnalytics(cid);
       return res.status(HttpStatus.OK).send(analytics);
     } catch (e) {
+      console.error(e);
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: e.message,
       });

@@ -11,6 +11,8 @@ import EditCourseButton from "../../../components/editCourseButton";
 import Avatar from "../../../../../components/avatar";
 import GradeDisplay from "../../../../components/gradeDisplay";
 import { CSSProperties } from "react";
+import Link from "next/link";
+import { ArrowLeft } from "flowbite-react-icons/outline";
 
 // Ensures the component is rendered client-side only
 const DynamicLineChart = dynamic(
@@ -117,6 +119,15 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
         />
       </div>
       <div className="col-span-1 justify-self-end space-y-4">
+        <button type="button" className="btn-primary block w-full">
+          <Link
+            href={`../${course.id}/exam`}
+            className="space-x-4 flex items-center text-center"
+          >
+            <ArrowLeft />
+            Back
+          </Link>
+        </button>
         <EditCourseButton courseId={course.id} />
       </div>
       <div className="border-t-2 border-gray-300 my-4 col-span-1 h-full">
@@ -144,7 +155,7 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
           </div>
         </div>
       </div>
-      <div className="col-span-1 p-3 px-4 m-6 text-black items-center ring ring-gray-200 rounded-lg col-span-1 w-1/2">
+      <div className="p-3 px-4 m-6 text-black items-center ring ring-gray-200 rounded-lg col-span-1 w-1/2">
         <p className="mt-2 font-bold text-2xl mb-4">Top Performing Students</p>
         <ul className="flex flex-col">
           {topScores.map((studentScore) => (
@@ -152,21 +163,37 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
               key={studentScore.id}
               className="flex items-center justify-between mb-2"
             >
-              <div className="flex items-center">
-                <Avatar
-                  avatarUrl={studentScore.avatarUrl}
-                  firstName={studentScore.firstName}
-                  lastName={studentScore.lastName}
-                  imageHeight={48}
-                  imageWidth={48}
-                  imageTextHeight={`w-12`}
-                  imageTextWidth={`w-12`}
-                  textSize={1}
-                />
-                <li className="ml-2">
-                  {studentScore.firstName} {studentScore.lastName}
-                </li>
-              </div>
+              {studentScore.firstName ? (
+                <div className="flex items-center">
+                  <Avatar
+                    avatarUrl={studentScore.avatarUrl}
+                    firstName={studentScore.firstName}
+                    lastName={studentScore.lastName}
+                    imageHeight={48}
+                    imageWidth={48}
+                    imageTextHeight={`w-12`}
+                    imageTextWidth={`h-12`}
+                    textSize={1}
+                  />
+                  <li className="ml-2">
+                    {studentScore.firstName} {studentScore.lastName}
+                  </li>
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <Avatar
+                    avatarUrl={undefined}
+                    firstName="N"
+                    lastName="A"
+                    imageHeight={86}
+                    imageWidth={48}
+                    imageTextHeight={`w-12`}
+                    imageTextWidth={`h-12`}
+                    textSize={1}
+                  />
+                  <li className="ml-2">Unknown Student</li>
+                </div>
+              )}
               <div className="ml-auto">
                 <GradeDisplay
                   progress={String(studentScore.averageScore)}

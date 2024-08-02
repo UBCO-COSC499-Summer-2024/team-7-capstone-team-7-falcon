@@ -3,16 +3,20 @@ import React, { useState, useEffect } from "react";
 import { TextInput, Label } from "flowbite-react";
 import { coursesAPI } from "@/app/api/coursesAPI";
 import SemesterSelect from "./semesterSelect";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { CourseEditData, Course } from "@/app/typings/backendDataTypes";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 
 interface CourseEditFormProps {
   courseId: number;
+  redirectPath?: string;
 }
 
-const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
+const CourseEditForm: React.FC<CourseEditFormProps> = ({
+  courseId,
+  redirectPath = "../../courses",
+}) => {
   const [formData, setFormData] = useState<CourseEditData>({
     courseName: "",
     courseCode: "",
@@ -21,6 +25,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
   });
   const router = useRouter();
   const [savingChanges, setSavingChanges] = useState(false);
+  const [courseData, setCourseData] = useState<Course | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -35,6 +40,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
         semesterId: course.semester.id ?? -1,
         inviteCode: course.invite_code ?? "",
       });
+      setCourseData(course);
     } catch (error) {
       toast.error("Failed to load course or semester data");
     }
@@ -47,18 +53,27 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
 
       const updatedCourse = await coursesAPI.editCourse(courseId, formData);
 
-      if (updatedCourse && updatedCourse.status) {
-        setFormData({
-          courseName: updatedCourse.course_name,
-          courseCode: updatedCourse.course_code,
-          semesterId: updatedCourse.semester_id ?? -1,
-          inviteCode: updatedCourse.invite_code ?? "",
-        });
+      if (
+        updatedCourse &&
+        (updatedCourse.course_name !== courseData?.course_name ||
+          updatedCourse.course_code !== courseData?.course_code)
+      ) {
         toast.success("Course successfully updated");
-
-        fetchData();
+        router.refresh();
       } else {
-        toast.error(updatedCourse.response.data.message);
+        if (updatedCourse && updatedCourse.status) {
+          setFormData({
+            courseName: updatedCourse.course_name,
+            courseCode: updatedCourse.course_code,
+            semesterId: updatedCourse.semester_id ?? -1,
+            inviteCode: updatedCourse.invite_code ?? "",
+          });
+          toast.success("Course successfully updated");
+
+          await fetchData();
+        } else {
+          toast.error(updatedCourse.response.data.message);
+        }
       }
     } catch (error) {
       toast.error("Failed to update course");
@@ -72,7 +87,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
       await coursesAPI.archiveCourse(courseId);
       toast.success("Course successfully archived");
       setTimeout(() => {
-        router.push("../../courses");
+        router.push(redirectPath);
       }, 2000);
     } catch (error) {
       toast.error("Failed to archive course");
@@ -94,6 +109,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
     navigator.clipboard.writeText(
       `${process.env.NEXT_PUBLIC_FRONTEND_URL}/student/course/${courseId}/invite?code=${inviteLink}`,
     );
+    toast.success("Invite link copied to clipboard");
   };
 
   const generateInviteCode = () => {
@@ -103,6 +119,7 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({ courseId }) => {
 
   return (
     <div>
+      <Toaster />
       <form method="PATCH" onSubmit={handleSaveChanges}>
         <div className="space-y-4 p-4 ring ring-gray-100 rounded-md flex flex-col">
           <Label htmlFor="courseCode">

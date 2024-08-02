@@ -32,13 +32,16 @@ const user_columns: Column[] = [
   { label: "Role", renderCell: (item) => item.role },
   {
     label: "Actions",
-    renderCell: (item) => (
-      <Link href={`./course/${item.id}`}>
-        <button type="button" className="btn-primary flex p-1 px-4">
-          Remove Student
-        </button>
-      </Link>
-    ),
+    renderCell: (item) =>
+      item.role === "student" ? (
+        <Link href={`./course/${item.id}`}>
+          <button type="button" className="btn-primary flex p-1 px-4">
+            Remove Student
+          </button>
+        </Link>
+      ) : (
+        <div>No available actions</div>
+      ),
   },
 ];
 

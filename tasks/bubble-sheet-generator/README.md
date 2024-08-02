@@ -4,7 +4,6 @@
 - [Setup and Installation](#setup-and-installation)
 - [Running locally](#running-locally)
   - [Running the bubble sheet generator outside of a container](#running-the-bubble-sheet-generator-outside-of-a-container)
-  - [Running the bubble sheet generator within a container](#running-the-bubble-sheet-generator-within-a-container)
 
 ## Tools
 
@@ -61,10 +60,4 @@ To start the bubble sheet generator, run:
 
 ```bash
 poetry run python -m main
-```
-
-### Running the bubble sheet generator within a container
-
-```bash
-# TODO
 ```

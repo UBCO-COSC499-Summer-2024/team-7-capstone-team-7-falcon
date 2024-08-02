@@ -81,8 +81,9 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       </button>
       <button
         type="button"
-        className="btn-primary flex justify-center bg-purple w-full"
+        className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-300"
         onClick={() => downloadSubmissionGrades()}
+        // disabled={examFolder?.length !== 0}
       >
         <div className="space-x-4 flex items-center">
           <Download />
@@ -91,8 +92,9 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       </button>
       <button
         type="button"
-        className="btn-primary flex justify-center bg-purple w-full"
+        className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-300"
         onClick={() => releaseGrades()}
+        // disabled={examFolder?.length !== 0}
       >
         <div className="space-x-4 flex items-center">
           <CheckPlusCircle />

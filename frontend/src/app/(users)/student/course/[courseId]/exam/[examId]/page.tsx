@@ -83,8 +83,9 @@ const StudentExamPage = async ({
           <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
           <ToggleBubbleSheet
             courseId={cid}
-            submissionId={submission.exam.id}
+            submissionId={submission.studentSubmission.id}
             examId={Number(params.examId)}
+            userId={user.id}
             submission={submission}
             disableEdit={true}
           />

@@ -11,7 +11,17 @@ const ToggleBubbleSheet: React.FC<{
   examId: number;
   submission: StudentSubmission;
   disableEdit?: boolean;
-}> = ({ courseId, submissionId, submission, examId, disableEdit }) => {
+  userId?: number;
+  refreshDispute?: () => void;
+}> = ({
+  courseId,
+  submissionId,
+  submission,
+  examId,
+  disableEdit,
+  userId,
+  refreshDispute,
+}) => {
   const [bubbleSheetUI, setBubbleSheetUI] = useState<boolean>(true);
 
   const toggleBubbleSheetUI = () => {
@@ -43,7 +53,11 @@ const ToggleBubbleSheet: React.FC<{
         />
       </div>
       {bubbleSheetUI && (
-        <PdfViewer courseId={courseId} submissionId={submissionId} />
+        <PdfViewer
+          courseId={courseId}
+          submissionId={submissionId}
+          userId={userId}
+        />
       )}
       {!bubbleSheetUI && (
         <BubbleSheetUI
@@ -52,6 +66,7 @@ const ToggleBubbleSheet: React.FC<{
           examId={examId}
           submissionId={submissionId}
           disableEdit={disableEdit}
+          refreshDispute={refreshDispute}
         />
       )}
     </div>

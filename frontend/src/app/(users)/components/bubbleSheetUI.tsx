@@ -4,6 +4,7 @@ import { StudentSubmission } from "../../typings/backendDataTypes";
 import { examsAPI } from "../../api/examAPI";
 import toast from "react-hot-toast";
 import { Alert } from "flowbite-react";
+import { useRouter } from "next/navigation";
 
 interface BubbleSheetUIProps {
   submission: StudentSubmission;
@@ -11,6 +12,7 @@ interface BubbleSheetUIProps {
   courseId: number;
   submissionId: number;
   disableEdit?: boolean;
+  refreshDispute?: () => void;
 }
 
 enum BubbleStyle {
@@ -25,11 +27,12 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
   courseId,
   submissionId,
   disableEdit,
+  refreshDispute,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: number[];
   }>({});
-
+  const router = useRouter();
   const [detailedSubmission, setDetailedSubmission] = useState(
     submission.answers,
   );
@@ -75,6 +78,10 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
         toast.success("Answers updated", {
           duration: 1_500,
         });
+        router.refresh();
+        if (refreshDispute) {
+          refreshDispute();
+        }
       } else {
         toast.error("Error updating answers");
       }

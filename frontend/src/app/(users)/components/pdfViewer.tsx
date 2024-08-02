@@ -15,6 +15,7 @@ const PdfViewer: React.FC<{
 
   useEffect(() => {
     const fetchPdf = async () => {
+      // alert(userId)
       try {
         let response;
         if (!userId) {

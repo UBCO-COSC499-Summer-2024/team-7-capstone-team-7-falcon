@@ -84,7 +84,7 @@ const InstructorSubmissionPage = async ({
           )}
           <ToggleBubbleSheet
             courseId={cid}
-            submissionId={submission.exam.id}
+            submissionId={submission.studentSubmission.id}
             examId={params.examId}
             submission={submission}
           />

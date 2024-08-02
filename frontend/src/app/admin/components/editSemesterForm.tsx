@@ -142,6 +142,7 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
                       theme={datePickerTheme}
                       inline={true}
                       showTodayButton={false}
+                      showClearButton={false}
                       minDate={setCalendarDate(1)}
                       defaultDate={new Date(Number(formData.starts_at))}
                     />
@@ -168,6 +169,7 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
                     defaultDate={new Date(Number(formData.ends_at))}
                     required
                     inline={true}
+                    showClearButton={false}
                     showTodayButton={false}
                   />
                 )}

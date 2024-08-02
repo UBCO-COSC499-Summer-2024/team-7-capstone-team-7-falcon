@@ -1638,7 +1638,12 @@ describe('ExamService', () => {
     it('should throw an error if the exam is not found', async () => {
       await expect(
         examService.createExamSubmission(1, 1, {
-          answers: {},
+          answers: {
+            errorFlag: false,
+            answer_list: [
+              { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+            ],
+          },
           documentPath: 'path',
           score: 2,
         }),
@@ -1660,7 +1665,12 @@ describe('ExamService', () => {
       }).save();
 
       await examService.createExamSubmission(exam.id, 1, {
-        answers: {},
+        answers: {
+          errorFlag: false,
+          answer_list: [
+            { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          ],
+        },
         documentPath: 'path',
         score: 2,
       });
@@ -1696,7 +1706,12 @@ describe('ExamService', () => {
       }).save();
 
       await examService.createExamSubmission(exam.id, 1, {
-        answers: {},
+        answers: {
+          errorFlag: false,
+          answer_list: [
+            { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          ],
+        },
         documentPath: 'path',
         score: 2,
       });

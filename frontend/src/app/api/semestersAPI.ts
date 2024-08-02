@@ -57,7 +57,7 @@ export const semestersAPI = {
       });
 
       const response = await instance.get(`${BACKEND_URL}/api/v1/semester/all`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Failed to fetch semesters:", error);
       throw error;

@@ -335,8 +335,8 @@ export interface ExamSubmissionDispute {
 export interface UserEditData {
   first_name: string;
   last_name: string;
-  student_id: number;
-  employee_id: number;
+  student_id?: number;
+  employee_id?: number;
 }
 
 export interface SemesterData {

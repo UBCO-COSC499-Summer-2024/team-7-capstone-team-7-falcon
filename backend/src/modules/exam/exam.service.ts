@@ -614,9 +614,9 @@ export class ExamService {
     csvStream.push('studentId,grade\n');
 
     examSubmissions.forEach((examSubmission) => {
-      const studentId = examSubmission.student.student_id;
+      const studentId = examSubmission.student?.student_id;
       const grade = examSubmission.score;
-      csvStream.push(`${studentId},${grade}\n`);
+      csvStream.push(`${studentId ?? 'unknown student'},${grade}\n`);
     });
 
     // End the stream

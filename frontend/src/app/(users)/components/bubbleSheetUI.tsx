@@ -42,6 +42,7 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
       </Alert>
     );
   }
+
   const questionsPerColumn = 75;
   const questionCount = detailedSubmission.answer_list.length;
   const options = ["A", "B", "C", "D", "E"];

@@ -1,6 +1,7 @@
 import logging
 from PIL import Image
 import os
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -27,20 +28,32 @@ def convert_to_pdf(graded_images, output_dir, file_name):
 
     """
     # Ensure the directory for saving exists
+    processed_path = (
+    Path(__file__).resolve().parents[4]
+    / "backend"
+    / "uploads"
+    / "exams"
+    / "processed_submissions"
+)
+
     try:
-        os.path.isdir(output_dir)
+        os.path.isdir(os.path.join(processed_path, output_dir))
     except OSError:
+        logging.error(
+            f"Directory {os.path.join(processed_path, output_dir)} does not exist"
+        )
         return
 
     try:
-        pdf_path = f"{output_dir}/{file_name}.pdf"
+        pdf_path = os.path.join(f"{processed_path}/{output_dir}", f"{file_name}.pdf")
+        logging.info(f"Converting images to PDF: {pdf_path}")   
         if not all(is_pil_image(img) for img in graded_images):
             raise ValueError(
                 "All elements in the graded_images must be PIL.Image objects"
             )
         graded_images[0].save(pdf_path, save_all=True, append_images=graded_images[1:])
         logging.info(f"Images converted to PDF successfully")
-        return pdf_path
+        return f"{output_dir}/{file_name}.pdf"
     except Exception as e:
         logging.error(f"PDF conversion failed: {e}")
         raise e

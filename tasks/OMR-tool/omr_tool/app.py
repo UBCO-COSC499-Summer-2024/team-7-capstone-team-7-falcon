@@ -111,6 +111,7 @@ def send_grades(backend_url, exam_id, submission_results):
 
     if request.status_code == 400:
         logging.critical("400 - Invalid payload")
+        logging.critical({"answers": submission_results["answers"], "score": submission_results["score"], "documentPath": str(submission_results["document_path"])})
         logging.critical(request.json())
 
     if request.status_code == 401:
@@ -143,7 +144,7 @@ def app():
             submission_path: str = os.path.join(
                 RAW_FILE_PATH, payload.get("folderName") + "/submissions.pdf"
             )
-            output_path = os.path.join(PROCESSED_FILE_PATH, payload.get("folderName"))
+            output_path = payload.get("folderName")
             # Generate an answer key from the answer key PDF (Should return a dict of answers)
             # Convert the answer key PDF to list of images
             # Process each image in the list with the OMR pipeline. Should return a dict of answers

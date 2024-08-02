@@ -13,4 +13,5 @@ export type ExamSettingsProps = {
   examId: number;
   courseId: number;
   examFolder?: string;
+  gradesReleasedAt?: number;
 };

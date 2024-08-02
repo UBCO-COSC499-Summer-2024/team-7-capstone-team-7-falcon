@@ -3,6 +3,7 @@ import React, { ChangeEvent, useState } from "react";
 import { StudentSubmission } from "../../typings/backendDataTypes";
 import { examsAPI } from "../../api/examAPI";
 import toast from "react-hot-toast";
+import { Alert } from "flowbite-react";
 
 interface BubbleSheetUIProps {
   submission: StudentSubmission;
@@ -33,8 +34,14 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
     submission.answers,
   );
 
-  //useeffect that updates whenever the data is updated too that is making a patch request
-
+  // If answer list doesn't exist it will only render an error banner
+  if (!detailedSubmission.answer_list) {
+    return (
+      <Alert color="red" className="w-full mb-3">
+        This submission was graded incorrectly. An answer list is missing.
+      </Alert>
+    );
+  }
   const questionsPerColumn = 75;
   const questionCount = detailedSubmission.answer_list.length;
   const options = ["A", "B", "C", "D", "E"];

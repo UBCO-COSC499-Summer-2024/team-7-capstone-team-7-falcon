@@ -19,6 +19,7 @@ import ExamSettings from "@/app/(users)/instructor/components/examSettings";
 import { Toaster } from "react-hot-toast";
 import { Alert } from "flowbite-react";
 import { InfoCircle } from "flowbite-react-icons/outline";
+
 const ViewExam = async ({
   params,
 }: {

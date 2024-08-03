@@ -1,5 +1,6 @@
 import { examsAPI } from "@/app/api/examAPI";
 import { Alert, FileInput, Label, Modal } from "flowbite-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -15,6 +16,7 @@ const UploadExamSubmissionsModal: React.FC<UploadExamSubmissionsModalProps> = ({
   onClose,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const router = useRouter();
 
   const [files, setFiles] = useState<{
     answerKey: File | null;
@@ -78,6 +80,7 @@ const UploadExamSubmissionsModal: React.FC<UploadExamSubmissionsModalProps> = ({
         "Submissions uploaded successfully. Check back later for the results.",
         { duration: 5_000 },
       );
+      router.refresh();
       handleClose();
     } else {
       toast.error(result.response.data.message);

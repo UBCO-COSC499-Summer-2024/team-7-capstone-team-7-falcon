@@ -2,7 +2,7 @@
 
 ## Tasks
 
-We asked participants to perform the following 10 tasks.
+We asked participants to perform the following 10 tasks. Note that tasks 2, 5, 6, 7, and 10 are repeated from the previous round of peer testing.
 
 1. Feature 1 (student)
 
@@ -87,7 +87,7 @@ The first section of the survey focused on the tasks users were asked to perform
 | Task 9  | 82.2           |
 | Task 10 | 83.0           |
 
-The average raw TLX score for all tasks is $81.3$.
+The average raw TLX score for all tasks is $81.3$. Task 8, in particular, has the lowest TLX score, and this is reflected in the user comments which explained that it was difficult to find the buttons for changing a student's grade (this has since been fixed).
 
 The second section made use of the standard Website Usability Scale (WUS) which is based on the System Usability Scale (SUS). Analysis was conducted according to the standard scale for SUS and the mean WUS score for our system is $71.8$. We also asked respondents to rate, on a scale of 1 to 10, how likely they were to recommend the website to others. The mean score for all participants is $7.91$.
 
@@ -95,9 +95,18 @@ Finally, the survey contained two free-text questions asking participants to ide
 
 ## Discussion
 
-Overall, the results show that our improved website has high usability. In particular, our WUS score of $71.8$ is above the average score of $68$ reported in [1](https://measuringu.com/sus/). 
+Overall, the results show that our improved website has high usability. In particular, our WUS score of $71.8$ is above the average score of $68$ reported in [[1]](https://measuringu.com/sus/). 
 
-One important limitation to keep in mind is the low number of participants ($n=12$). 
+One limitation of our analysis is the low number of participants ($n=12$). It is however comparable to the sample size from the previous peer testing exercise ($n=11$). This allows us to make a fairer comparison between the results for the tasks that were repeated as shown in the following table:
 
+|         | Round 1 Mean TLX Score | Round 2 Mean TLX Score |
+|---------|------------------------|------------------------|
+| Task 2  | 69.7                   | 83.0                   |
+| Task 5  | 71.2                   | 78.8                   |
+| Task 6  | 70.5                   | 82.6                   |
+| Task 7  | 68.2                   | 78.0                   |
+| Task 10 | 73.5                   | 83.0                   |
 
-- compare with previous results!!
+While it is important to keep in mind that the results from the first round of peer testing were skewed due to the presence of blank responses, the table still shows that the changes we made after the first peer testing exercise led to significant improvements in TLX scores for all of the repeated tasks. This is reflected in one of the survey responses which said that the participant "enjoyed the improvements from [their] last demo". In addition, our overall TLX score, WUS score, and recommendation score also showed significant improvements when compared with the results from the first round of peer testing.
+
+Hence, we can conclude that we were successful in improving the usability of the website and that OwlMark is now a highly-intuitive product.

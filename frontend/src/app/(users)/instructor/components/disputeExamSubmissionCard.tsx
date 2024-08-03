@@ -3,9 +3,7 @@
 import { examsAPI } from "@/app/api/examAPI";
 import { ExamSubmissionDispute } from "@/app/typings/backendDataTypes";
 import { Card, Label, Badge, Dropdown } from "flowbite-react";
-import { useState } from "react";
 import toast from "react-hot-toast";
-import DisputeExamSubmissionChangeGradeModal from "./disputeExamSubmissionChangeGradeModal";
 
 interface DisputeExamSubmissionCardProps {
   courseId: number;
@@ -24,8 +22,6 @@ const DisputeExamSubmissionCard: React.FC<DisputeExamSubmissionCardProps> = ({
   refreshDispute,
   examId,
 }) => {
-  const [showModal, setShowModal] = useState(false);
-
   const badgeColor = (status: string) => {
     switch (status) {
       case "RESOLVED":
@@ -58,21 +54,9 @@ const DisputeExamSubmissionCard: React.FC<DisputeExamSubmissionCardProps> = ({
       toast.error("Failed to update dispute status");
     }
   };
-  const handleModal = () => {
-    setShowModal(true);
-  };
 
   return (
     <Card>
-      {showModal && (
-        <DisputeExamSubmissionChangeGradeModal
-          setShowModal={setShowModal}
-          refreshDispute={refreshDispute}
-          dispute={dispute}
-          courseId={courseId}
-          examId={examId}
-        />
-      )}
       <div className="space-y-3">
         <div className="flex-wrap flex gap-2">
           <Label className="font-bold">Created at:</Label>
@@ -158,10 +142,6 @@ const DisputeExamSubmissionCard: React.FC<DisputeExamSubmissionCardProps> = ({
               In Review
             </Dropdown.Item>
           </Dropdown>
-
-          <button className="btn-primary p-2" onClick={() => handleModal()}>
-            Update Grade
-          </button>
         </div>
       </div>
     </Card>

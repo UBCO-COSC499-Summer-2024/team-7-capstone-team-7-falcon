@@ -418,6 +418,34 @@ export class ExamService {
   }
 
   /**
+   * Hide grades for an exam
+   * @param examId {number} - Exam id
+   * @returns {Promise<void>} - Promise of void
+   */
+  async hideGrades(examId: number): Promise<void> {
+    const exam = await ExamModel.findOne({
+      where: {
+        id: examId,
+        course: {
+          is_archived: false,
+        },
+      },
+      relations: ['course'],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    await ExamModel.update(
+      { id: examId },
+      {
+        grades_released_at: -1,
+      },
+    );
+  }
+
+  /**
    * Update grade
    * @param eid {number} - Exam id
    * @param cid {number} - Course id

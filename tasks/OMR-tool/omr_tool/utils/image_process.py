@@ -199,7 +199,7 @@ def identify_bubbled(img, cnts):
     return filled_in
 
 
-def draw_bubble_contours(image, bubble_contour, question_bounds, color):
+def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0,0)):
     """
     Draw the bubble contours on the image.
 
@@ -215,7 +215,7 @@ def draw_bubble_contours(image, bubble_contour, question_bounds, color):
     output_image = image.copy()
     x1, y1, x2, y2 = question_bounds
     repositioned_cnt = bubble_contour + [x1, y1]
-    cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2)
+    cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2, offset=offset)
     return output_image
 
 

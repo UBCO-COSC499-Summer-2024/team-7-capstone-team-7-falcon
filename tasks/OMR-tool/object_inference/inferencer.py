@@ -80,6 +80,9 @@ class Inferencer:
 
         Returns:
             Tuple: A tuple containing the bounding boxes, scores, and class IDs of the detected objects.
+
+            NOTE: Scores are the confidence and overlap scores of the detected objects. 
+                These are currently not used by the rest of the system but are good to have for the future
         """
         try:
             image_data = self.preprocess_image(image)

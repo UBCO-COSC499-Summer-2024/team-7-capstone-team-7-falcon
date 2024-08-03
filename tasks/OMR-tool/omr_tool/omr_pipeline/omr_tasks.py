@@ -25,13 +25,15 @@ The primary sequence for OMR grading
 
 def create_answer_key(key_imgs: list[Image]) -> list[dict]:
     """
-    Process the answer key for the exam.
+    Process the answer key images for the exam.
 
     Args:
         key_imgs (list): A list of PIL.Image objects representing the answer key.
 
     Returns:
         list[dict]: A list of dictionaries containing the answer key.
+            "question_num" (int): The question number.
+            "correct_answer_indices" (list): A list of the correct answer indices.
     """
     answer_key = []
     try:
@@ -40,9 +42,11 @@ def create_answer_key(key_imgs: list[Image]) -> list[dict]:
         for img in key_imgs:
             answer_key.extend(omr_on_key_image(img, first_question_in_page))
             if answer_key != []:
+                # Set the first question number on the next page
                 first_question_in_page = answer_key[-1]["question_num"] + 1
     except Exception as e:
         logging.error(f"Error creating answer key: {e}")
+        return []  # Return an empty list if an error occurs
     return answer_key
 
 
@@ -50,21 +54,34 @@ def mark_submission_group(
     group_images: list[Image], answer_key: dict
 ) -> tuple[dict, list[Image]]:
     """
-    Mark a single submission page and generate the corresponding results.
+    Mark a single submission group and generate the corresponding results.
+
+    This function takes a list of submission images and an answer key for the OMR (Optical Mark Recognition) tool.
+    It marks each submission image, calculates the score, and generates a graded image for each submission.
+    The function returns a tuple containing the submission results and the graded images.
 
     Args:
-        submission_img (PIL.Image): The submission image to be marked.
-        answer_key (dict): The answer key for the OMR (Optical Mark Recognition) tool.
+        group_images (list[Image]): A list of submission images to be marked.
+        answer_key (dict): The answer key for the OMR tool.
 
     Returns:
-        tuple: A tuple containing the submission results and the graded image.
-            - submission_results (dict): A dictionary containing the following information:
-                - "student_id" (str): The ID of the student.
-                - "document_path" (str): The path of the document.
-                - "score" (int): The total score of the submission.
-                - "answers" (dict): A dictionary containing the list of answers.
-                    - "answer_list" (list): A list of dictionaries representing each answer.
-            - graded_img (PIL.Image): The graded image.
+        tuple: A tuple containing the submission results and the graded images.
+            -- submission_results (dict): A dictionary containing the following information:
+                -- "student_id" (str): The ID of the student.
+                -- "document_path" (str): The path of the document.
+                -- "score" (int): The total score of the submission.
+                -- "answers" (dict): A dictionary containing the list of answers.
+                    -- "errorFlag" (bool): Flag indicating if there was an error.
+                    -- "answer_list" (list): A list of dictionaries representing each answer.
+                        Each answer is represented as a dictionary with the following keys:
+                        -- "question_num" (int): The question number.
+                        -- "expected" (str): The expected answer.
+                        -- "answered" (str): The student's answer.
+                        -- "score" (int): The score for the question.
+            -- graded_images (list[Image]): A list of graded images corresponding to each submission.
+
+    Raises:
+        ValueError: If the answer key is empty.
 
     """
     if answer_key == []:
@@ -104,7 +121,7 @@ def mark_submission_group(
     # Make the score out of 100
     submission_results["score"] = round(
         submission_results["score"] / len(answer_key) * 100, 2
-    )       
+    )
 
     return submission_results, graded_images
 
@@ -173,7 +190,7 @@ def omr_on_submission_image(
         first_q_in_page (int): The first question number on the page.
 
     Returns:
-        tuple: A tuple containing the student ID, total score, list of results, graded image, and error flag.
+        tuple: A tuple containing the student ID (if identified), total score, list of results, graded image, and error flag.
     """
     prepped_image = prepare_img(input_image)
     output_image = input_image.copy()
@@ -190,7 +207,10 @@ def omr_on_submission_image(
         question_num = first_q_in_page + i
         roi_cropped = extract_roi(threshed_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
-
+        # NOTE: BELOW IS A TEMPORARY MEASURE FOR CHECKING BOUNDS
+        output_image = cv2.rectangle(
+            output_image, question_bounds[:2], question_bounds[2:], (0, 255, 0), 2
+        )
         color, correct_answers, question_result = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )
@@ -253,8 +273,7 @@ def identify_page_details(
     inference_tool: Inferencer, boxes: np.ndarray, classes: list[str]
 ) -> tuple:
     """
-    Identifies the details of the page, including the student number section and question bounds.
-
+    Identifies the main objects of interest on the page. This includes the student number section and the question bounds.
     Args:
         inference_tool (Inferencer): The inference tool used for object detection.
         boxes (list): The list of bounding boxes.
@@ -297,8 +316,6 @@ def to_PIL_images(images: list[np.ndarray]) -> list[Image]:
     """
     Converts a list of NumPy arrays to a list of PIL.Image objects if necessary
 
-    NOTE: this converts the CV2 BGR color space to RGB as a side effect
-
     Args:
         images (list): A list of NumPy arrays.
 
@@ -309,7 +326,9 @@ def to_PIL_images(images: list[np.ndarray]) -> list[Image]:
         if isinstance(images[0], Image):
             pil_images = images
         else:
-            pil_images = [fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)) for img in images]
+            pil_images = [
+                fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)) for img in images
+            ]
     except Exception as e:
         logging.error(f"Error converting images to PIL.Image objects: {e}")
     return pil_images
@@ -319,9 +338,8 @@ if __name__ == "__main__":
     from pathlib import Path
     from omr_tool.utils.pdf_to_images import convert_to_images
 
-    sheet_path = (
-        Path(__file__).resolve().parents[2] / "fixtures" / "answer.pdf"
-    )
+    sheet_path = Path(__file__).resolve().parents[2] / "fixtures" / "custom.jpg"
+    # sheet_path = Path(__file__).resolve().parents[2] / "fixtures" / "ubc_submission_200.pdf"
 
     images = convert_to_images(sheet_path)
 

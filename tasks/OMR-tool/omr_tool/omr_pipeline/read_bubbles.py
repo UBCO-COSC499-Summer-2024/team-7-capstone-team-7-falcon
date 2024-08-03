@@ -2,12 +2,12 @@ import cv2
 import numpy as np
 
 
-def generate_bubble_contours(image):
+def generate_bubble_contours(image: np.ndarray) -> list:
     """
     Function to detect contours for the bubbles in an image.
 
     Args:
-        image (PIL.Image): The image to detect contours in.
+        image (ndarray): The image to detect contours in.
 
     Returns:
         list: A list of contours detected in the image.
@@ -35,14 +35,27 @@ def generate_bubble_contours(image):
     return sorted_contours
 
 
-def find_filled_bubbles(img, bubble_contours, threshold=450):
+def find_filled_bubbles(img, bubble_contours, threshold=0.7):
+    """
+    Finds the indices of filled bubbles in an image based on the given bubble contours.
+
+    Parameters:
+    - img: The input image.
+    - bubble_contours: A list of contours representing the bubbles.
+    - threshold: The threshold value for determining if a bubble is filled or not. Default is 0.7.
+
+    Returns:
+    - filled_index: A list of indices of the filled bubbles.
+
+    """
     filled_index = []
     for i, cnt in enumerate(bubble_contours):
         mask = np.zeros(img.shape, dtype="uint8")
         cv2.drawContours(mask, [cnt], -1, 255, -1)
         mask = cv2.bitwise_and(img, img, mask=mask)
         total = cv2.countNonZero(mask)
-        if total > threshold:
+        totalPercentage = total / cv2.contourArea(cnt)
+        if totalPercentage > threshold:
             filled_index.append(i)
     return filled_index
 

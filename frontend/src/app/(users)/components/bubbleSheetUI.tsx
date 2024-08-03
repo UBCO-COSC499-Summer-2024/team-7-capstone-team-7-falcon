@@ -46,18 +46,28 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
     );
   }
 
-  const questionsPerColumn = 75;
+  const questionsPerColumn = 30;
   const questionCount = detailedSubmission.answer_list.length;
   const options = ["A", "B", "C", "D", "E"];
 
-  const handleInputChange = (
+  const handleInputChange = async (
     e: ChangeEvent<HTMLInputElement>,
     questionIndex: number,
   ) => {
+    if (isNaN(parseInt(e.target.value))) {
+      return;
+    }
+
     const value = Number(e.target.value);
 
     if (value < 0 || value > 1) {
       toast.error("Score must be 0 or 1");
+      return;
+    }
+
+    if (value % 1 !== 0) {
+      toast.error("Score must be a whole number");
+      return;
     }
 
     const updatedAnswerList = { ...detailedSubmission };
@@ -67,36 +77,24 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
     };
 
     setDetailedSubmission(updatedAnswerList);
-  };
 
-  const handleKeyPress = async (e: any) => {
-    if (e.key === "Enter") {
-      if (
-        detailedSubmission.answer_list.find(
-          (question) => question.score < 0 || question.score > 1,
-        )
-      ) {
-        toast.error("Score must be 0 or 1 for all questions");
-        return;
-      }
+    const response = await examsAPI.updateGrade(
+      examId,
+      courseId,
+      submissionId,
+      detailedSubmission,
+    );
 
-      const response = await examsAPI.updateGrade(
-        examId,
-        courseId,
-        submissionId,
-        detailedSubmission,
-      );
-      if (response && response.status === 200) {
-        toast.success("Answers updated", {
-          duration: 1_500,
-        });
-        router.refresh();
-        if (refreshDispute) {
-          refreshDispute();
-        }
-      } else {
-        toast.error("Error updating answers");
+    if (response && response.status === 200) {
+      toast.success("Answers updated", {
+        duration: 1_500,
+      });
+      router.refresh();
+      if (refreshDispute) {
+        refreshDispute();
       }
+    } else {
+      toast.error("Error updating answers");
     }
   };
 
@@ -150,16 +148,18 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
   }
 
   return (
-    <div className="flex flex-row mt-4">
+    <div className="flex flex-row overflow-x-scroll w-3/4">
       {[...Array(Math.ceil(Number(questionCount) / questionsPerColumn))].map(
         (_, columnIndex) => (
-          <div className="flex flex-col mt-4" key={columnIndex}>
+          <div className="flex flex-col" key={columnIndex}>
             {[...Array(questionsPerColumn)].map((_, rowIndex) => {
               const questionIndex = columnIndex * questionsPerColumn + rowIndex;
               if (questionIndex >= Number(questionCount)) return null;
               return (
-                <div className="flex mt-4 mx-1 justify" key={questionIndex}>
-                  <p className="w-8 block">{questionIndex + 1}</p>
+                <div className="flex mt-4 mx-3 justify" key={questionIndex}>
+                  <p className="w-8 block font-bold mr-2">
+                    {questionIndex + 1}
+                  </p>
                   {options.map((option, index) => {
                     const status = questionStyleMap[questionIndex][index];
                     let borderClass = "border border-gray-400";
@@ -206,8 +206,10 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
                       detailedSubmission.answer_list[questionIndex].score
                     }
                     onChange={(e) => handleInputChange(e, questionIndex)}
-                    onKeyDown={handleKeyPress}
-                    className="mx-1 p-0 w-2/12 justify-right"
+                    className={
+                      `mx-1 p-0 w-5 justify-right text-center ` +
+                      (disableEdit ? "bg-gray-200" : "")
+                    }
                     disabled={disableEdit}
                   />
                 </div>

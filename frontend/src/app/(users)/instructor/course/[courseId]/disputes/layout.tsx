@@ -3,6 +3,8 @@ import { Course, SelectedButton } from "@/app/typings/backendDataTypes";
 import CourseHeader from "../../../components/courseHeader";
 import EditCourseButton from "../../../components/editCourseButton";
 import { Toaster } from "react-hot-toast";
+import Link from "next/link";
+import { ArrowLeft } from "flowbite-react-icons/outline";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,6 +28,15 @@ const Layout: React.FC<LayoutProps> = async ({ children, params }) => {
         </div>
         <div className="col-span-1 justify-self-end space-y-4">
           <EditCourseButton courseId={cid} />
+          <button type="button" className="btn-primary block w-full">
+            <Link
+              href={`../${course.id}/exam`}
+              className="space-x-4 flex items-center text-center"
+            >
+              <ArrowLeft />
+              Back to Course Page
+            </Link>
+          </button>
         </div>
       </div>
       <div className="w-full mt-5">

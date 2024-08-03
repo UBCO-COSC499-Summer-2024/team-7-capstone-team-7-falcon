@@ -1,12 +1,13 @@
 "use client";
 
-import { Alert, Modal } from "flowbite-react";
+import { Alert, Modal, Tooltip } from "flowbite-react";
 import { useState } from "react";
 import { BubbleSheetPayload } from "../../../typings/backendDataTypes";
 import { examsAPI } from "../../../api/examAPI";
 import { HiInformationCircle } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { saveAs } from "file-saver";
+import { InfoCircle } from "flowbite-react-icons/solid";
 
 interface BubbleSheetModalProps {
   onClose?(): void;
@@ -23,10 +24,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [isCreateDisabled, setIsCreateDisabled] = useState<boolean>(false);
-  const [isDownloadAvailable, setIsDownloadAvailable] =
-    useState<boolean>(false);
   const [questionCount, setQuestionCount] = useState<string>("");
-  const [fileId, setFileId] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: number[];
   }>({});
@@ -34,7 +32,6 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
   const questionsPerColumn = 35;
 
   const handleClose = () => {
-    setIsDownloadAvailable(false);
     setIsModalOpen(false);
     if (onClose) {
       onClose();
@@ -43,6 +40,7 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
 
   const handleOptionChange = (event: any) => {
     const value = Number(event.target.value);
+
     if (value >= 0 && value <= 200) {
       setQuestionCount(event.target.value);
     }
@@ -68,22 +66,23 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
     });
   };
 
-  const downloadBubbleSheetFile = async () => {
+  const downloadBubbleSheetFile = async (filePath: string) => {
     try {
-      const response = await examsAPI.downloadBubbleSheet(fileId);
-      const blob = new Blob([response.data], { type: "application/zip" });
-
-      saveAs(blob, "bubble_sheet.zip");
-      toast.success("Bubble sheet file downloaded");
-      setIsCreateDisabled(false);
+      const response = await examsAPI.downloadBubbleSheet(filePath);
+      if (response.data) {
+        const blob = new Blob([response.data], { type: "application/zip" });
+        saveAs(blob, "bubble_sheet.zip");
+      } else {
+        toast.error("Empty file received, please try again");
+      }
     } catch (e) {
       toast.error("Failed to download bubble sheet file");
-      setIsDownloadAvailable(false);
     }
+
+    setIsCreateDisabled(false);
   };
 
   const submitJob = async () => {
-    setIsDownloadAvailable(false);
     const keys = Object.keys(selectedOptions);
 
     // Verifies a key exists for each row (a key can exist but have no answer)
@@ -126,7 +125,8 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
         duration: 5_000,
       });
 
-      let fileIdReceived = false;
+      let filePath: string = "";
+
       while (true) {
         await new Promise((resolve) => setTimeout(resolve, 1_500));
 
@@ -138,14 +138,12 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
           jobCompleteResponse.data &&
           jobCompleteResponse.data?.data?.status === "completed"
         ) {
-          setFileId(jobCompleteResponse.data?.data?.payload?.filePath);
-          setIsDownloadAvailable(true);
-          fileIdReceived = true;
+          filePath = jobCompleteResponse.data?.data?.payload.filePath;
         }
 
-        if (fileIdReceived) {
+        if (filePath.length !== 0) {
           toast.success(
-            "Bubble sheet has been created, you can now download it",
+            "Bubble sheet has been created successfully. Downloading file...",
             {
               duration: 5_000,
             },
@@ -153,6 +151,8 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
           break;
         }
       }
+
+      await downloadBubbleSheetFile(filePath);
     } else {
       toast.error("Failed to create bubble sheet");
       setIsCreateDisabled(false);
@@ -166,6 +166,27 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
       <Modal.Body>
         <div className="grid grid-cols-1 space-x-4">
           <div className="col-span-1 space-y-3">
+            <Alert color="purple" rounded className="my-4">
+              <div className="flex items-center space-x-2">
+                <InfoCircle className="sm:size-48 md:size-10" />
+                <p>
+                  Custom bubble sheet exam allows you to customize your bubble
+                  sheet exam based on the number of questions and correct
+                  answers per question. Once you click "Create," the ZIP file
+                  with two files (bubble sheet and answer key) will be created
+                  and downloaded. This bubble sheet will not be associated with
+                  the exam you are now creating as you have an option to upload
+                  a different bubble sheet version when submitting submissions
+                  for grading
+                  <br />
+                  <br />
+                  <strong>
+                    NOTE: Once you will close this modal, you will have to press
+                    "Publish" to create an exam
+                  </strong>
+                </p>
+              </div>
+            </Alert>
             <div>
               <label
                 htmlFor="number-input"
@@ -173,16 +194,36 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
               >
                 Number of questions to be created
               </label>
-              <input
-                type="number"
-                id="number-input"
-                value={questionCount}
-                onChange={handleOptionChange}
-                min={0}
-                max={200}
-                placeholder="Enter a number between 0 and 200"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
+              <Tooltip
+                content="Enter the number of questions bubble sheet exam needs to have"
+                theme={{
+                  target: "w-full",
+                }}
+              >
+                <input
+                  type="number"
+                  id="number-input"
+                  value={questionCount}
+                  onChange={handleOptionChange}
+                  onKeyDown={(e) => {
+                    const eventKey = e.key.toLowerCase();
+
+                    if (
+                      eventKey === "." ||
+                      eventKey === "," ||
+                      eventKey === "-" ||
+                      eventKey === "e" ||
+                      eventKey === "+"
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                  min={0}
+                  max={200}
+                  placeholder="Enter a number between 0 and 200"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                />
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -247,13 +288,6 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
             disabled={isCreateDisabled}
           >
             Create
-          </button>
-          <button
-            className="btn-primary disabled:bg-purple-400"
-            disabled={!isDownloadAvailable}
-            onClick={downloadBubbleSheetFile}
-          >
-            Download
           </button>
         </div>
         <div className="col-span-2 flex justify-center"></div>

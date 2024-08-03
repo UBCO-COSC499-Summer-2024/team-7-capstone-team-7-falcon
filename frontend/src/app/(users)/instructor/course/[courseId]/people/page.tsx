@@ -28,7 +28,7 @@ const PeoplePage = async ({ params }: { params: { courseId: string } }) => {
           <div className="col-span-1 justify-self-end space-y-4">
             <EditCourseButton courseId={Number(params.courseId)} />
           </div>
-          <button type="button" className="btn-primary block">
+          <button type="button" className="btn-primary block w-full">
             <Link
               href={`../${course.id}/exam`}
               className="space-x-4 flex items-center"

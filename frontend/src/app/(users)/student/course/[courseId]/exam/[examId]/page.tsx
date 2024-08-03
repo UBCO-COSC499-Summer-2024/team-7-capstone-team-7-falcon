@@ -5,7 +5,7 @@ import {
   User,
 } from "../../../../../../typings/backendDataTypes";
 import Link from "next/link";
-import { ArrowLeft } from "flowbite-react-icons/outline";
+import { ArrowLeft, ChartMixed } from "flowbite-react-icons/outline";
 import { examsAPI } from "../../../../../../api/examAPI";
 import GradeDisplay from "../../../../../components/gradeDisplay";
 import { CSSProperties } from "react";
@@ -13,8 +13,9 @@ import { mean, median, quantile } from "d3-array";
 import { usersAPI } from "../../../../../../api/usersAPI";
 import ReportSubmissionIssue from "../../../../components/reportSubmissionIssue";
 import { Toaster } from "react-hot-toast";
-import PdfViewer from "../../../../../components/pdfViewer";
 import ToggleBubbleSheet from "../../../../../components/toggleBubbleSheet";
+import { Popover } from "flowbite-react";
+import ExamOverviewPopover from "../../../../../components/examOverviewPopover";
 
 const StudentExamPage = async ({
   params,
@@ -78,45 +79,49 @@ const StudentExamPage = async ({
         </h3>
         <div></div>
       </div>
-      <div className="grid grid-cols-5">
-        <div className="col-span-4">
+      <div className="">
+        <div className="flex my-5 items-center justify-between">
           <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
-          <ToggleBubbleSheet
-            courseId={cid}
-            submissionId={submission.studentSubmission.id}
-            examId={Number(params.examId)}
-            userId={user.id}
-            submission={submission}
-            disableEdit={true}
-          />
-        </div>
-        <div className="col-span-1 text-xl">
-          <p className="mt-4 mb-8 font-bold">Grade Overview</p>
           <GradeDisplay
             progress={String(submission.studentSubmission.score)}
-            text=""
+            text="Exam Grade"
             properties={
               {
-                "--size": "6rem",
-                "--thickness": "0.7rem",
+                "--size": "4rem",
+                "--thickness": "0.4rem",
                 "--progress": String(submission.studentSubmission.score),
               } as CSSProperties
             }
             textStyle={"font-normal text-normal"}
           />
-          <div className="text-normal mt-8 space-y-2">
-            <p>Mean: {stats.meanValue}</p>
-            <p>High: {stats.max}</p>
-            <p>Low: {stats.min}</p>
-            <p>Upper Quartile: {stats.upperQuartile}</p>
-            <p>Lower Quartile: {stats.lowerQuartile}</p>
-            <p>Median: {stats.medianValue}</p>
+
+          <div className="space-y-4">
+            <Popover
+              content={<ExamOverviewPopover stats={stats} />}
+              trigger="hover"
+              arrow={false}
+            >
+              <button className="btn-primary flex items-center space-x-3 w-full">
+                <ChartMixed />
+                <span>Exam Statistics</span>
+              </button>
+            </Popover>
+
+            <ReportSubmissionIssue
+              submissionId={submission.studentSubmission.id}
+              courseId={cid}
+            />
           </div>
-          <ReportSubmissionIssue
-            submissionId={submission.studentSubmission.id}
-            courseId={cid}
-          />
         </div>
+
+        <ToggleBubbleSheet
+          courseId={cid}
+          submissionId={submission.studentSubmission.id}
+          examId={Number(params.examId)}
+          userId={user.id}
+          submission={submission}
+          disableEdit={true}
+        />
       </div>
     </div>
   );

@@ -9,13 +9,11 @@ const PdfViewer: React.FC<{
   submissionId: number;
   userId?: number;
   width?: string;
-}> = ({ courseId, submissionId, userId, width = "90%" }) => {
+}> = ({ courseId, submissionId, userId }) => {
   const [pdfUrl, setPdfUrl] = useState<string>("");
-  const [bubbleSheetUI, setBubbleSheetUI] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchPdf = async () => {
-      // alert(userId)
       try {
         let response;
         if (!userId) {
@@ -41,15 +39,16 @@ const PdfViewer: React.FC<{
     fetchPdf();
   }, []);
 
-  const toggleBubbleSheetUI = () => {
-    setBubbleSheetUI(!bubbleSheetUI);
-  };
-
   return (
-    <div>
+    <div className="relative w-full h-full">
       {pdfUrl ? (
-        // TODO: Change height from pixels to relative units
-        <iframe src={pdfUrl} width={width} height="1000px" title="PDF Viewer" />
+        <iframe
+          src={pdfUrl}
+          width="100%"
+          height="1000px"
+          title="PDF Viewer"
+          className="h-100"
+        />
       ) : (
         <Spinner className="mx-auto w-full" />
       )}

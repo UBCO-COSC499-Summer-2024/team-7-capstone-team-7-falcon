@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ExamsSubmissionsDisputesTable from "../../../components/examsSubmissionsDisputesTable";
 
 const DisputesPage = async ({ params }: { params: { courseId: string } }) => {

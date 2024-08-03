@@ -22,47 +22,21 @@ const ToggleBubbleSheet: React.FC<{
   userId,
   refreshDispute,
 }) => {
-  const [bubbleSheetUI, setBubbleSheetUI] = useState<boolean>(true);
-
-  const toggleBubbleSheetUI = () => {
-    setBubbleSheetUI(!bubbleSheetUI);
-  };
-
   return (
-    <div className="relative">
-      <div className="z-10 my-4 flex rounded-md space-x-3">
-        <button
-          className="flex items-center btn-primary"
-          onClick={toggleBubbleSheetUI}
-        >
-          <Edit width={20} height={20} />
-          Edit Submission Grades
-        </button>
-        <button
-          className="flex items-center btn-primary"
-          onClick={toggleBubbleSheetUI}
-        >
-          <FilePdf width={20} height={20} />
-          View PDF Submission
-        </button>
-      </div>
-      {bubbleSheetUI && (
-        <PdfViewer
-          courseId={courseId}
-          submissionId={submissionId}
-          userId={userId}
-        />
-      )}
-      {!bubbleSheetUI && (
-        <BubbleSheetUI
-          submission={submission}
-          courseId={courseId}
-          examId={examId}
-          submissionId={submissionId}
-          disableEdit={disableEdit}
-          refreshDispute={refreshDispute}
-        />
-      )}
+    <div className="flex overflow-x-visible space-x-2">
+      <BubbleSheetUI
+        submission={submission}
+        courseId={courseId}
+        examId={examId}
+        submissionId={submissionId}
+        disableEdit={disableEdit}
+        refreshDispute={refreshDispute}
+      />
+      <PdfViewer
+        courseId={courseId}
+        submissionId={submissionId}
+        userId={userId}
+      />
     </div>
   );
 };

@@ -61,13 +61,19 @@ const ViewExam = async ({
           </div>
           <div className="justify-self-end space-y-4">
             <button type="button" className="btn-primary">
-              <Link href={""} className="space-x-4 flex items-center">
+              <Link
+                href={`../edit-course`}
+                className="space-x-4 flex items-center"
+              >
                 <Edit />
                 Course Settings
               </Link>
             </button>
-            <button type="button" className="btn-primary block">
-              <Link href={"../exam"} className="space-x-4 flex items-center">
+            <button type="button" className="btn-primary block w-full">
+              <Link
+                href={"../exam"}
+                className="space-x-4 flex items-center w-full"
+              >
                 <ArrowLeft />
                 Back
               </Link>

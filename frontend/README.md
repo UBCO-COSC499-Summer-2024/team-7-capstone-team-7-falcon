@@ -4,7 +4,6 @@
 - [Setup and Installation](#setup-and-installation)
 - [Running locally](#running-locally)
   - [Running the frontend application outside of a container](#running-the-frontend-application-outside-of-a-container)
-  - [Running the frontend application within a container](#running-the-frontend-application-within-a-container)
 
 ## Tools
 
@@ -58,20 +57,3 @@ npm run build && npm run start
 ```
 
 After running one of these commands, you can visit [http://localhost:3000](http://localhost:3000) to verify that the application is running.
-
-### Running the frontend application within a container
-
-To run the frontend application in development mode:
-
-```bash
-docker-compose up frontend
-```
-
-NOTE: This might take a moment to start. Wait until you see something similar to
-
-```
-team-7-capstone-team-7-falcon-frontend-1  |  ✓ Starting...
-team-7-capstone-team-7-falcon-frontend-1  |  ✓ Ready in *.*s
-```
-
-in the terminal logs before verifying that the application is running by visiting [http://localhost:3000](http://localhost:3000).

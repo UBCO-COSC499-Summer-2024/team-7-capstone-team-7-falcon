@@ -52,31 +52,31 @@ In order to run the application, the following dependencies need to be installed
 3. [nvm](https://github.com/nvm-sh/nvm)
 4. [Poetry](https://python-poetry.org/docs/)
 
-## Installation and Setup (WIP)
+## Installation and Setup
 
 Please refer to the READMEs found in the subfolders for instructions to run individual components of the application.
 
-This project uses Docker and an easy way to get the application running is to simply run 
-
-```bash
-docker-compose up
-```
-
-in the root directory.
-
-In order to do so, you must first:
+The following steps describe how the application can be run locally outside of a container:
 
 1. Setup the backend by following the [installation steps](./backend/README.md#setup-and-installation).
 
 2. Setup the frontend by following the [installation steps](./frontend/README.md#setup-and-installation).
 
-3. Setup the OMR utlities for the [bubble sheet generator](./tasks/bubble-sheet-generator/README.md#setup-and-installation) and the [OMR tool]().
+3. Setup the OMR utlities for the [bubble sheet generator](./tasks/bubble-sheet-generator/README.md#setup-and-installation) and the [OMR tool](./tasks/OMR-tool/README.md#setup-and-installation).
 
 4. Finally, in the root folder of this project (where this README is located), run:
 
 ```bash
 cp .env.example .env
 ```
+
+and then,
+
+```bash
+docker compose up redis postgres -d
+```
+
+to start the PostgreSQL and Redis Docker containers.
 
 ## Built with
 

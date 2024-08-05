@@ -134,6 +134,30 @@ export class CourseController {
   }
 
   /**
+   * Get exams with submissions disputes by course id
+   * @param res {Response} - Response object
+   * @param cid {number} - Course id
+   * @returns {Promise<Response>} - Response object
+   */
+  @UseGuards(AuthGuard, CourseRoleGuard)
+  @Roles(CourseRoleEnum.PROFESSOR, CourseRoleEnum.TA)
+  @Get('/:cid/exams_submissions_disputes')
+  async getExamsSubmissionsDisputes(
+    @Res() res: Response,
+    @Param('cid', ParseIntPipe) cid: number,
+  ): Promise<Response> {
+    try {
+      const examsSubmissionsDisputes =
+        await this.courseService.getExamsWithSubmissionsDisputesByCourseId(cid);
+      return res.status(HttpStatus.OK).send(examsSubmissionsDisputes);
+    } catch (e) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: e.message,
+      });
+    }
+  }
+
+  /**
    * Delete member from course
    * @param res {Response} - Response object
    * @param cid {number} - Course id

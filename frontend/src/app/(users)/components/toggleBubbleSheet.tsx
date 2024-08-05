@@ -1,6 +1,5 @@
 "use client";
-import React, { useState } from "react";
-import { Edit, FilePdf } from "flowbite-react-icons/solid";
+import React from "react";
 import PdfViewer from "./pdfViewer";
 import BubbleSheetUI from "./bubbleSheetUI";
 import { StudentSubmission } from "../../typings/backendDataTypes";

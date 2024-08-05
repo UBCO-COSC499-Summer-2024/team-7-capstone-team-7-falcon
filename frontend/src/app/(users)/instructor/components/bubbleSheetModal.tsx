@@ -172,17 +172,17 @@ const BubbleSheetModal: React.FC<BubbleSheetModalProps> = ({
                 <p>
                   Custom bubble sheet exam allows you to customize your bubble
                   sheet exam based on the number of questions and correct
-                  answers per question. Once you click "Create," the ZIP file
-                  with two files (bubble sheet and answer key) will be created
-                  and downloaded. This bubble sheet will not be associated with
-                  the exam you are now creating as you have an option to upload
-                  a different bubble sheet version when submitting submissions
-                  for grading
+                  answers per question. Once you click &quot;Create,&quot; the
+                  ZIP file with two files (bubble sheet and answer key) will be
+                  created and downloaded. This bubble sheet will not be
+                  associated with the exam you are now creating as you have an
+                  option to upload a different bubble sheet version when
+                  submitting submissions for grading
                   <br />
                   <br />
                   <strong>
                     NOTE: Once you will close this modal, you will have to press
-                    "Publish" to create an exam
+                    &quot;Publish&quot; to create an exam
                   </strong>
                 </p>
               </div>

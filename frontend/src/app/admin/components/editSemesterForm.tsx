@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { TextInput, Label, Datepicker, Alert } from "flowbite-react";
+import { TextInput, Label, Datepicker, Alert, Spinner } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { semestersAPI } from "@/app/api/semestersAPI";
 import { SemesterData, SemesterValid } from "@/app/typings/backendDataTypes";
 import { useRouter } from "next/navigation";
+import { datePickerTheme } from "@/app/components/datePickerTheme";
 
 interface SemesterEditFormProps {
   semesterId: number;
@@ -62,13 +63,8 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
         semesterId,
         formData,
       );
-
-      if (updatedSemester && updatedSemester.status) {
-        setFormData({
-          name: updatedSemester.name,
-          starts_at: updatedSemester.starts_at,
-          ends_at: updatedSemester.ends_at,
-        } as SemesterData);
+      console.log(updatedSemester);
+      if (updatedSemester && updatedSemester.status === 204) {
         toast.success("Semester successfully updated.");
 
         fetchData();
@@ -80,6 +76,14 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
     } finally {
       setSavingChanges(false);
     }
+  };
+
+  const setCalendarDate = (daysAhead: number) => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + daysAhead);
+
+    return tomorrow;
   };
 
   const DeleteSemester = async () => {
@@ -96,84 +100,118 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
 
   return (
     <div>
-      <form method="PATCH" onSubmit={handleSaveChanges}>
-        <div className="space-y-4 p-4 ring ring-gray-100 rounded-md flex flex-col">
-          <Label htmlFor="name">
-            <h2>Semester Name</h2>
-          </Label>
-          <TextInput
-            id="name"
-            name="name"
-            className="mb-3"
-            value={formData.name}
-            placeholder="Enter semester name"
-            required
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-
-          <Label htmlFor="starts_at" className="mb-3">
-            <h2 className="pt-2">Semester Start Date</h2>
-          </Label>
-          <div className="relative flex items-center mb-4">
-            <Datepicker
-              className="w-1/4"
-              id="starts_at"
-              name="starts_at"
-              value={new Date(Number(formData.starts_at)).toLocaleString()}
-              onSelectedDateChanged={(date: Date) =>
-                setFormData({ ...formData, starts_at: date.getTime() })
-              }
+      {formData.starts_at &&
+      formData.ends_at &&
+      formData.starts_at > 0 &&
+      formData.ends_at > 0 ? (
+        <form method="PATCH" onSubmit={handleSaveChanges}>
+          <div className="space-y-4 p-4 ring ring-gray-100 rounded-md flex flex-col">
+            <Label htmlFor="name">
+              <h2>Semester Name</h2>
+            </Label>
+            <TextInput
+              id="name"
+              name="name"
+              className="mb-3"
+              value={formData.name}
+              placeholder="Enter semester name"
               required
-            />
-          </div>
-
-          <Label htmlFor="ends_at" className="mb-3">
-            <h2 className="pt-2">Semester End Date</h2>
-          </Label>
-          <div className="relative flex items-center mb-4">
-            <Datepicker
-              className="w-1/4"
-              id="ends_at"
-              name="ends_at"
-              value={new Date(Number(formData.ends_at)).toLocaleString()}
-              onSelectedDateChanged={(date: Date) =>
-                setFormData({ ...formData, ends_at: date.getTime() })
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
               }
-              required
             />
-          </div>
 
-          {semesterValid === SemesterValid.DatesInThePast && (
-            <div className="mb-4">
-              <Alert color="failure" icon={HiInformationCircle}>
-                <span className="font-medium">Date(s) in the past! &nbsp;</span>
-                Please select a date in the future.
-              </Alert>
+            <div className="flex space-x-10">
+              <div className="mb-4">
+                <Label htmlFor="starts_at" className="mb-3">
+                  <h2 className="pt-2">Semester Start Date</h2>
+                </Label>
+                <div className="items-center mb-4">
+                  {formData && formData.starts_at > 0 && (
+                    <Datepicker
+                      className="w-1/4"
+                      id="starts_at"
+                      name="starts_at"
+                      value={new Date(
+                        Number(formData.starts_at),
+                      ).toLocaleString()}
+                      onSelectedDateChanged={(date: Date) =>
+                        setFormData({ ...formData, starts_at: date.getTime() })
+                      }
+                      required
+                      theme={datePickerTheme}
+                      inline={true}
+                      showTodayButton={false}
+                      showClearButton={false}
+                      minDate={setCalendarDate(1)}
+                      defaultDate={new Date(Number(formData.starts_at))}
+                    />
+                  )}
+                </div>
+              </div>
+              <div>
+                <Label
+                  htmlFor="ends_at"
+                  className="block text-gray-700 text-sm font-bold"
+                >
+                  <h2 className="pt-2">Semester End Date</h2>
+                </Label>
+                {formData && formData.ends_at > 0 && (
+                  <Datepicker
+                    className="w-1/4"
+                    id="ends_at"
+                    name="ends_at"
+                    theme={datePickerTheme}
+                    onSelectedDateChanged={(date: Date) =>
+                      setFormData({ ...formData, ends_at: date.getTime() })
+                    }
+                    value={new Date(Number(formData.ends_at)).toLocaleString()}
+                    defaultDate={new Date(Number(formData.ends_at))}
+                    required
+                    inline={true}
+                    showClearButton={false}
+                    showTodayButton={false}
+                  />
+                )}
+              </div>
             </div>
-          )}
 
-          {semesterValid === SemesterValid.EndDateBeforeStartDate && (
-            <div className="mb-4">
-              <Alert color="failure" icon={HiInformationCircle}>
-                <span className="font-medium">
-                  End date before start date! &nbsp;
-                </span>
-                Please select an end date that is after the start date.
-              </Alert>
+            {semesterValid === SemesterValid.DatesInThePast && (
+              <div className="mb-4">
+                <Alert color="failure" icon={HiInformationCircle}>
+                  <span className="font-medium">
+                    Date(s) in the past! &nbsp;
+                  </span>
+                  Please select a date in the future.
+                </Alert>
+              </div>
+            )}
+
+            {semesterValid === SemesterValid.EndDateBeforeStartDate && (
+              <div className="mb-4">
+                <Alert color="failure" icon={HiInformationCircle}>
+                  <span className="font-medium">
+                    End date before start date! &nbsp;
+                  </span>
+                  Please select an end date that is after the start date.
+                </Alert>
+              </div>
+            )}
+
+            <div>
+              <button
+                type="submit"
+                className="btn-primary w-ful disabled:bg-purple-400"
+                disabled={savingChanges}
+              >
+                {savingChanges ? "Saving Changes..." : "Save changes"}
+              </button>
             </div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              className="btn-primary w-ful disabled:bg-purple-400"
-              disabled={savingChanges}
-            >
-              {savingChanges ? "Saving Changes..." : "Save changes"}
-            </button>
           </div>
-        </div>
-      </form>
+        </form>
+      ) : (
+        <Spinner className="w-full" />
+      )}
       <div className="ring-1 rounded ring-red-700 pt-4 mt-4 flex flex-col p-4">
         <p className="font-bold text-lg mb-2">Danger Zone</p>
         <p className="font-bold mt-2">Delete this semester</p>

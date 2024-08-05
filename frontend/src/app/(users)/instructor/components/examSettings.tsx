@@ -3,7 +3,7 @@
 import { examsAPI } from "@/app/api/examAPI";
 import { ExamSettingsProps } from "@/app/components/type";
 import { saveAs } from "file-saver";
-import { CheckPlusCircle, Download, Upload } from "flowbite-react-icons/solid";
+import { Download, Eye, EyeSlash, Upload } from "flowbite-react-icons/solid";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import UploadExamSubmissionsModal from "./uploadExamSubmissionsModal";
@@ -70,7 +70,7 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       )}
       <button
         type="button"
-        className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-400"
+        className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-300"
         disabled={!!examFolder && examFolder?.length !== 0}
         onClick={() => setIsModalOpen(true)}
       >
@@ -81,8 +81,9 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       </button>
       <button
         type="button"
-        className="btn-primary flex justify-center bg-purple w-full"
+        className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-300"
         onClick={() => downloadSubmissionGrades()}
+        disabled={examFolder == null || examFolder?.length === 0}
       >
         <div className="space-x-4 flex items-center">
           <Download />
@@ -91,11 +92,12 @@ const ExamSettings: React.FC<ExamSettingsProps> = ({
       </button>
       <button
         type="button"
-        className="btn-primary flex justify-center bg-purple w-full"
+        className="btn-primary flex justify-center bg-purple w-full disabled:bg-purple-300"
         onClick={() => releaseGrades()}
+        disabled={examFolder == null || examFolder?.length === 0}
       >
         <div className="space-x-4 flex items-center">
-          <CheckPlusCircle />
+          {!gradesReleased ? <Eye /> : <EyeSlash />}
           <span>{gradesReleased ? "Hide Grades" : "Release Grades"}</span>
         </div>
       </button>

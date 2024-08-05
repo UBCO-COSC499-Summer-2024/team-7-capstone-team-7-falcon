@@ -119,6 +119,7 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
         />
       </div>
       <div className="col-span-1 justify-self-end space-y-4">
+        <EditCourseButton courseId={course.id} />
         <button type="button" className="btn-primary block w-full">
           <Link
             href={`../${course.id}/exam`}
@@ -128,7 +129,6 @@ const AnalyticsPage = async ({ params }: { params: { courseId: string } }) => {
             Back
           </Link>
         </button>
-        <EditCourseButton courseId={course.id} />
       </div>
       <div className="border-t-2 border-gray-300 my-4 col-span-1 h-full">
         <div className="grid grid-cols-3">

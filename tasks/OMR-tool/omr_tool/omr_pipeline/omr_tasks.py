@@ -208,9 +208,9 @@ def omr_on_submission_image(
         roi_cropped = extract_roi(threshed_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
         # NOTE: BELOW IS A TEMPORARY MEASURE FOR CHECKING BOUNDS
-        output_image = cv2.rectangle(
-            output_image, question_bounds[:2], question_bounds[2:], (0, 255, 0), 2
-        )
+        # output_image = cv2.rectangle(
+        #     output_image, question_bounds[:2], question_bounds[2:], (0, 255, 0), 2
+        # )
         color, correct_answers, question_result = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )

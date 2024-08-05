@@ -55,7 +55,6 @@ def find_filled_bubbles(img, bubble_contours, threshold=0.7):
         mask = cv2.bitwise_and(img, img, mask=mask)
         total = cv2.countNonZero(mask)
         totalPercentage = total / cv2.contourArea(cnt)
-        print(totalPercentage)
         if totalPercentage > threshold:
             filled_index.append(i)
     return filled_index

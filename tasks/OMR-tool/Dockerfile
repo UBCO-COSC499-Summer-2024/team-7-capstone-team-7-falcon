@@ -29,9 +29,13 @@ RUN rm -rf $POETRY_CACHE_DIR
 
 # Copies the project files separately to prevent re-installing dependencies on every code change
 COPY omr_tool ./omr_tool
+# Copies the object inference module to the container
+COPY object_inference ./object_inference
+# Copies the trained model to the container
+COPY model_training/trained_model_onnx/weights ./model_training/trained_model_onnx/weights
 
 # Installs the project itself
 RUN poetry install --without dev
 
-ENTRYPOINT [ "poetry", "run", "python", "-m", "omr_tool.main"]
+ENTRYPOINT [ "poetry", "run", "python", "-m", "omr_tool.app"]
 

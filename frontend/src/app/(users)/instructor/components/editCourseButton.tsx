@@ -9,7 +9,7 @@ interface EditCourseButtonProps {
 
 const EditCourseButton: React.FC<EditCourseButtonProps> = ({ courseId }) => {
   return (
-    <button type="button" className="btn-primary">
+    <button type="button" className="btn-primary w-full">
       <Link
         href={`/instructor/course/${courseId}/edit-course`}
         className="space-x-4 flex items-center"

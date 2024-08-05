@@ -243,6 +243,7 @@ export enum SelectedButton {
   None = "NONE",
   Submissions_Disputes = "SUBMISSIONS DISPUTES",
   Edit_Course = "COURSE SETTINGS",
+  Exams = "EXAMS",
 }
 
 export interface SemesterData {

@@ -850,9 +850,6 @@ export class ExamService {
           id: courseId,
           is_archived: false,
         },
-        submissions: {
-          id: submissionId,
-        },
       },
       order: {
         submissions: {

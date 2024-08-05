@@ -132,7 +132,7 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({
           <Label
             className="justify-center my-4"
             htmlFor="pdf"
-            value="Generate a custom bubble sheet exam"
+            value="Generate a custom bubble sheet exam (Optional)"
           />
           <div className="w-1/12">
             <div

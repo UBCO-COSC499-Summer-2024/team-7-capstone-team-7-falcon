@@ -42,8 +42,8 @@ class Inferencer:
     def __init__(
         self,
         model_path=MODEL_PATH,
-        conf_threshold=0.5,
-        iou_threshold=0.95,
+        conf_threshold=0.3,
+        iou_threshold=0.9,
         inference_classes=INFERENCE_CLASSES,
     ):
         self.conf_threshold = conf_threshold
@@ -81,7 +81,7 @@ class Inferencer:
         Returns:
             Tuple: A tuple containing the bounding boxes, scores, and class IDs of the detected objects.
 
-            NOTE: Scores are the confidence and overlap scores of the detected objects. 
+            NOTE: Scores are the confidence and overlap scores of the detected objects.
                 These are currently not used by the rest of the system but are good to have for the future
         """
         try:
@@ -132,7 +132,6 @@ class Inferencer:
             Tuple: A tuple containing the filtered bounding boxes, scores, and class IDs of the detected objects.
         """
         try:
-            predictions = np.squeeze(results[0]).T
 
             # Filter out object confidence scores below threshold
             predictions = np.squeeze(results[0]).T
@@ -148,15 +147,115 @@ class Inferencer:
 
             boxes = self.get_bounding_boxes(predictions)
 
-            indices = cv2.dnn.NMSBoxes(
-                boxes, scores, self.conf_threshold, self.iou_threshold
+            indices = self.soft_nms(
+                boxes, scores, self.iou_threshold, self.conf_threshold
             )
+            # indices = cv2.dnn.NMSBoxes(
+            #     boxes, scores, self.conf_threshold, self.iou_threshold
+            # )
+
             indices = indices.flatten()
 
             return boxes[indices], scores[indices], class_ids[indices]
         except Exception as e:
             print(f"Error postprocessing results: {e}")
             return [], [], []
+
+    def iou(self, boxes, areas, i, j):
+        """
+        Calculates the intersection over union (IoU) of two bounding boxes.
+
+        Args:
+            box1: The first bounding box.
+            box2: The second bounding box.
+
+        Returns:
+            float: The IoU of the two
+        """
+        inter_x1 = np.maximum(boxes[i, 1], boxes[j:, 1])
+        inter_y1 = np.maximum(boxes[i, 0], boxes[j:, 0])
+        inter_x2 = np.minimum(boxes[i, 3], boxes[j:, 3])
+        inter_y2 = np.minimum(boxes[i, 2], boxes[j:, 2])
+        w = np.maximum(0.0, inter_x2 - inter_x1 + 1)
+        h = np.maximum(0.0, inter_y2 - inter_y1 + 1)
+        intersection = w * h
+        overlap = intersection / (areas[i] + areas[j:] - intersection)
+
+        return overlap
+
+    def soft_nms(self, boxes, scores, iouThreshold, conf, sigma=0.1, method="gaussian"):
+        """
+        Applies Soft Non-Maximum Suppression (Soft-NMS) to the input bounding boxes and scores.
+
+        Args:
+            boxes (numpy.ndarray): Array of shape (N, 4) representing the bounding boxes coordinates in the format [y1, x1, y2, x2].
+            scores (numpy.ndarray): Array of shape (N,) representing the confidence scores for each bounding box.
+            iouThreshold (float): Threshold value for IoU (Intersection over Union). Bounding boxes with IoU greater than Nt will be suppressed.
+            conf (float): Confidence threshold. Bounding boxes with scores lower than conf will be suppressed.
+            sigma (float, optional): Sigma value for the Gaussian method. Defaults to 0.1.
+            method (str, optional): Method for Soft-NMS. Can be "linear", "gaussian", or "original". Defaults to "gaussian".
+
+        Returns:
+            numpy.ndarray: Array of indices representing the selected bounding boxes after Soft-NMS.
+
+        """
+        # indexes concatenate boxes with the last column
+        N = boxes.shape[0]
+        indexes = np.array([np.arange(N)])
+        boxes = np.concatenate((boxes, indexes.T), axis=1)
+
+        # the order of boxes coordinate is [y1,x1,y2,x2]
+        y1 = boxes[:, 0]
+        x1 = boxes[:, 1]
+        y2 = boxes[:, 2]
+        x2 = boxes[:, 3]
+        areas = (x2 - x1 + 1) * (y2 - y1 + 1)
+
+        for current in range(N):
+
+            next_pos = current + 1
+
+            # get the max score and index in scores[pos:, pos4]
+            if current != N - 1:
+                max_score = np.max(scores[next_pos:], axis=0)
+                max_pos = np.argmax(scores[next_pos:], axis=0)
+            else:
+                max_score = scores[-1]
+                max_pos = 0
+            if scores[current] < max_score:
+                boxes[current, :], boxes[max_pos + next_pos, :] = (
+                    boxes[max_pos + next_pos, :],
+                    boxes[current, :],
+                )
+                scores[current], scores[max_pos + next_pos] = (
+                    scores[max_pos + next_pos],
+                    scores[current],
+                )
+                areas[current], areas[max_pos + next_pos] = (
+                    areas[max_pos + next_pos],
+                    areas[current],
+                )
+
+            # calculate the iou.
+            ovr = self.iou(boxes, areas, current, next_pos)
+
+            # NMS methods: 'linear', 'gaussian', 'original'
+            if method == "linear":  # linear
+                weight = np.ones(ovr.shape)
+                weight[ovr > iouThreshold] = (
+                    weight[ovr > iouThreshold] - ovr[ovr > iouThreshold]
+                )
+            elif method == "gaussian":  # gaussian
+                weight = np.exp(-(ovr * ovr) / sigma)
+            else:  # original NMS
+                weight = np.ones(ovr.shape)
+                weight[ovr > iouThreshold] = 0
+
+            scores[next_pos:] = weight * scores[next_pos:]
+
+        inds = (boxes[:, 4][scores > conf]).astype(int)
+
+        return inds
 
     def get_bounding_boxes(self, predictions):
         """

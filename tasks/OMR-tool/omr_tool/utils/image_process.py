@@ -73,7 +73,7 @@ def threshold_img(image):
 
     """
     initial_thresh = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)[1]
-    blur_image = cv2.GaussianBlur(initial_thresh, (5, 5), 0)
+    blur_image = cv2.GaussianBlur(initial_thresh, (3, 3), 0)
     thresh = cv2.threshold(blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[
         1
     ]
@@ -199,7 +199,7 @@ def identify_bubbled(img, cnts):
     return filled_in
 
 
-def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0,0)):
+def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0, 0)):
     """
     Draw the bubble contours on the image.
 

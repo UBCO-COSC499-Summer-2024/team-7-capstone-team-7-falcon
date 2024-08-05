@@ -29,12 +29,12 @@ def convert_to_pdf(graded_images, output_dir, file_name):
     """
     # Ensure the directory for saving exists
     processed_path = (
-    Path(__file__).resolve().parents[4]
-    / "backend"
-    / "uploads"
-    / "exams"
-    / "processed_submissions"
-)
+        Path(__file__).resolve().parents[4]
+        / "backend"
+        / "uploads"
+        / "exams"
+        / "processed_submissions"
+    )
 
     try:
         os.path.isdir(os.path.join(processed_path, output_dir))
@@ -45,7 +45,7 @@ def convert_to_pdf(graded_images, output_dir, file_name):
         return
 
     try:
-        pdf_path = os.path.join(f"{processed_path}/{output_dir}", f"{file_name}.pdf")  
+        pdf_path = os.path.join(f"{processed_path}/{output_dir}", f"{file_name}.pdf")
         if not all(is_pil_image(img) for img in graded_images):
             raise ValueError(
                 "All elements in the graded_images must be PIL.Image objects"

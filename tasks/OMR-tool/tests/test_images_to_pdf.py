@@ -18,6 +18,7 @@ class TestConvertToPDF:
         Fixture that returns a temporary output path for saving pdfs.
         """
         return tmp_path_factory.mktemp("pdf_output")
+
     @pytest.fixture(scope="class")
     def pil_images(self):
         """
@@ -35,8 +36,6 @@ class TestConvertToPDF:
         """
         with pytest.raises(FileNotFoundError):
             output_pdf_path = convert_to_pdf(pil_images, output_path, "test_pdf")
-        
-        
 
     def test_convert_to_pdf_failed(self, output_path):
         """

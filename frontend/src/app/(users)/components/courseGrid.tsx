@@ -29,7 +29,7 @@ const CourseGrid: React.FC<CourseGridProps> = ({ reload }) => {
         setUserCourses(data);
         setIsLoaded(true);
       } catch (error) {
-        console.error("Failed to fetch courses:", error);
+        setIsLoaded(true);
       }
     };
 

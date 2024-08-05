@@ -80,6 +80,7 @@ const DisputeExamSubmissionPage = ({
           submissionId={dispute.submission.id}
           examId={params.examId}
           submission={submission}
+          refreshDispute={fetchDispute}
         />
       ) : null}
     </div>

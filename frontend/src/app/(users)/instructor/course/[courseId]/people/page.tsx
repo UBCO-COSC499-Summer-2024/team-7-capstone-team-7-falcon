@@ -10,6 +10,7 @@ import CourseHeader from "../../../components/courseHeader";
 import PeopleTable from "../../../components/PeopleTable";
 import Link from "next/link";
 import { ArrowLeft } from "flowbite-react-icons/outline";
+import EditCourseButton from "../../../components/editCourseButton";
 import DeleteUserModal from "../../../components/deleteUserModal";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -72,7 +73,10 @@ const PeoplePage = ({ params }: { params: { courseId: string } }) => {
           />
         </div>
         <div className="justify-self-end space-y-4">
-          <button type="button" className="btn-primary block">
+          <div className="col-span-1 justify-self-end space-y-4">
+            <EditCourseButton courseId={Number(params.courseId)} />
+          </div>
+          <button type="button" className="btn-primary block w-full">
             <Link
               href={`../${course.id}/exam`}
               className="space-x-4 flex items-center"

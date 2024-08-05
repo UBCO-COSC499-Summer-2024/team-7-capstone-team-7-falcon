@@ -54,7 +54,7 @@ describe('Seed Integration', () => {
       expect(response.body).toEqual({ message: 'Database seeded' });
 
       const users = await UserModel.find();
-      expect(users).toHaveLength(4);
+      expect(users).toHaveLength(5);
 
       const courses = await CourseModel.find();
       expect(courses).toHaveLength(1);
@@ -69,7 +69,7 @@ describe('Seed Integration', () => {
       expect(courseUsers).toHaveLength(3);
 
       const studentUsers = await StudentUserModel.find();
-      expect(studentUsers).toHaveLength(2);
+      expect(studentUsers).toHaveLength(3);
 
       const employeeUsers = await EmployeeUserModel.find();
       expect(employeeUsers).toHaveLength(2);
@@ -92,7 +92,7 @@ describe('Seed Integration', () => {
       await supertest().get('/seed').expect(200);
 
       let users = await UserModel.find();
-      expect(users).toHaveLength(4);
+      expect(users).toHaveLength(5);
 
       let courses = await CourseModel.find();
       expect(courses).toHaveLength(1);
@@ -107,7 +107,7 @@ describe('Seed Integration', () => {
       expect(courseUsers).toHaveLength(3);
 
       let studentUsers = await StudentUserModel.find();
-      expect(studentUsers).toHaveLength(2);
+      expect(studentUsers).toHaveLength(3);
 
       let employeeUsers = await EmployeeUserModel.find();
       expect(employeeUsers).toHaveLength(2);

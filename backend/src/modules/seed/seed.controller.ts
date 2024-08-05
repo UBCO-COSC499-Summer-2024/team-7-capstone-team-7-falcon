@@ -13,7 +13,6 @@ import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';
 import { CourseRoleEnum, UserRoleEnum } from '../../enums/user.enum';
 import { EnvironmentGuard } from '../../guards/environment.guard';
-import { DeepPartial } from 'typeorm';
 import { SubmissionDisputeModel } from '../exam/entities/submission-dispute.entity';
 
 @UseGuards(EnvironmentGuard)
@@ -88,6 +87,16 @@ export class SeedController {
       password: hashedPassword,
     }).save();
 
+    const studentThree = await UserModel.create({
+      email: 'student3@owlmark.com',
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      created_at: parseInt(new Date().getTime().toString()),
+      updated_at: parseInt(new Date().getTime().toString()),
+      email_verified: true,
+      password: hashedPassword,
+    }).save();
+
     const professor = await UserModel.create({
       email: 'professor@owlmark.com',
       first_name: faker.person.firstName(),
@@ -122,6 +131,11 @@ export class SeedController {
 
     await StudentUserModel.create({
       user: studentTwo,
+      student_id: faker.number.int({ min: 1_000, max: 9_999 }),
+    }).save();
+
+    await StudentUserModel.create({
+      user: studentThree,
       student_id: faker.number.int({ min: 1_000, max: 9_999 }),
     }).save();
 
@@ -194,11 +208,23 @@ export class SeedController {
       student: null,
       answers: {
         errorFlag: true,
-      } as DeepPartial<SubmissionModel['answers']>,
+        answer_list: [
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+        ],
+      },
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
       document_path: 'seed/submission.pdf',
-      score: 32.32,
+      score: 100,
     }).save();
 
     await SubmissionModel.create({
@@ -206,7 +232,19 @@ export class SeedController {
       student: studentUser,
       answers: {
         errorFlag: false,
-      } as DeepPartial<SubmissionModel['answers']>,
+        answer_list: [
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 0 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+          { question_num: 0, expected: [1, 2], answered: [1, 2], score: 1 },
+        ],
+      },
       created_at: parseInt(new Date().getTime().toString()),
       updated_at: parseInt(new Date().getTime().toString()),
       document_path: 'seed/submission.pdf',

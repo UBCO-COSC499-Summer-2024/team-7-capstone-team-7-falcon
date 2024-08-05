@@ -37,7 +37,7 @@ const CreateExam = async ({ params }: { params: { courseId: string } }) => {
           </button>
           <Link
             href={`../${course.id}/exam`}
-            className="space-x-4 flex items-center btn-primary"
+            className="space-x-4 flex items-center btn-primary w-full"
           >
             <ArrowLeft />
             Back

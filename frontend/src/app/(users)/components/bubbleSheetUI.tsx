@@ -54,11 +54,11 @@ const BubbleSheetUI: React.FC<BubbleSheetUIProps> = ({
     e: ChangeEvent<HTMLInputElement>,
     questionIndex: number,
   ) => {
+    const value = Number(e.target.value);
+
     if (isNaN(parseInt(e.target.value))) {
       return;
     }
-
-    const value = Number(e.target.value);
 
     if (value < 0 || value > 1) {
       toast.error("Score must be 0 or 1");

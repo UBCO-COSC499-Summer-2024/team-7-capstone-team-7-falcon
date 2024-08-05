@@ -92,7 +92,7 @@ class TestOMRTasks:
         results, graded_images = mark_submission_group(submission_images, key)
         assert len(graded_images) == 2
         assert results["student_id"] == "12437890"
-        assert results["score"] == 200
+        assert results["score"] == 100
         # Test result of first question
         assert results["answers"]["answer_list"][0]["question_num"] == 1
         assert (

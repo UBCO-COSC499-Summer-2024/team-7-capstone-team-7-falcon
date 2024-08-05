@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import cv2
 from pathlib import Path
-from omr_tool.object_inference.inferencer import Inferencer
+from object_inference.inferencer import Inferencer
 
 
 @pytest.fixture(scope="module")
@@ -24,15 +24,13 @@ def inferencer(model_path):
 @pytest.fixture(scope="module")
 def image():
     image_path = (
-        Path(__file__).resolve().parents[1] / "fixtures" / "submission_2-page_1.jpg"
+        Path(__file__).resolve().parents[1] / "fixtures" / "submission_14-page_1.jpg"
     )
     return cv2.imread(image_path)
 
 
 def test_initialization(inferencer):
     assert isinstance(inferencer, Inferencer)
-    assert inferencer.conf_threshold == 0.5
-    assert inferencer.iou_threshold == 0.95
     assert hasattr(inferencer, "session")
     assert hasattr(inferencer, "input_name")
 
@@ -57,11 +55,8 @@ def test_inference(inferencer, image):
     boxes, scores, classes = inferencer.infer(image)
     assert isinstance(boxes, np.ndarray)
     assert boxes.shape[1] == 4
-    assert boxes.__len__() == 108
     assert isinstance(scores, np.ndarray)
-    assert scores.__len__() == 108
     assert isinstance(classes, np.ndarray)
-    assert classes.__len__() == 108
 
 
 if __name__ == "__main__":

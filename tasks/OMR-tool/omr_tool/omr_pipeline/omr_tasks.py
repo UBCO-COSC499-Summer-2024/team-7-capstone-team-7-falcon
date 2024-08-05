@@ -262,7 +262,7 @@ def populate_answer_key(image: Image, flat_list: list[dict], first_q_in_page: in
         question_num = first_q_in_page + i
         question_roi = extract_roi(image, question_bounds)
         bubble_contours = generate_bubble_contours(question_roi)
-        bubbled = find_filled_bubbles(question_roi, bubble_contours)
+        bubbled = find_filled_bubbles(question_roi, bubble_contours, 0.8)
         answer_key.append(
             {"question_num": question_num, "correct_answer_indices": bubbled}
         )
@@ -339,9 +339,8 @@ if __name__ == "__main__":
     from omr_tool.utils.pdf_to_images import convert_to_images
 
     # sheet_path = Path(__file__).resolve().parents[2] / "fixtures" / "custom.jpg"
-    sheet_path = (
-        Path(__file__).resolve().parents[2] / "fixtures" / "ubc_submission_100.pdf"
-    )
+    sheet_path = Path(__file__).resolve().parents[2] / "fixtures" / "ubc_submission_100.pdf"
+    
 
     images = convert_to_images(sheet_path)
 

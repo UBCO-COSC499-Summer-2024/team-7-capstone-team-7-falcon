@@ -55,6 +55,7 @@ def find_filled_bubbles(img, bubble_contours, threshold=0.7):
         mask = cv2.bitwise_and(img, img, mask=mask)
         total = cv2.countNonZero(mask)
         totalPercentage = total / cv2.contourArea(cnt)
+        print(totalPercentage)
         if totalPercentage > threshold:
             filled_index.append(i)
     return filled_index
@@ -80,7 +81,7 @@ def evaluate_answer(roi_cropped, bubble_contours, answer_key, question_num):
     return color, correct_answer_indices, result
 
 
-def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=450):
+def check_answer(mask, sorted_bubble_contours, expected_answer, min_threshold=0.8):
     bubbled = find_filled_bubbles(mask, sorted_bubble_contours, min_threshold)
     if bubbled == expected_answer:
         return True, bubbled

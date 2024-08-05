@@ -42,7 +42,7 @@ def convert_to_pdf(graded_images, output_dir, file_name):
         logging.error(
             f"Directory {os.path.join(processed_path, output_dir)} does not exist"
         )
-        return
+        return None
 
     try:
         pdf_path = os.path.join(f"{processed_path}/{output_dir}", f"{file_name}.pdf")

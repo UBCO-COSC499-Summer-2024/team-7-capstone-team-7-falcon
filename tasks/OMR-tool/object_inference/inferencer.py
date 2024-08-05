@@ -42,8 +42,8 @@ class Inferencer:
     def __init__(
         self,
         model_path=MODEL_PATH,
-        conf_threshold=0.3,
-        iou_threshold=0.9,
+        conf_threshold=0.1,
+        iou_threshold=0.96,
         inference_classes=INFERENCE_CLASSES,
     ):
         self.conf_threshold = conf_threshold
@@ -161,7 +161,7 @@ class Inferencer:
             print(f"Error postprocessing results: {e}")
             return [], [], []
 
-    def iou(self, boxes, areas, i, j):
+    def calc_iou(self, boxes, areas, i, j):
         """
         Calculates the intersection over union (IoU) of two bounding boxes.
 
@@ -186,6 +186,7 @@ class Inferencer:
     def soft_nms(self, boxes, scores, iouThreshold, conf, sigma=0.1, method="gaussian"):
         """
         Applies Soft Non-Maximum Suppression (Soft-NMS) to the input bounding boxes and scores.
+        This algorithm was adapted from the work of Bodla et al. https://doi.org/10.48550/arXiv.1704.04503
 
         Args:
             boxes (numpy.ndarray): Array of shape (N, 4) representing the bounding boxes coordinates in the format [y1, x1, y2, x2].
@@ -237,19 +238,19 @@ class Inferencer:
                 )
 
             # calculate the iou.
-            ovr = self.iou(boxes, areas, current, next_pos)
+            iou = self.calc_iou(boxes, areas, current, next_pos)
 
             # NMS methods: 'linear', 'gaussian', 'original'
             if method == "linear":  # linear
-                weight = np.ones(ovr.shape)
-                weight[ovr > iouThreshold] = (
-                    weight[ovr > iouThreshold] - ovr[ovr > iouThreshold]
+                weight = np.ones(iou.shape)
+                weight[iou > iouThreshold] = (
+                    weight[iou > iouThreshold] - iou[iou > iouThreshold]
                 )
             elif method == "gaussian":  # gaussian
-                weight = np.exp(-(ovr * ovr) / sigma)
+                weight = np.exp(-(iou * iou) / sigma)
             else:  # original NMS
-                weight = np.ones(ovr.shape)
-                weight[ovr > iouThreshold] = 0
+                weight = np.ones(iou.shape)
+                weight[iou > iouThreshold] = 0
 
             scores[next_pos:] = weight * scores[next_pos:]
 

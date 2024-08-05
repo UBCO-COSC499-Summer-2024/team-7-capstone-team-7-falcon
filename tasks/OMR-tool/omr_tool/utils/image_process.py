@@ -199,7 +199,7 @@ def identify_bubbled(img, cnts):
     return filled_in
 
 
-def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0,0)):
+def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0, 0)):
     """
     Draw the bubble contours on the image.
 

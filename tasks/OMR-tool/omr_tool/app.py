@@ -111,7 +111,13 @@ def send_grades(backend_url, exam_id, submission_results):
 
     if request.status_code == 400:
         logging.critical("400 - Invalid payload")
-        logging.critical({"answers": submission_results["answers"], "score": submission_results["score"], "documentPath": str(submission_results["document_path"])})
+        logging.critical(
+            {
+                "answers": submission_results["answers"],
+                "score": submission_results["score"],
+                "documentPath": str(submission_results["document_path"]),
+            }
+        )
         logging.critical(request.json())
 
     if request.status_code == 401:

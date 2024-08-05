@@ -12,9 +12,7 @@ from omr_tool.omr_pipeline.read_bubbles import (
 import logging
 
 
-def extract_and_highlight_student_id(
-    prepped_image, student_num_section, output_image
-):
+def extract_and_highlight_student_id(prepped_image, student_num_section, output_image):
     """
     Extracts the student ID from a given section of the prepped image and highlights it on the output image.
 

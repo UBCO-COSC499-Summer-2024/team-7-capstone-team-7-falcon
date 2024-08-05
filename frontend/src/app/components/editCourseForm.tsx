@@ -104,12 +104,33 @@ const CourseEditForm: React.FC<CourseEditFormProps> = ({
     });
   };
 
+  const unsecureCopyToClipboard = (text: string) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+      toast.success("Invite link copied to clipboard");
+    } catch {
+      toast.error("Unable to copy to clipboard");
+    }
+    document.body.removeChild(textArea);
+  };
+
   const copyInviteLink = () => {
     const inviteLink = formData.inviteCode;
-    navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_FRONTEND_URL}/student/course/${courseId}/invite?code=${inviteLink}`,
-    );
-    toast.success("Invite link copied to clipboard");
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}/student/course/${courseId}/invite?code=${inviteLink}`,
+      );
+      toast.success("Invite link copied to clipboard");
+    } else {
+      unsecureCopyToClipboard(
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}/student/course/${courseId}/invite?code=${inviteLink}`,
+      );
+    }
   };
 
   const generateInviteCode = () => {

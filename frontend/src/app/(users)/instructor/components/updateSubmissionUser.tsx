@@ -28,9 +28,8 @@ const UpdateSubmissionUser: React.FC<UpdateSubmissionUserProps> = ({
           submissionId={submissionId}
         />
       )}
-      <p className="mt-8 text-xl font-bold">Additional Actions</p>
       <button
-        className="btn-primary flex align-middle justify-center space-x-3 rounded-xlg mt-4 w-full"
+        className="btn-primary flex align-middle justify-center space-x-3 rounded-xlg w-full py-3"
         onClick={() => handleModal()}
       >
         <HiOutlinePencil size={20} />

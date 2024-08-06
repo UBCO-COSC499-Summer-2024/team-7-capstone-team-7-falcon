@@ -1,0 +1,293 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserService countAllUsersByRole should count all users by role 1`] = `
+[
+  {
+    "count": "5",
+    "role": "student",
+  },
+  {
+    "count": "2",
+    "role": "professor",
+  },
+  {
+    "count": "2",
+    "role": "admin",
+  },
+]
+`;
+
+exports[`UserService findOrCreateUser should create user 1`] = `
+UserModel {
+  "auth_type": "google_oauth",
+  "avatar_url": "picture",
+  "email": "john.doe@test.com",
+  "email_verified": false,
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "password": null,
+  "role": "student",
+}
+`;
+
+exports[`UserService findOrCreateUser should create user with email auth type and employee id 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "email": "email@email.com",
+  "email_verified": false,
+  "employee_user": EmployeeUserModel {
+    "employee_id": 1,
+    "id": 1,
+  },
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "tokens": [
+    TokenModel {
+      "id": 1,
+      "type": "EMAIL_VERIFICATION",
+    },
+  ],
+}
+`;
+
+exports[`UserService findOrCreateUser should create user with email auth type and student id 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "email": "email@email.com",
+  "email_verified": false,
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "student_user": StudentUserModel {
+    "id": 1,
+    "student_id": 1,
+  },
+  "tokens": [
+    TokenModel {
+      "id": 1,
+      "type": "EMAIL_VERIFICATION",
+    },
+  ],
+}
+`;
+
+exports[`UserService findOrCreateUser should create user with email auth type and student id and employee id 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "email": "email@email.com",
+  "email_verified": false,
+  "employee_user": EmployeeUserModel {
+    "employee_id": 1,
+    "id": 1,
+  },
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "student_user": StudentUserModel {
+    "id": 1,
+    "student_id": 1,
+  },
+  "tokens": [
+    TokenModel {
+      "id": 1,
+      "type": "EMAIL_VERIFICATION",
+    },
+  ],
+}
+`;
+
+exports[`UserService getAllUsers should return all users from second page 1`] = `
+PageDto {
+  "data": [
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+5@mail.com",
+      "first_name": "John",
+      "id": 6,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+6@mail.com",
+      "first_name": "John",
+      "id": 7,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+7@mail.com",
+      "first_name": "John",
+      "id": 8,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+8@mail.com",
+      "first_name": "John",
+      "id": 9,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+9@mail.com",
+      "first_name": "John",
+      "id": 10,
+      "last_name": "Doe",
+      "role": "student",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": true,
+    "itemCount": 10,
+    "page": 2,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`UserService getAllUsers should return all users in one page when take is less or equal to 50 1`] = `
+PageDto {
+  "data": [
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+0@mail.com",
+      "first_name": "John",
+      "id": 1,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+1@mail.com",
+      "first_name": "John",
+      "id": 2,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+2@mail.com",
+      "first_name": "John",
+      "id": 3,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+3@mail.com",
+      "first_name": "John",
+      "id": 4,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+4@mail.com",
+      "first_name": "John",
+      "id": 5,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+5@mail.com",
+      "first_name": "John",
+      "id": 6,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+6@mail.com",
+      "first_name": "John",
+      "id": 7,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+7@mail.com",
+      "first_name": "John",
+      "id": 8,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+8@mail.com",
+      "first_name": "John",
+      "id": 9,
+      "last_name": "Doe",
+      "role": "student",
+    },
+    UserModel {
+      "auth_type": "email",
+      "avatar_url": null,
+      "email": "john.doe+9@mail.com",
+      "first_name": "John",
+      "id": 10,
+      "last_name": "Doe",
+      "role": "student",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": 1,
+    "pageCount": 1,
+    "take": 50,
+  },
+}
+`;
+
+exports[`UserService getUserById should return user 1`] = `
+UserModel {
+  "auth_type": "email",
+  "avatar_url": null,
+  "created_at": "1000000000",
+  "email": "john.doe@test.com",
+  "email_verified": false,
+  "employee_user": EmployeeUserModel {
+    "employee_id": 1,
+    "id": 1,
+  },
+  "first_name": "John",
+  "id": 1,
+  "last_name": "Doe",
+  "role": "student",
+  "student_user": StudentUserModel {
+    "id": 1,
+    "student_id": "1",
+  },
+  "updated_at": "1000000000",
+}
+`;

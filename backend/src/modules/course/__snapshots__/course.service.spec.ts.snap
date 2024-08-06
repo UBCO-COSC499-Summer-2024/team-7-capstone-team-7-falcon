@@ -1,0 +1,614 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CourseService editCourse should edit course 1`] = `
+CourseModel {
+  "course_code": "COSC499",
+  "course_name": "Capstone Project",
+  "created_at": "1000000000",
+  "id": 1,
+  "is_archived": false,
+  "section_name": "001",
+  "semester": SemesterModel {
+    "created_at": "1609459200000",
+    "ends_at": "1617235200000",
+    "id": 1,
+    "name": "Spring 2024",
+    "starts_at": "1609459200000",
+    "updated_at": "1609459200000",
+  },
+}
+`;
+
+exports[`CourseService enroll should enroll user if user is not already enrolled 1`] = `
+CourseUserModel {
+  "course": CourseModel {
+    "course_code": "COSC 499",
+    "course_name": "Capstone Project",
+    "created_at": "1000000000",
+    "id": 1,
+    "invite_code": "123",
+    "is_archived": false,
+    "section_name": "001",
+    "updated_at": "1000000000",
+  },
+  "course_role": "student",
+  "id": 1,
+  "user": UserModel {
+    "auth_type": "email",
+    "avatar_url": null,
+    "created_at": "1000000000",
+    "email": "john.doe@test.com",
+    "email_verified": false,
+    "first_name": "John",
+    "id": 1,
+    "last_name": "Doe",
+    "password": "password",
+    "role": "student",
+    "updated_at": "1000000000",
+  },
+}
+`;
+
+exports[`CourseService getAllCourses should return all courses 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 2,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 3,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 4,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 5,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 6,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 7,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 8,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 9,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+  {
+    "courseCode": "CS101",
+    "courseId": 10,
+    "creator": {
+      "firstName": "Jane",
+      "lastName": "Doe",
+    },
+    "members": "2",
+    "semesterName": "Spring 2024",
+  },
+]
+`;
+
+exports[`CourseService getCourseAnalytics should only return courseMembersSize if course has no exams or submissions 1`] = `
+{
+  "courseExamsCount": 0,
+  "courseMembersSize": 10,
+  "examSubmissions": [],
+  "examSubmissionsCount": 0,
+}
+`;
+
+exports[`CourseService getCourseAnalytics should return 0 courseMembersSize, examCount, and submissionCount if course has no submissions 1`] = `
+{
+  "courseExamsCount": 0,
+  "courseMembersSize": 0,
+  "examSubmissions": [],
+  "examSubmissionsCount": 0,
+}
+`;
+
+exports[`CourseService getCourseAnalytics should return courseMembersSize, examCount if course has students, exams, but no submissions 1`] = `
+{
+  "courseExamsCount": 4,
+  "courseMembersSize": 3,
+  "examSubmissions": [
+    {
+      "exam": {
+        "id": 2,
+        "title": "Exam-1",
+      },
+      "submissions": [],
+    },
+    {
+      "exam": {
+        "id": 4,
+        "title": "Exam-3",
+      },
+      "submissions": [],
+    },
+    {
+      "exam": {
+        "id": 1,
+        "title": "Exam-0",
+      },
+      "submissions": [],
+    },
+    {
+      "exam": {
+        "id": 3,
+        "title": "Exam-2",
+      },
+      "submissions": [],
+    },
+  ],
+  "examSubmissionsCount": 0,
+}
+`;
+
+exports[`CourseService getCourseAnalytics should return courseMembersSize, examCount, submissionCount if course has students, exams, and submissions 1`] = `
+{
+  "courseExamsCount": 4,
+  "courseMembersSize": 3,
+  "examSubmissions": [
+    {
+      "exam": {
+        "id": 1,
+        "title": "Exam-0",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 1,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+    {
+      "exam": {
+        "id": 2,
+        "title": "Exam-1",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 1,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+    {
+      "exam": {
+        "id": 3,
+        "title": "Exam-2",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 1,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+    {
+      "exam": {
+        "id": 4,
+        "title": "Exam-3",
+      },
+      "submissions": [
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 1,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 2,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+        {
+          "student": {
+            "avatarUrl": null,
+            "firstName": "John",
+            "id": 3,
+            "lastName": "Doe",
+            "submissionScore": -1,
+          },
+        },
+      ],
+    },
+  ],
+  "examSubmissionsCount": 12,
+}
+`;
+
+exports[`CourseService getCourseById should return course if course is found 1`] = `
+CourseModel {
+  "course_code": "COSC 499",
+  "course_name": "Capstone Project",
+  "created_at": "1000000000",
+  "id": 1,
+  "invite_code": "123",
+  "is_archived": false,
+  "section_name": "001",
+  "semester": null,
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`CourseService getCourseMembers should return course members from first page 1`] = `
+PageDto {
+  "data": [
+    CourseUserModel {
+      "course_role": "student",
+      "id": 2,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-1@test.com",
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe-0",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 1,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-0@test.com",
+        "first_name": "John",
+        "id": 1,
+        "last_name": "Doe-1",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 3,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-2@test.com",
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe-1",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 4,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-3@test.com",
+        "first_name": "John",
+        "id": 4,
+        "last_name": "Doe-2",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 5,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-4@test.com",
+        "first_name": "John",
+        "id": 5,
+        "last_name": "Doe-3",
+      },
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": 1,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`CourseService getCourseMembers should return course members from second page 1`] = `
+PageDto {
+  "data": [
+    CourseUserModel {
+      "course_role": "student",
+      "id": 6,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-5@test.com",
+        "first_name": "John",
+        "id": 6,
+        "last_name": "Doe-4",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 7,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-6@test.com",
+        "first_name": "John",
+        "id": 7,
+        "last_name": "Doe-5",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 8,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-7@test.com",
+        "first_name": "John",
+        "id": 8,
+        "last_name": "Doe-6",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 9,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-8@test.com",
+        "first_name": "John",
+        "id": 9,
+        "last_name": "Doe-7",
+      },
+    },
+    CourseUserModel {
+      "course_role": "student",
+      "id": 10,
+      "user": UserModel {
+        "avatar_url": null,
+        "email": "john.doe-9@test.com",
+        "first_name": "John",
+        "id": 10,
+        "last_name": "Doe-8",
+      },
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": true,
+    "itemCount": 10,
+    "page": 2,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`CourseService getCourseMembers should return empty array if course has no members 1`] = `
+PageDto {
+  "data": [],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "itemCount": 0,
+    "page": 1,
+    "pageCount": 0,
+    "take": 5,
+  },
+}
+`;
+
+exports[`CourseService getExamsWithSubmissionsDisputesByCourseId should return all exams with number of disputes and exam details 1`] = `
+[
+  {
+    "examId": 1,
+    "examName": "Exam 0",
+    "numberOfDisputes": 6,
+  },
+  {
+    "examId": 2,
+    "examName": "Exam 1",
+    "numberOfDisputes": 5,
+  },
+  {
+    "examId": 3,
+    "examName": "Exam 2",
+    "numberOfDisputes": 4,
+  },
+  {
+    "examId": 4,
+    "examName": "Exam 3",
+    "numberOfDisputes": 3,
+  },
+  {
+    "examId": 5,
+    "examName": "Exam 4",
+    "numberOfDisputes": 2,
+  },
+  {
+    "examId": 6,
+    "examName": "Exam 5",
+    "numberOfDisputes": 1,
+  },
+  {
+    "examId": 7,
+    "examName": "Exam 6",
+    "numberOfDisputes": 0,
+  },
+  {
+    "examId": 8,
+    "examName": "Exam 7",
+    "numberOfDisputes": 0,
+  },
+  {
+    "examId": 9,
+    "examName": "Exam 8",
+    "numberOfDisputes": 0,
+  },
+  {
+    "examId": 10,
+    "examName": "Exam 9",
+    "numberOfDisputes": 0,
+  },
+]
+`;
+
+exports[`CourseService getUserByCourseAndUserId should return course user if user is enrolled in course 1`] = `
+CourseUserModel {
+  "course": CourseModel {
+    "course_code": "COSC 499",
+    "course_name": "Capstone Project",
+    "created_at": "1000000000",
+    "id": 1,
+    "invite_code": "123",
+    "is_archived": false,
+    "section_name": "001",
+    "updated_at": "1000000000",
+  },
+  "course_role": "professor",
+  "id": 1,
+  "user": UserModel {
+    "auth_type": "email",
+    "avatar_url": null,
+    "created_at": "1000000000",
+    "email": "john.doe@test.com",
+    "email_verified": false,
+    "first_name": "John",
+    "id": 1,
+    "last_name": "Doe",
+    "password": "password",
+    "role": "student",
+    "updated_at": "1000000000",
+  },
+}
+`;

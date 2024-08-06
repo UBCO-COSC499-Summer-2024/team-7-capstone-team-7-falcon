@@ -10,7 +10,7 @@ def model_path():
     return (
         Path(__file__).resolve().parents[1]
         / "model_training"
-        / "trained_model_onnx"
+        / "trained_with_customs_onnx"
         / "weights"
         / "best.onnx"
     )

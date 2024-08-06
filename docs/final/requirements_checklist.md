@@ -28,7 +28,7 @@ Below is a list of requirements (key delivery points) that OwlMark satisfies.
 The following are **partially** satisfied:
 
 - Instructors will be able to create bubble-sheet exams with a customizable number of questions and each question will have a variable number of answer choices, allowing individual points assignment for each question.
-  - We allow a customizable number of questions and individual points assignment (between 0 and 1) for each question.
+  - We allow a customizable number of questions and individual points assignment (0 or 1) for each question.
 - Instructors will be able to assign point values to questions.
 
 The following are not satisfied:

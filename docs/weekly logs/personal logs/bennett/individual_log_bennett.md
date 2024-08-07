@@ -1,4 +1,4 @@
-## Friday (8/01- 8/06)
+## Wednesday (8/01- 8/06)
 
 ### Timesheet
 Clockify report

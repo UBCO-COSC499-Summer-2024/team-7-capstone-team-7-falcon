@@ -41,7 +41,7 @@ const examfaqItems = [
   },
   {
     question:
-      "Is it mandatory to create a custom bubble sheet while creating exam?",
+      "Is it mandatory to create a custom bubble sheet when creating an exam?",
     answer:
       "No, this step is completely optional. It is a separate feature that allows instructor to create their own bubble sheet if preferred.",
   },

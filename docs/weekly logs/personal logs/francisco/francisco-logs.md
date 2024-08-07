@@ -1,5 +1,40 @@
 # Personal Logs
 
+## Friday (7/31-8/01)
+
+### Timesheet
+
+Clockify report
+
+![clockify](07.31-08.01/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Final polishing overall pipeline
+  2. Correcting issues with custom sheets
+  3. preparing for testorama
+
+### Progress Update (since 7/31/2024)
+
+![ProjectBoard](07.31-08.01/board.png)
+
+  1. Finished pipeline endpoints, PDFs now send to frontend
+  2. Error handling for endpoints are functional
+  3. Overall pipeline from exam creation to exam revision is complete
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This shorter cycle involved the main final passes for full functionality of the OMR tool, we are still ironing out the kinks so we will not be merging the PR for tomorrow's testorama until we have better test coverage.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Finish full test coverage and documentation for the OMR pipeline
+  2. Make the pipeline for robust for custom sheets
+  3. Finish individual reports
+
+---
+---
+---
 ## Wednesday (7/26-7/30)
 
 ### Timesheet

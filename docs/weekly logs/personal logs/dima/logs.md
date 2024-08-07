@@ -12,7 +12,7 @@ Clockify report
 
 ### Progress Update (since 8/2/2024)
 
-![GitHub Board](./images/github_07312024-08012024.png)
+![GitHub Board](./images/github_08022024-08062024.png)
 
 <table>
     <tr>

@@ -39,6 +39,17 @@ const examfaqItems = [
     answer:
       "Select a course and then click on the Create Exam button. Enter the exam credentials and publish the exam",
   },
+  {
+    question:
+      "Is it mandatory to create a custom bubble sheet when creating an exam?",
+    answer: "No, this step is completely optional.",
+  },
+
+  {
+    question:
+      "How many questions am I allowed to add when setting up a custom bubble sheet exam?",
+    answer: "You may include between 0 and 200 questions, inclusive.",
+  },
 
   {
     question: "How to release grades for students?",

@@ -185,7 +185,6 @@ def app():
                 # send grades to backend
                 send_grades(backend_url, exam_id, submission_results)
 
-                # ---
             unique_id = uuid.uuid4()
             complete_job(backend_url, queue_name, job_id, unique_id)
         except requests.exceptions.RequestException:

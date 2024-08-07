@@ -208,9 +208,9 @@ def omr_on_submission_image(
         roi_cropped = extract_roi(threshed_image, question_bounds)
         bubble_contours = generate_bubble_contours(roi_cropped)
         # NOTE: BELOW IS A TEMPORARY MEASURE FOR CHECKING BOUNDS
-        # output_image = cv2.rectangle(
-        #     output_image, question_bounds[:2], question_bounds[2:], (0, 255, 0), 2
-        # )
+        output_image = cv2.rectangle(
+            output_image, question_bounds[:2], question_bounds[2:], (0, 255, 0), 2
+        )
         color, correct_answers, question_result = evaluate_answer(
             roi_cropped, bubble_contours, answer_key, question_num
         )
@@ -338,10 +338,10 @@ if __name__ == "__main__":
     from pathlib import Path
     from omr_tool.utils.pdf_to_images import convert_to_images
 
-    # sheet_path = Path(__file__).resolve().parents[2] / "fixtures" / "custom.jpg"
-    sheet_path = (
-        Path(__file__).resolve().parents[2] / "fixtures" / "ubc_submission_100.pdf"
-    )
+    sheet_path = Path(__file__).resolve().parents[2] / "fixtures" / "custom.jpg"
+    # sheet_path = (
+    #     Path(__file__).resolve().parents[2] / "fixtures" / "ubc_submission_100.pdf"
+    # )
 
     images = convert_to_images(sheet_path)
 

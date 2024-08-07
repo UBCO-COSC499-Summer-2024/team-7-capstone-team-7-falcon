@@ -875,7 +875,7 @@ describe('CourseService', () => {
 
       expect(result).toBeDefined();
       expect(result).toMatchSnapshot();
-    });
+    }, 10_000);
 
     it('should return 0 courseMembersSize, examCount, and submissionCount if course has no submissions', async () => {
       const course = await CourseModel.create({

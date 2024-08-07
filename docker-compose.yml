@@ -1,8 +1,9 @@
-version: '2'
+version: '3.9'
 
 services:
   postgres:
     image: postgres:latest
+    restart: always
     ports:
       - "5432:5432"
     networks:
@@ -16,14 +17,12 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    restart: on-failure
     env_file:
-      - frontend/.env.docker
-    ports:
-      - "3000:3000"
+      - path: frontend/.env.docker
+        required: false
     networks:
       - api
-    volumes:
-      - ./frontend:/app
     depends_on:
       - backend
 
@@ -31,24 +30,36 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
+    restart: on-failure
     networks:
       - api
-    volumes:
-      - ./backend:/app
     env_file:
-      - backend/.env.docker
+      - path: backend/.env.docker
+        required: false
     depends_on:
       - postgres
       - redis
 
   redis:
     image: redis:latest
+    restart: always
     ports:
       - "6379:6379"
     networks:
       - api
+
+  apache:
+    image: httpd:latest
+    restart: on-failure
+    ports:
+      - "80:80"
+    networks:
+      - api
+    volumes:
+      - ./network/conf/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    depends_on:
+      - backend
+      - frontend
 
 networks:
   api:
@@ -56,3 +67,4 @@ networks:
 
 volumes:
   pg:
+  uploads:

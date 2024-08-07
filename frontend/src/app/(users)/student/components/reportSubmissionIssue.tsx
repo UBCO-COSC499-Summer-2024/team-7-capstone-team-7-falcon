@@ -28,9 +28,8 @@ const ReportSubmissionIssue: React.FC<ReportSubmissionIssueProps> = ({
           submissionId={submissionId}
         />
       )}
-      <p className="mt-8 text-xl font-bold">Additional Actions</p>
       <button
-        className="btn-primary flex align-middle justify-center space-x-3 rounded-xlg mt-4 w-full"
+        className="btn-primary flex align-middle justify-center space-x-3 rounded-xlg w-full"
         onClick={() => handleModal()}
       >
         <HiFlag size={20} />

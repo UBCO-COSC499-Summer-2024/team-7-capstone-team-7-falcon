@@ -1,5 +1,33 @@
 # Individual Logs for Paula
 
+## Friday (7/31 - 8/01)
+
+### Timesheet
+
+Clockify report
+!["timesheet_07.31_08.01"](images/clockify_07.31_08.01.png)
+
+### Current Tasks
+
+!["current_tasks_07.31_08.01"](images/current_tasks_07.31_08.01.png)
+
+* #1: Repo clean up and documentation/user guide updates
+* #2: Analysis of test-o-rama results
+* #3: Docker setup for production
+
+### Progress Update (since 7/31/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle, I focused on testing the website for tomorrow's test-o-rama and prepping any related document and code. I haven't had much time to work on task #3, but will try to look into it tomorrow after the analysis will be done. 
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Repo clean up and documentation updates (blocked by OMR pipeline)
+* Analysis of test-o-rama results
+
 ## Wednesday (7/26 - 7/30)
 
 ### Timesheet

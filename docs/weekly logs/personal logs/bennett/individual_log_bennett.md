@@ -1,3 +1,37 @@
+## Friday (7/31- 8/01)
+
+### Timesheet
+Clockify report
+![time for 07.31_- 08.01](07.31_08.01.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+  * #1: Frontend Bubblesheet UI [S]
+
+### Progress Update (since 7/31/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Frontend Bubblesheet UI #403
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle I have resolved the merge conflicts and fixed a small bug with the frontend bubble sheet UI. We also discussed the features that
+we plan to test for the Test-O-Rama tomorrow. The process is going smoothly,
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+Next cycle we will discuss what we will show in the meeting with Scott and Ramon as well as what we are going to present next week.
+
 ## Wednesday (7/26- 7/30)
 
 ### Timesheet

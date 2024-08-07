@@ -43,21 +43,6 @@ def align_img(image: Image) -> Image:
 
     if ogW > ogH:
         image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    # grayscale_img = threshold_img(image, blur=False)
-    # template = threshold_img(ALIGNMENT_TEMPLATE, blur=False)
-    # mask = np.zeros(grayscale_img.shape[:2], dtype="uint8")
-    # print(grayscale_img.shape[:2])
-    # cv2.rectangle(mask, (newW, 0), (int(newW - np.ceil(newW*0.1)), int(0+np.ceil(newH*0.1))), 255, -1)
-    # masked = cv2.bitwise_and(grayscale_img, grayscale_img, mask=mask)
-    # cv2.imshow("Mask Applied to Image", masked)
-    # cv2.waitKey(0)
-    # result = cv2.matchTemplate(masked, template, cv2.TM_CCOEFF_NORMED)
-    # w, h = template.shape[::-1]
-    # threshold = 0.4
-    # loc = np.where(result >= threshold)
-    # for pt in zip(*loc[::-1]):
-    #     cv2.rectangle(image, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
-    # image = cv2.resize(image, (ogH, ogW))
     return image
 
 

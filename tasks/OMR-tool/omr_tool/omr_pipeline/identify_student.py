@@ -28,7 +28,7 @@ def extract_and_highlight_student_id(prepped_image, student_num_section, output_
     sid_roi = extract_roi(prepped_image, (x1, y1, x2, y2))
     student_id, id_filled, sid_issue = extract_student_num(sid_roi)
     if student_id == "-1":
-        logging.warning(f"Invalid student ID detected in image.")
+        # logging.warning(f"Invalid student ID detected in image.")
         output_image = highlight_error_region(
             output_image, map(int, student_num_section), sid_issue
         )

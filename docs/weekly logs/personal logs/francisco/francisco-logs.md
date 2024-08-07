@@ -1,5 +1,43 @@
 # Personal Logs
 
+## Wednesday (8/02-8/06)
+
+### Timesheet
+
+Clockify report
+
+![clockify](08.02-08.06/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Finish preparing demo materials
+  2. Writing individual report
+  3. Preparing final presentation
+  4. Some attempts at making the custom bubble sheets more reliable
+
+### Progress Update (since 8/02/2024)
+
+![ProjectBoard](08.02-08.06/board.png)
+
+  1. Merged the entire OMR pipeline into production
+  2. Trained a new model for object detection
+  3. Added a new implementation for soft NMS on inference
+  4. Modified bubble sheets for the better parity to the UBC 200 question sheets
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This cycle has involved a lot of troubleshooting on the custom bubble sheets, changing the NMS algorithm helped somewhat for reliability but the custom sheets are just being culled too strictly. I want to try to fix this by the end of the week but I don't want it to eat into my report writing. THe rest of the pipeline works well and I have gotten excellent accuracy with the 200 question pages, I just wish I had more time to make the system as robust as I would have liked.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Finish report
+  2. Finish Final Presentation
+  3. Have a finalized codebase
+
+---
+---
+---
+
 ## Friday (7/31-8/01)
 
 ### Timesheet
@@ -35,6 +73,7 @@ This shorter cycle involved the main final passes for full functionality of the 
 ---
 ---
 ---
+
 ## Wednesday (7/26-7/30)
 
 ### Timesheet

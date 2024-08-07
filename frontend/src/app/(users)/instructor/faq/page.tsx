@@ -25,7 +25,7 @@ const coursefaqItems = [
   {
     question: "How do I view the courses I am enrolled in?",
     answer:
-      "Instructors will need to sign in with their credentials to view the list of courses on the Course Dashboard page.",
+      "Once signed in, the courses will be visible on the dashboard page.",
   },
   {
     question: "How do I update course details?",

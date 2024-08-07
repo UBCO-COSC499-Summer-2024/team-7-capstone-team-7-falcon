@@ -49,7 +49,7 @@ const examfaqItems = [
   {
     question:
       "How many questions am I allowed to add when setting up a custom bubble sheet exam?",
-    answer: "You can create any number of questions between 0 to 200.",
+    answer: "You may include between 0 and 200 questions, inclusive.",
   },
 
   {

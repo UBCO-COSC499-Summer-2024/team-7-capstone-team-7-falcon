@@ -43,6 +43,7 @@ const TableComponent = <T,>({
   }, [search]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
     setSearch(event.target.value);
   };
 

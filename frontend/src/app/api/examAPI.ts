@@ -7,7 +7,6 @@ import {
   ExamData,
   StudentSubmission,
 } from "../typings/backendDataTypes";
-import toast from "react-hot-toast";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 

@@ -63,7 +63,7 @@ const SemesterEditForm: React.FC<SemesterEditFormProps> = ({ semesterId }) => {
         semesterId,
         formData,
       );
-      console.log(updatedSemester);
+
       if (updatedSemester && updatedSemester.status === 204) {
         toast.success("Semester successfully updated.");
 

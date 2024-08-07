@@ -1,17 +1,19 @@
 from pdf2image import convert_from_path
 import logging
+from cv2 import imread
 
 logger = logging.getLogger(__name__)
 
 
 def check_is_pdf(file_path: str) -> bool:
     """Check if the file is a PDF."""
-    if file_path.lower().endswith(".pdf"):
+    filepathStr = str(file_path)
+    if filepathStr.endswith(".pdf"):
         return True
-    if file_path.lower().endswith((".png", ".jpg", ".jpeg")):
+    if filepathStr.endswith((".png", ".jpg", ".jpeg")):
         return False
     raise ValueError(
-        f'File Path "{file_path}" does not point to a PDF or allowed image type'
+        f'File Path "{filepathStr}" does not point to a PDF or allowed image type'
     )
 
 
@@ -48,7 +50,7 @@ def save_images(images, output_path, num_pages_per_sheet):
         raise e
 
 
-def convert_to_image(pdf_path: str) -> list:
+def convert_to_images(pdf_path: str) -> list:
     """Converts a PDF file to a list of images, saving each page as a separate image.
 
     Args:
@@ -63,8 +65,8 @@ def convert_to_image(pdf_path: str) -> list:
     """
     try:
         if not check_is_pdf(pdf_path):
-            logger.warning(f"File is already an image: {pdf_path}")
-            return None  # Return Code 0 if already an image
+            # logger.warning(f"File is already an image: {pdf_path}")
+            return [imread(pdf_path)]  # Return Code 0 if already an image
         images = convert_from_path(pdf_path)
         logger.info(f"PDF converted to image successfully")
         return images
@@ -92,7 +94,7 @@ if __name__ == "__main__":
         sys.exit(1)
     img_save = sys.argv[4].lower() == "true"
     print("Converting PDF to image...")
-    result = convert_to_image(pdf_path)
+    result = convert_to_images(pdf_path)
     if result != None and img_save:
         images_saved = save_images(result, output_path, num_pages_per_sheet)
         print(

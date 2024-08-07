@@ -418,6 +418,34 @@ export class ExamService {
   }
 
   /**
+   * Hide grades for an exam
+   * @param examId {number} - Exam id
+   * @returns {Promise<void>} - Promise of void
+   */
+  async hideGrades(examId: number): Promise<void> {
+    const exam = await ExamModel.findOne({
+      where: {
+        id: examId,
+        course: {
+          is_archived: false,
+        },
+      },
+      relations: ['course'],
+    });
+
+    if (!exam) {
+      throw new ExamNotFoundException();
+    }
+
+    await ExamModel.update(
+      { id: examId },
+      {
+        grades_released_at: -1,
+      },
+    );
+  }
+
+  /**
    * Update grade
    * @param eid {number} - Exam id
    * @param cid {number} - Course id
@@ -586,9 +614,9 @@ export class ExamService {
     csvStream.push('studentId,grade\n');
 
     examSubmissions.forEach((examSubmission) => {
-      const studentId = examSubmission.student.student_id;
+      const studentId = examSubmission.student?.student_id;
       const grade = examSubmission.score;
-      csvStream.push(`${studentId},${grade}\n`);
+      csvStream.push(`${studentId ?? 'unknown student'},${grade}\n`);
     });
 
     // End the stream
@@ -821,9 +849,6 @@ export class ExamService {
         course: {
           id: courseId,
           is_archived: false,
-        },
-        submissions: {
-          id: submissionId,
         },
       },
       order: {

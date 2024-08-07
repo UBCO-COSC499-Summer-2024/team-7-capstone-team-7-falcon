@@ -27,14 +27,17 @@ const CreateExam = async ({ params }: { params: { courseId: string } }) => {
         </div>
         <div className="justify-self-end space-y-4">
           <button type="button" className="btn-primary">
-            <Link href={""} className="space-x-4 flex items-center">
+            <Link
+              href={`../${course.id}/edit-course`}
+              className="space-x-4 flex items-center"
+            >
               <Edit />
               Course Settings
             </Link>
           </button>
           <Link
             href={`../${course.id}/exam`}
-            className="space-x-4 flex items-center btn-primary"
+            className="space-x-4 flex items-center btn-primary w-full"
           >
             <ArrowLeft />
             Back

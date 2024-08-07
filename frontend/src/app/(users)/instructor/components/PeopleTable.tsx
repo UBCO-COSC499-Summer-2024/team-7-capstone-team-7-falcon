@@ -1,55 +1,69 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { Column, DataItem } from "../../../components/type";
 import { coursesAPI } from "../../../api/coursesAPI";
 import { CourseUser } from "../../../typings/backendDataTypes";
-import Link from "next/link";
-import Avatar from "../../../components/avatar";
 import TableComponent from "../../../components/tableComponent";
-
-const user_columns: Column[] = [
-  { label: "#", renderCell: (item) => item.id },
-  {
-    label: "Name",
-    renderCell: (item) => (
-      <div className="flex sm:space-x-0 md:space-x-4 items-center">
-        <Avatar
-          avatarUrl={item.user.avatar_url}
-          firstName={item.user.first_name}
-          lastName={item.user.last_name}
-          imageTextHeight={`w-12`}
-          imageTextWidth={`w-12`}
-          textSize={1}
-          imageHeight={48}
-          imageWidth={48}
-        />
-        <span className="mt-1">
-          {item.user.first_name} {item.user?.last_name ?? ""}
-        </span>
-      </div>
-    ),
-  },
-  { label: "Role", renderCell: (item) => item.role },
-  {
-    label: "Actions",
-    renderCell: (item) => (
-      <Link href={`./course/${item.id}`}>
-        <button type="button" className="btn-primary flex p-1 px-4">
-          Remove Student
-        </button>
-      </Link>
-    ),
-  },
-];
+import Avatar from "../../../components/avatar";
 
 type PeopleTableProps = {
   course_id: number;
+  onRemoveClick: (userId: number, studentName: string) => void;
 };
 
-const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
+const PeopleTable: React.FC<PeopleTableProps> = ({
+  course_id,
+  onRemoveClick,
+}) => {
   const [data, setData] = useState<DataItem<CourseUser>[] | null>(null);
 
-  // gets the data once on mount
+  const user_columns: Column[] = [
+    { label: "#", renderCell: (item) => item.id },
+    {
+      label: "Name",
+      renderCell: (item) => (
+        <div className="flex sm:space-x-0 md:space-x-4 items-center">
+          <Avatar
+            avatarUrl={item.user.avatar_url}
+            firstName={item.user.first_name}
+            lastName={item.user.last_name}
+            imageTextHeight={`w-12`}
+            imageTextWidth={`w-12`}
+            textSize={1}
+            imageHeight={48}
+            imageWidth={48}
+          />
+          <span className="mt-1">
+            {item.user.first_name} {item.user?.last_name ?? ""}
+          </span>
+        </div>
+      ),
+    },
+    { label: "Role", renderCell: (item) => item.role },
+    {
+      label: "Actions",
+      renderCell: (item) =>
+        item.role === "student" ? (
+          <button
+            type="button"
+            className="btn-primary flex p-1 px-4"
+            onClick={() =>
+              onRemoveClick(
+                item.id,
+                `${item.user.first_name} ${item.user?.last_name ?? ""}`,
+              )
+            }
+          >
+            {item.data}
+            Remove Student
+          </button>
+        ) : (
+          <div>No available actions</div>
+        ),
+    },
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await coursesAPI.getCourseMembers(course_id);
@@ -73,7 +87,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ course_id }) => {
       setData(users);
     };
     fetchData();
-  }, []);
+  }, [course_id]);
 
   if (!data) {
     return <p>Data not found</p>;

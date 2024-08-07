@@ -120,7 +120,7 @@ export interface Submission {
     first_name: string;
     last_name: string;
   };
-  answers: UserSubmissionExamAnswers;
+  answers: AnsweredQuestion[];
   score: number;
   updated_at: number;
   submission_id: string;
@@ -243,6 +243,7 @@ export enum SelectedButton {
   None = "NONE",
   Submissions_Disputes = "SUBMISSIONS DISPUTES",
   Edit_Course = "COURSE SETTINGS",
+  Exams = "EXAMS",
 }
 
 export interface SemesterData {
@@ -277,7 +278,20 @@ export interface StudentSubmission {
     courseCode: string;
   };
   grades: number[];
-  answers: UserSubmissionExamAnswers;
+  answers: {
+    errorFlag: boolean;
+    answer_list: AnsweredQuestion[];
+  };
+}
+
+export interface AnalyticsExamSubmission {
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    submissionScore: number;
+    avatarUrl: string;
+  };
 }
 
 export interface AnalyticsSubmission {
@@ -335,8 +349,8 @@ export interface ExamSubmissionDispute {
 export interface UserEditData {
   first_name: string;
   last_name: string;
-  student_id: number;
-  employee_id: number;
+  student_id?: number;
+  employee_id?: number;
 }
 
 export interface SemesterData {
@@ -354,4 +368,16 @@ export interface AnalyticsExamSubmission {
     submissionScore: number;
     avatarUrl: string;
   };
+}
+
+export interface AnsweredQuestion {
+  question_num: number;
+  expected: number[];
+  answered: number[];
+  score: number;
+}
+
+export interface Answers {
+  errorFlag: boolean;
+  answer_list: AnsweredQuestion[];
 }

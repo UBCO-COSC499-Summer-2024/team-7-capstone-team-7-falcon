@@ -1,13 +1,16 @@
 "use client";
 
 import DisputeExamSubmissionCard from "@/app/(users)/instructor/components/disputeExamSubmissionCard";
-import PdfViewer from "@/app/(users)/student/components/pdfViewer";
 import { examsAPI } from "@/app/api/examAPI";
-import { ExamSubmissionDispute } from "@/app/typings/backendDataTypes";
+import {
+  ExamSubmissionDispute,
+  StudentSubmission,
+} from "@/app/typings/backendDataTypes";
 import { Spinner } from "flowbite-react";
 import { ArrowLeft } from "flowbite-react-icons/outline";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import ToggleBubbleSheet from "../../../../../../../../components/toggleBubbleSheet";
 
 const DisputeExamSubmissionPage = ({
   params,
@@ -18,6 +21,7 @@ const DisputeExamSubmissionPage = ({
   const courseId = Number(params.courseId);
   const [dispute, setDispute] = useState<ExamSubmissionDispute | null>(null);
   const [showSubmission, setShowSubmission] = useState(false);
+  const [submission, setSubmission] = useState<StudentSubmission | null>(null);
 
   const fetchDispute = async () => {
     const response = await examsAPI.getExamSubmissionDispute(
@@ -29,9 +33,26 @@ const DisputeExamSubmissionPage = ({
     }
   };
 
+  const getSubmission = async () => {
+    if (dispute) {
+      const submissionResponse = await examsAPI.getSubmissionById(
+        courseId,
+        dispute.submission.id,
+      );
+
+      if (submissionResponse) {
+        setSubmission(submissionResponse.data);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchDispute();
   }, []);
+
+  useEffect(() => {
+    getSubmission();
+  }, [dispute]);
 
   return dispute ? (
     <div>
@@ -53,14 +74,15 @@ const DisputeExamSubmissionPage = ({
         examId={params.examId}
       />
       <div className="mb-10" />
-      {showSubmission && (
-        <PdfViewer
+      {showSubmission && submission ? (
+        <ToggleBubbleSheet
           courseId={courseId}
           submissionId={dispute.submission.id}
-          userId={dispute.submission.student.user.id}
-          width="100%"
+          examId={params.examId}
+          submission={submission}
+          refreshDispute={fetchDispute}
         />
-      )}
+      ) : null}
     </div>
   ) : (
     <Spinner className="mx-auto w-full" />

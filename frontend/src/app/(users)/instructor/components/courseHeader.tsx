@@ -1,6 +1,7 @@
 import { SelectedButton } from "../../../typings/backendDataTypes";
 import AnalyticsButton from "./analyticsButton";
 import CreateExamButton from "./createExamButton";
+import ExamsButton from "./examsButton";
 import PeopleButton from "./peopleButton";
 import SubmissionsDisputesButton from "./submissionsDisputesButton";
 
@@ -22,6 +23,16 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
       <h1 className="text-4xl font-bold">{course_code}</h1>
       <h2 className="text-xl">{course_desc}</h2>
       <div className="pt-6 flex space-x-6">
+        <ExamsButton
+          course_id={course_id}
+          className={
+            selected === SelectedButton.Exams ||
+            selected === SelectedButton.None
+              ? "bg-purple-700 ring-purple-800 text-white"
+              : ""
+          }
+        />
+
         <CreateExamButton
           course_id={course_id}
           className={

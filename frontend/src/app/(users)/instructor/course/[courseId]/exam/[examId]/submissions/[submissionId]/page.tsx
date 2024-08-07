@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft } from "flowbite-react-icons/outline";
+import { ArrowLeft, ChartMixed, Edit } from "flowbite-react-icons/outline";
 import { CSSProperties } from "react";
 import { mean, median, quantile } from "d3-array";
 import {
@@ -9,17 +9,18 @@ import {
 } from "../../../../../../../../typings/backendDataTypes";
 import { coursesAPI } from "../../../../../../../../api/coursesAPI";
 import { examsAPI } from "../../../../../../../../api/examAPI";
-import PdfViewer from "../../../../../../../student/components/pdfViewer";
 import GradeDisplay from "../../../../../../../components/gradeDisplay";
 import { Toaster } from "react-hot-toast";
-import { Alert } from "flowbite-react";
+import { Alert, Popover } from "flowbite-react";
 import CourseHeader from "../../../../../../components/courseHeader";
 import UpdateSubmissionUser from "../../../../../../components/updateSubmissionUser";
+import ToggleBubbleSheet from "../../../../../../../components/toggleBubbleSheet";
+import ExamOverviewPopover from "@/app/(users)/components/examOverviewPopover";
 
 const InstructorSubmissionPage = async ({
   params,
 }: {
-  params: { courseId: string; submissionId: string };
+  params: { courseId: string; submissionId: string; examId: number };
 }) => {
   const cid = Number(params.courseId);
   const submissionId = Number(params.submissionId);
@@ -63,54 +64,74 @@ const InstructorSubmissionPage = async ({
           />
         </div>
         <div className="justify-self-end space-y-4">
-          <Link
-            href={`../../`}
-            className="space-x-4 flex items-center btn-primary px-8"
-          >
-            <ArrowLeft /> Back
-          </Link>
+          <button type="button" className="btn-primary">
+            <Link
+              href={`../edit-course`}
+              className="space-x-4 flex items-center"
+            >
+              <Edit />
+              Course Settings
+            </Link>
+          </button>
+          <button type="button" className="btn-primary block w-full">
+            <Link href={"../"} className="space-x-4 flex items-center w-full">
+              <ArrowLeft />
+              Back
+            </Link>
+          </button>
         </div>
       </div>
       <h3 className="text-xl p-1 mt-5 border-b-2 border-gray-300 col-span-2">
         Submission Details
       </h3>
-      <div className="grid grid-cols-5 space-x-4">
-        <div className="col-span-4">
-          <p className="text-xl p-1 py-4 font-bold">{submission.exam.name}</p>
-          {!submission.studentSubmission.hasStudent && (
-            <Alert color="red" className="w-full mb-3">
-              This submission does not have a student associated with it.
-            </Alert>
-          )}
-          <PdfViewer courseId={cid} submissionId={submission.exam.id} />
-        </div>
-        <div className="col-span-1 text-xl">
-          <p className="mt-4 mb-8 font-bold">Grade Overview</p>
+      <div>
+        <div className="flex my-5 items-center justify-between">
+          <p className="text-xl p-1 font-bold">{submission.exam.name}</p>
+
           <GradeDisplay
             progress={String(submission.studentSubmission.score)}
-            text=""
+            text="Exam Grade"
             properties={
               {
-                "--size": "6rem",
-                "--thickness": "0.7rem",
+                "--size": "4rem",
+                "--thickness": "0.4rem",
                 "--progress": String(submission.studentSubmission.score),
               } as CSSProperties
             }
             textStyle={"font-normal text-normal"}
           />
-          <div className="text-normal mt-8 space-y-2">
-            <p>Mean: {stats.meanValue}</p>
-            <p>High: {stats.max}</p>
-            <p>Low: {stats.min}</p>
-            <p>Upper Quartile: {stats.upperQuartile}</p>
-            <p>Lower Quartile: {stats.lowerQuartile}</p>
-            <p>Median: {stats.medianValue}</p>
+
+          <div className="space-y-4">
+            <Popover
+              content={<ExamOverviewPopover stats={stats} />}
+              trigger="hover"
+              arrow={false}
+            >
+              <button className="btn-primary flex items-center space-x-3 w-full">
+                <ChartMixed />
+                <span>Exam Statistics</span>
+              </button>
+            </Popover>
+
+            <UpdateSubmissionUser
+              courseId={submission.course.id}
+              submissionId={submission.studentSubmission.id}
+            />
           </div>
-          <UpdateSubmissionUser
-            courseId={submission.course.id}
-            submissionId={submission.studentSubmission.id}
-          />
         </div>
+
+        {!submission.studentSubmission.hasStudent && (
+          <Alert color="red" className="w-full mb-3">
+            This submission does not have a student associated with it.
+          </Alert>
+        )}
+
+        <ToggleBubbleSheet
+          courseId={cid}
+          submissionId={submission.studentSubmission.id}
+          examId={params.examId}
+          submission={submission}
+        />
       </div>
     </div>
   );

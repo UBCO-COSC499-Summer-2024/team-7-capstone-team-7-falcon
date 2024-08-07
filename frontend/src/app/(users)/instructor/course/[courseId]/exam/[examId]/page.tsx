@@ -19,6 +19,7 @@ import ExamSettings from "@/app/(users)/instructor/components/examSettings";
 import { Toaster } from "react-hot-toast";
 import { Alert } from "flowbite-react";
 import { InfoCircle } from "flowbite-react-icons/outline";
+
 const ViewExam = async ({
   params,
 }: {
@@ -61,13 +62,19 @@ const ViewExam = async ({
           </div>
           <div className="justify-self-end space-y-4">
             <button type="button" className="btn-primary">
-              <Link href={""} className="space-x-4 flex items-center">
+              <Link
+                href={`../edit-course`}
+                className="space-x-4 flex items-center"
+              >
                 <Edit />
                 Course Settings
               </Link>
             </button>
-            <button type="button" className="btn-primary block">
-              <Link href={"../exam"} className="space-x-4 flex items-center">
+            <button type="button" className="btn-primary block w-full">
+              <Link
+                href={"../exam"}
+                className="space-x-4 flex items-center w-full"
+              >
                 <ArrowLeft />
                 Back
               </Link>
@@ -98,6 +105,7 @@ const ViewExam = async ({
               courseId={cid}
               examId={examId}
               examFolder={exam.exam_folder}
+              gradesReleasedAt={exam.grades_released_at}
             />
             <ExamPerformance />
             <DangerZone courseId={cid} examId={examId} />

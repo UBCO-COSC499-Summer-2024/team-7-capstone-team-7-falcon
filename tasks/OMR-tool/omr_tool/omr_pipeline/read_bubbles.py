@@ -35,7 +35,7 @@ def generate_bubble_contours(image: np.ndarray) -> list:
     return sorted_contours
 
 
-def find_filled_bubbles(img, bubble_contours, threshold=0.7):
+def find_filled_bubbles(img, bubble_contours, threshold=0.8):
     """
     Finds the indices of filled bubbles in an image based on the given bubble contours.
 

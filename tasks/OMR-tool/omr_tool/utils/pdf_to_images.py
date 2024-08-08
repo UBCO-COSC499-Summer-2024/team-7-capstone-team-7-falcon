@@ -43,7 +43,7 @@ def save_images(images, output_path, num_pages_per_sheet):
             image_path = f"{output_path}/submission_{submission_num}-page_{i}.jpg"
             image.save(image_path, "JPEG")
             i += 1
-        logger.info(f"PDF converted to image successfully")
+        # logger.info(f"PDF converted to image successfully")
         return True
     except Exception as e:
         logger.error(f"Image saving failed: {e}")
@@ -93,7 +93,7 @@ if __name__ == "__main__":
         print("save_images must be either 'true' or 'false'")
         sys.exit(1)
     img_save = sys.argv[4].lower() == "true"
-    print("Converting PDF to image...")
+    # print("Converting PDF to image...")
     result = convert_to_images(pdf_path)
     if result != None and img_save:
         images_saved = save_images(result, output_path, num_pages_per_sheet)
@@ -104,6 +104,6 @@ if __name__ == "__main__":
         print(f"File {pdf_path} is already an image, no processing done")
     else:
 
-        print(f"PDF {pdf_path} converted to image successfully")
+        # print(f"PDF {pdf_path} converted to image successfully")
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+        print("--- %s seconds ---" % (time.time() - start_time))

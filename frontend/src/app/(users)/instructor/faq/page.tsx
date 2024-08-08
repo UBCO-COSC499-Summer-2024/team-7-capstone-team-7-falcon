@@ -42,8 +42,7 @@ const examfaqItems = [
   {
     question:
       "Is it mandatory to create a custom bubble sheet when creating an exam?",
-    answer:
-      "No, this step is completely optional.",
+    answer: "No, this step is completely optional.",
   },
 
   {

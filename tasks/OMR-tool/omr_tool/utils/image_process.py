@@ -57,8 +57,8 @@ def threshold_img(image):
         PIL.Image: The thresholded image.
 
     """
-    initial_thresh = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)[1]
-    blur_image = cv2.GaussianBlur(initial_thresh, (3, 3), 0)
+    initial_thresh = cv2.threshold(image, 226, 255, cv2.THRESH_BINARY)[1]
+    blur_image = cv2.GaussianBlur(initial_thresh, (5, 5), 0)
     thresh = cv2.threshold(blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[
         1
     ]
@@ -157,33 +157,6 @@ def identify_object_contours(generated_contours):
     return objects
 
 
-def identify_bubbled(img, cnts):
-    """
-    Identifies the filled-in bubbles in an image.
-
-    Args:
-        img (numpy.ndarray): The input image.
-        cnts (list): List of contours representing the bubbles.
-
-    Returns:
-        list: List of contours representing the filled-in bubbles.
-    """
-    bubbled = None
-    filled_in = []
-
-    for cnt, i in enumerate(cnts):
-        mask = np.zeros(img.shape, dtype="uint8")
-        cv2.drawContours(mask, [i], -1, 255, -1)
-
-        mask = cv2.bitwise_and(img, img, mask=mask)
-        total = cv2.countNonZero(mask)
-
-        if bubbled is None or total > 400:
-            bubbled = (total, cnt)
-            filled_in.append(cnts[bubbled[1]])
-    return filled_in
-
-
 def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0, 0)):
     """
     Draw the bubble contours on the image.
@@ -255,7 +228,7 @@ if __name__ == "__main__":
     # cv2.imshow("aligned", align_img(image))
     # cv2.waitKey(0)
     prepared_image = prepare_img(image)
-    question_contours = generate_bubble_contours(prepared_image)
+    # question_contours = generate_bubble_contours(prepared_image)
     # objects = identify_object_contours(question_contours)
 
     image_with_contours = image.copy()
@@ -264,7 +237,7 @@ if __name__ == "__main__":
 
     cv2.drawContours(image_with_contours, question_contours, -1, (255, 255, 0), 2)
 
-    filled_in = identify_bubbled(image, question_contours)
+    # filled_in = identify_bubbled(image, question_contours)
 
     cv2.drawContours(image_with_bubble, filled_in, -1, (0, 255, 0), 2)
     cv2.imshow("Bubbled Image", cv2.resize(image_with_bubble, (1080, 900)))

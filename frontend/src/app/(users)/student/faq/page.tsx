@@ -6,39 +6,39 @@ import FAQComponent from "../../components/Accordion";
 const generalfaqItems = [
   {
     id: 1,
-    question: "How to sign in to the account?",
+    question: "How do I sign in to my account?",
     answer:
-      "Students can create an account and login with the credentials or sign in with google. They will be required to provide their student id to verify their account",
+      "Students can either create an account and login with an email and password combination, or sign in using a Google account.",
   },
   {
     id: 2,
-    question: "How to view the graded exams?",
+    question: "How can I view my graded exams?",
     answer:
-      "Select a course from the course dashboard. Click on the view exam button under the Graded Exams tab on the course page.",
+      "Select a course from the course dashboard. Click on the view exam button under the 'Graded Exams' tab on the course page.",
   },
 ];
 
 const courseFaqItems = [
   {
     id: 1,
-    question: "How to join a course?",
+    question: "How do I join a course?",
     answer:
-      "The Course Invite link will be sent to you by your professor. Click on the invite link and you will be able to access the course",
+      "Your instructor will provide you with a course invite link. Click on the link to register yourself in the course.",
   },
 ];
 
 const examFaqItems = [
   {
     id: 1,
-    question: "How to view upcoming exams in a particular course?",
+    question: "How can I view upcoming exams for a particular course?",
     answer:
-      "Select a particular course from the dashboard. Click on the upcoming exams on the course page to view the list of exams.",
+      "Select a course from the dashboard. Click on the upcoming exams tab on the course page to view the list of upcoming exams.",
   },
   {
     id: 2,
-    question: "How can I view my graded exam?",
+    question: "How can I view my graded exams?",
     answer:
-      "Select a course from the course dashboard. Click on the view exam button under the Graded Exams tab on the course page.",
+      "Select a course from the course dashboard. Click on the view exam button under the 'Graded Exams' tab on the course page.",
   },
 ];
 

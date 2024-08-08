@@ -23,13 +23,14 @@ CANVAS_OFFSET = 200
 FONT_SIZE_HEADER = 12
 FONT_SIZE_SUBHEADER = 9
 FONT_SIZE_TEXT = 8
+FONT_SIZE_BUBBLE = 7
 REQUEST_DELAY = 3  # 3 seconds
 UPLOAD_PATH = (
     Path(__file__).resolve().parents[3] / "backend" / "uploads" / "bubble_sheets"
 )
 
 
-def draw_bubble(canvas, x, y, radius=6, fill=0):
+def draw_bubble(canvas, x, y, radius=5, fill=0):
     """Draw a bubble at the given x, y coordinates
 
     Args:
@@ -222,8 +223,8 @@ def generate_bubble_sheet(
     start_x = margin
     start_y = height - margin - CANVAS_OFFSET
     question_spacing_x = 2 * inch
-    question_spacing_y = 0.3 * inch
-    bubble_spacing = 0.3 * inch
+    question_spacing_y = 0.30 * inch
+    bubble_spacing = 0.25 * inch
 
     current_x = start_x
     current_y = start_y
@@ -244,11 +245,11 @@ def generate_bubble_sheet(
     page = 1
     for question in range(1, num_questions + 1):
         c.setFont(FONT_BOLD, FONT_SIZE_TEXT)
-        c.drawString(current_x - 1, current_y + 5, f"{question}")
-        c.setFont(FONT_NORMAL, FONT_SIZE_TEXT)
+        c.drawString(current_x - 10, current_y + 5, f"{question}")
 
         question_answers = answers[question - 1] if question - 1 < len(answers) else []
 
+        c.setFont(FONT_NORMAL, FONT_SIZE_BUBBLE)
         for choice in range(choices_per_question):
             bubble_x = current_x + (choice + 1) * bubble_spacing
 
@@ -256,8 +257,8 @@ def generate_bubble_sheet(
                 draw_bubble(c, bubble_x, current_y + 7, fill=1)
             else:
                 draw_bubble(c, bubble_x, current_y + 7)
-
             c.drawString(bubble_x - 2.5, current_y + 4, chr(65 + choice))
+        c.setFont(FONT_NORMAL, FONT_SIZE_TEXT)
 
         current_y -= question_spacing_y
 

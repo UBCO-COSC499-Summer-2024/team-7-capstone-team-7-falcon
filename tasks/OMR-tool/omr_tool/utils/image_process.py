@@ -214,6 +214,63 @@ def extract_roi(image, question_bounds):
     return roi_cropped
 
 
+def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0, 0)):
+    """
+    Draw the bubble contours on the image.
+
+    Args:
+        image (numpy.ndarray): The input image.
+        bubble_contours (list): The list of bubble contours.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The image with the bubble contours drawn.
+
+    """
+    output_image = image.copy()
+    x1, y1, x2, y2 = question_bounds
+    repositioned_cnt = bubble_contour + [x1, y1]
+    cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2, offset=offset)
+    return output_image
+
+
+def highlight_error_region(image, question_bounds, message=""):
+    output_image = image.copy()
+    x1, y1, x2, y2 = question_bounds
+    cv2.rectangle(output_image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+    if message:
+        cv2.putText(
+            output_image,
+            message,
+            (x1, y2 + 20),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (0, 0, 255),
+            2,
+        )
+    return output_image
+
+
+def extract_roi(image, question_bounds):
+    """
+    Extracts the region of interest (ROI) from the given image based on the provided question bounds.
+
+    Parameters:
+        image (numpy.ndarray): The input image from which the ROI needs to be extracted.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The cropped ROI image.
+
+    """
+    mask = np.zeros(image.shape[:2], dtype="uint8")
+    x1, y1, x2, y2 = question_bounds
+    cv2.fillPoly(mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
+    roi = cv2.bitwise_and(image, image, mask=mask)
+    roi_cropped = roi[y1:y2, x1:x2]
+    return roi_cropped
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(

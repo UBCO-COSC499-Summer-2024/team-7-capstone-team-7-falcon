@@ -13,10 +13,9 @@ This Python app completes all the tasks needed for grading submitted bubble shee
 7. Finally, the pages are compiled into a PDF file again, and the results and PDF file for each submission are sent as a payload to be stored in the backend, and subsequently relayed to the frontend for the professor to view.
 
 ## Installation
-
 To run this app, you must have Poetry installed. [You may view the  installation instructions for Poetry here](https://python-poetry.org/docs/)
 
-Once you have poetry installed, it is as simple as running 
+Once you have poetry installed, it is as simple as running
 ``` poetry install ``` to install all the necessary dependencies.
 
 You can then run the app within the poetry environment by running it within the poetry shell.
@@ -73,7 +72,7 @@ Confirm that the output follows the following format:
 poetry install
 ```
 
-3. Now, move to the `omr_tool` folder. 
+3. Now, move to the `omr_tool` folder.
 
 ```bash
 cd omr_tool/

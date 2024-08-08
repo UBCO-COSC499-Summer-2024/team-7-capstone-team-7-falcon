@@ -44,6 +44,17 @@ const examfaqItems = [
       "Is it mandatory to create a custom bubble sheet when creating an exam?",
     answer: "No, this step is completely optional.",
   },
+  {
+    question:
+      "Is it mandatory to create a custom bubble sheet when creating an exam?",
+    answer: "No, this step is completely optional.",
+  },
+
+  {
+    question:
+      "How many questions am I allowed to add when setting up a custom bubble sheet exam?",
+    answer: "You may include between 0 and 200 questions, inclusive.",
+  },
 
   {
     question:

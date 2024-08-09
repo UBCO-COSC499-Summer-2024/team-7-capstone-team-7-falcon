@@ -1,5 +1,39 @@
 # Personal Logs
 
+## Friday (8/07-8/08)
+
+### Timesheet
+
+Clockify report
+
+![clockify](08.07-08.08/clockify.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+
+  1. Final presentation
+  2. Personal Report
+
+### Progress Update (since 8/07/2024)
+
+![ProjectBoard](08.07-08.08/board.png)
+
+  1. Presented Features
+  2. Added OMR to production
+  3. Worked on report
+  4. Prepared presentation
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+This Cycle was quick, mainly finishing up and doing code cleanup, I am concerned about my individual report, I have not been able to dedicate as much time as I would want to it 
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+  1. Finish Capstone.
+
+---
+---
+---
+
 ## Wednesday (8/02-8/06)
 
 ### Timesheet

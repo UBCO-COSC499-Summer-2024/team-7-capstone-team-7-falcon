@@ -134,14 +134,17 @@ export class ExamService {
   public async getSubmissionsByExamId(
     examId: number,
   ): Promise<SubmissionModel[]> {
-    const queryBuilder = SubmissionModel.createQueryBuilder('submission')
-      .leftJoin('submission.exam', 'exam')
-      .leftJoinAndSelect('submission.student', 'student')
-      .leftJoinAndSelect('student.user', 'user')
-      .where('exam.id = :examId', { examId })
-      .orderBy('submission.score', 'DESC');
-
-    const submissions = await queryBuilder.getMany();
+    const submissions = await SubmissionModel.find({
+      where: {
+        exam: {
+          id: examId,
+        },
+      },
+      relations: ['student', 'student.user', 'exam'],
+      order: {
+        score: 'DESC',
+      },
+    });
 
     // Modify the submissions to only include the necessary fields
     const modifiedSubmissions: SubmissionModel[] = submissions.map(
@@ -844,12 +847,20 @@ export class ExamService {
     courseId: number,
     submissionId: number,
   ): Promise<UserSubmissionExamInterface> {
+    const submission = await SubmissionModel.findOne({
+      where: {
+        id: submissionId,
+      },
+      relations: ['exam'],
+    });
+
     const exam = await ExamModel.findOne({
       where: {
         course: {
           id: courseId,
           is_archived: false,
         },
+        id: submission?.exam?.id,
       },
       order: {
         submissions: {
@@ -893,7 +904,6 @@ export class ExamService {
       ),
       answers: currentSubmission[0].answers,
     };
-
     return modifiedResponse;
   }
 

@@ -28,4 +28,4 @@ COPY bubble_sheet_generator ./bubble_sheet_generator
 RUN poetry install --without dev
 
 
-ENTRYPOINT [ "poetry", "run", "python", "-m", "omr_tool.main"]
+ENTRYPOINT [ "poetry", "run", "python", "-m", "bubble_sheet_generator.main"]

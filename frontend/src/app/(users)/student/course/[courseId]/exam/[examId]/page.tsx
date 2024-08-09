@@ -112,10 +112,6 @@ const StudentExamPage = async ({
               courseId={cid}
             />
           </div>
-          <ReportSubmissionIssue
-            submissionId={submission.studentSubmission.id}
-            courseId={cid}
-          />
         </div>
 
         <ToggleBubbleSheet

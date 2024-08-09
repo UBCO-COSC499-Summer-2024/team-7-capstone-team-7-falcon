@@ -6,44 +6,66 @@ import FAQComponent from "../../components/Accordion";
 
 const generalfaqItems = [
   {
-    question: "How to create an exam for students?",
+    question: "What is the process for creating an exam?",
     answer:
-      "Select a course and then click on the Create Exam button. Enter the exam credentials and publish the exam",
+      "First, select a course and click the 'Create Exam' button. Next, enter the exam information and publish the exam.",
   },
   {
-    question: "How to edit the course information?",
+    question: "How do I update course details?",
     answer:
-      "Select course settings button on the course page and edit the course information as required",
+      "On the course page, click the 'Course Settings' button and make the necessary changes to the course information.",
   },
   {
-    question: "How to release grades for students?",
+    question: "How do I release student grades?",
     answer:
-      "Select the analytics button on the course page and click on the release grades button.",
+      "Click on the action button associated with an exam. This will bring you to a page with the option to release/hide grades.",
   },
 ];
 const coursefaqItems = [
   {
-    question: "How to view courses I am enrolled in?",
+    question: "How do I view the courses I am enrolled in?",
     answer:
-      "Instructors will need to sign in with their credentials to view the list of courses on the Course Dashboard page.",
+      "Once signed in, the courses will be visible on the dashboard page.",
   },
   {
-    question: "How to edit the course information?",
+    question: "How do I update course details?",
     answer:
-      "Select course settings button on the course page and edit the course information as required",
+      "On the course page, click the 'Course Settings' button and make the necessary changes to the course information.",
   },
 ];
 const examfaqItems = [
   {
-    question: "How to create an exam for students?",
+    question: "What is the process for creating an exam?",
     answer:
-      "Select a course and then click on the Create Exam button. Enter the exam credentials and publish the exam",
+      "First, select a course and click the 'Create Exam' button. Next, enter the exam information and publish the exam.",
+  },
+  {
+    question:
+      "Is it mandatory to create a custom bubble sheet when creating an exam?",
+    answer: "No, this step is completely optional.",
+  },
+  {
+    question:
+      "Is it mandatory to create a custom bubble sheet when creating an exam?",
+    answer: "No, this step is completely optional.",
   },
 
   {
-    question: "How to release grades for students?",
+    question:
+      "How many questions am I allowed to add when setting up a custom bubble sheet exam?",
+    answer: "You may include between 0 and 200 questions, inclusive.",
+  },
+
+  {
+    question:
+      "How many questions am I allowed to add when setting up a custom bubble sheet exam?",
+    answer: "You may include between 0 and 200 questions, inclusive.",
+  },
+
+  {
+    question: "How do I release student grades?",
     answer:
-      "Select the analytics button on the course page and click on the release grades button.",
+      "Click on the action button associated with an exam. This will bring you to a page with the option to release/hide grades.",
   },
 ];
 

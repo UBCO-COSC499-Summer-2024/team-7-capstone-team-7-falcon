@@ -1,6 +1,9 @@
 # OMR Tool Backend Service
+
 ## Overview
+
 This Python app completes all the tasks needed for grading submitted bubble sheets. The app completes the following steps when a job is created for it:
+
 1. Receives the answer key and submission PDFs from the backend.
 2. Converts the PDFs into image lists that can be used by OpenCV and the inferencer.
 3. The answer key images are first processed by the inferencer, detecting the question obejects, from there, contour detection and thresholding is done on each question to populate an answer key list.
@@ -12,7 +15,7 @@ This Python app completes all the tasks needed for grading submitted bubble shee
 ## Installation
 To run this app, you must have Poetry installed. [You may view the  installation instructions for Poetry here](https://python-poetry.org/docs/)
 
-Once you have poetry installed, it is as simple as running 
+Once you have poetry installed, it is as simple as running
 ``` poetry install ``` to install all the necessary dependencies.
 
 You can then run the app within the poetry environment by running it within the poetry shell.
@@ -29,3 +32,72 @@ The model was trained off of a set of labeled images containing UBC bubble sheet
 The code used to train the model is found under the submodule ```model_training/OMR-model-training```
 
 [You can find the training submodule's repository here.](https://github.com/fperellaholfeld/OMR-model-inference)
+
+## Developing Guidelines
+
+- [OMR Tool Backend Service](#omr-tool-backend-service)
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [The Object Detection Model](#the-object-detection-model)
+  - [Developing Guidelines](#developing-guidelines)
+    - [Tools](#tools)
+    - [Setup and Installation](#setup-and-installation)
+    - [Running locally](#running-locally)
+      - [Running the bubble sheet generator outside of a container](#running-the-bubble-sheet-generator-outside-of-a-container)
+
+### Tools
+
+You will need to install the following command line tools and applications to run the application:
+
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [Poetry](https://python-poetry.org/docs/)
+
+### Setup and Installation
+
+1. Make sure you are in the `OMR-tool` folder by running in your CLI:
+
+```bash
+pwd
+```
+
+Confirm that the output follows the following format:
+
+```bash
+**/team-7-capstone-team-7-falcon/tasks/OMR-tool
+```
+
+2. Install dependencies:
+
+```bash
+poetry install
+```
+
+3. Now, move to the `omr_tool` folder.
+
+```bash
+cd omr_tool/
+```
+
+Confirm that you are in the right folder using `pwd`. The output should follow the following format:
+
+```bash
+**/team-7-capstone-team-7-falcon/tasks/OMR-tool/omr_tool
+```
+
+4. Create a `.env` file from `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+### Running locally
+
+#### Running the bubble sheet generator outside of a container
+
+The following steps assume that PostgreSQL and Redis are running (for example, in a Docker container).
+
+To start the bubble sheet generator, run:
+
+```bash
+poetry run python -m app.py
+```

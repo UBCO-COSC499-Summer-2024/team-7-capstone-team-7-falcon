@@ -57,8 +57,8 @@ def threshold_img(image):
         PIL.Image: The thresholded image.
 
     """
-    initial_thresh = cv2.threshold(image, 225, 255, cv2.THRESH_BINARY)[1]
-    blur_image = cv2.GaussianBlur(initial_thresh, (3, 3), 0)
+    initial_thresh = cv2.threshold(image, 226, 255, cv2.THRESH_BINARY)[1]
+    blur_image = cv2.GaussianBlur(initial_thresh, (5, 5), 0)
     thresh = cv2.threshold(blur_image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[
         1
     ]
@@ -157,31 +157,61 @@ def identify_object_contours(generated_contours):
     return objects
 
 
-def identify_bubbled(img, cnts):
+def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0, 0)):
     """
-    Identifies the filled-in bubbles in an image.
+    Draw the bubble contours on the image.
 
     Args:
-        img (numpy.ndarray): The input image.
-        cnts (list): List of contours representing the bubbles.
+        image (numpy.ndarray): The input image.
+        bubble_contours (list): The list of bubble contours.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
 
     Returns:
-        list: List of contours representing the filled-in bubbles.
+        numpy.ndarray: The image with the bubble contours drawn.
+
     """
-    bubbled = None
-    filled_in = []
+    output_image = image.copy()
+    x1, y1, x2, y2 = question_bounds
+    repositioned_cnt = bubble_contour + [x1, y1]
+    cv2.drawContours(output_image, [repositioned_cnt], -1, color, 2, offset=offset)
+    return output_image
 
-    for cnt, i in enumerate(cnts):
-        mask = np.zeros(img.shape, dtype="uint8")
-        cv2.drawContours(mask, [i], -1, 255, -1)
 
-        mask = cv2.bitwise_and(img, img, mask=mask)
-        total = cv2.countNonZero(mask)
+def highlight_error_region(image, question_bounds, message=""):
+    output_image = image.copy()
+    x1, y1, x2, y2 = question_bounds
+    cv2.rectangle(output_image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+    if message:
+        cv2.putText(
+            output_image,
+            message,
+            (x1, y2 + 20),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (0, 0, 255),
+            2,
+        )
+    return output_image
 
-        if bubbled is None or total > 400:
-            bubbled = (total, cnt)
-            filled_in.append(cnts[bubbled[1]])
-    return filled_in
+
+def extract_roi(image, question_bounds):
+    """
+    Extracts the region of interest (ROI) from the given image based on the provided question bounds.
+
+    Parameters:
+        image (numpy.ndarray): The input image from which the ROI needs to be extracted.
+        question_bounds (tuple): The bounding box coordinates (x1, y1, x2, y2) of the question region.
+
+    Returns:
+        numpy.ndarray: The cropped ROI image.
+
+    """
+    mask = np.zeros(image.shape[:2], dtype="uint8")
+    x1, y1, x2, y2 = question_bounds
+    cv2.fillPoly(mask, [np.array([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])], 255)
+    roi = cv2.bitwise_and(image, image, mask=mask)
+    roi_cropped = roi[y1:y2, x1:x2]
+    return roi_cropped
 
 
 def draw_bubble_contours(image, bubble_contour, question_bounds, color, offset=(0, 0)):
@@ -255,7 +285,7 @@ if __name__ == "__main__":
     # cv2.imshow("aligned", align_img(image))
     # cv2.waitKey(0)
     prepared_image = prepare_img(image)
-    question_contours = generate_bubble_contours(prepared_image)
+    # question_contours = generate_bubble_contours(prepared_image)
     # objects = identify_object_contours(question_contours)
 
     image_with_contours = image.copy()
@@ -264,7 +294,7 @@ if __name__ == "__main__":
 
     cv2.drawContours(image_with_contours, question_contours, -1, (255, 255, 0), 2)
 
-    filled_in = identify_bubbled(image, question_contours)
+    # filled_in = identify_bubbled(image, question_contours)
 
     cv2.drawContours(image_with_bubble, filled_in, -1, (0, 255, 0), 2)
     cv2.imshow("Bubbled Image", cv2.resize(image_with_bubble, (1080, 900)))

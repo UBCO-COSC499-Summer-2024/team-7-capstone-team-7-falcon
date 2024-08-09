@@ -20,7 +20,7 @@ import ExamOverviewPopover from "@/app/(users)/components/examOverviewPopover";
 const InstructorSubmissionPage = async ({
   params,
 }: {
-  params: { courseId: string; submissionId: string; examId: number };
+  params: { courseId: string; examId: number; submissionId: string };
 }) => {
   const cid = Number(params.courseId);
   const submissionId = Number(params.submissionId);
@@ -42,6 +42,7 @@ const InstructorSubmissionPage = async ({
     submissionId,
   );
   const submission: StudentSubmission = submissionResponse.data;
+
   if (!submissionResponse || !submission) {
     throw new Error("Submission does not exist");
   }

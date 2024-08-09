@@ -1,3 +1,23 @@
+## Friday (8/07-8/08)
+
+<img width="1048" alt="image" src="https://github.com/user-attachments/assets/cfb8372d-64dc-4695-bdb2-2e5cce16d7aa">
+
+## Current Task
+
+1. Proof read individual report
+
+## Progress update since (7/08)
+
+I finished my individual report, though I am yet to proof read and edit for the deliverable. I practiced my script for the final presentation (User Groups)
+
+## Cycle Goal Review
+
+I just focused on the report and presentation.
+
+## Next Cycle Goal
+
+Tomorrow is our final presentation!
+
 ## Wednesday (8/02-8/06)
 
 <img width="1054" alt="image" src="https://github.com/user-attachments/assets/500690eb-9c1a-4c8e-a887-f7373566b917">

@@ -1,22 +1,102 @@
-# Project-Starter
+# OwlMark: bubble-sheet marking made easy
 
-Please use the provided folder structure for your docs (project plan, design documenation, communications log, weekly logs and final documentation), source code, tesing, etc.    You are free to organize any additional internal folder structure as required by the project.  The team **MUST** use a branching workflow and once an item is ready, do remember to issue a PR, review and merge in into the master brach.
+- [Project Description](#project-description)
+- [Code Structure](#code-structure)
+- [Dependencies](#dependencies)
+- [Installation and Setup](#installation-and-setup)
+- [Built with](#built-with)
+- [Authors](#authors)
+
+## Project Description
+
+OwlMark is a responsive web application that supports the marking and management of optically-marked exams. 
+
+Our application was developed to be an efficient alternative to the sole Scantron machine at UBC Okanagan (UBCO). It was commissioned by Dr. Ramon Lawrence, the Academic Director of UBCO's Centre for Teaching & Learning to address the deficiencies of the university's current approach to bubble-sheet exam marking. The main target users are instructors, but students will also be able to view and review their marked exams. In particular, OwlMark allows instructors to batch upload bubble-sheet exams, efficiently mark them using an optical mark recognition (OMR) system, and to view the associated exam statistics. To account for marking errors, our system also offers a reporting system to users. 
+
+## Code Structure
+
 ```
 .
-├── docs                    # Documentation files (alternatively `doc`)
-│   ├── TOC.md              # Table of contents
-│   ├── plan                # Scope and Charter
-│   ├── design              # Getting started guide
-│   ├── final               # Getting started guide
-│   ├── logs                # Team Logs
+├── backend                         # Backend infrastructure
+|   ├── migrations                  # Database migration files
+|   ├── src                         # Relavant source code for the backend
+|   ├── test                        # Integration tests for backend endpoints
+|   ├── uploads                     # Files uploaded to backend that can be used by frontend application
 │   └── ...
-├── build                   # Compiled files (alternatively `dist`))    
-├── app                     # Source files (alternatively `lib` or `src`)
-├── test                    # Automated tests (alternatively `spec` or `tests`)
-├── tools                   # Tools and utilities
-├── LICENSE                 # The license for this project 
-└── README.md
+├── docs                            # Documentation files
+│   ├── TOC.md                      # Table of contents
+│   ├── communication               # Meeting notes and client communication
+│   ├── design                      # Documentation related to the project design
+│   ├── final                       # Final documentation
+│   ├── plan                        # Project plan
+│   └── weekly logs                 # Individual and team logs
+├── frontend                        # Frontend infrastructure
+|   ├── public                      # Static assets
+|   ├── src                         # Source code for the frontend
+│   └── ...
+├── tasks                           # Utilities for the OMR system
+|   ├── bubble-sheet-generator      # Utility for generating custom bubble sheets
+|   ├── OMR-tool                    # Utility for grading bubble-sheet exams using computer vision
+├── uploads                         # Files uploaded to the system
+├── ...
+├── LICENSE                         # The license for this project
+└── README.md                       # This file!
 ```
-You can find additional information on folder structure convetions [here](https://github.com/kriasoft/Folder-Structure-Conventions). 
 
-Also, update your README.md file with the team and client/project information.  You can find details on writing GitHub Markdown [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) as well as a [handy cheatsheet](https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf).   
+## Dependencies
+
+In order to run the application, the following dependencies need to be installed:
+
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [psql](https://blog.timescale.com/tutorials/)
+3. [nvm](https://github.com/nvm-sh/nvm)
+4. [Poetry](https://python-poetry.org/docs/)
+
+## Installation and Setup
+
+Please refer to the READMEs found in the subfolders for instructions to run individual components of the application.
+
+The following steps describe how the application can be run locally outside of a container:
+
+1. Setup the backend by following the [installation steps](./backend/README.md#setup-and-installation).
+
+2. Setup the frontend by following the [installation steps](./frontend/README.md#setup-and-installation).
+
+3. Setup the OMR utlities for the [bubble sheet generator](./tasks/bubble-sheet-generator/README.md#setup-and-installation) and the [OMR tool](./tasks/OMR-tool/README.md#setup-and-installation).
+
+4. Finally, in the root folder of this project (where this README is located), run:
+
+```bash
+cp .env.example .env
+```
+
+and then,
+
+```bash
+docker compose up redis postgres -d
+```
+
+to start the PostgreSQL and Redis Docker containers.
+
+## Built with
+
+- Frontend
+  - [NextJS](https://nextjs.org/)
+  - [Tailwind CSS with Flowbite](https://flowbite.com/)
+- Backend
+  - [NestJS](https://nestjs.com/)
+  - [Python](https://www.python.org/)
+- Database
+  - [PostgreSQL](https://www.postgresql.org/)
+- Containerization
+  - [Docker](https://www.docker.com/)
+
+## Authors
+
+OwlMark is delivered to you by
+
+- [Bennett Chang](https://github.com/BennettChang) 
+- [Dmytro Zhuravel](https://github.com/d3li0n)
+- [Francisco Perella-Holfeld](https://github.com/fperellaholfeld)
+- [Ishika Agarwal](https://github.com/ishikaubc)
+- [Paula Wong-Chung](https://github.com/KafkaNoNeko)

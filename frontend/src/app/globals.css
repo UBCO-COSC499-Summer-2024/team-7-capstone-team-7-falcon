@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+/* Uncomment below to enable dark theme */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+} */
+
+/* Uncomment below to enable gradient background */
+/* body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
+
+@layer components {
+  .btn-primary {
+    @apply font-medium rounded-lg text-sm text-center px-5 py-2.5;
+    @apply text-white bg-purple-700 hover:bg-purple-800;
+    @apply focus:ring-4 focus:outline-none focus:ring-purple-300;
+  }
+
+  .btn-secondary {
+    @apply text-sm font-medium text-gray-900 py-2.5 px-5 ms-3;
+    @apply bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700;
+    @apply focus:z-10 focus:ring-4 focus:ring-gray-100 focus:outline-none;
+  }
+
+  .radial-progress {
+    --size: 6rem; /* Size of the progress circle */
+    --thickness: 0.5rem; /* Thickness of the progress circle */
+    --color-bg: theme(colors.gray.200);  /* Background color */
+    --color-progress: theme(colors.purple.700); /* Progress bar color */
+    --progress: 50; /* Default progress value */
+  
+    position: relative;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background-color: var(--color-bg);
+    background-image: conic-gradient(
+      var(--color-progress) calc(var(--progress) * 1%),
+      transparent 0
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--color-progress);
+  }
+  
+  .radial-progress::before {
+    content: '';
+    position: absolute;
+    width: calc(var(--size) - var(--thickness) * 2);
+    height: calc(var(--size) - var(--thickness) * 2);
+    background-color: #ffffff;
+    border-radius: 50%;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

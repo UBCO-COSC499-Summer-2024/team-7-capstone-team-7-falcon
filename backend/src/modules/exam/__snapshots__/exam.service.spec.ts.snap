@@ -1,0 +1,1027 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExamService createExam should create an exam 1`] = `
+ExamModel {
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Test Exam",
+  "questions": {},
+}
+`;
+
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is found 1`] = `
+StudentUserModel {
+  "id": 1,
+  "student_id": 1,
+  "submissions": [
+    SubmissionModel {
+      "answers": {
+        "answer_list": [
+          {
+            "answered": [
+              1,
+              2,
+            ],
+            "expected": [
+              1,
+              2,
+            ],
+            "question_num": 0,
+            "score": 1,
+          },
+        ],
+        "errorFlag": false,
+      },
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+    },
+  ],
+}
+`;
+
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is found 2`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "submissions": [
+    SubmissionModel {
+      "answers": {
+        "answer_list": [
+          {
+            "answered": [
+              1,
+              2,
+            ],
+            "expected": [
+              1,
+              2,
+            ],
+            "question_num": 0,
+            "score": 1,
+          },
+        ],
+        "errorFlag": false,
+      },
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+    },
+  ],
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`ExamService createExamSubmission should create a submission for an exam when student record is not found 1`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "submissions": [
+    SubmissionModel {
+      "answers": {
+        "answer_list": [
+          {
+            "answered": [
+              1,
+              2,
+            ],
+            "expected": [
+              1,
+              2,
+            ],
+            "question_num": 0,
+            "score": 1,
+          },
+        ],
+        "errorFlag": false,
+      },
+      "document_path": "path",
+      "id": 1,
+      "score": 2,
+      "student": null,
+    },
+  ],
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`ExamService createSubmissionDisputeBySubmissionId should create a submission dispute 1`] = `
+SubmissionDisputeModel {
+  "description": "Dispute",
+  "id": 1,
+  "resolved_at": null,
+  "status": "CREATED",
+  "submission": SubmissionModel {
+    "answers": {},
+    "created_at": "1000000000",
+    "document_path": "path",
+    "id": 1,
+    "score": 23,
+    "updated_at": "1000000000",
+  },
+}
+`;
+
+exports[`ExamService getExamById should return an exam by id 1`] = `
+ExamModel {
+  "created_at": "1000000000",
+  "exam_date": "1000000000",
+  "exam_folder": null,
+  "grades_released_at": null,
+  "id": 1,
+  "name": "Exam",
+  "questions": {},
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`ExamService getExamGradedSubmissionByUser should return graded submission for user 1`] = `
+{
+  "answers": {},
+  "course": {
+    "courseCode": "CS101",
+    "courseName": "Introduction to Computer Science",
+    "id": 1,
+  },
+  "exam": {
+    "examDate": "1000000000",
+    "id": 1,
+    "name": "Exam",
+  },
+  "grades": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    10,
+  ],
+  "studentSubmission": {
+    "id": 1,
+    "score": 10,
+  },
+}
+`;
+
+exports[`ExamService getExamSubmissionsDisputesByExamId should return all disputes for an exam 1`] = `
+[
+  {
+    "created_at": "1000000000",
+    "id": 1,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 2,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 3,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 4,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 5,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 6,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 7,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 8,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 9,
+    "status": "CREATED",
+  },
+  {
+    "created_at": "1000000000",
+    "id": 10,
+    "status": "CREATED",
+  },
+]
+`;
+
+exports[`ExamService getExamsByCourseId should return course exams from first page 1`] = `
+PageDto {
+  "data": [
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000009",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 10,
+      "name": "Exam 9",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000008",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 9,
+      "name": "Exam 8",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000007",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 8,
+      "name": "Exam 7",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000006",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 7,
+      "name": "Exam 6",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000005",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 6,
+      "name": "Exam 5",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "itemCount": 10,
+    "page": 1,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`ExamService getExamsByCourseId should return course exams from second page 1`] = `
+PageDto {
+  "data": [
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000004",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 5,
+      "name": "Exam 4",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000003",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 4,
+      "name": "Exam 3",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000002",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 3,
+      "name": "Exam 2",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000001",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 2,
+      "name": "Exam 1",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+    ExamModel {
+      "created_at": "1000000000",
+      "exam_date": "1000000000",
+      "exam_folder": null,
+      "grades_released_at": null,
+      "id": 1,
+      "name": "Exam 0",
+      "questions": {},
+      "updated_at": "1000000000",
+    },
+  ],
+  "meta": PageMetaDto {
+    "hasNextPage": false,
+    "hasPreviousPage": true,
+    "itemCount": 10,
+    "page": 2,
+    "pageCount": 2,
+    "take": 5,
+  },
+}
+`;
+
+exports[`ExamService getGradedExamsByCourseId should return graded exams by course id 1`] = `
+[
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "exam_folder": null,
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000001",
+    "exam_folder": null,
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000002",
+    "exam_folder": null,
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000003",
+    "exam_folder": null,
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000004",
+    "exam_folder": null,
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000005",
+    "exam_folder": null,
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000006",
+    "exam_folder": null,
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000007",
+    "exam_folder": null,
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000008",
+    "exam_folder": null,
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000009",
+    "exam_folder": null,
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`ExamService getGradedSubmissionsByUser should return graded submissions for a specific user 1`] = `
+[
+  {
+    "exams": [
+      {
+        "courseId": 1,
+        "examDate": "1000000000",
+        "examId": 1,
+        "examName": "Exam 0",
+        "examScore": 0,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000001",
+        "examId": 2,
+        "examName": "Exam 1",
+        "examScore": 1,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000002",
+        "examId": 3,
+        "examName": "Exam 2",
+        "examScore": 2,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000003",
+        "examId": 4,
+        "examName": "Exam 3",
+        "examScore": 3,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000004",
+        "examId": 5,
+        "examName": "Exam 4",
+        "examScore": 4,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000005",
+        "examId": 6,
+        "examName": "Exam 5",
+        "examScore": 5,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000006",
+        "examId": 7,
+        "examName": "Exam 6",
+        "examScore": 6,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000007",
+        "examId": 8,
+        "examName": "Exam 7",
+        "examScore": 7,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000008",
+        "examId": 9,
+        "examName": "Exam 8",
+        "examScore": 8,
+      },
+      {
+        "courseId": 1,
+        "examDate": "1000000009",
+        "examId": 10,
+        "examName": "Exam 9",
+        "examScore": 9,
+      },
+    ],
+  },
+]
+`;
+
+exports[`ExamService getSubmissionById should return submission by id 1`] = `
+{
+  "answers": {},
+  "course": {
+    "courseCode": "CS101",
+    "courseName": "Introduction to Computer Science",
+    "id": 1,
+  },
+  "exam": {
+    "examDate": "1000000000",
+    "id": 1,
+    "name": "Exam",
+  },
+  "grades": [
+    30,
+  ],
+  "studentSubmission": {
+    "hasStudent": true,
+    "id": 1,
+    "score": 30,
+  },
+}
+`;
+
+exports[`ExamService getSubmissionById should return submission by id even if student is not assigned 1`] = `
+{
+  "answers": {},
+  "course": {
+    "courseCode": "CS101",
+    "courseName": "Introduction to Computer Science",
+    "id": 1,
+  },
+  "exam": {
+    "examDate": "1000000000",
+    "id": 1,
+    "name": "Exam",
+  },
+  "grades": [
+    30,
+  ],
+  "studentSubmission": {
+    "hasStudent": false,
+    "id": 1,
+    "score": 30,
+  },
+}
+`;
+
+exports[`ExamService getSubmissionDisputeByDisputeId should return the submission dispute 1`] = `
+{
+  "created_at": "1000000000",
+  "description": "Dispute",
+  "id": 1,
+  "resolved_at": null,
+  "status": "CREATED",
+  "submission": {
+    "answers": {},
+    "created_at": "1000000000",
+    "document_path": "path",
+    "id": 1,
+    "score": 23,
+    "student": {
+      "id": undefined,
+      "student_id": undefined,
+      "user": {
+        "first_name": undefined,
+        "id": undefined,
+        "last_name": undefined,
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  "updated_at": "1000000000",
+}
+`;
+
+exports[`ExamService getSubmissionsByExamId should return submissions by exam id 1`] = `
+[
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 10,
+    "score": 9,
+    "student": {
+      "id": 10,
+      "student_id": 9,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 10,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 9,
+    "score": 8,
+    "student": {
+      "id": 9,
+      "student_id": 8,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 9,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 8,
+    "score": 7,
+    "student": {
+      "id": 8,
+      "student_id": 7,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 8,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 7,
+    "score": 6,
+    "student": {
+      "id": 7,
+      "student_id": 6,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 7,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 6,
+    "score": 5,
+    "student": {
+      "id": 6,
+      "student_id": 5,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 6,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 5,
+    "score": 4,
+    "student": {
+      "id": 5,
+      "student_id": 4,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 5,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 4,
+    "score": 3,
+    "student": {
+      "id": 4,
+      "student_id": 3,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 4,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 3,
+    "score": 2,
+    "student": {
+      "id": 3,
+      "student_id": 2,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 3,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 2,
+    "score": 1,
+    "student": {
+      "id": 2,
+      "student_id": 1,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 2,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+  {
+    "answers": {},
+    "created_at": "1000000000",
+    "id": 1,
+    "score": 0,
+    "student": {
+      "id": 1,
+      "student_id": 0,
+      "user": {
+        "avatar_url": null,
+        "first_name": "John",
+        "id": 1,
+        "last_name": "Doe",
+      },
+    },
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`ExamService getUpcomingExamsByCourseId should return upcoming exams by course id 1`] = `
+[
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 1,
+    "name": "Exam 0",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 2,
+    "name": "Exam 1",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 3,
+    "name": "Exam 2",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 4,
+    "name": "Exam 3",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 5,
+    "name": "Exam 4",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 6,
+    "name": "Exam 5",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 7,
+    "name": "Exam 6",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 8,
+    "name": "Exam 7",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 9,
+    "name": "Exam 8",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  ExamModel {
+    "created_at": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 10,
+    "name": "Exam 9",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+]
+`;
+
+exports[`ExamService getUpcomingExamsByCourseUser should return upcoming exams for user 1`] = `
+[
+  {
+    "courseCode": "CS101",
+    "courseId": 1,
+    "courseName": "Introduction to Computer Science",
+    "exams": [
+      {
+        "id": 1,
+        "name": "Exam 0",
+      },
+      {
+        "id": 2,
+        "name": "Exam 1",
+      },
+      {
+        "id": 3,
+        "name": "Exam 2",
+      },
+      {
+        "id": 4,
+        "name": "Exam 3",
+      },
+      {
+        "id": 5,
+        "name": "Exam 4",
+      },
+      {
+        "id": 6,
+        "name": "Exam 5",
+      },
+      {
+        "id": 7,
+        "name": "Exam 6",
+      },
+      {
+        "id": 8,
+        "name": "Exam 7",
+      },
+      {
+        "id": 9,
+        "name": "Exam 8",
+      },
+      {
+        "id": 10,
+        "name": "Exam 9",
+      },
+    ],
+  },
+  {
+    "courseCode": "CS102",
+    "courseId": 2,
+    "courseName": "Introduction to Computer Science II",
+    "exams": [
+      {
+        "id": 11,
+        "name": "Exam 0",
+      },
+      {
+        "id": 12,
+        "name": "Exam 1",
+      },
+      {
+        "id": 13,
+        "name": "Exam 2",
+      },
+      {
+        "id": 14,
+        "name": "Exam 3",
+      },
+      {
+        "id": 15,
+        "name": "Exam 4",
+      },
+      {
+        "id": 16,
+        "name": "Exam 5",
+      },
+      {
+        "id": 17,
+        "name": "Exam 6",
+      },
+      {
+        "id": 18,
+        "name": "Exam 7",
+      },
+      {
+        "id": 19,
+        "name": "Exam 8",
+      },
+      {
+        "id": 20,
+        "name": "Exam 9",
+      },
+    ],
+  },
+]
+`;
+
+exports[`ExamService retrieveSubmissionsByExamId should return only headers if no submissions are present 1`] = `
+"studentId,grade
+"
+`;
+
+exports[`ExamService retrieveSubmissionsByExamId should return submissions for an exam with student id and grade 1`] = `
+"studentId,grade
+1001,1
+1002,2
+1003,3
+1004,4
+1005,5
+1006,6
+1007,7
+1008,8
+1009,9
+1010,10
+"
+`;
+
+exports[`ExamService updateSubmissionUserByUserId should update the submission with the student 1`] = `
+SubmissionModel {
+  "answers": {},
+  "created_at": "1000000000",
+  "document_path": "path",
+  "exam": ExamModel {
+    "created_at": "1000000000",
+    "exam_date": "1000000000",
+    "exam_folder": null,
+    "grades_released_at": null,
+    "id": 1,
+    "name": "Exam",
+    "questions": {},
+    "updated_at": "1000000000",
+  },
+  "id": 1,
+  "score": 23,
+  "student": StudentUserModel {
+    "id": 1,
+    "student_id": 1234,
+  },
+  "updated_at": "1000000000",
+}
+`;

@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - api
+    volumes:
+      - pg:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - path: frontend/.env.docker
+        required: false
+    networks:
+      - api
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: on-failure
+    networks:
+      - api
+    env_file:
+      - path: backend/.env.docker
+        required: false
+    depends_on:
+      - postgres
+      - redis
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - api
+
+  apache:
+    image: httpd:latest
+    restart: on-failure
+    ports:
+      - "80:80"
+    networks:
+      - api
+    volumes:
+      - ./network/conf/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  api:
+    driver: bridge
+
+volumes:
+  pg:
+  uploads:

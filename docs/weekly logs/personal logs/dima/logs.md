@@ -29,16 +29,6 @@ No development happened as we are done.
 ### Next Cycle Goals (What are you going to accomplish during the next cycle)
   * None, last project
 
-## Friday (7/31 - 8/01)
-
-### Timesheet
-Clockify report
-![Clockify report](./images/time_report_20240731-20240801.png)
-
-### Current Tasks (Provide sufficient detail)
-  * #1: Prepare for Test-O-Rama
-  * #2: Setup production server
-
 ## Wednesday (8/2 - 8/06)
 
 ### Timesheet

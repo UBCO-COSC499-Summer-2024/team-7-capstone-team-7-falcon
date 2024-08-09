@@ -1,5 +1,44 @@
 # Individual Logs
 
+## Wednesday (8/2 - 8/06)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_08022024-08062024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: Prepare for final presentation
+  * #2: Communicate with Scott about writing documentation to write production server
+
+### Progress Update (since 8/2/2024)
+
+![GitHub Board](./images/github_08022024-08062024.png)
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Issue #428
+        </td>
+        <!-- Status -->
+        <td>Completed
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+During this cycle, I focused on fixing the issue from test-o-rama and setting up production server for Scott. Most of the time I spent on setting up production server as production environment on UBC servers was not prepare for us, so I did spend a lot of time to put it up together. Feedback from test-o-rama took me at most couple of hours to address.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * Prepare for client and requirements meeting with Ramon and Scott
+  * Prepare for final presentation
+
 ## Friday (7/31 - 8/01)
 
 ### Timesheet

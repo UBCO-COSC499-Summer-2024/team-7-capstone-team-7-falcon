@@ -1,3 +1,53 @@
+## Friday (8/07- 8/08)
+
+### Timesheet
+Clockify report
+![time for 08.07_- 08.08](08.07_08.08.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+    N/A
+
+### Progress Update (since 8/07/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle all features are done so there is nothing left for me to do. We had 2 meetings to discuss the presentation.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+N/A
+
+## Wednesday (8/02- 8/06)
+
+### Timesheet
+Clockify report
+![time for 08.02_- 08.06](08.02_08.06.png)
+
+### Current Tasks (Provide sufficient detail and include t-shirt size)
+    N/A
+
+### Progress Update (since 8/02/2024) 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+This cycle all features are done so there is nothing left for me to do. We had a meeting to to discuss the team feature list for the final individual report. I also finished writing my own individual report. We are ready to demo our app.
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+N/A
+
 ## Friday (7/31- 8/01)
 
 ### Timesheet

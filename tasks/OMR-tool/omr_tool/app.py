@@ -99,6 +99,10 @@ def send_grades(backend_url, exam_id, submission_results):
 
     student_id = submission_results["student_id"]
 
+    # Check if student_id is valid as a last resort
+    if not student_id:
+        student_id = "-1"
+
     request = requests.post(
         f"{backend_url}/exam/{exam_id}/{student_id}",
         headers={"x-worker-auth-token": os.getenv("WORKER_TOKEN")},

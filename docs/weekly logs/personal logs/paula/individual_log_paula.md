@@ -1,5 +1,58 @@
 # Individual Logs for Paula
 
+## Friday (8/07 - 8/08)
+
+### Timesheet
+
+Clockify report
+!["timesheet_08.07_08.08"](images/clockify_08.07_08.08.png)
+
+### Current Tasks
+
+!["current_tasks_08.07_08.08"](images/current_tasks_08.07_08.08.png)
+
+* #1: Prep for the final presentation
+* #2: Complete individual report
+
+### Progress Update (since 8/07/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+Since development is complete, I focused on working on my individual report and prepping for the final presentation.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+N/A
+
+## Wednesday (8/02 - 8/06)
+
+### Timesheet
+
+Clockify report
+!["timesheet_08.02_08.06"](images/clockify_08.02_08.06.png)
+
+### Current Tasks
+
+!["current_tasks_08.02_08.06"](images/current_tasks_08.02_08.06.png)
+
+* #1: Repo clean up and documentation/user guide updates
+* #2: Analysis of test-o-rama results
+
+### Progress Update (since 8/02/2024)
+
+See the image in the previous section.
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+Since development is pretty much complete, I worked on cleaning up the repository's documentation. We are wrapping up the project and my focus is now on completing my individual report and prepping for the final presentation.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+
+* Prep for the final presentation
+* Complete individual report
+
 ## Friday (7/31 - 8/01)
 
 ### Timesheet

@@ -1,5 +1,34 @@
 # Individual Logs
 
+## Friday (8/7 - 8/08)
+
+### Timesheet
+Clockify report
+![Clockify report](./images/time_report_08072024-08082024.png)
+
+### Current Tasks (Provide sufficient detail)
+  * #1: No tasks, done with project
+
+### Progress Update (since 8/7/2024)
+
+No GitHub board screenshot as we didn't work on anything.
+
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+</table>
+
+### Cycle Goal Review (Reflection: what went well, what was done, what didn't; Retrospective: how is the process going and why?)
+
+No development happened as we are done.
+
+### Next Cycle Goals (What are you going to accomplish during the next cycle)
+  * None, last project
+
 ## Wednesday (8/2 - 8/06)
 
 ### Timesheet

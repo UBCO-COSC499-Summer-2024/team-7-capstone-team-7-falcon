@@ -1,3 +1,4 @@
+
 ## Friday (8/07-8/08)
 
 <img width="1048" alt="image" src="https://github.com/user-attachments/assets/cfb8372d-64dc-4695-bdb2-2e5cce16d7aa">

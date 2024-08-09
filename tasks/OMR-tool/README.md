@@ -13,6 +13,7 @@ This Python app completes all the tasks needed for grading submitted bubble shee
 7. Finally, the pages are compiled into a PDF file again, and the results and PDF file for each submission are sent as a payload to be stored in the backend, and subsequently relayed to the frontend for the professor to view.
 
 ## Installation
+
 To run this app, you must have Poetry installed. [You may view the  installation instructions for Poetry here](https://python-poetry.org/docs/)
 
 Once you have poetry installed, it is as simple as running
@@ -33,13 +34,16 @@ The code used to train the model is found under the submodule ```model_training/
 
 [You can find the training submodule's repository here.](https://github.com/fperellaholfeld/OMR-model-inference)
 
+# Developing Guidelines
+
 ## Developing Guidelines
 
 - [OMR Tool Backend Service](#omr-tool-backend-service)
   - [Overview](#overview)
   - [Installation](#installation)
   - [The Object Detection Model](#the-object-detection-model)
-  - [Developing Guidelines](#developing-guidelines)
+- [Developing Guidelines](#developing-guidelines)
+  - [Developing Guidelines](#developing-guidelines-1)
     - [Tools](#tools)
     - [Setup and Installation](#setup-and-installation)
     - [Running locally](#running-locally)

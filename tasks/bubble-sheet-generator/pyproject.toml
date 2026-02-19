@@ -7,10 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10.2"
-requests = "^2.32.3"
+requests = "^2.32.4"
 reportlab = "^4.2.0"
-pillow = "^10.3.0"
-pypdf = "^4.2.0"
+pillow = "^12.1.1"
+pypdf = "^6.7.1"
 python-dotenv = "^1.0.1"
 
 
